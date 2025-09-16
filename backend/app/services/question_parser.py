@@ -68,17 +68,25 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
             current_question['explanation'] = line.replace('**Explanation:**', '').strip()
         
         elif line.startswith('**Option') and current_question:
-            option_match = re.match(r'\*\*Option (\d+): (.+)\*\*', line)
+            option_match = re.match(r'\*\*Option (\d+): (.+?)\*\*', line)
+            if not option_match:
+                option_match = re.match(r'\*\*Option (\d+):\*\* (.+)', line)
+            
             if option_match:
                 option_value = option_match.group(1)
                 option_label = option_match.group(2)
                 
                 description = ''
                 j = i + 1
-                while j < len(lines) and not lines[j].strip().startswith('**'):
+                while j < len(lines) and not lines[j].strip().startswith('**') and not lines[j].strip().startswith('####'):
                     desc_line = lines[j].strip()
-                    if desc_line and not desc_line.startswith('*'):
-                        description += desc_line + ' '
+                    if desc_line and not desc_line.startswith('*Note:'):
+                        if desc_line.startswith('*Basic Description:'):
+                            description = desc_line.replace('*Basic Description:', '').strip()
+                        elif not desc_line.startswith('*') and description == '':
+                            description = desc_line
+                        elif desc_line.startswith('-') and 'This security control' in desc_line:
+                            description = desc_line.replace('- ', '').strip()
                     j += 1
                 
                 current_question['options'].append({
@@ -86,6 +94,8 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                     'label': option_label,
                     'description': description.strip()
                 })
+            else:
+                print(f"Warning: Could not parse option format at line {i+1}: {line}")
         
         i += 1
     
@@ -136,9 +146,24 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
 def load_assessment_structure() -> AssessmentStructure:
     """Load and parse the assessment questions from the markdown file"""
     try:
-        return create_sample_assessment_structure()
+        import os
+        current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        md_file_path = os.path.join(current_dir, "data", "security_assessment_questions.md")
+        
+        if os.path.exists(md_file_path):
+            print(f"Loading assessment structure from {md_file_path}")
+            with open(md_file_path, 'r', encoding='utf-8') as file:
+                md_content = file.read()
+            structure = parse_assessment_questions(md_content)
+            print(f"Successfully loaded {len(structure.sections)} sections with {structure.total_questions} total questions")
+            return structure
+        else:
+            print(f"Assessment file not found at {md_file_path}, using sample structure")
+            return create_sample_assessment_structure()
     except Exception as e:
         print(f"Error loading assessment structure: {e}")
+        import traceback
+        traceback.print_exc()
         return create_sample_assessment_structure()
 
 def create_sample_assessment_structure() -> AssessmentStructure:
