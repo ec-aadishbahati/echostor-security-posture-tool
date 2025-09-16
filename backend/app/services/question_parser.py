@@ -147,7 +147,7 @@ def load_assessment_structure() -> AssessmentStructure:
     """Load and parse the assessment questions from the markdown file"""
     try:
         import os
-        current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         md_file_path = os.path.join(current_dir, "data", "security_assessment_questions.md")
         
         if os.path.exists(md_file_path):
