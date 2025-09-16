@@ -43,7 +43,11 @@ async def start_assessment(
     
     assessment = Assessment(
         user_id=current_user.id,
-        expires_at=expires_at
+        status="in_progress",
+        started_at=datetime.utcnow(),
+        expires_at=expires_at,
+        last_saved_at=datetime.utcnow(),
+        progress_percentage=0.0
     )
     
     db.add(assessment)
