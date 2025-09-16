@@ -3,6 +3,7 @@ name = "echostor-security-posture-backend"
 version = "0.1.0"
 description = "Backend API for EchoStor Security Posture Assessment Tool"
 authors = ["EchoStor Technologies <aadish.bahati@echostor.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
