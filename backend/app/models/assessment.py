@@ -9,8 +9,8 @@ from app.core.database import Base
 class Assessment(Base):
     __tablename__ = "assessments"
 
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     status = Column(String(50), default="in_progress")  # in_progress, completed, expired
     started_at = Column(DateTime(timezone=True), server_default=func.now())
     completed_at = Column(DateTime(timezone=True))
@@ -25,8 +25,8 @@ class Assessment(Base):
 class AssessmentResponse(Base):
     __tablename__ = "assessment_responses"
 
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    assessment_id = Column(PG_UUID(as_uuid=True), ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    assessment_id = Column(String(36), ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False)
     section_id = Column(String(50), nullable=False)
     question_id = Column(String(50), nullable=False)
     answer_value = Column(JSONB)
@@ -42,8 +42,8 @@ class AssessmentResponse(Base):
 class Report(Base):
     __tablename__ = "reports"
 
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    assessment_id = Column(PG_UUID(as_uuid=True), ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    assessment_id = Column(String(36), ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False)
     report_type = Column(String(50), default="standard")  # standard, ai_enhanced
     file_path = Column(String(500))
     status = Column(String(50), default="pending")  # pending, generating, completed, failed
@@ -55,9 +55,9 @@ class Report(Base):
 class AdminAuditLog(Base):
     __tablename__ = "admin_audit_log"
 
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     admin_email = Column(String(255))
     action = Column(String(100))
-    target_user_id = Column(PG_UUID(as_uuid=True))
+    target_user_id = Column(String(36))
     details = Column(JSONB)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
