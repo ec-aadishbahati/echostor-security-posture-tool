@@ -27,6 +27,7 @@ primary_region = "iad"
 
 [env]
   PORT = "8000"
+  RESTART_TIMESTAMP = "1726477055"
 
 [[vm]]
   memory = "2gb"
