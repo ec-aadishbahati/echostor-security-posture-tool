@@ -74,7 +74,7 @@ async def start_assessment(
 @router.get("/current", response_model=AssessmentResponse)
 async def get_current_assessment(
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get the current assessment for the user"""
     
