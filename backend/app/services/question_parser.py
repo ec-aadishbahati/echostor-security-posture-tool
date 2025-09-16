@@ -94,8 +94,6 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                     'label': option_label,
                     'description': description.strip()
                 })
-            else:
-                print(f"Warning: Could not parse option format at line {i+1}: {line}")
         
         i += 1
     
@@ -151,19 +149,14 @@ def load_assessment_structure() -> AssessmentStructure:
         md_file_path = os.path.join(current_dir, "data", "security_assessment_questions.md")
         
         if os.path.exists(md_file_path):
-            print(f"Loading assessment structure from {md_file_path}")
             with open(md_file_path, 'r', encoding='utf-8') as file:
                 md_content = file.read()
             structure = parse_assessment_questions(md_content)
-            print(f"Successfully loaded {len(structure.sections)} sections with {structure.total_questions} total questions")
             return structure
         else:
-            print(f"Assessment file not found at {md_file_path}, using sample structure")
             return create_sample_assessment_structure()
     except Exception as e:
         print(f"Error loading assessment structure: {e}")
-        import traceback
-        traceback.print_exc()
         return create_sample_assessment_structure()
 
 def create_sample_assessment_structure() -> AssessmentStructure:
