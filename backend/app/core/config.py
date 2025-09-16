@@ -20,6 +20,7 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://localhost:3001",
         "https://echostor-security-posture-tool.vercel.app",
+        "https://echostor-security-posture-tool-git-main-aadish-bahatis-projects.vercel.app",
         "https://*.vercel.app"
     ]
     
