@@ -1,3 +1,4 @@
+from sqlalchemy.orm import relationship
 from app.models.user import User
 from app.models.assessment import Assessment, AssessmentResponse, Report, AdminAuditLog
 
