@@ -1,4 +1,4 @@
-app = "echostor-security-posture-backend"
+app = "echostor-security-posture-tool"
 primary_region = "iad"
 
 [build]
