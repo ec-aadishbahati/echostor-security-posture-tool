@@ -71,15 +71,15 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
     
     if user_credentials.email == "testuser@assessment.com" and user_credentials.password == "TestPass123!":
         import uuid
-        test_user_uuid = "12345678-1234-5678-9012-123456789abc"
+        test_user_uuid = uuid.UUID("12345678-1234-5678-9012-123456789abc")
         access_token = create_access_token(
-            data={"sub": "testuser@assessment.com", "user_id": test_user_uuid}
+            data={"sub": "testuser@assessment.com", "user_id": str(test_user_uuid)}
         )
         
         from app.schemas.user import UserResponse
         from datetime import datetime
         test_user = UserResponse(
-            id=test_user_uuid,
+            id=str(test_user_uuid),
             email="testuser@assessment.com",
             full_name="Assessment Test User",
             company_name="Test Assessment Company",
