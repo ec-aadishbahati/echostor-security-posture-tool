@@ -30,7 +30,7 @@ jobs:
           cd frontend
           npm run build
         env:
-          NEXT_PUBLIC_API_URL: https://echostor-security-posture-backend.fly.dev
+          NEXT_PUBLIC_API_URL: https://echostor-security-posture-tool.fly.dev
           NEXT_PUBLIC_APP_NAME: EchoStor Security Posture Assessment
 
       - name: Deploy to Vercel
