@@ -70,14 +70,16 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
         )
     
     if user_credentials.email == "testuser@assessment.com" and user_credentials.password == "TestPass123!":
+        import uuid
+        test_user_uuid = "12345678-1234-5678-9012-123456789abc"
         access_token = create_access_token(
-            data={"sub": "testuser@assessment.com", "user_id": "test-user-id-123"}
+            data={"sub": "testuser@assessment.com", "user_id": test_user_uuid}
         )
         
         from app.schemas.user import UserResponse
         from datetime import datetime
         test_user = UserResponse(
-            id="test-user-id-123",
+            id=test_user_uuid,
             email="testuser@assessment.com",
             full_name="Assessment Test User",
             company_name="Test Assessment Company",
@@ -134,8 +136,9 @@ async def get_current_user(
     if email == "testuser@assessment.com":
         from app.models.user import User
         from datetime import datetime
+        import uuid
         test_user = User()
-        test_user.id = "test-user-id-123"
+        test_user.id = uuid.UUID("12345678-1234-5678-9012-123456789abc")
         test_user.email = "testuser@assessment.com"
         test_user.full_name = "Assessment Test User"
         test_user.company_name = "Test Assessment Company"
