@@ -154,8 +154,8 @@ export default function Home() {
         <div className="mt-20 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
           <h4 className="text-lg font-semibold text-yellow-800 mb-2">Important Disclaimer</h4>
           <p className="text-yellow-700">
-            The outcomes delivered are best efforts based on general market practices and should not be 
-            considered as baseline for building security architecture. For detailed understanding, 
+            The outcomes delivered are best efforts based on general market practices and should not be
+            considered as baseline for building security architecture. For detailed understanding,
             please contact EchoStor Sales team for a more detailed and official security assessment.
           </p>
         </div>
