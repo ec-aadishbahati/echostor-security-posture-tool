@@ -37,7 +37,7 @@ async def start_assessment(
     ).first()
     
     if existing_assessment:
-        return AssessmentResponse.from_orm(existing_assessment)
+        return AssessmentResponse.model_validate(existing_assessment)
     
     expires_at = datetime.utcnow() + timedelta(days=settings.ASSESSMENT_EXPIRY_DAYS)
     
@@ -50,7 +50,7 @@ async def start_assessment(
     db.commit()
     db.refresh(assessment)
     
-    return AssessmentResponse.from_orm(assessment)
+    return AssessmentResponse.model_validate(assessment)
 
 @router.get("/current", response_model=AssessmentResponse)
 async def get_current_assessment(
@@ -80,7 +80,7 @@ async def get_current_assessment(
             detail="Assessment has expired"
         )
     
-    return AssessmentResponse.from_orm(assessment)
+    return AssessmentResponse.model_validate(assessment)
 
 @router.get("/{assessment_id}/responses", response_model=List[AssessmentResponseResponse])
 async def get_assessment_responses(
@@ -107,7 +107,7 @@ async def get_assessment_responses(
         AssessmentResponseModel.assessment_id == assessment_id
     ).all()
     
-    return [AssessmentResponseResponse.from_orm(response) for response in responses]
+    return [AssessmentResponseResponse.model_validate(response) for response in responses]
 
 @router.post("/{assessment_id}/save-progress")
 async def save_assessment_progress(
