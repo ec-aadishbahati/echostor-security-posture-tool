@@ -22,7 +22,7 @@ class AssessmentResponse(BaseModel):
     completed_at: Optional[datetime]
     expires_at: Optional[datetime]
     last_saved_at: datetime
-    progress_percentage: float
+    progress_percentage: Optional[float] = 0.0
 
     class Config:
         from_attributes = True
