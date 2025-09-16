@@ -64,7 +64,7 @@ export default function Home() {
             <span className="text-primary-600"> Security Posture</span>
           </h2>
           <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
-            Comprehensive cybersecurity assessment across 19 key domains with 409 detailed questions. 
+            Comprehensive cybersecurity assessment across 19 key domains with 409 detailed questions.
             Get actionable insights and AI-powered recommendations to strengthen your security posture.
           </p>
           <div className="mt-10">
