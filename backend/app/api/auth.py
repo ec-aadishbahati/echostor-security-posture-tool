@@ -135,15 +135,23 @@ async def get_current_user(
     if email == "testuser@assessment.com":
         from app.models.user import User
         from datetime import datetime
-        test_user = User()
-        test_user.id = "12345678-1234-5678-9012-123456789abc"
-        test_user.email = "testuser@assessment.com"
-        test_user.full_name = "Assessment Test User"
-        test_user.company_name = "Test Assessment Company"
-        test_user.is_active = True
-        test_user.created_at = datetime.utcnow()
-        test_user.updated_at = datetime.utcnow()
-        return test_user
+        
+        existing_test_user = db.query(User).filter(User.id == "12345678-1234-5678-9012-123456789abc").first()
+        if not existing_test_user:
+            test_user_db = User(
+                id="12345678-1234-5678-9012-123456789abc",
+                email="testuser@assessment.com",
+                full_name="Assessment Test User",
+                company_name="Test Assessment Company",
+                password_hash="$2b$12$dummy_hash_for_test_user_only",
+                is_active=True
+            )
+            db.add(test_user_db)
+            db.commit()
+            db.refresh(test_user_db)
+            return test_user_db
+        else:
+            return existing_test_user
     
     user = db.query(User).filter(User.email == email).first()
     if not user:
