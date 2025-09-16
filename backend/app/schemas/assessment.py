@@ -15,8 +15,8 @@ class AssessmentUpdate(BaseModel):
     progress_percentage: Optional[float] = None
 
 class AssessmentResponse(BaseModel):
-    id: uuid.UUID
-    user_id: uuid.UUID
+    id: str
+    user_id: str
     status: str
     started_at: datetime
     completed_at: Optional[datetime]
@@ -36,8 +36,8 @@ class AssessmentResponseUpdate(BaseModel):
     answer_value: Any
 
 class AssessmentResponseResponse(BaseModel):
-    id: uuid.UUID
-    assessment_id: uuid.UUID
+    id: str
+    assessment_id: str
     section_id: str
     question_id: str
     answer_value: Any
