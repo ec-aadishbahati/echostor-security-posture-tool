@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import { 
   ChevronLeftIcon, 
   ChevronRightIcon,
-  SaveIcon,
+  BookmarkIcon,
   CheckCircleIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
@@ -171,7 +171,7 @@ export default function AssessmentQuestions() {
 
     if (currentQuestionIndex < section.questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
-    } else if (currentSectionIndex < structure.data.sections.length - 1) {
+    } else if (currentSectionIndex < (structure?.data?.sections?.length || 0) - 1) {
       setCurrentSectionIndex(prev => prev + 1);
       setCurrentQuestionIndex(0);
     }
@@ -182,7 +182,7 @@ export default function AssessmentQuestions() {
       setCurrentQuestionIndex(prev => prev - 1);
     } else if (currentSectionIndex > 0) {
       setCurrentSectionIndex(prev => prev - 1);
-      const prevSection = structure.data.sections[currentSectionIndex - 1];
+      const prevSection = structure?.data?.sections?.[currentSectionIndex - 1];
       setCurrentQuestionIndex(prevSection.questions.length - 1);
     }
   };
@@ -397,7 +397,7 @@ export default function AssessmentQuestions() {
                 disabled={saveProgressMutation.isLoading}
                 className="btn-secondary flex items-center"
               >
-                <SaveIcon className="h-4 w-4 mr-2" />
+                <BookmarkIcon className="h-4 w-4 mr-2" />
                 {saveProgressMutation.isLoading ? 'Saving...' : 'Save Progress'}
               </button>
 

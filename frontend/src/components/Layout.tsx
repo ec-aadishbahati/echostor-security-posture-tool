@@ -6,7 +6,7 @@ import {
   DocumentTextIcon, 
   ChartBarIcon, 
   UserIcon,
-  LogoutIcon,
+  ArrowRightOnRectangleIcon,
   CogIcon
 } from '@heroicons/react/24/outline';
 
@@ -68,7 +68,7 @@ export default function Layout({ children, title }: LayoutProps) {
                 onClick={logout}
                 className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 hover:text-gray-700"
               >
-                <LogoutIcon className="w-4 h-4 mr-2" />
+                <ArrowRightOnRectangleIcon className="w-4 h-4 mr-2" />
                 Logout
               </button>
             </div>

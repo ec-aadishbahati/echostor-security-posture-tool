@@ -7,7 +7,7 @@ import {
   DocumentTextIcon, 
   ChartBarIcon,
   ExclamationTriangleIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
             <div className="card">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <TrendingUpIcon className="h-8 w-8 text-indigo-600" />
+                  <ArrowTrendingUpIcon className="h-8 w-8 text-indigo-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">New This Week</p>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
             <div className="mb-8">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">System Alerts</h3>
               <div className="space-y-4">
-                {alerts.data.alerts.map((alert: any, index: number) => (
+                {alerts?.data?.alerts?.map((alert: any, index: number) => (
                   <div 
                     key={index}
                     className={`p-4 rounded-lg border-l-4 ${
