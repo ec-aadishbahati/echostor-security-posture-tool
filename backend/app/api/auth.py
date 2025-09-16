@@ -75,12 +75,15 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
         )
         
         from app.schemas.user import UserResponse
+        from datetime import datetime
         test_user = UserResponse(
             id="test-user-id-123",
             email="testuser@assessment.com",
             full_name="Assessment Test User",
             company_name="Test Assessment Company",
-            is_active=True
+            is_active=True,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
         )
         
         return Token(
@@ -130,12 +133,15 @@ async def get_current_user(
     
     if email == "testuser@assessment.com":
         from app.models.user import User
+        from datetime import datetime
         test_user = User()
         test_user.id = "test-user-id-123"
         test_user.email = "testuser@assessment.com"
         test_user.full_name = "Assessment Test User"
         test_user.company_name = "Test Assessment Company"
         test_user.is_active = True
+        test_user.created_at = datetime.utcnow()
+        test_user.updated_at = datetime.utcnow()
         return test_user
     
     user = db.query(User).filter(User.email == email).first()
