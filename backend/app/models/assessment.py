@@ -17,6 +17,8 @@ class Assessment(Base):
     expires_at = Column(DateTime(timezone=True))
     last_saved_at = Column(DateTime(timezone=True), server_default=func.now())
     progress_percentage = Column(DECIMAL(5, 2), default=0.00)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     user = relationship("User", back_populates="assessments")
     responses = relationship("AssessmentResponse", back_populates="assessment", cascade="all, delete-orphan")
