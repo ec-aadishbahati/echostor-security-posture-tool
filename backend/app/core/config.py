@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "aadish.bahati@echostor.com")
     ADMIN_PASSWORD_HASH: str = os.getenv("ADMIN_PASSWORD_HASH", "")
     
+    ADMIN_LOGIN_USER: str = os.getenv("ADMIN_LOGIN_USER", "")
+    ADMIN_LOGIN_PASSWORD: str = os.getenv("ADMIN_LOGIN_PASSWORD", "")
+    
     ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:3001",

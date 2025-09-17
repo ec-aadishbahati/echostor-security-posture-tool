@@ -46,6 +46,26 @@ async def register(user_data: UserCreate, db: Session = Depends(get_write_db)):
 
 @router.post("/login", response_model=Token)
 async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db)):
+    if (settings.ADMIN_LOGIN_USER and 
+        user_credentials.email == settings.ADMIN_LOGIN_USER and
+        settings.ADMIN_LOGIN_PASSWORD):
+        
+        if user_credentials.password == settings.ADMIN_LOGIN_PASSWORD:
+            access_token = create_access_token(
+                data={"sub": settings.ADMIN_LOGIN_USER, "is_admin": True},
+                is_admin=True
+            )
+            
+            return Token(
+                access_token=access_token,
+                expires_in=settings.ADMIN_TOKEN_EXPIRE_HOURS * 3600
+            )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+    
     if user_credentials.email == settings.ADMIN_EMAIL:
         if not settings.ADMIN_PASSWORD_HASH:
             raise HTTPException(
@@ -100,7 +120,8 @@ async def get_current_user(
     token_data = verify_token(credentials.credentials)
     
     if token_data.get("is_admin"):
-        return {"email": settings.ADMIN_EMAIL, "is_admin": True}
+        admin_email = settings.ADMIN_LOGIN_USER if settings.ADMIN_LOGIN_USER else settings.ADMIN_EMAIL
+        return {"email": admin_email, "is_admin": True}
     
     email = token_data.get("sub")
     if not email:
