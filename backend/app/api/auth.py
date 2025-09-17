@@ -69,29 +69,6 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
             expires_in=settings.ADMIN_TOKEN_EXPIRE_HOURS * 3600
         )
     
-    if user_credentials.email == "testuser@assessment.com" and user_credentials.password == "TestPass123!":
-        test_user_uuid = "12345678-1234-5678-9012-123456789abc"
-        access_token = create_access_token(
-            data={"sub": "testuser@assessment.com", "user_id": test_user_uuid}
-        )
-        
-        from app.schemas.user import UserResponse
-        from datetime import datetime
-        test_user = UserResponse(
-            id=test_user_uuid,
-            email="testuser@assessment.com",
-            full_name="Assessment Test User",
-            company_name="Test Assessment Company",
-            is_active=True,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
-        )
-        
-        return Token(
-            access_token=access_token,
-            expires_in=settings.ACCESS_TOKEN_EXPIRE_HOURS * 3600,
-            user=test_user
-        )
     
     user = db.query(User).filter(User.email == user_credentials.email).first()
     if not user or not verify_password(user_credentials.password, user.password_hash):
@@ -107,7 +84,7 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
         )
     
     access_token = create_access_token(
-        data={"sub": user.email, "user_id": str(user.id)}
+        data={"sub": user.email, "user_id": str(user.id), "is_admin": False}
     )
     
     return Token(
@@ -132,26 +109,6 @@ async def get_current_user(
             detail="Could not validate credentials"
         )
     
-    if email == "testuser@assessment.com":
-        from app.models.user import User
-        from datetime import datetime
-        
-        existing_test_user = db.query(User).filter(User.id == "12345678-1234-5678-9012-123456789abc").first()
-        if not existing_test_user:
-            test_user_db = User(
-                id="12345678-1234-5678-9012-123456789abc",
-                email="testuser@assessment.com",
-                full_name="Assessment Test User",
-                company_name="Test Assessment Company",
-                password_hash="$2b$12$dummy_hash_for_test_user_only",
-                is_active=True
-            )
-            db.add(test_user_db)
-            db.commit()
-            db.refresh(test_user_db)
-            return test_user_db
-        else:
-            return existing_test_user
     
     user = db.query(User).filter(User.email == email).first()
     if not user:

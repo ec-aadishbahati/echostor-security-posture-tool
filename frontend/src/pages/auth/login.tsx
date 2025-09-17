@@ -20,10 +20,10 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      await login(data.email, data.password);
+      const response = await login(data.email, data.password);
       toast.success('Login successful!');
       
-      if (data.email === 'aadish.bahati@echostor.com') {
+      if (response?.user?.is_admin || response?.is_admin) {
         router.push('/admin');
       } else {
         router.push('/dashboard');
@@ -110,7 +110,7 @@ export default function Login() {
 
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Admin login: Use aadish.bahati@echostor.com
+              Need help? Contact support for assistance.
             </p>
           </div>
         </form>

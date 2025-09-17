@@ -33,6 +33,7 @@ class Token(BaseModel):
     token_type: str = "bearer"
     expires_in: int
     user: Optional[UserResponse] = None
+    is_admin: Optional[bool] = None
 
 class TokenData(BaseModel):
     email: Optional[str] = None

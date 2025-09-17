@@ -27,10 +27,11 @@ async def get_all_users(
     query = db.query(User)
     
     if search:
+        search_param = f"%{search}%"
         query = query.filter(
-            User.full_name.ilike(f"%{search}%") |
-            User.email.ilike(f"%{search}%") |
-            User.company_name.ilike(f"%{search}%")
+            User.full_name.ilike(search_param) |
+            User.email.ilike(search_param) |
+            User.company_name.ilike(search_param)
         )
     
     users = query.offset(skip).limit(limit).all()

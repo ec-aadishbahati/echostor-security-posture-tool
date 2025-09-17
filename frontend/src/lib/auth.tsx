@@ -64,13 +64,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     Cookies.set('access_token', access_token, { expires: 1 }); // 1 day
     
-    if (email === 'aadish.bahati@echostor.com') {
-      setIsAdmin(true);
-      Cookies.set('is_admin', 'true', { expires: 1 });
-    } else {
+    try {
+      const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
+      if (tokenPayload.is_admin) {
+        setIsAdmin(true);
+        Cookies.set('is_admin', 'true', { expires: 1 });
+      } else {
+        setUser(userData);
+        setIsAdmin(false);
+      }
+    } catch (error) {
       setUser(userData);
       setIsAdmin(false);
     }
+    
+    return response.data;
   };
 
   const register = async (data: {
