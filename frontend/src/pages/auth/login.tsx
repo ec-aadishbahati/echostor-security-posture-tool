@@ -20,10 +20,11 @@ export default function Login() {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      const response = await login(data.email, data.password);
+      await login(data.email, data.password);
       toast.success('Login successful!');
       
-      if (response?.user?.is_admin || response?.is_admin) {
+      const adminFlag = document.cookie.includes('is_admin=true');
+      if (adminFlag) {
         router.push('/admin');
       } else {
         router.push('/dashboard');
