@@ -43,7 +43,7 @@ async def get_all_users(
         db=db
     )
     
-    return [UserResponse.from_orm(user) for user in users]
+    return [UserResponse.model_validate(user) for user in users]
 
 @router.get("/users/{user_id}", response_model=UserResponse)
 async def get_user(
@@ -67,7 +67,7 @@ async def get_user(
         db=db
     )
     
-    return UserResponse.from_orm(user)
+    return UserResponse.model_validate(user)
 
 @router.get("/users/{user_id}/assessments", response_model=List[AssessmentResponseSchema])
 async def get_user_assessments(
@@ -96,7 +96,7 @@ async def get_user_assessments(
         db=db
     )
     
-    return [AssessmentResponseSchema.from_orm(assessment) for assessment in assessments]
+    return [AssessmentResponseSchema.model_validate(assessment) for assessment in assessments]
 
 @router.get("/assessments", response_model=List[AssessmentResponseSchema])
 async def get_all_assessments(
@@ -122,7 +122,7 @@ async def get_all_assessments(
         db=db
     )
     
-    return [AssessmentResponseSchema.from_orm(assessment) for assessment in assessments]
+    return [AssessmentResponseSchema.model_validate(assessment) for assessment in assessments]
 
 @router.get("/dashboard/stats")
 async def get_dashboard_stats(
@@ -211,7 +211,7 @@ async def get_all_reports(
         db=db
     )
     
-    return [ReportResponse.from_orm(report) for report in reports]
+    return [ReportResponse.model_validate(report) for report in reports]
 
 @router.get("/alerts")
 async def get_alerts(

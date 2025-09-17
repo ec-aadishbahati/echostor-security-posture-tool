@@ -41,7 +41,7 @@ async def register(user_data: UserCreate, db: Session = Depends(get_write_db)):
     return Token(
         access_token=access_token,
         expires_in=settings.ACCESS_TOKEN_EXPIRE_HOURS * 3600,
-        user=UserResponse.from_orm(db_user)
+        user=UserResponse.model_validate(db_user)
     )
 
 @router.post("/login", response_model=Token)
@@ -110,7 +110,7 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
     return Token(
         access_token=access_token,
         expires_in=settings.ACCESS_TOKEN_EXPIRE_HOURS * 3600,
-        user=UserResponse.from_orm(user)
+        user=UserResponse.model_validate(user)
     )
 
 async def get_current_user(
@@ -155,4 +155,4 @@ async def get_current_user_info(current_user = Depends(get_current_user)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Admin user info not available"
         )
-    return UserResponse.from_orm(current_user)
+    return UserResponse.model_validate(current_user)
