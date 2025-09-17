@@ -45,7 +45,7 @@ async def generate_report(
     ).first()
     
     if existing_report:
-        return ReportResponse.from_orm(existing_report)
+        return ReportResponse.model_validate(existing_report)
     
     report = Report(
         assessment_id=assessment_id,
@@ -59,7 +59,7 @@ async def generate_report(
     
     background_tasks.add_task(generate_standard_report, str(report.id))
     
-    return ReportResponse.from_orm(report)
+    return ReportResponse.model_validate(report)
 
 @router.post("/{assessment_id}/request-ai-report")
 async def request_ai_report(
@@ -141,7 +141,7 @@ async def admin_generate_ai_report(
     
     background_tasks.add_task(generate_ai_report, str(report.id))
     
-    return ReportResponse.from_orm(report)
+    return ReportResponse.model_validate(report)
 
 @router.get("/{report_id}/download")
 async def download_report(
@@ -196,7 +196,7 @@ async def get_user_reports(
         Assessment.user_id == current_user.id
     ).all()
     
-    return [ReportResponse.from_orm(report) for report in reports]
+    return [ReportResponse.model_validate(report) for report in reports]
 
 @router.get("/{report_id}/status", response_model=ReportResponse)
 async def get_report_status(
@@ -221,4 +221,4 @@ async def get_report_status(
             detail="Access denied"
         )
     
-    return ReportResponse.from_orm(report)
+    return ReportResponse.model_validate(report)
