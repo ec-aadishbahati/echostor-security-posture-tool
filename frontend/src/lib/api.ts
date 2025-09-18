@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -10,17 +10,17 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = Cookies.get('access_token');
-  if (token) {
+  if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
 api.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
     if (error.response?.status === 401) {
       Cookies.remove('access_token');
       window.location.href = '/auth/login';
@@ -55,7 +55,7 @@ export const assessmentAPI = {
   getResponses: (assessmentId: string) =>
     api.get(`/api/assessment/${assessmentId}/responses`),
   
-  saveProgress: (assessmentId: string, responses: any[]) =>
+  saveProgress: (assessmentId: string, responses: Record<string, any>[]) =>
     api.post(`/api/assessment/${assessmentId}/save-progress`, { responses }),
   
   completeAssessment: (assessmentId: string) =>
