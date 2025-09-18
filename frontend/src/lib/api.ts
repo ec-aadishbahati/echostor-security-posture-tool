@@ -101,4 +101,7 @@ export const adminAPI = {
     api.post(`/api/reports/admin/${reportId}/generate-ai`),
   releaseAIReport: (reportId: string) =>
     api.post(`/api/reports/admin/${reportId}/release`),
+  deleteUser: (userId: string) => api.delete(`/api/admin/users/${userId}`),
+  resetUserPassword: (userId: string, newPassword: string) => 
+    api.post(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),
 };
