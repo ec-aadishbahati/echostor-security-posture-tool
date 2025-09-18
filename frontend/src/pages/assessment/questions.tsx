@@ -244,7 +244,7 @@ export default function AssessmentQuestions() {
         if (consultationInterest !== null) {
           const consultationData = {
             consultation_interest: consultationInterest,
-            consultation_details: consultationInterest ? consultationDetails : null
+            consultation_details: consultationInterest ? consultationDetails : undefined
           };
           await assessmentAPI.saveConsultationInterest(assessmentId, consultationData);
         }
