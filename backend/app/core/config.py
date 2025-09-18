@@ -22,8 +22,7 @@ class Settings(BaseSettings):
     ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
-        "https://echostor-security-posture-tool.vercel.app",
-        "https://*.vercel.app"
+        "https://echostor-security-posture-tool.vercel.app"
     ]
     
     ASSESSMENT_EXPIRY_DAYS: int = 15
