@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -54,14 +54,14 @@ async def start_assessment(
     if existing_assessment:
         return AssessmentResponse.model_validate(existing_assessment)
     
-    expires_at = datetime.utcnow() + timedelta(days=settings.ASSESSMENT_EXPIRY_DAYS)
+    expires_at = datetime.now(timezone.utc) + timedelta(days=settings.ASSESSMENT_EXPIRY_DAYS)
     
     assessment = Assessment(
         user_id=current_user.id,
         status="in_progress",
-        started_at=datetime.utcnow(),
+        started_at=datetime.now(timezone.utc),
         expires_at=expires_at,
-        last_saved_at=datetime.utcnow(),
+        last_saved_at=datetime.now(timezone.utc),
         progress_percentage=0.0
     )
     
@@ -91,7 +91,7 @@ async def get_current_assessment(
             detail="No active assessment found"
         )
     
-    if assessment.expires_at and datetime.utcnow() > assessment.expires_at:
+    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at:
         assessment.status = "expired"
         db.commit()
         raise HTTPException(
@@ -151,7 +151,7 @@ async def save_assessment_progress(
             detail="Assessment not found or not in progress"
         )
     
-    if assessment.expires_at and datetime.utcnow() > assessment.expires_at:
+    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at:
         assessment.status = "expired"
         db.commit()
         raise HTTPException(
@@ -169,7 +169,7 @@ async def save_assessment_progress(
         
         if existing_response:
             existing_response.answer_value = response_data.answer_value
-            existing_response.updated_at = datetime.utcnow()
+            existing_response.updated_at = datetime.now(timezone.utc)
         else:
             new_response = AssessmentResponseModel(
                 assessment_id=assessment_id,
@@ -179,7 +179,7 @@ async def save_assessment_progress(
             )
             db.add(new_response)
     
-    assessment.last_saved_at = datetime.utcnow()
+    assessment.last_saved_at = datetime.now(timezone.utc)
     
     total_responses = db.query(AssessmentResponseModel).filter(
         AssessmentResponseModel.assessment_id == assessment_id
@@ -217,7 +217,7 @@ async def complete_assessment(
             detail="Assessment not found or not in progress"
         )
     
-    if assessment.expires_at and datetime.utcnow() > assessment.expires_at:
+    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at:
         assessment.status = "expired"
         db.commit()
         raise HTTPException(
@@ -226,7 +226,7 @@ async def complete_assessment(
         )
     
     assessment.status = "completed"
-    assessment.completed_at = datetime.utcnow()
+    assessment.completed_at = datetime.now(timezone.utc)
     assessment.progress_percentage = 100.0
     
     db.commit()
