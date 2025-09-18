@@ -23,6 +23,8 @@ class AssessmentResponse(BaseModel):
     expires_at: Optional[datetime]
     last_saved_at: datetime
     progress_percentage: float
+    consultation_interest: bool = False
+    consultation_details: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -31,6 +33,7 @@ class AssessmentResponseCreate(BaseModel):
     section_id: str
     question_id: str
     answer_value: Any
+    comment: Optional[str] = None
 
 class AssessmentResponseUpdate(BaseModel):
     answer_value: Any
@@ -41,6 +44,7 @@ class AssessmentResponseResponse(BaseModel):
     section_id: str
     question_id: str
     answer_value: Any
+    comment: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 

@@ -374,6 +374,37 @@ async def reset_user_password(
     
     return {"message": "Password reset successfully"}
 
+
+@router.get("/consultations")
+async def get_consultation_requests(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_write_db)
+):
+    """Get all consultation requests from users"""
+    
+    consultations = db.query(Assessment).join(User).filter(
+        Assessment.consultation_interest == True
+    ).order_by(desc(Assessment.updated_at)).offset(skip).limit(limit).all()
+    
+    consultation_data = []
+    for assessment in consultations:
+        consultation_data.append({
+            "id": assessment.id,
+            "user_name": assessment.user.full_name,
+            "user_email": assessment.user.email,
+            "company_name": assessment.user.company_name,
+            "consultation_details": assessment.consultation_details,
+            "assessment_completed_at": assessment.completed_at,
+            "created_at": assessment.created_at
+        })
+    
+    return {
+        "data": consultation_data,
+        "total": len(consultation_data)
+    }
+
 @router.post("/users/bulk-update-status")
 async def bulk_update_user_status(
     request: dict,

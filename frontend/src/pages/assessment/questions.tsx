@@ -50,6 +50,10 @@ export default function AssessmentQuestions() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
+  const [comments, setComments] = useState<Record<string, string>>({});
+  const [consultationInterest, setConsultationInterest] = useState<boolean | null>(null);
+  const [consultationDetails, setConsultationDetails] = useState<string>('');
+  const [showConsultationQuestion, setShowConsultationQuestion] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
 
@@ -143,11 +147,22 @@ export default function AssessmentQuestions() {
       return {
         section_id: question?.section_id || '',
         question_id: questionId,
-        answer_value: value
+        answer_value: value,
+        comment: comments[questionId] || null
       };
     });
 
     saveProgressMutation.mutate({ assessmentId, responses: responseArray });
+  };
+
+  const handleCommentChange = (questionId: string, comment: string) => {
+    const wordCount = comment.trim().split(/\s+/).filter(word => word.length > 0).length;
+    if (wordCount <= 150) {
+      setComments(prev => ({
+        ...prev,
+        [questionId]: comment
+      }));
+    }
   };
 
   const findQuestionById = (questionId: string): Question | undefined => {
@@ -187,6 +202,8 @@ export default function AssessmentQuestions() {
     } else if (currentSectionIndex < (structure?.data?.sections?.length || 0) - 1) {
       setCurrentSectionIndex(prev => prev + 1);
       setCurrentQuestionIndex(0);
+    } else if (!showConsultationQuestion) {
+      setShowConsultationQuestion(true);
     }
   };
 
@@ -210,18 +227,35 @@ export default function AssessmentQuestions() {
 
   const isLastQuestion = () => {
     if (!structure) return false;
-    return currentSectionIndex === structure.data.sections.length - 1 &&
+    const isLastAssessmentQuestion = currentSectionIndex === structure.data.sections.length - 1 &&
            currentQuestionIndex === structure.data.sections[currentSectionIndex].questions.length - 1;
+    
+    if (isLastAssessmentQuestion && !showConsultationQuestion) {
+      return false;
+    }
+    return showConsultationQuestion;
   };
 
-  const handleCompleteAssessment = () => {
+  const handleCompleteAssessment = async () => {
     if (!assessmentId) return;
     
     if (confirm('Are you sure you want to complete the assessment? You won\'t be able to make changes after this.')) {
-      saveProgress();
-      setTimeout(() => {
-        completeAssessmentMutation.mutate(assessmentId);
-      }, 1000);
+      try {
+        if (consultationInterest !== null) {
+          const consultationData = {
+            consultation_interest: consultationInterest,
+            consultation_details: consultationInterest ? consultationDetails : undefined
+          };
+          await assessmentAPI.saveConsultationInterest(assessmentId, consultationData);
+        }
+        
+        saveProgress();
+        setTimeout(() => {
+          completeAssessmentMutation.mutate(assessmentId);
+        }, 1000);
+      } catch (error) {
+        console.error('Failed to save consultation data:', error);
+      }
     }
   };
 
@@ -396,13 +430,98 @@ export default function AssessmentQuestions() {
                 </div>
               )}
             </div>
+            
+            {!showConsultationQuestion && (
+              <div className="mt-6 pt-4 border-t border-gray-200">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Additional Comments (Optional)
+                  <span className="text-xs text-gray-500 ml-2">
+                    {comments[currentQuestion.id]?.trim().split(/\s+/).filter(word => word.length > 0).length || 0}/150 words
+                  </span>
+                </label>
+                <textarea
+                  value={comments[currentQuestion.id] || ''}
+                  onChange={(e) => handleCommentChange(currentQuestion.id, e.target.value)}
+                  placeholder="Add any additional context, clarifications, or notes about your answer..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  rows={3}
+                />
+                {comments[currentQuestion.id]?.trim().split(/\s+/).filter(word => word.length > 0).length > 150 && (
+                  <p className="text-red-600 text-xs mt-1">Comment exceeds 150 word limit</p>
+                )}
+              </div>
+            )}
           </div>
+
+          {showConsultationQuestion && (
+            <div className="card mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Consultation Interest
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Would you like to be contacted by EchoStor's Security Specialist for consultation on any security matters?
+              </p>
+              
+              <div className="space-y-3 mb-4">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="consultation"
+                    value="yes"
+                    checked={consultationInterest === true}
+                    onChange={() => setConsultationInterest(true)}
+                    className="mr-3 text-primary-600 focus:ring-primary-500"
+                  />
+                  <span className="font-medium text-gray-900">Yes, I'm interested in consultation</span>
+                </label>
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="consultation"
+                    value="no"
+                    checked={consultationInterest === false}
+                    onChange={() => setConsultationInterest(false)}
+                    className="mr-3 text-primary-600 focus:ring-primary-500"
+                  />
+                  <span className="font-medium text-gray-900">No, thank you</span>
+                </label>
+              </div>
+
+              {consultationInterest === true && (
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Consultation Details (Required)
+                    <span className="text-xs text-gray-500 ml-2">
+                      {consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length}/300 words (200-300 required)
+                    </span>
+                  </label>
+                  <textarea
+                    value={consultationDetails}
+                    onChange={(e) => setConsultationDetails(e.target.value)}
+                    placeholder="Please describe the security topics or areas you'd like to discuss with our specialist..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    rows={5}
+                    required
+                  />
+                  {(() => {
+                    const wordCount = consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length;
+                    if (wordCount < 200) {
+                      return <p className="text-orange-600 text-xs mt-1">Please provide at least 200 words</p>;
+                    } else if (wordCount > 300) {
+                      return <p className="text-red-600 text-xs mt-1">Please limit to 300 words</p>;
+                    }
+                    return null;
+                  })()}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Navigation */}
           <div className="flex justify-between items-center">
             <button
               onClick={goToPreviousQuestion}
-              disabled={currentSectionIndex === 0 && currentQuestionIndex === 0}
+              disabled={currentSectionIndex === 0 && currentQuestionIndex === 0 && !showConsultationQuestion}
               className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <ChevronLeftIcon className="h-4 w-4 mr-2" />
@@ -422,8 +541,16 @@ export default function AssessmentQuestions() {
               {isLastQuestion() ? (
                 <button
                   onClick={handleCompleteAssessment}
-                  disabled={completeAssessmentMutation.isLoading}
-                  className="btn-primary flex items-center"
+                  disabled={
+                    completeAssessmentMutation.isLoading ||
+                    consultationInterest === null || 
+                    (consultationInterest === true && (
+                      !consultationDetails.trim() ||
+                      consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length < 200 ||
+                      consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length > 300
+                    ))
+                  }
+                  className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <CheckCircleIcon className="h-4 w-4 mr-2" />
                   {completeAssessmentMutation.isLoading ? 'Completing...' : 'Complete Assessment'}

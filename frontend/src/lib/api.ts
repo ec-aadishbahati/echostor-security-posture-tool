@@ -60,6 +60,9 @@ export const assessmentAPI = {
   
   completeAssessment: (assessmentId: string) =>
     api.post(`/api/assessment/${assessmentId}/complete`),
+
+  saveConsultationInterest: (assessmentId: string, consultationData: { consultation_interest: boolean; consultation_details?: string }) =>
+    api.post(`/api/assessment/${assessmentId}/consultation`, consultationData),
 };
 
 export const reportsAPI = {
@@ -108,4 +111,7 @@ export const adminAPI = {
     api.post('/api/admin/users/bulk-update-status', { user_ids: userIds, is_active: isActive }),
   bulkDeleteUsers: (userIds: string[]) =>
     api.post('/api/admin/users/bulk-delete', { user_ids: userIds }),
+
+  getConsultations: ({ skip = 0, limit = 100 }: { skip?: number; limit?: number }) =>
+    api.get(`/api/admin/consultations?skip=${skip}&limit=${limit}`),
 };
