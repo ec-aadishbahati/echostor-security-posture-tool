@@ -358,7 +358,7 @@ async def reset_user_password(
     user.password_hash = get_password_hash(new_password)
     db.commit()
     
-    return {"message": "Password reset successfully"}</str>
+    return {"message": "Password reset successfully"}
 
 async def log_admin_action(
     admin_email: str,
