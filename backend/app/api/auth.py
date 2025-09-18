@@ -115,7 +115,7 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     token_data = verify_token(credentials.credentials)
     
