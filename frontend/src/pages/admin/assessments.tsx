@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
-import { adminAPI } from '../../lib/api';
+import { adminAPI, assessmentAPI } from '../../lib/api';
 import { 
   DocumentTextIcon, 
   ChevronLeftIcon,
@@ -30,6 +30,8 @@ export default function AdminAssessments() {
       refetchInterval: 30000,
     }
   );
+
+  const { data: structure } = useQuery('assessmentStructure', assessmentAPI.getStructure);
 
   const assessments = assessmentsData?.data || [];
   const hasNextPage = assessments.length === limit;
@@ -73,7 +75,8 @@ export default function AdminAssessments() {
 
   const calculateProgress = (responses: any[]) => {
     if (!responses || responses.length === 0) return 0;
-    return Math.round((responses.length / 409) * 100);
+    const totalQuestions = structure?.data?.total_questions || 409;
+    return Math.round((responses.length / totalQuestions) * 100);
   };
 
   return (
