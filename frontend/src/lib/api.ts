@@ -96,7 +96,9 @@ export const adminAPI = {
     api.get('/api/admin/reports', { params }),
   
   getAlerts: () => api.get('/api/admin/alerts'),
-  
+  getUsersProgressSummary: () => api.get('/api/admin/users-progress-summary'),
   generateAIReport: (reportId: string) =>
     api.post(`/api/reports/admin/${reportId}/generate-ai`),
+  releaseAIReport: (reportId: string) =>
+    api.post(`/api/reports/admin/${reportId}/release`),
 };

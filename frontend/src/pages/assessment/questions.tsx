@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useAuth } from '@/lib/auth';
+import { useAutoLogout } from '@/lib/useAutoLogout';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { assessmentAPI } from '@/lib/api';
@@ -40,11 +41,23 @@ export default function AssessmentQuestions() {
   const router = useRouter();
   const queryClient = useQueryClient();
   
+  useAutoLogout(async () => {
+    if (assessmentId) {
+      await saveProgress();
+    }
+  });
+  
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
+
+  useAutoLogout(async () => {
+    if (assessmentId) {
+      await saveProgress();
+    }
+  });
 
   const { data: structure, isLoading: structureLoading } = useQuery(
     'assessmentStructure',
@@ -243,22 +256,27 @@ export default function AssessmentQuestions() {
     <ProtectedRoute>
       <Layout title="Security Assessment">
         <div className="max-w-4xl mx-auto">
-          {/* Progress Bar */}
+          {/* Enhanced Progress Bar */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-gray-700">
-                Progress: {progress.toFixed(1)}%
+                Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of {structure?.data?.total_questions || 0} questions)
               </span>
               <div className="flex items-center text-sm text-gray-600">
                 <ClockIcon className="h-4 w-4 mr-1" />
-                {lastSaved ? `Saved ${lastSaved.toLocaleTimeString()}` : 'Not saved yet'}
+                {lastSaved ? `Auto-saved ${lastSaved.toLocaleTimeString()}` : 'Not saved yet'}
               </div>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-gray-200 rounded-full h-3">
               <div 
-                className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                className="bg-gradient-to-r from-primary-500 to-primary-600 h-3 rounded-full transition-all duration-500 relative"
                 style={{ width: `${progress}%` }}
-              ></div>
+              >
+                <div className="absolute right-0 top-0 h-3 w-1 bg-primary-700 rounded-r-full"></div>
+              </div>
+            </div>
+            <div className="mt-1 text-xs text-gray-500">
+              Section {currentSectionIndex + 1} of {structure?.data?.sections?.length || 0}: {currentSection?.title}
             </div>
           </div>
 

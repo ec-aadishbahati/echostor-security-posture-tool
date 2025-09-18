@@ -143,6 +143,33 @@ async def admin_generate_ai_report(
     
     return ReportResponse.model_validate(report)
 
+@router.post("/admin/{report_id}/release")
+async def admin_release_ai_report(
+    report_id: str,
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_write_db)
+):
+    """Admin endpoint to release AI-enhanced reports to users"""
+    
+    report = db.query(Report).filter(
+        and_(
+            Report.id == report_id,
+            Report.report_type == "ai_enhanced",
+            Report.status == "completed"
+        )
+    ).first()
+    
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Report not found or not ready for release"
+        )
+    
+    report.status = "released"
+    db.commit()
+    
+    return {"message": "AI report released to user", "report_id": report_id}
+
 @router.get("/{report_id}/download")
 async def download_report(
     report_id: str,
@@ -171,7 +198,7 @@ async def download_report(
                 detail="Access denied"
             )
     
-    if report.status != "completed" or not report.file_path:
+    if (report.status not in ["completed", "released"]) or not report.file_path:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Report not ready for download"
