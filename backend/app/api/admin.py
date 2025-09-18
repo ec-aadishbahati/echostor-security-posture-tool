@@ -405,7 +405,7 @@ async def bulk_update_user_status(
     
     return {"message": f"Updated {updated_count} users", "updated_count": updated_count}
 
-@router.delete("/users/bulk-delete")
+@router.post("/users/bulk-delete")
 async def bulk_delete_users(
     request: dict,
     current_admin = Depends(get_current_admin_user),
