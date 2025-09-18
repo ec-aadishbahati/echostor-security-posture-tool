@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { adminAPI } from '../../lib/api';
@@ -7,14 +7,22 @@ import {
   UserIcon, 
   MagnifyingGlassIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  TrashIcon,
+  KeyIcon
 } from '@heroicons/react/24/outline';
+import { toast } from 'react-hot-toast';
 
 export default function AdminUsers() {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [newPassword, setNewPassword] = useState('');
   const limit = 20;
   const skip = (currentPage - 1) * limit;
+  const queryClient = useQueryClient();
 
   const { data: usersData, isLoading, error } = useQuery(
     ['adminUsers', { skip, limit, search }],
@@ -42,6 +50,59 @@ export default function AdminUsers() {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const deleteUserMutation = useMutation(
+    (userId: string) => adminAPI.deleteUser(userId),
+    {
+      onSuccess: () => {
+        toast.success('User deleted successfully');
+        queryClient.invalidateQueries('adminUsers');
+        setShowDeleteModal(false);
+        setSelectedUser(null);
+      },
+      onError: () => {
+        toast.error('Failed to delete user');
+      }
+    }
+  );
+
+  const resetPasswordMutation = useMutation(
+    ({ userId, password }: { userId: string; password: string }) => 
+      adminAPI.resetUserPassword(userId, password),
+    {
+      onSuccess: () => {
+        toast.success('Password reset successfully');
+        setShowPasswordModal(false);
+        setSelectedUser(null);
+        setNewPassword('');
+      },
+      onError: () => {
+        toast.error('Failed to reset password');
+      }
+    }
+  );
+
+  const handleDeleteUser = (user: any) => {
+    setSelectedUser(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleResetPassword = (user: any) => {
+    setSelectedUser(user);
+    setShowPasswordModal(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedUser) {
+      deleteUserMutation.mutate(selectedUser.id);
+    }
+  };
+
+  const confirmPasswordReset = () => {
+    if (selectedUser && newPassword) {
+      resetPasswordMutation.mutate({ userId: selectedUser.id, password: newPassword });
+    }
   };
 
   return (
@@ -131,6 +192,7 @@ export default function AdminUsers() {
                       <th className="text-left py-3 px-4 font-semibold text-gray-900">Company</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900">Status</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900">Joined</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -157,6 +219,24 @@ export default function AdminUsers() {
                         <td className="py-4 px-4">
                           <span className="text-gray-600">{formatDate(user.created_at)}</span>
                         </td>
+                        <td className="py-4 px-4">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => handleResetPassword(user)}
+                              className="text-indigo-600 hover:text-indigo-900 flex items-center"
+                              title="Reset Password"
+                            >
+                              <KeyIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(user)}
+                              className="text-red-600 hover:text-red-900 flex items-center"
+                              title="Delete User"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -164,6 +244,78 @@ export default function AdminUsers() {
               </div>
             )}
           </div>
+
+          {/* Delete Confirmation Modal */}
+          {showDeleteModal && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div className="mt-3 text-center">
+                  <h3 className="text-lg font-medium text-gray-900">Delete User</h3>
+                  <div className="mt-2 px-7 py-3">
+                    <p className="text-sm text-gray-500">
+                      Are you sure you want to delete {selectedUser?.full_name}? This action cannot be undone.
+                    </p>
+                  </div>
+                  <div className="flex justify-center space-x-4 mt-4">
+                    <button
+                      onClick={() => setShowDeleteModal(false)}
+                      className="btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmDelete}
+                      disabled={deleteUserMutation.isLoading}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
+                    >
+                      {deleteUserMutation.isLoading ? 'Deleting...' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Password Reset Modal */}
+          {showPasswordModal && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div className="mt-3">
+                  <h3 className="text-lg font-medium text-gray-900 text-center">Reset Password</h3>
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700">
+                      New Password for {selectedUser?.full_name}
+                    </label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                      placeholder="Enter new password"
+                    />
+                  </div>
+                  <div className="flex justify-center space-x-4 mt-6">
+                    <button
+                      onClick={() => {
+                        setShowPasswordModal(false);
+                        setNewPassword('');
+                      }}
+                      className="btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmPasswordReset}
+                      disabled={resetPasswordMutation.isLoading || !newPassword}
+                      className="btn-primary disabled:opacity-50"
+                    >
+                      {resetPasswordMutation.isLoading ? 'Resetting...' : 'Reset Password'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </Layout>
     </ProtectedRoute>

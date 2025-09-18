@@ -11,6 +11,7 @@ from app.schemas.user import UserResponse
 from app.schemas.assessment import AssessmentResponse as AssessmentResponseSchema
 from app.schemas.report import ReportResponse
 from app.api.auth import get_current_admin_user
+from app.core.security import get_password_hash
 
 router = APIRouter()
 
@@ -304,6 +305,74 @@ async def get_alerts(
         })
     
     return {"alerts": alerts}
+
+@router.delete("/users/{user_id}")
+async def delete_user(
+    user_id: str,
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_write_db)
+):
+    """Delete a user and all associated data"""
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    assessments = db.query(Assessment).filter(Assessment.user_id == user_id).all()
+    for assessment in assessments:
+        db.query(AssessmentResponse).filter(AssessmentResponse.assessment_id == assessment.id).delete()
+        db.query(Report).filter(Report.assessment_id == assessment.id).delete()
+    db.query(Assessment).filter(Assessment.user_id == user_id).delete()
+    
+    db.delete(user)
+    db.commit()
+    
+    await log_admin_action(
+        admin_email=current_admin["email"],
+        action="delete_user",
+        target_user_id=user_id,
+        db=db
+    )
+    
+    return {"message": "User deleted successfully"}
+
+@router.post("/users/{user_id}/reset-password")
+async def reset_user_password(
+    user_id: str,
+    request: dict,
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_write_db)
+):
+    """Reset a user's password"""
+    
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    new_password = request.get("new_password")
+    if not new_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New password is required"
+        )
+    
+    user.password_hash = get_password_hash(new_password)
+    db.commit()
+    
+    await log_admin_action(
+        admin_email=current_admin["email"],
+        action="reset_password",
+        target_user_id=user_id,
+        db=db
+    )
+    
+    return {"message": "Password reset successfully"}
 
 async def log_admin_action(
     admin_email: str,
