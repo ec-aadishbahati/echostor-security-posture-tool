@@ -1,6 +1,20 @@
 app = "echostor-security-posture-tool"
 primary_region = "iad"
 
+# Multi-region deployment configuration
+# US East Coast (primary), US West Coast, and Australia (Sydney)
+[deploy]
+  strategy = "rolling"
+
+[[regions]]
+  name = "iad"  # US East Coast (primary)
+  
+[[regions]]
+  name = "lax"  # US West Coast
+  
+[[regions]]
+  name = "syd"  # Australia (Sydney)
+
 [build]
   dockerfile = "Dockerfile"
 
@@ -29,7 +43,14 @@ primary_region = "iad"
   PORT = "8000"
   RESTART_TIMESTAMP = "1726477055"
 
+# Machine configuration for multi-region deployment
+# Total of 4 machines distributed across 3 regions
 [[vm]]
   memory = "2gb"
   cpu_kind = "shared"
   cpus = 1
+  
+# Scale configuration for multi-region deployment
+[scaling]
+  min_machines_running = 1
+  max_machines_running = 4
