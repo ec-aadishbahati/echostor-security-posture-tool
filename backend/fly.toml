@@ -6,15 +6,6 @@ primary_region = "iad"
 [deploy]
   strategy = "rolling"
 
-[[regions]]
-  name = "iad"  # US East Coast (primary)
-  
-[[regions]]
-  name = "lax"  # US West Coast
-  
-[[regions]]
-  name = "syd"  # Australia (Sydney)
-
 [build]
   dockerfile = "Dockerfile"
 
