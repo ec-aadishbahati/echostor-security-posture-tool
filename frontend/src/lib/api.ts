@@ -104,4 +104,8 @@ export const adminAPI = {
   deleteUser: (userId: string) => api.delete(`/api/admin/users/${userId}`),
   resetUserPassword: (userId: string, newPassword: string) => 
     api.post(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),
+  bulkUpdateUserStatus: (userIds: string[], isActive: boolean) =>
+    api.post('/api/admin/users/bulk-update-status', { user_ids: userIds, is_active: isActive }),
+  bulkDeleteUsers: (userIds: string[]) =>
+    api.post('/api/admin/users/bulk-delete', { user_ids: userIds }),
 };

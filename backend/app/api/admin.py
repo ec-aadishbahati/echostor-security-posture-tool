@@ -374,6 +374,72 @@ async def reset_user_password(
     
     return {"message": "Password reset successfully"}
 
+@router.post("/users/bulk-update-status")
+async def bulk_update_user_status(
+    request: dict,
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_write_db)
+):
+    """Bulk activate/deactivate users"""
+    
+    user_ids = request.get("user_ids", [])
+    is_active = request.get("is_active", True)
+    
+    if not user_ids:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No user IDs provided"
+        )
+    
+    updated_count = db.query(User).filter(User.id.in_(user_ids)).update(
+        {"is_active": is_active}, synchronize_session=False
+    )
+    db.commit()
+    
+    await log_admin_action(
+        admin_email=current_admin["email"],
+        action="bulk_update_status",
+        details={"user_ids": user_ids, "is_active": is_active, "updated_count": updated_count},
+        db=db
+    )
+    
+    return {"message": f"Updated {updated_count} users", "updated_count": updated_count}
+
+@router.delete("/users/bulk-delete")
+async def bulk_delete_users(
+    request: dict,
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_write_db)
+):
+    """Bulk delete users and all associated data"""
+    
+    user_ids = request.get("user_ids", [])
+    
+    if not user_ids:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No user IDs provided"
+        )
+    
+    for user_id in user_ids:
+        assessments = db.query(Assessment).filter(Assessment.user_id == user_id).all()
+        for assessment in assessments:
+            db.query(AssessmentResponse).filter(AssessmentResponse.assessment_id == assessment.id).delete()
+            db.query(Report).filter(Report.assessment_id == assessment.id).delete()
+        db.query(Assessment).filter(Assessment.user_id == user_id).delete()
+    
+    deleted_count = db.query(User).filter(User.id.in_(user_ids)).delete(synchronize_session=False)
+    db.commit()
+    
+    await log_admin_action(
+        admin_email=current_admin["email"],
+        action="bulk_delete_users",
+        details={"user_ids": user_ids, "deleted_count": deleted_count},
+        db=db
+    )
+    
+    return {"message": f"Deleted {deleted_count} users", "deleted_count": deleted_count}
+
 async def log_admin_action(
     admin_email: str,
     action: str,
