@@ -42,7 +42,7 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                 question_id = question_match.group(1).replace('.', '_')
                 current_question = {
                     'id': question_id,
-                    'section_id': current_section['id'] if current_section else 'unknown',
+                    'section_id': '',  # Will be set after parsing
                     'text': '',
                     'type': 'multiple_choice',
                     'weight': 1,
@@ -118,7 +118,7 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
             
             question = Question(
                 id=q_data['id'],
-                section_id=q_data['section_id'],
+                section_id=section_data['id'],  # Use section's id instead of question's section_id
                 text=q_data['text'],
                 type=q_data['type'],
                 weight=q_data['weight'],

@@ -76,6 +76,10 @@ export default function AssessmentQuestions() {
             existingResponses[response.question_id] = response.answer_value;
           });
           setResponses(existingResponses);
+          
+          if (responseData.data.length > 0 && structure) {
+            findFirstUnansweredQuestion(existingResponses);
+          }
         });
       },
       onError: () => {
@@ -135,6 +139,12 @@ export default function AssessmentQuestions() {
     return () => clearInterval(interval);
   }, [assessmentId, responses]);
 
+  useEffect(() => {
+    if (structure && assessment && Object.keys(responses).length > 0) {
+      findFirstUnansweredQuestion(responses);
+    }
+  }, [structure, assessment]);
+
   const saveProgress = () => {
     if (!assessmentId || !structure) return;
 
@@ -158,6 +168,22 @@ export default function AssessmentQuestions() {
       if (question) return question;
     }
     return undefined;
+  };
+
+  const findFirstUnansweredQuestion = (existingResponses: Record<string, any>) => {
+    if (!structure) return;
+    
+    for (let sectionIndex = 0; sectionIndex < structure.data.sections.length; sectionIndex++) {
+      const section = structure.data.sections[sectionIndex];
+      for (let questionIndex = 0; questionIndex < section.questions.length; questionIndex++) {
+        const question = section.questions[questionIndex];
+        if (!existingResponses[question.id]) {
+          setCurrentSectionIndex(sectionIndex);
+          setCurrentQuestionIndex(questionIndex);
+          return;
+        }
+      }
+    }
   };
 
   const handleAnswerChange = (questionId: string, value: any) => {
