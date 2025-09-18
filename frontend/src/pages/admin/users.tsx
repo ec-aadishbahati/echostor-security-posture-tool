@@ -19,6 +19,9 @@ export default function AdminUsers() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [bulkOperation, setBulkOperation] = useState<'activate' | 'deactivate' | 'delete' | null>(null);
   const [newPassword, setNewPassword] = useState('');
   const limit = 20;
   const skip = (currentPage - 1) * limit;
@@ -83,6 +86,39 @@ export default function AdminUsers() {
     }
   );
 
+  const bulkUpdateStatusMutation = useMutation(
+    ({ userIds, isActive }: { userIds: string[]; isActive: boolean }) => 
+      adminAPI.bulkUpdateUserStatus(userIds, isActive),
+    {
+      onSuccess: (data) => {
+        toast.success(`${data.data.message}`);
+        queryClient.invalidateQueries('adminUsers');
+        setSelectedUsers([]);
+        setShowBulkModal(false);
+        setBulkOperation(null);
+      },
+      onError: () => {
+        toast.error('Failed to update users');
+      }
+    }
+  );
+
+  const bulkDeleteMutation = useMutation(
+    (userIds: string[]) => adminAPI.bulkDeleteUsers(userIds),
+    {
+      onSuccess: (data) => {
+        toast.success(`${data.data.message}`);
+        queryClient.invalidateQueries('adminUsers');
+        setSelectedUsers([]);
+        setShowBulkModal(false);
+        setBulkOperation(null);
+      },
+      onError: () => {
+        toast.error('Failed to delete users');
+      }
+    }
+  );
+
   const handleDeleteUser = (user: any) => {
     setSelectedUser(user);
     setShowDeleteModal(true);
@@ -102,6 +138,42 @@ export default function AdminUsers() {
   const confirmPasswordReset = () => {
     if (selectedUser && newPassword) {
       resetPasswordMutation.mutate({ userId: selectedUser.id, password: newPassword });
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (selectedUsers.length === users.length) {
+      setSelectedUsers([]);
+    } else {
+      setSelectedUsers(users.map((user: any) => user.id));
+    }
+  };
+
+  const handleSelectUser = (userId: string) => {
+    setSelectedUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
+  const handleBulkOperation = (operation: 'activate' | 'deactivate' | 'delete') => {
+    if (selectedUsers.length === 0) {
+      toast.error('Please select users first');
+      return;
+    }
+    setBulkOperation(operation);
+    setShowBulkModal(true);
+  };
+
+  const confirmBulkOperation = () => {
+    if (!bulkOperation || selectedUsers.length === 0) return;
+
+    if (bulkOperation === 'delete') {
+      bulkDeleteMutation.mutate(selectedUsers);
+    } else {
+      const isActive = bulkOperation === 'activate';
+      bulkUpdateStatusMutation.mutate({ userIds: selectedUsers, isActive });
     }
   };
 
@@ -146,24 +218,48 @@ export default function AdminUsers() {
               <h3 className="text-lg font-semibold text-gray-900">
                 All Users ({users.length})
               </h3>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={!hasPrevPage}
-                  className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                >
-                  <ChevronLeftIcon className="h-5 w-5" />
-                </button>
-                <span className="px-3 py-1 text-sm text-gray-600">
-                  Page {currentPage}
-                </span>
-                <button
-                  onClick={() => setCurrentPage(prev => prev + 1)}
-                  disabled={!hasNextPage}
-                  className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                >
-                  <ChevronRightIcon className="h-5 w-5" />
-                </button>
+              <div className="flex items-center gap-4">
+                {selectedUsers.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600">
+                      {selectedUsers.length} selected
+                    </span>
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          handleBulkOperation(e.target.value as 'activate' | 'deactivate' | 'delete');
+                          e.target.value = '';
+                        }
+                      }}
+                      className="text-sm border border-gray-300 rounded px-2 py-1"
+                      defaultValue=""
+                    >
+                      <option value="">Bulk Actions</option>
+                      <option value="activate">Activate Users</option>
+                      <option value="deactivate">Deactivate Users</option>
+                      <option value="delete">Delete Users</option>
+                    </select>
+                  </div>
+                )}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={!hasPrevPage}
+                    className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  >
+                    <ChevronLeftIcon className="h-5 w-5" />
+                  </button>
+                  <span className="px-3 py-1 text-sm text-gray-600">
+                    Page {currentPage}
+                  </span>
+                  <button
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    disabled={!hasNextPage}
+                    className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                  >
+                    <ChevronRightIcon className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -188,6 +284,14 @@ export default function AdminUsers() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                        <input
+                          type="checkbox"
+                          checked={selectedUsers.length === users.length && users.length > 0}
+                          onChange={handleSelectAll}
+                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                      </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900">User</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900">Company</th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-900">Status</th>
@@ -198,6 +302,14 @@ export default function AdminUsers() {
                   <tbody>
                     {users.map((user: any) => (
                       <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-4 px-4">
+                          <input
+                            type="checkbox"
+                            checked={selectedUsers.includes(user.id)}
+                            onChange={() => handleSelectUser(user.id)}
+                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                          />
+                        </td>
                         <td className="py-4 px-4">
                           <div>
                             <div className="font-medium text-gray-900">{user.full_name}</div>
@@ -310,6 +422,51 @@ export default function AdminUsers() {
                       className="btn-primary disabled:opacity-50"
                     >
                       {resetPasswordMutation.isLoading ? 'Resetting...' : 'Reset Password'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bulk Operation Confirmation Modal */}
+          {showBulkModal && bulkOperation && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div className="mt-3 text-center">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {bulkOperation === 'delete' ? 'Delete Users' : 
+                     bulkOperation === 'activate' ? 'Activate Users' : 'Deactivate Users'}
+                  </h3>
+                  <div className="mt-2 px-7 py-3">
+                    <p className="text-sm text-gray-500">
+                      Are you sure you want to {bulkOperation} {selectedUsers.length} selected user{selectedUsers.length > 1 ? 's' : ''}?
+                      {bulkOperation === 'delete' && ' This action cannot be undone.'}
+                    </p>
+                  </div>
+                  <div className="flex justify-center space-x-4 mt-4">
+                    <button
+                      onClick={() => {
+                        setShowBulkModal(false);
+                        setBulkOperation(null);
+                      }}
+                      className="btn-secondary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmBulkOperation}
+                      disabled={bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading}
+                      className={`px-4 py-2 rounded-md disabled:opacity-50 ${
+                        bulkOperation === 'delete' 
+                          ? 'bg-red-600 hover:bg-red-700 text-white'
+                          : 'btn-primary'
+                      }`}
+                    >
+                      {(bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading) 
+                        ? 'Processing...' 
+                        : `${bulkOperation === 'delete' ? 'Delete' : 
+                            bulkOperation === 'activate' ? 'Activate' : 'Deactivate'}`}
                     </button>
                   </div>
                 </div>
