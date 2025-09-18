@@ -68,7 +68,7 @@ export default function AssessmentQuestions() {
     assessmentAPI.getStructure
   );
 
-  const { data: assessment, isLoading: assessmentLoading } = useQuery(
+  const { data: assessment, isLoading: assessmentLoading, error: assessmentError } = useQuery(
     'currentAssessment',
     assessmentAPI.getCurrentAssessment,
     {
@@ -82,9 +82,10 @@ export default function AssessmentQuestions() {
           setResponses(existingResponses);
         });
       },
-      onError: () => {
-        startAssessmentMutation.mutate();
-      }
+      onError: (error: any) => {
+        console.log('No active assessment found, will show start assessment UI');
+      },
+      retry: false
     }
   );
 
@@ -96,8 +97,9 @@ export default function AssessmentQuestions() {
         queryClient.invalidateQueries('currentAssessment');
       },
       onError: (error: any) => {
-        toast.error('Failed to start assessment');
-        router.push('/dashboard');
+        console.error('Failed to start assessment:', error);
+        const errorMessage = error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+        toast.error(errorMessage);
       }
     }
   );
@@ -259,10 +261,21 @@ export default function AssessmentQuestions() {
     }
   };
 
-  if (structureLoading || assessmentLoading) {
+  if (structureLoading || (assessmentLoading && !assessmentError)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (startAssessmentMutation.isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Starting your assessment...</p>
+        </div>
       </div>
     );
   }
@@ -272,6 +285,66 @@ export default function AssessmentQuestions() {
     return null;
   }
 
+  if (assessmentError && !assessmentId && startAssessmentMutation.isError) {
+    return (
+      <Layout title="Assessment Questions">
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-red-800 mb-2">
+              Unable to Start Assessment
+            </h3>
+            <p className="text-red-700 mb-4">
+              We encountered an issue while trying to start your security assessment. This could be due to a temporary server issue or authentication problem.
+            </p>
+            <button
+              onClick={() => {
+                startAssessmentMutation.reset();
+                startAssessmentMutation.mutate();
+              }}
+              disabled={startAssessmentMutation.isLoading}
+              className="btn-primary mr-4"
+              data-testid="retry-start-assessment"
+            >
+              {startAssessmentMutation.isLoading ? 'Starting...' : 'Try Again'}
+            </button>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="btn-secondary"
+              data-testid="return-to-dashboard"
+            >
+              Return to Dashboard
+            </button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (assessmentError && !assessmentId && !startAssessmentMutation.isError) {
+    return (
+      <Layout title="Assessment Questions">
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+            <h3 className="text-lg font-semibold text-blue-800 mb-2">
+              Ready to Start Your Assessment?
+            </h3>
+            <p className="text-blue-700 mb-4">
+              No active assessment was found. Click below to begin your comprehensive security posture evaluation.
+            </p>
+            <button
+              onClick={() => startAssessmentMutation.mutate()}
+              disabled={startAssessmentMutation.isLoading}
+              className="btn-primary"
+              data-testid="start-new-assessment"
+            >
+              {startAssessmentMutation.isLoading ? 'Starting...' : 'Start Assessment'}
+            </button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   const currentQuestion = getCurrentQuestion();
   const currentSection = getCurrentSection();
   const progress = calculateProgress();
@@ -279,8 +352,29 @@ export default function AssessmentQuestions() {
   if (!currentQuestion || !currentSection) {
     return (
       <Layout title="Assessment Questions">
-        <div className="text-center py-12">
-          <p className="text-gray-600">No questions available</p>
+        <div className="max-w-2xl mx-auto text-center py-12">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-yellow-800 mb-2">
+              Assessment Structure Loading
+            </h3>
+            <p className="text-yellow-700 mb-4">
+              We're having trouble loading the assessment questions. Please try refreshing the page.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="btn-primary mr-4"
+              data-testid="refresh-page"
+            >
+              Refresh Page
+            </button>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="btn-secondary"
+              data-testid="return-to-dashboard-fallback"
+            >
+              Return to Dashboard
+            </button>
+          </div>
         </div>
       </Layout>
     );
@@ -523,6 +617,7 @@ export default function AssessmentQuestions() {
               onClick={goToPreviousQuestion}
               disabled={currentSectionIndex === 0 && currentQuestionIndex === 0 && !showConsultationQuestion}
               className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              data-testid="previous-question-btn"
             >
               <ChevronLeftIcon className="h-4 w-4 mr-2" />
               Previous
@@ -533,6 +628,7 @@ export default function AssessmentQuestions() {
                 onClick={saveProgress}
                 disabled={saveProgressMutation.isLoading}
                 className="btn-secondary flex items-center"
+                data-testid="save-progress-btn"
               >
                 <BookmarkIcon className="h-4 w-4 mr-2" />
                 {saveProgressMutation.isLoading ? 'Saving...' : 'Save Progress'}
@@ -551,6 +647,7 @@ export default function AssessmentQuestions() {
                     ))
                   }
                   className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-testid="complete-assessment-btn"
                 >
                   <CheckCircleIcon className="h-4 w-4 mr-2" />
                   {completeAssessmentMutation.isLoading ? 'Completing...' : 'Complete Assessment'}
@@ -559,6 +656,7 @@ export default function AssessmentQuestions() {
                 <button
                   onClick={goToNextQuestion}
                   className="btn-primary flex items-center"
+                  data-testid="next-question-btn"
                 >
                   Next
                   <ChevronRightIcon className="h-4 w-4 ml-2" />
