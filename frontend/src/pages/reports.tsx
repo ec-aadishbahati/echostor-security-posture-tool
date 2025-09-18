@@ -236,7 +236,7 @@ export default function Reports() {
                         </div>
                         
                         <div className="flex items-center gap-2">
-                          {report.status === 'completed' && (
+                          {(report.status === 'completed' || report.status === 'released') && (
                             <button
                               onClick={() => handleDownload(report.id)}
                               disabled={downloadMutation.isLoading}
@@ -255,10 +255,21 @@ export default function Reports() {
                           )}
                           
                           {report.status === 'pending' && report.report_type === 'ai_enhanced' && (
-                            <div className="flex items-center text-sm text-yellow-600">
-                              <ClockIcon className="h-4 w-4 mr-1" />
-                              Pending Review
-                            </div>
+                            <span className="text-blue-600 text-sm">
+                              AI report requested - awaiting admin generation
+                            </span>
+                          )}
+                          
+                          {report.status === 'completed' && report.report_type === 'ai_enhanced' && (
+                            <span className="text-orange-600 text-sm">
+                              AI report generated - awaiting admin release
+                            </span>
+                          )}
+                          
+                          {report.status === 'released' && report.report_type === 'ai_enhanced' && (
+                            <span className="text-green-600 text-sm">
+                              AI report available for download
+                            </span>
                           )}
                         </div>
                       </div>

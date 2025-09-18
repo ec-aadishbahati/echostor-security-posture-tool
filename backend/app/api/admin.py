@@ -183,6 +183,40 @@ async def get_dashboard_stats(
     
     return stats
 
+@router.get("/users-progress-summary")
+async def get_users_progress_summary(
+    current_admin = Depends(get_current_admin_user),
+    db: Session = Depends(get_read_db)
+):
+    """Get detailed progress summary for all users"""
+    
+    users_with_progress = db.query(User).outerjoin(Assessment).all()
+    
+    summary = []
+    for user in users_with_progress:
+        assessment = db.query(Assessment).filter(Assessment.user_id == user.id).order_by(desc(Assessment.created_at)).first()
+        
+        user_data = {
+            "user_id": str(user.id),
+            "full_name": user.full_name,
+            "email": user.email,
+            "company_name": user.company_name,
+            "assessment_status": assessment.status if assessment else "not_started",
+            "progress_percentage": float(assessment.progress_percentage) if assessment else 0.0,
+            "last_activity": assessment.last_saved_at if assessment else user.created_at,
+            "days_since_activity": (datetime.utcnow() - (assessment.last_saved_at if assessment else user.created_at)).days
+        }
+        summary.append(user_data)
+    
+    await log_admin_action(
+        admin_email=current_admin["email"],
+        action="view_users_progress",
+        details={"user_count": len(summary)},
+        db=db
+    )
+    
+    return {"users_progress": summary}
+
 @router.get("/reports", response_model=List[ReportResponse])
 async def get_all_reports(
     skip: int = Query(0, ge=0),

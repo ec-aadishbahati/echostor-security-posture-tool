@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { adminAPI } from '../../lib/api';
+import toast from 'react-hot-toast';
 import { 
   ChartBarIcon, 
   ChevronLeftIcon,
@@ -11,7 +12,8 @@ import {
   SparklesIcon,
   ClockIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  PaperAirplaneIcon
 } from '@heroicons/react/24/outline';
 
 export default function AdminReports() {
@@ -20,6 +22,33 @@ export default function AdminReports() {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 20;
   const skip = (currentPage - 1) * limit;
+  const queryClient = useQueryClient();
+
+  const generateAIReportMutation = useMutation(
+    adminAPI.generateAIReport,
+    {
+      onSuccess: () => {
+        toast.success('AI report generation started');
+        queryClient.invalidateQueries('adminReports');
+      },
+      onError: (error: any) => {
+        toast.error(error.response?.data?.detail || 'Failed to generate AI report');
+      }
+    }
+  );
+
+  const releaseAIReportMutation = useMutation(
+    adminAPI.releaseAIReport,
+    {
+      onSuccess: () => {
+        toast.success('AI report released to user');
+        queryClient.invalidateQueries('adminReports');
+      },
+      onError: (error: any) => {
+        toast.error(error.response?.data?.detail || 'Failed to release AI report');
+      }
+    }
+  );
 
   const { data: reportsData, isLoading, error } = useQuery(
     ['adminReports', { skip, limit, report_type: typeFilter, status: statusFilter }],
@@ -239,9 +268,31 @@ export default function AdminReports() {
                           <span className="text-gray-600">{formatDate(report.requested_at)}</span>
                         </td>
                         <td className="py-4 px-4">
-                          <span className="text-gray-600">
-                            {report.completed_at ? formatDate(report.completed_at) : '-'}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-600">
+                              {report.completed_at ? formatDate(report.completed_at) : '-'}
+                            </span>
+                            {report.report_type === 'ai_enhanced' && report.status === 'pending' && (
+                              <button
+                                onClick={() => generateAIReportMutation.mutate(report.id)}
+                                disabled={generateAIReportMutation.isLoading}
+                                className="btn-primary text-xs flex items-center"
+                              >
+                                <SparklesIcon className="h-3 w-3 mr-1" />
+                                {generateAIReportMutation.isLoading ? 'Generating...' : 'Generate'}
+                              </button>
+                            )}
+                            {report.report_type === 'ai_enhanced' && report.status === 'completed' && (
+                              <button
+                                onClick={() => releaseAIReportMutation.mutate(report.id)}
+                                disabled={releaseAIReportMutation.isLoading}
+                                className="btn-secondary text-xs flex items-center"
+                              >
+                                <PaperAirplaneIcon className="h-3 w-3 mr-1" />
+                                {releaseAIReportMutation.isLoading ? 'Releasing...' : 'Release'}
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))}

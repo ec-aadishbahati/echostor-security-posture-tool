@@ -91,7 +91,7 @@ async def get_current_assessment(
             detail="No active assessment found"
         )
     
-    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at:
+    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at.replace(tzinfo=timezone.utc):
         assessment.status = "expired"
         db.commit()
         raise HTTPException(
@@ -151,7 +151,7 @@ async def save_assessment_progress(
             detail="Assessment not found or not in progress"
         )
     
-    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at:
+    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at.replace(tzinfo=timezone.utc):
         assessment.status = "expired"
         db.commit()
         raise HTTPException(
@@ -217,7 +217,7 @@ async def complete_assessment(
             detail="Assessment not found or not in progress"
         )
     
-    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at:
+    if assessment.expires_at and datetime.now(timezone.utc) > assessment.expires_at.replace(tzinfo=timezone.utc):
         assessment.status = "expired"
         db.commit()
         raise HTTPException(
