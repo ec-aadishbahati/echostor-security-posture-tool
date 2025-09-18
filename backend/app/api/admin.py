@@ -109,7 +109,7 @@ async def get_all_assessments(
 ):
     """Get all assessments with filtering"""
     
-    query = db.query(Assessment)
+    query = db.query(Assessment).join(User)
     
     if status:
         query = query.filter(Assessment.status == status)
