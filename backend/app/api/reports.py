@@ -161,7 +161,10 @@ async def download_report(
     
     is_admin = isinstance(current_user, dict) and current_user.get("is_admin")
     if not is_admin:
-        user_id = current_user.id if hasattr(current_user, 'id') else None
+        if isinstance(current_user, dict):
+            user_id = current_user.get("id")
+        else:
+            user_id = getattr(current_user, 'id', None)
         if report.assessment.user_id != user_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -218,7 +221,10 @@ async def get_report_status(
     
     is_admin = isinstance(current_user, dict) and current_user.get("is_admin")
     if not is_admin:
-        user_id = current_user.id if hasattr(current_user, 'id') else None
+        if isinstance(current_user, dict):
+            user_id = current_user.get("id")
+        else:
+            user_id = getattr(current_user, 'id', None)
         if report.assessment.user_id != user_id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
