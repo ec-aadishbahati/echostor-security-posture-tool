@@ -421,24 +421,30 @@ async def bulk_delete_users(
             detail="No user IDs provided"
         )
     
-    for user_id in user_ids:
-        assessments = db.query(Assessment).filter(Assessment.user_id == user_id).all()
-        for assessment in assessments:
-            db.query(AssessmentResponse).filter(AssessmentResponse.assessment_id == assessment.id).delete()
-            db.query(Report).filter(Report.assessment_id == assessment.id).delete()
-        db.query(Assessment).filter(Assessment.user_id == user_id).delete()
-    
-    deleted_count = db.query(User).filter(User.id.in_(user_ids)).delete(synchronize_session=False)
-    db.commit()
-    
-    await log_admin_action(
-        admin_email=current_admin["email"],
-        action="bulk_delete_users",
-        details={"user_ids": user_ids, "deleted_count": deleted_count},
-        db=db
-    )
-    
-    return {"message": f"Deleted {deleted_count} users", "deleted_count": deleted_count}
+    try:
+        # Let SQLAlchemy handle cascade deletion automatically
+        # User.assessments relationship has cascade="all, delete-orphan"
+        # Assessment foreign keys have ondelete="CASCADE"
+        deleted_count = db.query(User).filter(User.id.in_(user_ids)).delete(synchronize_session=False)
+        db.commit()
+        
+        await log_admin_action(
+            admin_email=current_admin["email"],
+            action="bulk_delete_users",
+            details={"user_ids": user_ids, "deleted_count": deleted_count},
+            db=db
+        )
+        
+        return {"message": f"Deleted {deleted_count} users", "deleted_count": deleted_count}
+        
+    except Exception as e:
+        db.rollback()
+        # Log the specific error for debugging
+        print(f"Bulk delete error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete users: {str(e)}"
+        )
 
 async def log_admin_action(
     admin_email: str,
