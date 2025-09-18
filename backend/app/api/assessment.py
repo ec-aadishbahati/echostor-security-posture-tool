@@ -169,13 +169,15 @@ async def save_assessment_progress(
         
         if existing_response:
             existing_response.answer_value = response_data.answer_value
+            existing_response.comment = response_data.comment
             existing_response.updated_at = datetime.now(timezone.utc)
         else:
             new_response = AssessmentResponseModel(
                 assessment_id=assessment_id,
                 section_id=response_data.section_id,
                 question_id=response_data.question_id,
-                answer_value=response_data.answer_value
+                answer_value=response_data.answer_value,
+                comment=response_data.comment
             )
             db.add(new_response)
     
@@ -232,3 +234,34 @@ async def complete_assessment(
     db.commit()
     
     return {"message": "Assessment completed successfully"}
+
+
+@router.post("/{assessment_id}/consultation")
+async def save_consultation_interest(
+    assessment_id: str,
+    consultation_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_write_db)
+):
+    """Save consultation interest and details"""
+    
+    assessment = db.query(Assessment).filter(
+        and_(
+            Assessment.id == assessment_id,
+            Assessment.user_id == current_user.id
+        )
+    ).first()
+    
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+    
+    if consultation_data.get("consultation_interest") and consultation_data.get("consultation_details"):
+        word_count = len(consultation_data["consultation_details"].split())
+        if word_count < 200 or word_count > 300:
+            raise HTTPException(status_code=400, detail="Consultation details must be 200-300 words")
+    
+    assessment.consultation_interest = consultation_data.get("consultation_interest", False)
+    assessment.consultation_details = consultation_data.get("consultation_details")
+    
+    db.commit()
+    return {"message": "Consultation preferences saved"}

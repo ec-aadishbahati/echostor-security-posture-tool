@@ -17,6 +17,8 @@ class Assessment(Base):
     expires_at = Column(DateTime(timezone=True))
     last_saved_at = Column(DateTime(timezone=True), server_default=func.now())
     progress_percentage = Column(DECIMAL(5, 2), default=0.00)
+    consultation_interest = Column(Boolean, default=False)
+    consultation_details = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -32,6 +34,7 @@ class AssessmentResponse(Base):
     section_id = Column(String(50), nullable=False)
     question_id = Column(String(50), nullable=False)
     answer_value = Column(JSONB)
+    comment = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

@@ -6591,6 +6591,9 @@
 
 **Explanation:** Model monitoring detects degradation and potential security issues in production.
 
-
+**Answer Options:**
+**Option 1: Yes** - This security control/practice is implemented in your organization
+**Option 2: No** - This security control/practice is not currently implemented
+*Note: If you select 'No', consider this an opportunity for security improvement.*
 
 ---

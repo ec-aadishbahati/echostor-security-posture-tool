@@ -7,7 +7,8 @@ import {
   ChartBarIcon, 
   UserIcon,
   ArrowRightOnRectangleIcon,
-  CogIcon
+  CogIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
@@ -24,6 +25,7 @@ export default function Layout({ children, title }: LayoutProps) {
         { name: 'Users', href: '/admin/users', icon: UserIcon },
         { name: 'Assessments', href: '/admin/assessments', icon: DocumentTextIcon },
         { name: 'Reports', href: '/admin/reports', icon: ChartBarIcon },
+        { name: 'Consultations', href: '/admin/consultations', icon: ChatBubbleLeftRightIcon },
       ]
     : [
         { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
