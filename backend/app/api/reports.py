@@ -160,11 +160,16 @@ async def download_report(
         )
     
     is_admin = isinstance(current_user, dict) and current_user.get("is_admin")
-    if not is_admin and report.assessment.user_id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied"
-        )
+    if not is_admin:
+        if isinstance(current_user, dict):
+            user_id = current_user.get("id")
+        else:
+            user_id = getattr(current_user, 'id', None)
+        if report.assessment.user_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied"
+            )
     
     if report.status != "completed" or not report.file_path:
         raise HTTPException(
@@ -215,10 +220,15 @@ async def get_report_status(
         )
     
     is_admin = isinstance(current_user, dict) and current_user.get("is_admin")
-    if not is_admin and report.assessment.user_id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied"
-        )
+    if not is_admin:
+        if isinstance(current_user, dict):
+            user_id = current_user.get("id")
+        else:
+            user_id = getattr(current_user, 'id', None)
+        if report.assessment.user_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied"
+            )
     
     return ReportResponse.model_validate(report)
