@@ -21,7 +21,7 @@ async def get_all_users(
     limit: int = Query(100, ge=1, le=1000),
     search: Optional[str] = Query(None),
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get all users with pagination and search"""
     
@@ -50,7 +50,7 @@ async def get_all_users(
 async def get_user(
     user_id: str,
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get a specific user by ID"""
     
@@ -74,7 +74,7 @@ async def get_user(
 async def get_user_assessments(
     user_id: str,
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get all assessments for a specific user"""
     
@@ -105,7 +105,7 @@ async def get_all_assessments(
     limit: int = Query(100, ge=1, le=1000),
     status: Optional[str] = Query(None),
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get all assessments with filtering"""
     
@@ -128,7 +128,7 @@ async def get_all_assessments(
 @router.get("/dashboard/stats")
 async def get_dashboard_stats(
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get dashboard statistics"""
     
@@ -187,7 +187,7 @@ async def get_dashboard_stats(
 @router.get("/users-progress-summary")
 async def get_users_progress_summary(
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get detailed progress summary for all users"""
     
@@ -225,7 +225,7 @@ async def get_all_reports(
     report_type: Optional[str] = Query(None),
     status: Optional[str] = Query(None),
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get all reports with filtering"""
     
@@ -251,7 +251,7 @@ async def get_all_reports(
 @router.get("/alerts")
 async def get_alerts(
     current_admin = Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db)
+    db: Session = Depends(get_write_db)
 ):
     """Get system alerts for admin dashboard"""
     
