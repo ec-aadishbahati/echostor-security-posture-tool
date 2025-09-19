@@ -67,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
       if (tokenPayload.is_admin) {
+        setUser(userData);
         setIsAdmin(true);
         Cookies.set('is_admin', 'true', { expires: 1 });
       } else {
@@ -95,6 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
       if (tokenPayload.is_admin) {
+        setUser(userData);
         setIsAdmin(true);
         Cookies.set('is_admin', 'true', { expires: 1 });
       } else {
