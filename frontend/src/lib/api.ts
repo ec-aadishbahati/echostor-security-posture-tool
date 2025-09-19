@@ -112,6 +112,11 @@ export const adminAPI = {
   bulkDeleteUsers: (userIds: string[]) =>
     api.post('/api/admin/users/bulk-delete', { user_ids: userIds }),
 
-  getConsultations: ({ skip = 0, limit = 100 }: { skip?: number; limit?: number }) =>
-    api.get(`/api/admin/consultations?skip=${skip}&limit=${limit}`),
+  getConsultationRequests: (skip = 0, limit = 100) => {
+    const params = new URLSearchParams({
+      skip: skip.toString(),
+      limit: limit.toString(),
+    });
+    return api.get(`/api/admin/consultations?${params}`);
+  },
 };
