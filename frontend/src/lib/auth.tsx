@@ -38,21 +38,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const adminFlag = Cookies.get('is_admin');
     
     if (token) {
-      if (adminFlag === 'true') {
-        setIsAdmin(true);
-        setIsLoading(false);
-      } else {
-        authAPI
-          .getCurrentUser()
-          .then((response) => {
-            setUser(response.data);
-            setIsLoading(false);
-          })
-          .catch(() => {
-            Cookies.remove('access_token');
-            setIsLoading(false);
-          });
-      }
+      authAPI
+        .getCurrentUser()
+        .then((response) => {
+          setUser(response.data);
+          if (adminFlag === 'true') {
+            setIsAdmin(true);
+          }
+          setIsLoading(false);
+        })
+        .catch(() => {
+          Cookies.remove('access_token');
+          Cookies.remove('is_admin');
+          setIsLoading(false);
+        });
     } else {
       setIsLoading(false);
     }
