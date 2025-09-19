@@ -57,12 +57,6 @@ export default function AssessmentQuestions() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
 
-  useAutoLogout(async () => {
-    if (assessmentId) {
-      await saveProgress();
-    }
-  });
-
   const { data: structure, isLoading: structureLoading } = useQuery(
     'assessmentStructure',
     assessmentAPI.getStructure

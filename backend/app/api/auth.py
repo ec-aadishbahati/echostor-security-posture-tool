@@ -141,12 +141,15 @@ async def get_current_user(
     return user
 
 async def get_current_admin_user(current_user = Depends(get_current_user)):
-    if not isinstance(current_user, dict) or not current_user.get("is_admin"):
+    if isinstance(current_user, dict) and current_user.get("is_admin"):
+        return current_user
+    elif hasattr(current_user, 'is_admin') and current_user.is_admin:
+        return {"email": current_user.email, "is_admin": True, "user_id": str(current_user.id)}
+    else:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Admin access required"
         )
-    return current_user
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(current_user = Depends(get_current_user)):

@@ -145,19 +145,30 @@ def load_assessment_structure() -> AssessmentStructure:
     """Load and parse the assessment questions from the markdown file"""
     try:
         import os
+        from fastapi import HTTPException, status
         current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         md_file_path = os.path.join(current_dir, "data", "security_assessment_questions.md")
         
-        if os.path.exists(md_file_path):
-            with open(md_file_path, 'r', encoding='utf-8') as file:
-                md_content = file.read()
-            structure = parse_assessment_questions(md_content)
-            return structure
-        else:
-            return create_sample_assessment_structure()
+        if not os.path.exists(md_file_path):
+            raise FileNotFoundError(f"Assessment questions file not found at {md_file_path}")
+        
+        with open(md_file_path, 'r', encoding='utf-8') as file:
+            md_content = file.read()
+        
+        if not md_content.strip():
+            raise ValueError("Assessment questions file is empty")
+        
+        structure = parse_assessment_questions(md_content)
+        if structure.total_questions == 0:
+            raise ValueError("No questions found in assessment structure")
+        
+        return structure
     except Exception as e:
-        print(f"Error loading assessment structure: {e}")
-        return create_sample_assessment_structure()
+        print(f"Critical error loading assessment structure: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Assessment questions are not available. Please contact support."
+        )
 
 def create_sample_assessment_structure() -> AssessmentStructure:
     """Create a sample assessment structure for testing"""

@@ -69,11 +69,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (tokenPayload.is_admin) {
         setIsAdmin(true);
         Cookies.set('is_admin', 'true', { expires: 1 });
+      } else if (userData && userData.is_admin) {
+        setIsAdmin(true);
+        Cookies.set('is_admin', 'true', { expires: 1 });
+        setUser(userData);
       } else {
         setUser(userData);
         setIsAdmin(false);
       }
     } catch (error) {
+      if (userData && userData.is_admin) {
+        setIsAdmin(true);
+        Cookies.set('is_admin', 'true', { expires: 1 });
+      }
       setUser(userData);
       setIsAdmin(false);
     }

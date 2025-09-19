@@ -18,7 +18,7 @@ export default function AdminConsultations() {
 
   const { data: consultationsData, isLoading, error } = useQuery(
     ['adminConsultations', { skip, limit }],
-    () => adminAPI.getConsultations({ skip, limit }),
+    () => adminAPI.getConsultationRequests(skip, limit),
     {
       keepPreviousData: true,
       refetchInterval: 30000,

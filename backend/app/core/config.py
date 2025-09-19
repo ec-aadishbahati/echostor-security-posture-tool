@@ -31,6 +31,13 @@ class Settings(BaseSettings):
     REPORTS_DIR: str = "reports"
     AI_REPORT_DELIVERY_DAYS: int = 5
     
+    def __post_init__(self):
+        """Validate critical configuration"""
+        if not self.JWT_SECRET_KEY:
+            raise ValueError("JWT_SECRET_KEY must be set")
+        if not self.DATABASE_URL_WRITE:
+            raise ValueError("DATABASE_URL_WRITE must be set")
+    
     class Config:
         env_file = ".env"
 
