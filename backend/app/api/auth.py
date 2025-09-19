@@ -35,7 +35,11 @@ async def register(user_data: UserCreate, db: Session = Depends(get_write_db)):
     db.refresh(db_user)
     
     access_token = create_access_token(
-        data={"sub": db_user.email, "user_id": str(db_user.id)}
+        data={
+            "sub": db_user.email, 
+            "user_id": str(db_user.id), 
+            "is_admin": db_user.is_admin if hasattr(db_user, 'is_admin') else False
+        }
     )
     
     return Token(
@@ -104,7 +108,11 @@ async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db))
         )
     
     access_token = create_access_token(
-        data={"sub": user.email, "user_id": str(user.id), "is_admin": False}
+        data={
+            "sub": user.email, 
+            "user_id": str(user.id), 
+            "is_admin": user.is_admin if hasattr(user, 'is_admin') else False
+        }
     )
     
     return Token(
@@ -141,10 +149,10 @@ async def get_current_user(
     return user
 
 async def get_current_admin_user(current_user = Depends(get_current_user)):
-    if isinstance(current_user, dict) and current_user.get("is_admin"):
-        return current_user
-    elif hasattr(current_user, 'is_admin') and current_user.is_admin:
+    if hasattr(current_user, 'is_admin') and current_user.is_admin:
         return {"email": current_user.email, "is_admin": True, "user_id": str(current_user.id)}
+    elif isinstance(current_user, dict) and current_user.get("is_admin"):
+        return current_user
     else:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
