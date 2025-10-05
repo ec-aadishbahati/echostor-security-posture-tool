@@ -1,6 +1,7 @@
 {
   "name": "echostor-security-posture-frontend",
   "version": "0.1.0",
+  "description": "Frontend for EchoStor Security Posture Assessment Tool",
   "private": true,
   "scripts": {
     "dev": "next dev",
