@@ -107,24 +107,29 @@ npm run test:watch
 ### Test Structure
 
 ```
-frontend/src/
-├── pages/
-│   ├── auth/
-│   │   └── __tests__/
-│   │       ├── login.test.tsx
-│   │       └── register.test.tsx
-│   ├── assessment/
-│   │   └── __tests__/
-│   │       └── questions.test.tsx
-│   ├── admin/
-│   │   └── __tests__/
-│   │       └── index.test.tsx
-│   └── __tests__/
+frontend/
+├── tests/
+│   └── pages/
+│       ├── auth/
+│       │   ├── login.test.tsx
+│       │   └── register.test.tsx
 │       └── dashboard.test.tsx
-└── components/
-    └── __tests__/
-        └── (component tests)
+└── src/
+    ├── pages/
+    │   ├── auth/
+    │   │   ├── login.tsx
+    │   │   └── register.tsx
+    │   └── dashboard.tsx
+    └── components/
+        └── __tests__/
+            └── (component tests)
 ```
+
+**Important Note on Test File Location:**
+
+Test files for pages are located in the `frontend/tests/pages/` directory, **not** inside `frontend/src/pages/`. This is because Next.js treats all files in the `pages/` directory as routes, which would cause build failures with test files.
+
+Component tests can use the `__tests__/` directory pattern alongside the components since they're not in the `pages/` directory.
 
 ### Writing New Frontend Tests
 

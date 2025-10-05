@@ -1,19 +1,19 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import Login from '../login'
+import Register from '@/pages/auth/register'
 
 jest.mock('next/router', () => require('next-router-mock'))
 jest.mock('react-hot-toast')
 jest.mock('@/lib/auth', () => ({
   useAuth: () => ({
-    login: jest.fn(),
+    register: jest.fn(),
     user: null,
   }),
 }))
 
-describe('Login Page', () => {
+describe('Register Page', () => {
   it('renders without crashing', () => {
-    const { container } = render(<Login />)
+    const { container } = render(<Register />)
     expect(container).toBeTruthy()
   })
 })
