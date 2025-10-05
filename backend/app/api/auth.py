@@ -127,6 +127,12 @@ async def get_current_user(
 ):
     token_data = verify_token(credentials.credentials)
     
+    if token_data.get("is_admin") and token_data.get("user_id"):
+        user_id = token_data.get("user_id")
+        user = db.query(User).filter(User.id == user_id).first()
+        if user:
+            return user
+    
     if token_data.get("is_admin"):
         admin_email = settings.ADMIN_LOGIN_USER if settings.ADMIN_LOGIN_USER else settings.ADMIN_EMAIL
         return {"email": admin_email, "is_admin": True}

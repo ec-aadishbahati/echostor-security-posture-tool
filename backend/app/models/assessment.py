@@ -1,6 +1,6 @@
-from sqlalchemy import Column, String, DateTime, UUID, ForeignKey, DECIMAL, Text, Boolean
+from sqlalchemy import Column, String, DateTime, UUID, ForeignKey, DECIMAL, Text, Boolean, JSON
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 import uuid
 
@@ -33,7 +33,7 @@ class AssessmentResponse(Base):
     assessment_id = Column(String(36), ForeignKey("assessments.id", ondelete="CASCADE"), nullable=False)
     section_id = Column(String(50), nullable=False)
     question_id = Column(String(50), nullable=False)
-    answer_value = Column(JSONB)
+    answer_value = Column(JSON)
     comment = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -64,5 +64,5 @@ class AdminAuditLog(Base):
     admin_email = Column(String(255))
     action = Column(String(100))
     target_user_id = Column(String(36))
-    details = Column(JSONB)
+    details = Column(JSON)
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
