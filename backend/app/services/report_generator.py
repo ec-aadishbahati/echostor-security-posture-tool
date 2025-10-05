@@ -12,7 +12,8 @@ from app.core.config import settings
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.services.question_parser import load_assessment_structure
 
-openai.api_key = settings.OPENAI_API_KEY
+if settings.OPENAI_API_KEY:
+    openai.api_key = settings.OPENAI_API_KEY
 
 async def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
@@ -66,6 +67,12 @@ async def generate_ai_report(report_id: str):
     try:
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
+            return
+        
+        if not settings.OPENAI_API_KEY:
+            print("OPENAI_API_KEY not configured - cannot generate AI report")
+            report.status = "failed"
+            db.commit()
             return
         
         assessment = db.query(Assessment).filter(Assessment.id == report.assessment_id).first()

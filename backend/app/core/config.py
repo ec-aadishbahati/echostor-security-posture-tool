@@ -1,23 +1,24 @@
 from pydantic_settings import BaseSettings
-from typing import List
+from pydantic import model_validator
+from typing import List, Optional
 import os
 
 class Settings(BaseSettings):
-    DATABASE_URL_WRITE: str = os.getenv("DATABASE_URL_WRITE", "")
-    DATABASE_URL_READ: str = os.getenv("DATABASE_URL_READ", "")
+    DATABASE_URL_WRITE: Optional[str] = None
+    DATABASE_URL_READ: Optional[str] = None
     
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "")
+    JWT_SECRET_KEY: Optional[str] = None
     JWT_ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_HOURS: int = 24
     ADMIN_TOKEN_EXPIRE_HOURS: int = 8
     
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    OPENAI_API_KEY: Optional[str] = None
     
-    ADMIN_EMAIL: str = os.getenv("ADMIN_EMAIL", "aadish.bahati@echostor.com")
-    ADMIN_PASSWORD_HASH: str = os.getenv("ADMIN_PASSWORD_HASH", "")
+    ADMIN_EMAIL: str = "aadish.bahati@echostor.com"
+    ADMIN_PASSWORD_HASH: Optional[str] = None
     
-    ADMIN_LOGIN_USER: str = os.getenv("ADMIN_LOGIN_USER", "")
-    ADMIN_LOGIN_PASSWORD: str = os.getenv("ADMIN_LOGIN_PASSWORD", "")
+    ADMIN_LOGIN_USER: Optional[str] = None
+    ADMIN_LOGIN_PASSWORD: Optional[str] = None
     
     ALLOWED_ORIGINS: List[str] = [
         "http://localhost:3000",
@@ -31,12 +32,21 @@ class Settings(BaseSettings):
     REPORTS_DIR: str = "reports"
     AI_REPORT_DELIVERY_DAYS: int = 5
     
-    def __post_init__(self):
-        """Validate critical configuration"""
+    @model_validator(mode='after')
+    def validate_required_settings(self):
         if not self.JWT_SECRET_KEY:
-            raise ValueError("JWT_SECRET_KEY must be set")
+            raise ValueError(
+                "JWT_SECRET_KEY environment variable must be set. "
+                "Generate one with: openssl rand -hex 32"
+            )
         if not self.DATABASE_URL_WRITE:
-            raise ValueError("DATABASE_URL_WRITE must be set")
+            raise ValueError(
+                "DATABASE_URL_WRITE environment variable must be set. "
+                "Example: postgresql://user:pass@host:5432/dbname"
+            )
+        if not self.DATABASE_URL_READ:
+            self.DATABASE_URL_READ = self.DATABASE_URL_WRITE
+        return self
     
     class Config:
         env_file = ".env"
