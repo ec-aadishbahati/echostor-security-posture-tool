@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 TEST_DATABASE_URL = "sqlite:///./test.db"
 os.environ.setdefault("DATABASE_URL_WRITE", TEST_DATABASE_URL)
 os.environ.setdefault("DATABASE_URL_READ", TEST_DATABASE_URL)
+os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key-for-testing-only-not-secure")
 
 from app.main import app  # noqa: E402
 
