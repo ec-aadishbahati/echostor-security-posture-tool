@@ -27,6 +27,8 @@ httpx = "^0.25.2"
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
 pytest-asyncio = "^0.21.1"
+pytest-cov = "^4.1.0"
+pytest-mock = "^3.12.0"
 black = "^23.11.0"
 isort = "^5.12.0"
 flake8 = "^6.1.0"
@@ -35,6 +37,16 @@ mypy = "^1.7.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "--cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=80 -v"
+
+[tool.coverage.run]
+omit = ["*/tests/*", "*/migrations/*", "*/__pycache__/*", "*/conftest.py"]
 
 [tool.black]
 line-length = 88
