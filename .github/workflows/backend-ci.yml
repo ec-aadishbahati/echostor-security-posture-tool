@@ -75,11 +75,6 @@ jobs:
           cd backend
           poetry install --with dev
 
-      - name: Check black formatting
-        run: |
-          cd backend
-          poetry run black --check .
-
       - name: Check ruff formatting
         run: |
           cd backend
