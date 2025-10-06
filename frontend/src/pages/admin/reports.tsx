@@ -64,9 +64,10 @@ export default function AdminReports() {
     }
   );
 
-  const reports = reportsData?.data || [];
-  const hasNextPage = reports.length === limit;
-  const hasPrevPage = currentPage > 1;
+  const reports = reportsData?.data?.items || [];
+  const pagination = reportsData?.data;
+  const hasNextPage = pagination?.has_next || false;
+  const hasPrevPage = pagination?.has_prev || false;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

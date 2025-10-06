@@ -57,7 +57,9 @@ def test_get_user_reports(client: TestClient, auth_token, test_report):
     )
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data, list)
+    assert "items" in data
+    assert isinstance(data["items"], list)
+    assert len(data["items"]) >= 1
 
 
 def test_get_report_status(client: TestClient, auth_token, test_report):

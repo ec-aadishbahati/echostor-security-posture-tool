@@ -1,6 +1,14 @@
 import os
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+    Query,
+    Request,
+    status,
+)
 from fastapi.responses import FileResponse
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
@@ -242,22 +250,31 @@ async def download_report(
     )
 
 
-@router.get("/user/reports", response_model=list[ReportResponse])
+@router.get("/user/reports")
 async def get_user_reports(
     request: Request,
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=1000),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Get all reports for the current user"""
+    """Get all reports for the current user with pagination"""
 
-    reports = (
-        db.query(Report)
-        .join(Assessment)
-        .filter(Assessment.user_id == current_user.id)
-        .all()
+    query = (
+        db.query(Report).join(Assessment).filter(Assessment.user_id == current_user.id)
     )
 
-    return [ReportResponse.model_validate(report) for report in reports]
+    total = query.count()
+    reports = query.offset(skip).limit(limit).all()
+
+    from app.utils.pagination import paginate
+
+    return paginate(
+        items=[ReportResponse.model_validate(report) for report in reports],
+        total=total,
+        skip=skip,
+        limit=limit,
+    )
 
 
 @router.get("/{report_id}/status", response_model=ReportResponse)

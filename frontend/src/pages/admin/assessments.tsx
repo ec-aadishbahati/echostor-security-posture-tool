@@ -33,9 +33,10 @@ export default function AdminAssessments() {
 
   const { data: structure } = useQuery('assessmentStructure', assessmentAPI.getStructure);
 
-  const assessments = assessmentsData?.data || [];
-  const hasNextPage = assessments.length === limit;
-  const hasPrevPage = currentPage > 1;
+  const assessments = assessmentsData?.data?.items || [];
+  const pagination = assessmentsData?.data;
+  const hasNextPage = pagination?.has_next || false;
+  const hasPrevPage = pagination?.has_prev || false;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
