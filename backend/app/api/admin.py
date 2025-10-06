@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import and_, desc, func
 from sqlalchemy.orm import Session
 
@@ -18,6 +18,7 @@ router = APIRouter()
 
 @router.get("/users", response_model=list[UserResponse])
 async def get_all_users(
+    request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     search: str | None = Query(None),
@@ -50,6 +51,7 @@ async def get_all_users(
 
 @router.get("/users/{user_id}", response_model=UserResponse)
 async def get_user(
+    request: Request,
     user_id: str,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_read_db),
@@ -76,6 +78,7 @@ async def get_user(
     "/users/{user_id}/assessments", response_model=list[AssessmentResponseSchema]
 )
 async def get_user_assessments(
+    request: Request,
     user_id: str,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_read_db),
@@ -121,6 +124,7 @@ async def get_user_assessments(
 
 @router.get("/assessments", response_model=list[AssessmentResponseSchema])
 async def get_all_assessments(
+    request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     status: str | None = Query(None),
@@ -161,7 +165,9 @@ async def get_all_assessments(
 
 @router.get("/dashboard/stats")
 async def get_dashboard_stats(
-    current_admin=Depends(get_current_admin_user), db: Session = Depends(get_read_db)
+    request: Request,
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_read_db),
 ):
     """Get dashboard statistics"""
 
@@ -245,7 +251,9 @@ async def get_dashboard_stats(
 
 @router.get("/users-progress-summary")
 async def get_users_progress_summary(
-    current_admin=Depends(get_current_admin_user), db: Session = Depends(get_read_db)
+    request: Request,
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_read_db),
 ):
     """Get detailed progress summary for all users"""
 
@@ -299,6 +307,7 @@ async def get_users_progress_summary(
 
 @router.get("/reports", response_model=list[ReportResponse])
 async def get_all_reports(
+    request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     report_type: str | None = Query(None),
@@ -344,7 +353,9 @@ async def get_all_reports(
 
 @router.get("/alerts")
 async def get_alerts(
-    current_admin=Depends(get_current_admin_user), db: Session = Depends(get_read_db)
+    request: Request,
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_read_db),
 ):
     """Get system alerts for admin dashboard"""
 
@@ -425,6 +436,7 @@ async def get_alerts(
 
 @router.delete("/users/{user_id}")
 async def delete_user(
+    request: Request,
     user_id: str,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
@@ -471,8 +483,9 @@ async def delete_user(
 
 @router.post("/users/{user_id}/reset-password")
 async def reset_user_password(
+    request: Request,
     user_id: str,
-    request: dict,
+    request_data: dict,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
 ):
@@ -485,7 +498,7 @@ async def reset_user_password(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
 
-        new_password = request.get("new_password")
+        new_password = request_data.get("new_password")
         if not new_password:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -517,6 +530,7 @@ async def reset_user_password(
 
 @router.get("/consultations")
 async def get_consultation_requests(
+    request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     current_admin=Depends(get_current_admin_user),
@@ -561,15 +575,16 @@ async def get_consultation_requests(
 
 @router.post("/users/bulk-update-status")
 async def bulk_update_user_status(
-    request: dict,
+    request: Request,
+    request_data: dict,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
 ):
     """Bulk activate/deactivate users"""
 
     try:
-        user_ids = request.get("user_ids", [])
-        is_active = request.get("is_active", True)
+        user_ids = request_data.get("user_ids", [])
+        is_active = request_data.get("is_active", True)
 
         if not user_ids:
             raise HTTPException(
@@ -612,13 +627,14 @@ async def bulk_update_user_status(
 
 @router.post("/users/bulk-delete")
 async def bulk_delete_users(
-    request: dict,
+    request: Request,
+    request_data: dict,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
 ):
     """Bulk delete users and all associated data"""
 
-    user_ids = request.get("user_ids", [])
+    user_ids = request_data.get("user_ids", [])
 
     if not user_ids:
         raise HTTPException(

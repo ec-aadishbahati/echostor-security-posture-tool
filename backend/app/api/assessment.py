@@ -1,6 +1,6 @@
 from datetime import UTC, datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
@@ -22,14 +22,16 @@ router = APIRouter()
 
 
 @router.get("/structure", response_model=AssessmentStructure)
-async def get_assessment_structure():
+async def get_assessment_structure(request: Request):
     """Get the complete assessment structure with all questions"""
     return load_assessment_structure()
 
 
 @router.post("/start", response_model=AssessmentResponse)
 async def start_assessment(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_write_db)
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_write_db),
 ):
     """Start a new assessment for the current user"""
 
@@ -85,7 +87,9 @@ async def start_assessment(
 
 @router.get("/current", response_model=AssessmentResponse)
 async def get_current_assessment(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_write_db)
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_write_db),
 ):
     """Get the current assessment for the user"""
 
@@ -121,6 +125,7 @@ async def get_current_assessment(
     "/{assessment_id}/responses", response_model=list[AssessmentResponseResponse]
 )
 async def get_assessment_responses(
+    request: Request,
     assessment_id: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_read_db),
@@ -153,6 +158,7 @@ async def get_assessment_responses(
 
 @router.post("/{assessment_id}/save-progress")
 async def save_assessment_progress(
+    request: Request,
     assessment_id: str,
     progress_data: SaveProgressRequest,
     current_user: User = Depends(get_current_user),
@@ -237,6 +243,7 @@ async def save_assessment_progress(
 
 @router.post("/{assessment_id}/complete")
 async def complete_assessment(
+    request: Request,
     assessment_id: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_write_db),
@@ -281,6 +288,7 @@ async def complete_assessment(
 
 @router.post("/{assessment_id}/consultation")
 async def save_consultation_interest(
+    request: Request,
     assessment_id: str,
     consultation_data: dict,
     current_user: User = Depends(get_current_user),
