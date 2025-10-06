@@ -5,7 +5,7 @@ from sqlalchemy import and_, desc, func
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_admin_user
-from app.core.database import get_read_db, get_write_db
+from app.core.database import get_db
 from app.core.security import get_password_hash
 from app.models.assessment import AdminAuditLog, Assessment, AssessmentResponse, Report
 from app.models.user import User
@@ -27,7 +27,7 @@ async def get_all_users(
     limit: int = Query(100, ge=1, le=1000),
     search: str | None = Query(None),
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get all users with pagination and search"""
 
@@ -58,7 +58,7 @@ async def get_user(
     request: Request,
     user_id: str,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get a specific user by ID"""
 
@@ -85,7 +85,7 @@ async def get_user_assessments(
     request: Request,
     user_id: str,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get all assessments for a specific user"""
 
@@ -133,7 +133,7 @@ async def get_all_assessments(
     limit: int = Query(100, ge=1, le=1000),
     status: str | None = Query(None),
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Get all assessments with filtering"""
 
@@ -171,7 +171,7 @@ async def get_all_assessments(
 async def get_dashboard_stats(
     request: Request,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get dashboard statistics"""
 
@@ -257,7 +257,7 @@ async def get_dashboard_stats(
 async def get_users_progress_summary(
     request: Request,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get detailed progress summary for all users"""
 
@@ -317,7 +317,7 @@ async def get_all_reports(
     report_type: str | None = Query(None),
     status: str | None = Query(None),
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get all reports with filtering"""
 
@@ -359,7 +359,7 @@ async def get_all_reports(
 async def get_alerts(
     request: Request,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get system alerts for admin dashboard"""
 
@@ -443,7 +443,7 @@ async def delete_user(
     request: Request,
     user_id: str,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Delete a user and all associated data"""
 
@@ -491,7 +491,7 @@ async def reset_user_password(
     user_id: str,
     request_data: dict,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Reset a user's password"""
 
@@ -538,7 +538,7 @@ async def get_consultation_requests(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get all consultation requests from users"""
 
@@ -582,7 +582,7 @@ async def bulk_update_user_status(
     request: Request,
     request_data: BulkUpdateUserStatusRequest,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Bulk activate/deactivate users"""
 
@@ -626,7 +626,7 @@ async def bulk_delete_users(
     request: Request,
     request_data: BulkDeleteUsersRequest,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Bulk delete users and all associated data"""
 

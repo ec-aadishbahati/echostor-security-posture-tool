@@ -6,7 +6,7 @@ from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_admin_user, get_current_user
-from app.core.database import get_read_db, get_write_db
+from app.core.database import get_db
 from app.models.assessment import Assessment, Report
 from app.models.user import User
 from app.schemas.report import AIReportRequest, ReportResponse
@@ -21,7 +21,7 @@ async def generate_report(
     assessment_id: str,
     background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Generate a standard PDF report for a completed assessment"""
 
@@ -75,7 +75,7 @@ async def request_ai_report(
     assessment_id: str,
     request_data: AIReportRequest,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Request an AI-enhanced report (admin will generate it)"""
 
@@ -135,7 +135,7 @@ async def admin_generate_ai_report(
     report_id: str,
     background_tasks: BackgroundTasks,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Admin endpoint to generate AI-enhanced reports"""
 
@@ -170,7 +170,7 @@ async def admin_release_ai_report(
     request: Request,
     report_id: str,
     current_admin=Depends(get_current_admin_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Admin endpoint to release AI-enhanced reports to users"""
 
@@ -203,7 +203,7 @@ async def download_report(
     request: Request,
     report_id: str,
     current_user=Depends(get_current_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Download a completed report"""
 
@@ -246,7 +246,7 @@ async def download_report(
 async def get_user_reports(
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get all reports for the current user"""
 
@@ -265,7 +265,7 @@ async def get_report_status(
     request: Request,
     report_id: str,
     current_user=Depends(get_current_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get the status of a specific report"""
 

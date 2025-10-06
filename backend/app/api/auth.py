@@ -3,7 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.core.database import get_read_db, get_write_db
+from app.core.database import get_db
 from app.core.security import (
     create_access_token,
     get_password_hash,
@@ -21,7 +21,7 @@ security = HTTPBearer()
 @limiter.limit("5/minute")
 @router.post("/register", response_model=Token)
 async def register(
-    request: Request, user_data: UserCreate, db: Session = Depends(get_write_db)
+    request: Request, user_data: UserCreate, db: Session = Depends(get_db)
 ):
     existing_user = db.query(User).filter(User.email == user_data.email).first()
     if existing_user:
@@ -59,7 +59,7 @@ async def register(
 @limiter.limit("5/minute")
 @router.post("/login", response_model=Token)
 async def login(
-    request: Request, user_credentials: UserLogin, db: Session = Depends(get_read_db)
+    request: Request, user_credentials: UserLogin, db: Session = Depends(get_db)
 ):
     if (
         settings.ADMIN_LOGIN_USER
@@ -132,7 +132,7 @@ async def login(
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     token_data = verify_token(credentials.credentials)
 

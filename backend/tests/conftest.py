@@ -11,11 +11,10 @@ from sqlalchemy.pool import StaticPool
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 TEST_DATABASE_URL = "sqlite:///./test.db"
-os.environ.setdefault("DATABASE_URL_WRITE", TEST_DATABASE_URL)
-os.environ.setdefault("DATABASE_URL_READ", TEST_DATABASE_URL)
+os.environ.setdefault("DATABASE_URL", TEST_DATABASE_URL)
 os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key-for-testing-only-not-secure")
 
-from app.core.database import Base, get_read_db, get_write_db
+from app.core.database import Base, get_db
 from app.core.security import create_access_token, get_password_hash
 from app.main import app
 from app.models.assessment import Assessment, Report
@@ -43,20 +42,13 @@ def db_session():
 
 @pytest.fixture
 def client(db_session):
-    def override_get_write_db():
+    def override_get_db():
         try:
             yield db_session
         finally:
             pass
 
-    def override_get_read_db():
-        try:
-            yield db_session
-        finally:
-            pass
-
-    app.dependency_overrides[get_write_db] = override_get_write_db
-    app.dependency_overrides[get_read_db] = override_get_read_db
+    app.dependency_overrides[get_db] = override_get_db
 
     yield TestClient(app)
 

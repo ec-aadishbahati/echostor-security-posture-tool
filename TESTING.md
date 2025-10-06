@@ -260,7 +260,7 @@ The CI pipeline:
 
 **Backend tests fail with database errors**:
 - Ensure you're running tests with `poetry run pytest` (not just `pytest`)
-- Check that `DATABASE_URL_WRITE` and `DATABASE_URL_READ` are set in conftest.py
+- Check that `DATABASE_URL` is set in conftest.py
 
 **Frontend tests fail with module not found**:
 - Run `npm install` to ensure all dependencies are installed

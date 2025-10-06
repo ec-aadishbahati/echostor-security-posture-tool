@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_user
 from app.core.config import settings
-from app.core.database import get_read_db, get_write_db
+from app.core.database import get_db
 from app.models.assessment import Assessment
 from app.models.assessment import AssessmentResponse as AssessmentResponseModel
 from app.models.user import User
@@ -32,7 +32,7 @@ async def get_assessment_structure(request: Request):
 async def start_assessment(
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Start a new assessment for the current user"""
 
@@ -90,7 +90,7 @@ async def start_assessment(
 async def get_current_assessment(
     request: Request,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Get the current assessment for the user"""
 
@@ -129,7 +129,7 @@ async def get_assessment_responses(
     request: Request,
     assessment_id: str,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_read_db),
+    db: Session = Depends(get_db),
 ):
     """Get all responses for an assessment"""
 
@@ -163,7 +163,7 @@ async def save_assessment_progress(
     assessment_id: str,
     progress_data: SaveProgressRequest,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Save assessment progress"""
 
@@ -247,7 +247,7 @@ async def complete_assessment(
     request: Request,
     assessment_id: str,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Complete an assessment"""
 
@@ -293,7 +293,7 @@ async def save_consultation_interest(
     assessment_id: str,
     consultation_data: ConsultationRequest,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_write_db),
+    db: Session = Depends(get_db),
 ):
     """Save consultation interest and details"""
 
