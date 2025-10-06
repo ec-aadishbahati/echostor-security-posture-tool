@@ -14,8 +14,8 @@ from app.schemas.assessment import (
     AssessmentResponse,
     AssessmentResponseResponse,
     AssessmentStructure,
-    SaveProgressRequest,
     ConsultationRequest,
+    SaveProgressRequest,
 )
 from app.services.question_parser import load_assessment_structure
 

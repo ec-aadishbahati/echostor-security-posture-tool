@@ -14,7 +14,12 @@ class ReportCreate(ReportBase):
 
 
 class ReportUpdate(BaseModel):
-    status: Annotated[str, Field(pattern="^(generating|completed|failed|pending|released)$")] | None = None
+    status: (
+        Annotated[
+            str, Field(pattern="^(generating|completed|failed|pending|released)$")
+        ]
+        | None
+    ) = None
     file_path: Annotated[str, Field(max_length=500)] | None = None
     completed_at: datetime | None = None
 

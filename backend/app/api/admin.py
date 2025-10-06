@@ -12,9 +12,9 @@ from app.models.user import User
 from app.schemas.assessment import AssessmentResponse as AssessmentResponseSchema
 from app.schemas.report import ReportResponse
 from app.schemas.user import (
-    UserResponse,
-    BulkUpdateUserStatusRequest,
     BulkDeleteUsersRequest,
+    BulkUpdateUserStatusRequest,
+    UserResponse,
 )
 
 router = APIRouter()
