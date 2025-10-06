@@ -1,6 +1,6 @@
 import os
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from fastapi.responses import FileResponse
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
@@ -17,6 +17,7 @@ router = APIRouter()
 
 @router.post("/{assessment_id}/generate", response_model=ReportResponse)
 async def generate_report(
+    request: Request,
     assessment_id: str,
     background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
@@ -70,6 +71,7 @@ async def generate_report(
 
 @router.post("/{assessment_id}/request-ai-report")
 async def request_ai_report(
+    request: Request,
     assessment_id: str,
     request_data: AIReportRequest,
     current_user: User = Depends(get_current_user),
@@ -129,6 +131,7 @@ async def request_ai_report(
 
 @router.post("/admin/{report_id}/generate-ai", response_model=ReportResponse)
 async def admin_generate_ai_report(
+    request: Request,
     report_id: str,
     background_tasks: BackgroundTasks,
     current_admin=Depends(get_current_admin_user),
@@ -164,6 +167,7 @@ async def admin_generate_ai_report(
 
 @router.post("/admin/{report_id}/release")
 async def admin_release_ai_report(
+    request: Request,
     report_id: str,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
@@ -196,6 +200,7 @@ async def admin_release_ai_report(
 
 @router.get("/{report_id}/download")
 async def download_report(
+    request: Request,
     report_id: str,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_read_db),
@@ -239,7 +244,9 @@ async def download_report(
 
 @router.get("/user/reports", response_model=list[ReportResponse])
 async def get_user_reports(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_read_db)
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_read_db),
 ):
     """Get all reports for the current user"""
 
@@ -255,6 +262,7 @@ async def get_user_reports(
 
 @router.get("/{report_id}/status", response_model=ReportResponse)
 async def get_report_status(
+    request: Request,
     report_id: str,
     current_user=Depends(get_current_user),
     db: Session = Depends(get_read_db),

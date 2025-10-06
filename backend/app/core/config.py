@@ -30,6 +30,7 @@ class Settings(BaseSettings):
 
     REPORTS_DIR: str = "reports"
     AI_REPORT_DELIVERY_DAYS: int = 5
+    REDIS_URL: str | None = None
 
     @model_validator(mode="after")
     def validate_required_settings(self):

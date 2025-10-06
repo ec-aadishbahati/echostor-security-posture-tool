@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
@@ -10,6 +10,7 @@ from app.core.security import (
     verify_password,
     verify_token,
 )
+from app.middleware.rate_limit import limiter
 from app.models.user import User
 from app.schemas.user import Token, UserCreate, UserLogin, UserResponse
 
@@ -17,8 +18,11 @@ router = APIRouter()
 security = HTTPBearer()
 
 
+@limiter.limit("5/minute")
 @router.post("/register", response_model=Token)
-async def register(user_data: UserCreate, db: Session = Depends(get_write_db)):
+async def register(
+    request: Request, user_data: UserCreate, db: Session = Depends(get_write_db)
+):
     existing_user = db.query(User).filter(User.email == user_data.email).first()
     if existing_user:
         raise HTTPException(
@@ -52,8 +56,11 @@ async def register(user_data: UserCreate, db: Session = Depends(get_write_db)):
     )
 
 
+@limiter.limit("5/minute")
 @router.post("/login", response_model=Token)
-async def login(user_credentials: UserLogin, db: Session = Depends(get_read_db)):
+async def login(
+    request: Request, user_credentials: UserLogin, db: Session = Depends(get_read_db)
+):
     if (
         settings.ADMIN_LOGIN_USER
         and user_credentials.email == settings.ADMIN_LOGIN_USER
@@ -175,7 +182,9 @@ async def get_current_admin_user(current_user=Depends(get_current_user)):
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user_info(current_user=Depends(get_current_user)):
+async def get_current_user_info(
+    request: Request, current_user=Depends(get_current_user)
+):
     if isinstance(current_user, dict) and current_user.get("is_admin"):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
