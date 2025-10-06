@@ -1,15 +1,16 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-import os
 
-from app.api import auth, assessment, admin, reports
+from app.api import admin, assessment, auth, reports
 from app.core.config import settings
 
 app = FastAPI(
     title="EchoStor Security Posture Assessment API",
     description="API for comprehensive security posture assessment tool",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 app.add_middleware(
@@ -29,9 +30,11 @@ app.include_router(assessment.router, prefix="/api/assessment", tags=["assessmen
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
 
+
 @app.get("/")
 async def root():
     return {"message": "EchoStor Security Posture Assessment API", "version": "1.0.0"}
+
 
 @app.get("/health")
 async def health_check():

@@ -1,5 +1,5 @@
-import pytest
 from fastapi.testclient import TestClient
+
 
 def test_assessment_structure_endpoint(client: TestClient):
     response = client.get("/api/assessment/structure")

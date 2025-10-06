@@ -1,31 +1,36 @@
-from pydantic import BaseModel
-from typing import Optional
-from datetime import datetime
 import uuid
+from datetime import datetime
+
+from pydantic import BaseModel
+
 
 class ReportBase(BaseModel):
     report_type: str = "standard"
 
+
 class ReportCreate(ReportBase):
     assessment_id: uuid.UUID
 
+
 class ReportUpdate(BaseModel):
-    status: Optional[str] = None
-    file_path: Optional[str] = None
-    completed_at: Optional[datetime] = None
+    status: str | None = None
+    file_path: str | None = None
+    completed_at: datetime | None = None
+
 
 class ReportResponse(BaseModel):
     id: uuid.UUID
     assessment_id: uuid.UUID
     report_type: str
-    file_path: Optional[str]
+    file_path: str | None
     status: str
     requested_at: datetime
-    completed_at: Optional[datetime]
+    completed_at: datetime | None
 
     class Config:
         from_attributes = True
 
+
 class AIReportRequest(BaseModel):
     assessment_id: uuid.UUID
-    message: Optional[str] = None
+    message: str | None = None
