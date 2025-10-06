@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from app.api import admin, assessment, auth, reports
+from app.api import admin, assessment, auth, health, reports
 from app.core.config import settings
 from app.middleware.rate_limit import limiter
 
@@ -35,15 +35,10 @@ app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(assessment.router, prefix="/api/assessment", tags=["assessment"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
+app.include_router(health.router, tags=["health"])
 
 
 @limiter.exempt
 @app.get("/")
 async def root():
     return {"message": "EchoStor Security Posture Assessment API", "version": "1.0.0"}
-
-
-@limiter.exempt
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
