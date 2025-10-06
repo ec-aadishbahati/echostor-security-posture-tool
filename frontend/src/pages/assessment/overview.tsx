@@ -1,14 +1,13 @@
 import React from 'react';
-import { useQuery } from 'react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
-import { 
-  DocumentTextIcon, 
+import {
+  DocumentTextIcon,
   CheckCircleIcon,
   ClockIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline';
 
 export default function AssessmentOverview() {
@@ -23,9 +22,7 @@ export default function AssessmentOverview() {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Welcome to Your Security Assessment
             </h2>
-            <p className="text-xl text-gray-600">
-              Thank you for registering, {user?.full_name}!
-            </p>
+            <p className="text-xl text-gray-600">Thank you for registering, {user?.full_name}!</p>
           </div>
 
           <div className="card mb-8">
@@ -35,28 +32,36 @@ export default function AssessmentOverview() {
                 <DocumentTextIcon className="h-6 w-6 text-primary-600 mt-1 mr-3" />
                 <div>
                   <h4 className="font-semibold text-gray-900">Comprehensive Evaluation</h4>
-                  <p className="text-gray-600">Answer questions about your organization's security practices across multiple domains.</p>
+                  <p className="text-gray-600">
+                    Answer questions about your organization&apos;s security practices across
+                    multiple domains.
+                  </p>
                 </div>
               </div>
               <div className="flex items-start">
                 <ClockIcon className="h-6 w-6 text-primary-600 mt-1 mr-3" />
                 <div>
                   <h4 className="font-semibold text-gray-900">15-Day Assessment Period</h4>
-                  <p className="text-gray-600">Take your time to provide accurate responses. Your progress is automatically saved.</p>
+                  <p className="text-gray-600">
+                    Take your time to provide accurate responses. Your progress is automatically
+                    saved.
+                  </p>
                 </div>
               </div>
               <div className="flex items-start">
                 <CheckCircleIcon className="h-6 w-6 text-primary-600 mt-1 mr-3" />
                 <div>
                   <h4 className="font-semibold text-gray-900">AI-Enhanced Report</h4>
-                  <p className="text-gray-600">Receive personalized recommendations and actionable insights upon completion.</p>
+                  <p className="text-gray-600">
+                    Receive personalized recommendations and actionable insights upon completion.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="text-center">
-            <Link 
+            <Link
               href="/assessment/questions"
               className="btn-primary inline-flex items-center text-lg px-8 py-3"
             >

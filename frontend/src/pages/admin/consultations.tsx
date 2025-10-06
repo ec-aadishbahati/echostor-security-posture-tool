@@ -3,12 +3,12 @@ import { useQuery } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { adminAPI } from '../../lib/api';
-import { 
+import {
   ChatBubbleLeftRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   EnvelopeIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
 
 export default function AdminConsultations() {
@@ -16,7 +16,11 @@ export default function AdminConsultations() {
   const limit = 20;
   const skip = (currentPage - 1) * limit;
 
-  const { data: consultationsData, isLoading, error } = useQuery(
+  const {
+    data: consultationsData,
+    isLoading,
+    error: _error,
+  } = useQuery(
     ['adminConsultations', { skip, limit }],
     () => adminAPI.getConsultationRequests(skip, limit),
     {
@@ -54,17 +58,15 @@ export default function AdminConsultations() {
               </h3>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={!hasPrevPage}
                   className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
                   <ChevronLeftIcon className="h-5 w-5" />
                 </button>
-                <span className="px-3 py-1 text-sm text-gray-600">
-                  Page {currentPage}
-                </span>
+                <span className="px-3 py-1 text-sm text-gray-600">Page {currentPage}</span>
                 <button
-                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
                   disabled={!hasNextPage}
                   className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
@@ -99,12 +101,14 @@ export default function AdminConsultations() {
                         {new Date(consultation.created_at).toLocaleDateString()}
                       </div>
                     </div>
-                    
+
                     <div className="bg-gray-50 rounded-lg p-4">
                       <h5 className="font-medium text-gray-900 mb-2">Consultation Details:</h5>
-                      <p className="text-gray-700 whitespace-pre-wrap">{consultation.consultation_details}</p>
+                      <p className="text-gray-700 whitespace-pre-wrap">
+                        {consultation.consultation_details}
+                      </p>
                     </div>
-                    
+
                     <div className="mt-4 flex justify-end">
                       <a
                         href={`mailto:${consultation.user_email}?subject=EchoStor Security Consultation&body=Hello ${consultation.user_name},%0D%0A%0D%0AThank you for your interest in our security consultation services.`}

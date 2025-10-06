@@ -15,14 +15,18 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginForm>();
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
       toast.success('Login successful!');
-      
+
       const adminFlag = document.cookie.includes('is_admin=true');
       if (adminFlag) {
         router.push('/admin');
@@ -48,7 +52,10 @@ export default function Login() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link href="/auth/register" className="font-medium text-primary-600 hover:text-primary-500">
+            <Link
+              href="/auth/register"
+              className="font-medium text-primary-600 hover:text-primary-500"
+            >
               create a new account
             </Link>
           </p>
@@ -72,9 +79,7 @@ export default function Login() {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
@@ -110,9 +115,7 @@ export default function Login() {
           </div>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Need help? Contact support for assistance.
-            </p>
+            <p className="text-sm text-gray-600">Need help? Contact support for assistance.</p>
           </div>
         </form>
       </div>

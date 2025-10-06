@@ -5,39 +5,41 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
 import { assessmentAPI } from '@/lib/api';
 import Link from 'next/link';
-import { 
-  DocumentTextIcon, 
+import {
+  DocumentTextIcon,
   ChartBarIcon,
   ClockIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
   const { user } = useAuth();
 
-  const { data: assessment, isLoading: assessmentLoading, error: assessmentError } = useQuery(
-    'currentAssessment',
-    assessmentAPI.getCurrentAssessment,
-    {
-      retry: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const {
+    data: assessment,
+    isLoading: assessmentLoading,
+    error: assessmentError,
+  } = useQuery('currentAssessment', assessmentAPI.getCurrentAssessment, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
 
   const calculateTimeRemaining = (expiresAt: string) => {
     const now = new Date();
     const expiry = new Date(expiresAt);
     const diffTime = expiry.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays <= 0) return "Expired";
-    if (diffDays === 1) return "1 day";
+
+    if (diffDays <= 0) return 'Expired';
+    if (diffDays === 1) return '1 day';
     return `${diffDays} days`;
   };
 
   const hasActiveAssessment = assessment && !assessmentError;
   const progressPercentage = hasActiveAssessment ? assessment.data.progress_percentage || 0 : 0;
-  const timeRemaining = hasActiveAssessment ? calculateTimeRemaining(assessment.data.expires_at) : "15 days";
+  const timeRemaining = hasActiveAssessment
+    ? calculateTimeRemaining(assessment.data.expires_at)
+    : '15 days';
 
   return (
     <ProtectedRoute>
@@ -53,7 +55,7 @@ export default function Dashboard() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <Link 
+            <Link
               href="/assessment/questions"
               className="card hover:shadow-lg transition-shadow cursor-pointer"
             >
@@ -66,7 +68,9 @@ export default function Dashboard() {
                     {hasActiveAssessment ? 'Continue Assessment' : 'Start Assessment'}
                   </h3>
                   <p className="text-gray-600">
-                    {hasActiveAssessment ? 'Resume your security evaluation' : 'Begin your security evaluation'}
+                    {hasActiveAssessment
+                      ? 'Resume your security evaluation'
+                      : 'Begin your security evaluation'}
                   </p>
                 </div>
                 <ArrowRightIcon className="h-5 w-5 text-gray-400 ml-auto" />
@@ -81,11 +85,13 @@ export default function Dashboard() {
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Progress</h3>
                   <p className="text-gray-600">
-                    {assessmentLoading ? 'Loading...' : `${progressPercentage.toFixed(1)}% Complete`}
+                    {assessmentLoading
+                      ? 'Loading...'
+                      : `${progressPercentage.toFixed(1)}% Complete`}
                   </p>
                   {hasActiveAssessment && (
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                      <div 
+                      <div
                         className="bg-green-600 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${progressPercentage}%` }}
                       ></div>
@@ -115,15 +121,11 @@ export default function Dashboard() {
               {hasActiveAssessment ? 'Your Assessment Progress' : 'About Your Assessment'}
             </h3>
             <p className="text-gray-600 mb-4">
-              {hasActiveAssessment 
+              {hasActiveAssessment
                 ? `You have completed ${progressPercentage.toFixed(1)}% of your security posture assessment. Continue where you left off to receive personalized recommendations and an AI-enhanced report.`
-                : 'Complete your comprehensive security posture assessment to receive personalized recommendations and an AI-enhanced report for your organization.'
-              }
+                : 'Complete your comprehensive security posture assessment to receive personalized recommendations and an AI-enhanced report for your organization.'}
             </p>
-            <Link 
-              href="/assessment/questions"
-              className="btn-primary inline-flex items-center"
-            >
+            <Link href="/assessment/questions" className="btn-primary inline-flex items-center">
               {hasActiveAssessment ? 'Continue Assessment' : 'Get Started'}
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Link>

@@ -19,7 +19,7 @@ export const useAutoLogout = (onBeforeLogout?: () => Promise<void>) => {
     warningTimeoutRef.current = setTimeout(() => {
       toast('You will be logged out in 1 minute due to inactivity', {
         duration: 60000,
-        icon: '⚠️'
+        icon: '⚠️',
       });
     }, WARNING_TIMEOUT);
 
@@ -39,15 +39,15 @@ export const useAutoLogout = (onBeforeLogout?: () => Promise<void>) => {
 
   useEffect(() => {
     const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-    
-    events.forEach(event => {
+
+    events.forEach((event) => {
       document.addEventListener(event, resetTimer, true);
     });
 
     resetTimer(); // Start the timer
 
     return () => {
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, resetTimer, true);
       });
       if (timeoutRef.current) clearTimeout(timeoutRef.current);

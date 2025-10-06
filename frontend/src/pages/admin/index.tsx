@@ -2,13 +2,12 @@ import { useQuery } from 'react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { adminAPI } from '@/lib/api';
-import { 
-  UserIcon, 
-  DocumentTextIcon, 
+import {
+  UserIcon,
+  DocumentTextIcon,
   ChartBarIcon,
   ExclamationTriangleIcon,
   ArrowTrendingUpIcon,
-  ClockIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -21,13 +20,9 @@ export default function AdminDashboard() {
     }
   );
 
-  const { data: alerts, isLoading: alertsLoading } = useQuery(
-    'adminAlerts',
-    adminAPI.getAlerts,
-    {
-      refetchInterval: 60000, // Refetch every minute
-    }
-  );
+  const { data: alerts, isLoading: alertsLoading } = useQuery('adminAlerts', adminAPI.getAlerts, {
+    refetchInterval: 60000, // Refetch every minute
+  });
 
   const { data: usersProgress, isLoading: usersProgressLoading } = useQuery(
     'usersProgress',
@@ -47,9 +42,7 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Admin Dashboard
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Dashboard</h2>
             <p className="text-gray-600">
               Monitor user activity, assessment progress, and system performance
             </p>
@@ -120,29 +113,33 @@ export default function AdminDashboard() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">System Alerts</h3>
               <div className="space-y-4">
                 {alerts?.data?.alerts?.map((alert: any, index: number) => (
-                  <div 
+                  <div
                     key={index}
                     className={`p-4 rounded-lg border-l-4 ${
-                      alert.type === 'warning' 
-                        ? 'bg-yellow-50 border-yellow-400' 
+                      alert.type === 'warning'
+                        ? 'bg-yellow-50 border-yellow-400'
                         : 'bg-blue-50 border-blue-400'
                     }`}
                   >
                     <div className="flex items-center">
-                      <ExclamationTriangleIcon 
+                      <ExclamationTriangleIcon
                         className={`h-5 w-5 mr-3 ${
                           alert.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'
-                        }`} 
+                        }`}
                       />
                       <div>
-                        <h4 className={`font-semibold ${
-                          alert.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'
-                        }`}>
+                        <h4
+                          className={`font-semibold ${
+                            alert.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'
+                          }`}
+                        >
                           {alert.title}
                         </h4>
-                        <p className={`text-sm ${
-                          alert.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'
-                        }`}>
+                        <p
+                          className={`text-sm ${
+                            alert.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'
+                          }`}
+                        >
                           {alert.message}
                         </p>
                       </div>
@@ -182,21 +179,21 @@ export default function AdminDashboard() {
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
               <div className="space-y-3">
-                <Link 
+                <Link
                   href="/admin/users"
                   className="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
                 >
                   <UserIcon className="h-6 w-6 text-primary-600 mr-3" />
                   <span>Manage Users</span>
                 </Link>
-                <Link 
+                <Link
                   href="/admin/assessments"
                   className="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
                 >
                   <DocumentTextIcon className="h-6 w-6 text-primary-600 mr-3" />
                   <span>View Assessments</span>
                 </Link>
-                <Link 
+                <Link
                   href="/admin/reports"
                   className="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
                 >
@@ -220,11 +217,21 @@ export default function AdminDashboard() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Progress</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        User
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Company
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Progress
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Last Activity
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -234,26 +241,39 @@ export default function AdminDashboard() {
                           <div className="text-sm font-medium text-gray-900">{user.full_name}</div>
                           <div className="text-sm text-gray-500">{user.email}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.company_name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {user.company_name}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                              <div className="bg-primary-600 h-2 rounded-full" style={{ width: `${user.progress_percentage}%` }}></div>
+                              <div
+                                className="bg-primary-600 h-2 rounded-full"
+                                style={{ width: `${user.progress_percentage}%` }}
+                              ></div>
                             </div>
-                            <span className="text-sm text-gray-900">{user.progress_percentage.toFixed(1)}%</span>
+                            <span className="text-sm text-gray-900">
+                              {user.progress_percentage.toFixed(1)}%
+                            </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            user.assessment_status === 'completed' ? 'bg-green-100 text-green-800' :
-                            user.assessment_status === 'in_progress' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-gray-100 text-gray-800'
-                          }`}>
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              user.assessment_status === 'completed'
+                                ? 'bg-green-100 text-green-800'
+                                : user.assessment_status === 'in_progress'
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : 'bg-gray-100 text-gray-800'
+                            }`}
+                          >
                             {user.assessment_status.replace('_', ' ')}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {user.days_since_activity === 0 ? 'Today' : `${user.days_since_activity} days ago`}
+                          {user.days_since_activity === 0
+                            ? 'Today'
+                            : `${user.days_since_activity} days ago`}
                         </td>
                       </tr>
                     ))}
@@ -261,7 +281,10 @@ export default function AdminDashboard() {
                 </table>
                 {usersProgress?.data?.users_progress?.length > 10 && (
                   <div className="mt-4 text-center">
-                    <Link href="/admin/users" className="text-primary-600 hover:text-primary-500 text-sm font-medium">
+                    <Link
+                      href="/admin/users"
+                      className="text-primary-600 hover:text-primary-500 text-sm font-medium"
+                    >
                       View all {usersProgress?.data?.users_progress?.length || 0} users →
                     </Link>
                   </div>

@@ -4,8 +4,8 @@ import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { adminAPI } from '../../lib/api';
 import toast from 'react-hot-toast';
-import { 
-  ChartBarIcon, 
+import {
+  ChartBarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   DocumentIcon,
@@ -13,7 +13,7 @@ import {
   ClockIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  PaperAirplaneIcon
+  PaperAirplaneIcon,
 } from '@heroicons/react/24/outline';
 
 export default function AdminReports() {
@@ -24,40 +24,39 @@ export default function AdminReports() {
   const skip = (currentPage - 1) * limit;
   const queryClient = useQueryClient();
 
-  const generateAIReportMutation = useMutation(
-    adminAPI.generateAIReport,
-    {
-      onSuccess: () => {
-        toast.success('AI report generation started');
-        queryClient.invalidateQueries('adminReports');
-      },
-      onError: (error: any) => {
-        toast.error(error.response?.data?.detail || 'Failed to generate AI report');
-      }
-    }
-  );
+  const generateAIReportMutation = useMutation(adminAPI.generateAIReport, {
+    onSuccess: () => {
+      toast.success('AI report generation started');
+      queryClient.invalidateQueries('adminReports');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.detail || 'Failed to generate AI report');
+    },
+  });
 
-  const releaseAIReportMutation = useMutation(
-    adminAPI.releaseAIReport,
-    {
-      onSuccess: () => {
-        toast.success('AI report released to user');
-        queryClient.invalidateQueries('adminReports');
-      },
-      onError: (error: any) => {
-        toast.error(error.response?.data?.detail || 'Failed to release AI report');
-      }
-    }
-  );
+  const releaseAIReportMutation = useMutation(adminAPI.releaseAIReport, {
+    onSuccess: () => {
+      toast.success('AI report released to user');
+      queryClient.invalidateQueries('adminReports');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.detail || 'Failed to release AI report');
+    },
+  });
 
-  const { data: reportsData, isLoading, error } = useQuery(
+  const {
+    data: reportsData,
+    isLoading,
+    error,
+  } = useQuery(
     ['adminReports', { skip, limit, report_type: typeFilter, status: statusFilter }],
-    () => adminAPI.getReports({ 
-      skip, 
-      limit, 
-      report_type: typeFilter || undefined,
-      status: statusFilter || undefined
-    }),
+    () =>
+      adminAPI.getReports({
+        skip,
+        limit,
+        report_type: typeFilter || undefined,
+        status: statusFilter || undefined,
+      }),
     {
       keepPreviousData: true,
       refetchInterval: 30000,
@@ -75,7 +74,7 @@ export default function AdminReports() {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -132,18 +131,17 @@ export default function AdminReports() {
       <Layout title="Reports Management">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Reports Management
-            </h2>
-            <p className="text-gray-600">
-              Monitor all generated reports and their status
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Reports Management</h2>
+            <p className="text-gray-600">Monitor all generated reports and their status</p>
           </div>
 
           <div className="card mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="type-filter" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="type-filter"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Filter by Type
                 </label>
                 <select
@@ -161,7 +159,10 @@ export default function AdminReports() {
                 </select>
               </div>
               <div>
-                <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="status-filter"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Filter by Status
                 </label>
                 <select
@@ -189,17 +190,15 @@ export default function AdminReports() {
               </h3>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={!hasPrevPage}
                   className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
                   <ChevronLeftIcon className="h-5 w-5" />
                 </button>
-                <span className="px-3 py-1 text-sm text-gray-600">
-                  Page {currentPage}
-                </span>
+                <span className="px-3 py-1 text-sm text-gray-600">Page {currentPage}</span>
                 <button
-                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
                   disabled={!hasNextPage}
                   className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
@@ -221,7 +220,9 @@ export default function AdminReports() {
               <div className="text-center py-8">
                 <ChartBarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600">
-                  {typeFilter || statusFilter ? 'No reports found with the selected filters.' : 'No reports found.'}
+                  {typeFilter || statusFilter
+                    ? 'No reports found with the selected filters.'
+                    : 'No reports found.'}
                 </p>
               </div>
             ) : (
@@ -252,7 +253,9 @@ export default function AdminReports() {
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
                             {getTypeIcon(report.report_type)}
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(report.report_type)}`}>
+                            <span
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(report.report_type)}`}
+                            >
                               {report.report_type === 'ai_enhanced' ? 'AI Enhanced' : 'Standard'}
                             </span>
                           </div>
@@ -260,7 +263,9 @@ export default function AdminReports() {
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
                             {getStatusIcon(report.status)}
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`}>
+                            <span
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`}
+                            >
                               {report.status.toUpperCase()}
                             </span>
                           </div>
@@ -273,26 +278,30 @@ export default function AdminReports() {
                             <span className="text-gray-600">
                               {report.completed_at ? formatDate(report.completed_at) : '-'}
                             </span>
-                            {report.report_type === 'ai_enhanced' && report.status === 'pending' && (
-                              <button
-                                onClick={() => generateAIReportMutation.mutate(report.id)}
-                                disabled={generateAIReportMutation.isLoading}
-                                className="btn-primary text-xs flex items-center"
-                              >
-                                <SparklesIcon className="h-3 w-3 mr-1" />
-                                {generateAIReportMutation.isLoading ? 'Generating...' : 'Generate'}
-                              </button>
-                            )}
-                            {report.report_type === 'ai_enhanced' && report.status === 'completed' && (
-                              <button
-                                onClick={() => releaseAIReportMutation.mutate(report.id)}
-                                disabled={releaseAIReportMutation.isLoading}
-                                className="btn-secondary text-xs flex items-center"
-                              >
-                                <PaperAirplaneIcon className="h-3 w-3 mr-1" />
-                                {releaseAIReportMutation.isLoading ? 'Releasing...' : 'Release'}
-                              </button>
-                            )}
+                            {report.report_type === 'ai_enhanced' &&
+                              report.status === 'pending' && (
+                                <button
+                                  onClick={() => generateAIReportMutation.mutate(report.id)}
+                                  disabled={generateAIReportMutation.isLoading}
+                                  className="btn-primary text-xs flex items-center"
+                                >
+                                  <SparklesIcon className="h-3 w-3 mr-1" />
+                                  {generateAIReportMutation.isLoading
+                                    ? 'Generating...'
+                                    : 'Generate'}
+                                </button>
+                              )}
+                            {report.report_type === 'ai_enhanced' &&
+                              report.status === 'completed' && (
+                                <button
+                                  onClick={() => releaseAIReportMutation.mutate(report.id)}
+                                  disabled={releaseAIReportMutation.isLoading}
+                                  className="btn-secondary text-xs flex items-center"
+                                >
+                                  <PaperAirplaneIcon className="h-3 w-3 mr-1" />
+                                  {releaseAIReportMutation.isLoading ? 'Releasing...' : 'Release'}
+                                </button>
+                              )}
                           </div>
                         </td>
                       </tr>

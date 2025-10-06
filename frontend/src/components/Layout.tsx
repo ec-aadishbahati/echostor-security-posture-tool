@@ -1,14 +1,13 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
-import { 
-  HomeIcon, 
-  DocumentTextIcon, 
-  ChartBarIcon, 
+import {
+  HomeIcon,
+  DocumentTextIcon,
+  ChartBarIcon,
   UserIcon,
   ArrowRightOnRectangleIcon,
-  CogIcon,
-  ChatBubbleLeftRightIcon
+  ChatBubbleLeftRightIcon,
 } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
