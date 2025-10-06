@@ -136,7 +136,7 @@ def test_delete_user(client: TestClient, admin_token, db_session):
         email="delete@example.com",
         full_name="Delete User",
         company_name="Test Company",
-        password_hash=get_password_hash("password123"),
+        password_hash=get_password_hash("DeletePass123!"),
         is_active=True,
         is_admin=False,
     )
@@ -212,7 +212,7 @@ def test_bulk_delete_users(client: TestClient, admin_token, db_session):
         email="bulk1@example.com",
         full_name="Bulk User 1",
         company_name="Test Company",
-        password_hash=get_password_hash("password123"),
+        password_hash=get_password_hash("BulkPass123!"),
         is_active=True,
         is_admin=False,
     )
@@ -220,7 +220,7 @@ def test_bulk_delete_users(client: TestClient, admin_token, db_session):
         email="bulk2@example.com",
         full_name="Bulk User 2",
         company_name="Test Company",
-        password_hash=get_password_hash("password123"),
+        password_hash=get_password_hash("BulkPass123!"),
         is_active=True,
         is_admin=False,
     )

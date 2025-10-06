@@ -53,7 +53,7 @@ def test_register_duplicate_email(client: TestClient, test_user):
 def test_login_valid_credentials(client: TestClient, test_user):
     response = client.post(
         "/api/auth/login",
-        json={"email": test_user.email, "password": "testpassword123"},
+        json={"email": test_user.email, "password": "TestPass123!"},
     )
     assert response.status_code == 200
     data = response.json()
@@ -104,7 +104,7 @@ def test_get_current_user_invalid_token(client: TestClient):
 def test_admin_user_login(client: TestClient, test_admin_user):
     response = client.post(
         "/api/auth/login",
-        json={"email": test_admin_user.email, "password": "adminpassword123"},
+        json={"email": test_admin_user.email, "password": "AdminPass123!"},
     )
     assert response.status_code == 200
     data = response.json()

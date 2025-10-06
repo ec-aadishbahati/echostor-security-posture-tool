@@ -69,7 +69,7 @@ def test_user(db_session):
         email="test@example.com",
         full_name="Test User",
         company_name="Test Company",
-        password_hash=get_password_hash("testpassword123"),
+        password_hash=get_password_hash("TestPass123!"),
         is_active=True,
         is_admin=False,
     )
@@ -85,7 +85,7 @@ def test_admin_user(db_session):
         email="admin@example.com",
         full_name="Admin User",
         company_name="Test Company",
-        password_hash=get_password_hash("adminpassword123"),
+        password_hash=get_password_hash("AdminPass123!"),
         is_active=True,
         is_admin=True,
     )
