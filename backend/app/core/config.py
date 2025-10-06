@@ -31,8 +31,6 @@ class Settings(BaseSettings):
     REPORTS_DIR: str = "reports"
     AI_REPORT_DELIVERY_DAYS: int = 5
     REDIS_URL: str | None = None
-    SENTRY_DSN: str | None = None
-    SENTRY_ENVIRONMENT: str = "development"
 
     @model_validator(mode="after")
     def validate_required_settings(self):
