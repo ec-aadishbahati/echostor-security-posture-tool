@@ -15,6 +15,7 @@ from app.schemas.assessment import (
     AssessmentResponseResponse,
     AssessmentStructure,
     SaveProgressRequest,
+    ConsultationRequest,
 )
 from app.services.question_parser import load_assessment_structure
 
@@ -290,7 +291,7 @@ async def complete_assessment(
 async def save_consultation_interest(
     request: Request,
     assessment_id: str,
-    consultation_data: dict,
+    consultation_data: ConsultationRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_write_db),
 ):
@@ -307,19 +308,8 @@ async def save_consultation_interest(
     if not assessment:
         raise HTTPException(status_code=404, detail="Assessment not found")
 
-    if consultation_data.get("consultation_interest") and consultation_data.get(
-        "consultation_details"
-    ):
-        word_count = len(consultation_data["consultation_details"].split())
-        if word_count < 200 or word_count > 300:
-            raise HTTPException(
-                status_code=400, detail="Consultation details must be 200-300 words"
-            )
-
-    assessment.consultation_interest = consultation_data.get(
-        "consultation_interest", False
-    )
-    assessment.consultation_details = consultation_data.get("consultation_details")
+    assessment.consultation_interest = consultation_data.consultation_interest
+    assessment.consultation_details = consultation_data.consultation_details
 
     db.commit()
     return {"message": "Consultation preferences saved"}

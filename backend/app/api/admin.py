@@ -11,7 +11,11 @@ from app.models.assessment import AdminAuditLog, Assessment, AssessmentResponse,
 from app.models.user import User
 from app.schemas.assessment import AssessmentResponse as AssessmentResponseSchema
 from app.schemas.report import ReportResponse
-from app.schemas.user import UserResponse
+from app.schemas.user import (
+    UserResponse,
+    BulkUpdateUserStatusRequest,
+    BulkDeleteUsersRequest,
+)
 
 router = APIRouter()
 
@@ -576,25 +580,17 @@ async def get_consultation_requests(
 @router.post("/users/bulk-update-status")
 async def bulk_update_user_status(
     request: Request,
-    request_data: dict,
+    request_data: BulkUpdateUserStatusRequest,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
 ):
     """Bulk activate/deactivate users"""
 
     try:
-        user_ids = request_data.get("user_ids", [])
-        is_active = request_data.get("is_active", True)
-
-        if not user_ids:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail="No user IDs provided"
-            )
-
         updated_count = (
             db.query(User)
-            .filter(User.id.in_(user_ids))
-            .update({"is_active": is_active}, synchronize_session=False)
+            .filter(User.id.in_(request_data.user_ids))
+            .update({"is_active": request_data.is_active}, synchronize_session=False)
         )
         db.commit()
 
@@ -602,8 +598,8 @@ async def bulk_update_user_status(
             admin_email=current_admin["email"],
             action="bulk_update_status",
             details={
-                "user_ids": user_ids,
-                "is_active": is_active,
+                "user_ids": request_data.user_ids,
+                "is_active": request_data.is_active,
                 "updated_count": updated_count,
             },
             db=db,
@@ -628,18 +624,11 @@ async def bulk_update_user_status(
 @router.post("/users/bulk-delete")
 async def bulk_delete_users(
     request: Request,
-    request_data: dict,
+    request_data: BulkDeleteUsersRequest,
     current_admin=Depends(get_current_admin_user),
     db: Session = Depends(get_write_db),
 ):
     """Bulk delete users and all associated data"""
-
-    user_ids = request_data.get("user_ids", [])
-
-    if not user_ids:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="No user IDs provided"
-        )
 
     try:
         # Let SQLAlchemy handle cascade deletion automatically
@@ -647,7 +636,7 @@ async def bulk_delete_users(
         # Assessment foreign keys have ondelete="CASCADE"
         deleted_count = (
             db.query(User)
-            .filter(User.id.in_(user_ids))
+            .filter(User.id.in_(request_data.user_ids))
             .delete(synchronize_session=False)
         )
         db.commit()
@@ -655,7 +644,7 @@ async def bulk_delete_users(
         await log_admin_action(
             admin_email=current_admin["email"],
             action="bulk_delete_users",
-            details={"user_ids": user_ids, "deleted_count": deleted_count},
+            details={"user_ids": request_data.user_ids, "deleted_count": deleted_count},
             db=db,
         )
 
