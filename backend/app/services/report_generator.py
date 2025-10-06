@@ -1,57 +1,62 @@
 import os
 import uuid
 from datetime import datetime
-from typing import Dict, List, Any
-from jinja2 import Template
-from weasyprint import HTML, CSS
-from sqlalchemy.orm import Session
-import openai
+from typing import Any
 
-from app.core.database import WriteSessionLocal
+import openai
+from jinja2 import Template
+from weasyprint import HTML
+
 from app.core.config import settings
+from app.core.database import WriteSessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.services.question_parser import load_assessment_structure
 
 if settings.OPENAI_API_KEY:
     openai.api_key = settings.OPENAI_API_KEY
 
+
 async def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
-    
+
     db = WriteSessionLocal()
     try:
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
             return
-        
-        assessment = db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
+
+        assessment = (
+            db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
+        )
         if not assessment:
             report.status = "failed"
             db.commit()
             return
-        
-        responses = db.query(AssessmentResponse).filter(
-            AssessmentResponse.assessment_id == assessment.id
-        ).all()
-        
+
+        responses = (
+            db.query(AssessmentResponse)
+            .filter(AssessmentResponse.assessment_id == assessment.id)
+            .all()
+        )
+
         structure = load_assessment_structure()
-        
+
         scores = calculate_assessment_scores(responses, structure)
-        
+
         html_content = generate_report_html(assessment, responses, scores, structure)
-        
+
         filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
         file_path = os.path.join(settings.REPORTS_DIR, filename)
-        
+
         os.makedirs(settings.REPORTS_DIR, exist_ok=True)
-        
+
         HTML(string=html_content).write_pdf(file_path)
-        
+
         report.file_path = file_path
         report.status = "completed"
         report.completed_at = datetime.utcnow()
         db.commit()
-        
+
     except Exception as e:
         print(f"Error generating standard report: {e}")
         if report:
@@ -60,51 +65,58 @@ async def generate_standard_report(report_id: str):
     finally:
         db.close()
 
+
 async def generate_ai_report(report_id: str):
     """Generate an AI-enhanced report using ChatGPT"""
-    
+
     db = WriteSessionLocal()
     try:
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
             return
-        
+
         if not settings.OPENAI_API_KEY:
             print("OPENAI_API_KEY not configured - cannot generate AI report")
             report.status = "failed"
             db.commit()
             return
-        
-        assessment = db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
+
+        assessment = (
+            db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
+        )
         if not assessment:
             report.status = "failed"
             db.commit()
             return
-        
-        responses = db.query(AssessmentResponse).filter(
-            AssessmentResponse.assessment_id == assessment.id
-        ).all()
-        
+
+        responses = (
+            db.query(AssessmentResponse)
+            .filter(AssessmentResponse.assessment_id == assessment.id)
+            .all()
+        )
+
         structure = load_assessment_structure()
-        
+
         ai_insights = await generate_ai_insights(responses, structure)
-        
+
         scores = calculate_assessment_scores(responses, structure)
-        
-        html_content = generate_ai_report_html(assessment, responses, scores, structure, ai_insights)
-        
+
+        html_content = generate_ai_report_html(
+            assessment, responses, scores, structure, ai_insights
+        )
+
         filename = f"ai_report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
         file_path = os.path.join(settings.REPORTS_DIR, filename)
-        
+
         os.makedirs(settings.REPORTS_DIR, exist_ok=True)
-        
+
         HTML(string=html_content).write_pdf(file_path)
-        
+
         report.file_path = file_path
         report.status = "completed"
         report.completed_at = datetime.utcnow()
         db.commit()
-        
+
     except Exception as e:
         print(f"Error generating AI report: {e}")
         if report:
@@ -113,86 +125,103 @@ async def generate_ai_report(report_id: str):
     finally:
         db.close()
 
-def calculate_assessment_scores(responses: List[AssessmentResponse], structure) -> Dict[str, Any]:
+
+def calculate_assessment_scores(
+    responses: list[AssessmentResponse], structure
+) -> dict[str, Any]:
     """Calculate assessment scores by section"""
-    
+
     scores = {}
     response_dict = {r.question_id: r for r in responses}
-    
+
     for section in structure.sections:
         section_score = 0
         section_max_score = 0
         section_responses = 0
-        
+
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
                 section_responses += 1
                 question_score = calculate_question_score(response, question)
                 section_score += question_score
-            
+
             section_max_score += question.weight
-        
-        completion_rate = (section_responses / len(section.questions)) * 100 if section.questions else 0
-        score_percentage = (section_score / section_max_score) * 100 if section_max_score > 0 else 0
-        
+
+        completion_rate = (
+            (section_responses / len(section.questions)) * 100
+            if section.questions
+            else 0
+        )
+        score_percentage = (
+            (section_score / section_max_score) * 100 if section_max_score > 0 else 0
+        )
+
         scores[section.id] = {
             "score": section_score,
             "max_score": section_max_score,
             "percentage": score_percentage,
             "completion_rate": completion_rate,
             "responses_count": section_responses,
-            "total_questions": len(section.questions)
+            "total_questions": len(section.questions),
         }
-    
+
     total_score = sum(s["score"] for s in scores.values())
     total_max_score = sum(s["max_score"] for s in scores.values())
-    overall_percentage = (total_score / total_max_score) * 100 if total_max_score > 0 else 0
-    
+    overall_percentage = (
+        (total_score / total_max_score) * 100 if total_max_score > 0 else 0
+    )
+
     scores["overall"] = {
         "score": total_score,
         "max_score": total_max_score,
-        "percentage": overall_percentage
+        "percentage": overall_percentage,
     }
-    
+
     return scores
+
 
 def calculate_question_score(response: AssessmentResponse, question) -> int:
     """Calculate score for a single question response"""
-    
+
     if question.type == "yes_no":
         if response.answer_value == "yes":
             return question.weight
         else:
             return 0
-    
+
     elif question.type == "multiple_choice":
         return question.weight if response.answer_value else 0
-    
+
     elif question.type == "multiple_select":
         if isinstance(response.answer_value, list):
             return question.weight if response.answer_value else 0
         return question.weight if response.answer_value else 0
-    
+
     return 0
 
-async def generate_ai_insights(responses: List[AssessmentResponse], structure) -> Dict[str, str]:
+
+async def generate_ai_insights(
+    responses: list[AssessmentResponse], structure
+) -> dict[str, str]:
     """Generate AI insights for each section"""
-    
+
     insights = {}
     response_dict = {r.question_id: r for r in responses}
-    
+
     for section in structure.sections:
         section_responses = []
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
-                section_responses.append({
-                    "question": question.text,
-                    "answer": response.answer_value,
-                    "weight": question.weight
-                })
-        
+                section_responses.append(
+                    {
+                        "question": question.text,
+                        "answer": response.answer_value,
+                        "weight": question.weight,
+                    }
+                )
+
         if section_responses:
             try:
                 prompt = f"""
@@ -213,37 +242,42 @@ async def generate_ai_insights(responses: List[AssessmentResponse], structure) -
                 
                 Keep the response professional and actionable, around 300-400 words.
                 """
-                
+
                 response = await openai.ChatCompletion.acreate(
                     model="gpt-4",
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=500,
-                    temperature=0.7
+                    temperature=0.7,
                 )
-                
+
                 insights[section.id] = response.choices[0].message.content
-                
+
             except Exception as e:
                 print(f"Error generating AI insight for section {section.id}: {e}")
-                insights[section.id] = "AI analysis temporarily unavailable for this section."
-    
+                insights[section.id] = (
+                    "AI analysis temporarily unavailable for this section."
+                )
+
     return insights
 
-def format_responses_for_ai(responses: List[Dict]) -> str:
+
+def format_responses_for_ai(responses: list[dict]) -> str:
     """Format responses for AI analysis"""
-    
+
     formatted = []
     for resp in responses:
         formatted.append(f"Q: {resp['question']}")
         formatted.append(f"A: {resp['answer']} (Weight: {resp['weight']})")
         formatted.append("")
-    
+
     return "\n".join(formatted)
+
 
 def generate_report_html(assessment, responses, scores, structure) -> str:
     """Generate HTML content for standard report"""
-    
-    template = Template("""
+
+    template = Template(
+        """
     <!DOCTYPE html>
     <html>
     <head>
@@ -314,21 +348,28 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
         </div>
     </body>
     </html>
-    """)
-    
+    """
+    )
+
     overall_percentage = scores["overall"]["percentage"]
     if overall_percentage >= 80:
         overall_score_class = "high-score"
-        overall_assessment = "Strong security posture with good coverage across most areas."
+        overall_assessment = (
+            "Strong security posture with good coverage across most areas."
+        )
     elif overall_percentage >= 60:
         overall_score_class = "medium-score"
-        overall_assessment = "Moderate security posture with room for improvement in several areas."
+        overall_assessment = (
+            "Moderate security posture with room for improvement in several areas."
+        )
     else:
         overall_score_class = "low-score"
-        overall_assessment = "Security posture needs significant improvement across multiple areas."
-    
+        overall_assessment = (
+            "Security posture needs significant improvement across multiple areas."
+        )
+
     recommendations = generate_recommendations(scores, structure)
-    
+
     def get_score_status(percentage):
         if percentage >= 80:
             return "Strong"
@@ -336,22 +377,26 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
             return "Moderate"
         else:
             return "Needs Improvement"
-    
+
     return template.render(
         assessment=assessment,
         scores=scores,
         structure=structure,
-        report_date=datetime.now().strftime('%Y-%m-%d %H:%M'),
+        report_date=datetime.now().strftime("%Y-%m-%d %H:%M"),
         overall_score_class=overall_score_class,
         overall_assessment=overall_assessment,
         recommendations=recommendations,
-        get_score_status=get_score_status
+        get_score_status=get_score_status,
     )
 
-def generate_ai_report_html(assessment, responses, scores, structure, ai_insights) -> str:
+
+def generate_ai_report_html(
+    assessment, responses, scores, structure, ai_insights
+) -> str:
     """Generate HTML content for AI-enhanced report"""
-    
-    template = Template("""
+
+    template = Template(
+        """
     <!DOCTYPE html>
     <html>
     <head>
@@ -424,51 +469,69 @@ def generate_ai_report_html(assessment, responses, scores, structure, ai_insight
         </div>
     </body>
     </html>
-    """)
-    
+    """
+    )
+
     overall_percentage = scores["overall"]["percentage"]
     if overall_percentage >= 80:
         overall_score_class = "high-score"
-        overall_assessment = "Strong security posture with good coverage across most areas."
+        overall_assessment = (
+            "Strong security posture with good coverage across most areas."
+        )
     elif overall_percentage >= 60:
         overall_score_class = "medium-score"
-        overall_assessment = "Moderate security posture with room for improvement in several areas."
+        overall_assessment = (
+            "Moderate security posture with room for improvement in several areas."
+        )
     else:
         overall_score_class = "low-score"
-        overall_assessment = "Security posture needs significant improvement across multiple areas."
-    
+        overall_assessment = (
+            "Security posture needs significant improvement across multiple areas."
+        )
+
     recommendations = generate_recommendations(scores, structure)
-    
+
     return template.render(
         assessment=assessment,
         scores=scores,
         structure=structure,
         ai_insights=ai_insights,
-        report_date=datetime.now().strftime('%Y-%m-%d %H:%M'),
+        report_date=datetime.now().strftime("%Y-%m-%d %H:%M"),
         overall_score_class=overall_score_class,
         overall_assessment=overall_assessment,
-        recommendations=recommendations
+        recommendations=recommendations,
     )
 
-def generate_recommendations(scores, structure) -> List[str]:
+
+def generate_recommendations(scores, structure) -> list[str]:
     """Generate recommendations based on scores"""
-    
+
     recommendations = []
-    
-    section_scores = [(section.title, scores[section.id]["percentage"]) 
-                     for section in structure.sections]
+
+    section_scores = [
+        (section.title, scores[section.id]["percentage"])
+        for section in structure.sections
+    ]
     section_scores.sort(key=lambda x: x[1])
-    
+
     for title, percentage in section_scores[:3]:
         if percentage < 70:
-            recommendations.append(f"Prioritize improvements in {title} (current score: {percentage:.1f}%)")
-    
+            recommendations.append(
+                f"Prioritize improvements in {title} (current score: {percentage:.1f}%)"
+            )
+
     overall_percentage = scores["overall"]["percentage"]
     if overall_percentage < 60:
-        recommendations.append("Consider engaging a cybersecurity consultant for comprehensive security program development")
-    
+        recommendations.append(
+            "Consider engaging a cybersecurity consultant for comprehensive security program development"
+        )
+
     if overall_percentage < 80:
-        recommendations.append("Implement regular security awareness training for all employees")
-        recommendations.append("Establish a formal incident response plan and test it regularly")
-    
+        recommendations.append(
+            "Implement regular security awareness training for all employees"
+        )
+        recommendations.append(
+            "Establish a formal incident response plan and test it regularly"
+        )
+
     return recommendations

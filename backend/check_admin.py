@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 
+
 from app.core.database import get_write_db
 from app.models.user import User
-from sqlalchemy.orm import Session
+
 
 def check_admin_user():
     """Check if admin user exists in database"""
     try:
         db = next(get_write_db())
-        
-        admin_user = db.query(User).filter(User.email == 'aadish.bahati@echostor.com').first()
-        
+
+        admin_user = (
+            db.query(User).filter(User.email == "aadish.bahati@echostor.com").first()
+        )
+
         if admin_user:
-            print(f"✅ Admin user found:")
+            print("✅ Admin user found:")
             print(f"   Email: {admin_user.email}")
             print(f"   Name: {admin_user.full_name}")
             print(f"   Is Admin: {admin_user.is_admin}")
@@ -20,16 +23,17 @@ def check_admin_user():
             print(f"   Created: {admin_user.created_at}")
         else:
             print("❌ No admin user found in database")
-            
+
         all_users = db.query(User).all()
         print(f"\n📊 Total users in database: {len(all_users)}")
         for user in all_users:
             print(f"   - {user.email} (admin: {user.is_admin})")
-            
+
         db.close()
-        
+
     except Exception as e:
         print(f"❌ Error checking admin user: {e}")
+
 
 if __name__ == "__main__":
     check_admin_user()
