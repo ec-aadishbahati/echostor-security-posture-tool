@@ -20,7 +20,7 @@ from app.schemas.user import (
 router = APIRouter()
 
 
-@router.get("/users", response_model=list[UserResponse])
+@router.get("/users")
 async def get_all_users(
     request: Request,
     skip: int = Query(0, ge=0),
@@ -41,6 +41,7 @@ async def get_all_users(
             | User.company_name.ilike(search_param)
         )
 
+    total = query.count()
     users = query.offset(skip).limit(limit).all()
 
     await log_admin_action(
@@ -50,7 +51,14 @@ async def get_all_users(
         db=db,
     )
 
-    return [UserResponse.model_validate(user) for user in users]
+    from app.utils.pagination import paginate
+
+    return paginate(
+        items=[UserResponse.model_validate(user) for user in users],
+        total=total,
+        skip=skip,
+        limit=limit,
+    )
 
 
 @router.get("/users/{user_id}", response_model=UserResponse)
@@ -126,7 +134,7 @@ async def get_user_assessments(
         )
 
 
-@router.get("/assessments", response_model=list[AssessmentResponseSchema])
+@router.get("/assessments")
 async def get_all_assessments(
     request: Request,
     skip: int = Query(0, ge=0),
@@ -143,6 +151,7 @@ async def get_all_assessments(
         if status:
             query = query.filter(Assessment.status == status)
 
+        total = query.count()
         assessments = (
             query.order_by(desc(Assessment.created_at)).offset(skip).limit(limit).all()
         )
@@ -154,10 +163,17 @@ async def get_all_assessments(
             db=db,
         )
 
-        return [
-            AssessmentResponseSchema.model_validate(assessment)
-            for assessment in assessments
-        ]
+        from app.utils.pagination import paginate
+
+        return paginate(
+            items=[
+                AssessmentResponseSchema.model_validate(assessment)
+                for assessment in assessments
+            ],
+            total=total,
+            skip=skip,
+            limit=limit,
+        )
 
     except Exception as e:
         print(f"Error in get_all_assessments: {str(e)}")
@@ -309,7 +325,7 @@ async def get_users_progress_summary(
         )
 
 
-@router.get("/reports", response_model=list[ReportResponse])
+@router.get("/reports")
 async def get_all_reports(
     request: Request,
     skip: int = Query(0, ge=0),
@@ -330,6 +346,7 @@ async def get_all_reports(
         if status:
             query = query.filter(Report.status == status)
 
+        total = query.count()
         reports = (
             query.order_by(desc(Report.requested_at)).offset(skip).limit(limit).all()
         )
@@ -345,7 +362,14 @@ async def get_all_reports(
             db=db,
         )
 
-        return [ReportResponse.model_validate(report) for report in reports]
+        from app.utils.pagination import paginate
+
+        return paginate(
+            items=[ReportResponse.model_validate(report) for report in reports],
+            total=total,
+            skip=skip,
+            limit=limit,
+        )
 
     except Exception as e:
         print(f"Error in get_all_reports: {str(e)}")
@@ -543,15 +567,15 @@ async def get_consultation_requests(
     """Get all consultation requests from users"""
 
     try:
-        consultations = (
+        query = (
             db.query(Assessment)
             .join(User)
             .filter(Assessment.consultation_interest.is_(True))
             .order_by(desc(Assessment.updated_at))
-            .offset(skip)
-            .limit(limit)
-            .all()
         )
+
+        total = query.count()
+        consultations = query.offset(skip).limit(limit).all()
 
         consultation_data = []
         for assessment in consultations:
@@ -567,7 +591,9 @@ async def get_consultation_requests(
                 }
             )
 
-        return {"data": consultation_data, "total": len(consultation_data)}
+        from app.utils.pagination import paginate
+
+        return paginate(items=consultation_data, total=total, skip=skip, limit=limit)
 
     except Exception as e:
         print(f"Error in get_consultation_requests: {str(e)}")

@@ -25,9 +25,10 @@ export default function AdminConsultations() {
     }
   );
 
-  const consultations = consultationsData?.data || [];
-  const hasNextPage = consultations.length === limit;
-  const hasPrevPage = currentPage > 1;
+  const consultations = consultationsData?.data?.items || [];
+  const pagination = consultationsData?.data;
+  const hasNextPage = pagination?.has_next || false;
+  const hasPrevPage = pagination?.has_prev || false;
 
   if (isLoading) {
     return (

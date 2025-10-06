@@ -72,7 +72,8 @@ export const reportsAPI = {
   requestAIReport: (assessmentId: string, message?: string) =>
     api.post(`/api/reports/${assessmentId}/request-ai-report`, { message }),
   
-  getUserReports: () => api.get('/api/reports/user/reports'),
+  getUserReports: (params?: { skip?: number; limit?: number }) => 
+    api.get('/api/reports/user/reports', { params }),
   
   getReportStatus: (reportId: string) =>
     api.get(`/api/reports/${reportId}/status`),

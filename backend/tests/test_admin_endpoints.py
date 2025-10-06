@@ -9,8 +9,9 @@ def test_get_all_users(client: TestClient, admin_token, test_user):
     )
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data, list)
-    assert len(data) >= 1
+    assert "items" in data
+    assert isinstance(data["items"], list)
+    assert len(data["items"]) >= 1
 
 
 def test_get_all_users_with_search(client: TestClient, admin_token, test_user):
@@ -21,7 +22,8 @@ def test_get_all_users_with_search(client: TestClient, admin_token, test_user):
     )
     assert response.status_code == 200
     data = response.json()
-    assert len(data) >= 1
+    assert "items" in data
+    assert len(data["items"]) >= 1
 
 
 def test_get_all_users_unauthorized(client: TestClient, auth_token):
@@ -68,7 +70,8 @@ def test_get_all_assessments(client: TestClient, admin_token, test_assessment):
     )
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data, list)
+    assert "items" in data
+    assert isinstance(data["items"], list)
 
 
 def test_get_all_assessments_with_status_filter(
@@ -81,7 +84,8 @@ def test_get_all_assessments_with_status_filter(
     )
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data, list)
+    assert "items" in data
+    assert isinstance(data["items"], list)
 
 
 def test_get_dashboard_stats(
@@ -115,7 +119,8 @@ def test_get_all_reports(client: TestClient, admin_token, test_report):
     )
     assert response.status_code == 200
     data = response.json()
-    assert isinstance(data, list)
+    assert "items" in data
+    assert isinstance(data["items"], list)
 
 
 def test_get_alerts(client: TestClient, admin_token):
@@ -189,8 +194,8 @@ def test_get_consultation_requests(
     )
     assert response.status_code == 200
     data = response.json()
-    assert "data" in data
-    assert isinstance(data["data"], list)
+    assert "items" in data
+    assert isinstance(data["items"], list)
 
 
 def test_bulk_update_user_status(client: TestClient, admin_token, test_user):

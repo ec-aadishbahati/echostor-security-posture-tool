@@ -36,9 +36,10 @@ export default function AdminUsers() {
     }
   );
 
-  const users = usersData?.data || [];
-  const hasNextPage = users.length === limit;
-  const hasPrevPage = currentPage > 1;
+  const users = usersData?.data?.items || [];
+  const pagination = usersData?.data;
+  const hasNextPage = pagination?.has_next || false;
+  const hasPrevPage = pagination?.has_prev || false;
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
