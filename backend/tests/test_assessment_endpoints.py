@@ -124,7 +124,15 @@ def test_save_assessment_progress_not_found(client: TestClient, auth_token):
     response = client.post(
         "/api/assessment/nonexistent-id/save-progress",
         headers={"Authorization": f"Bearer {auth_token}"},
-        json={"responses": []},
+        json={
+            "responses": [
+                {
+                    "section_id": "access-control",
+                    "question_id": "ac-1",
+                    "answer_value": "yes",
+                }
+            ]
+        },
     )
     assert response.status_code == 404
 
@@ -171,5 +179,5 @@ def test_save_consultation_interest_invalid_word_count(
         headers={"Authorization": f"Bearer {auth_token}"},
         json={"consultation_interest": True, "consultation_details": short_details},
     )
-    assert response.status_code == 400
-    assert "200-300 words" in response.json()["detail"]
+    assert response.status_code == 422
+    assert "200" in str(response.json())

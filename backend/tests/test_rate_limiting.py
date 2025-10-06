@@ -29,7 +29,7 @@ def test_auth_register_rate_limit(client: TestClient):
             "/api/auth/register",
             json={
                 "email": f"test{i}@example.com",
-                "password": "testpassword123",
+                "password": "TestPass123!",
                 "full_name": "Test User",
                 "company_name": "Test Company",
             },
@@ -40,7 +40,7 @@ def test_auth_register_rate_limit(client: TestClient):
         "/api/auth/register",
         json={
             "email": "test6@example.com",
-            "password": "testpassword123",
+            "password": "TestPass123!",
             "full_name": "Test User",
             "company_name": "Test Company",
         },

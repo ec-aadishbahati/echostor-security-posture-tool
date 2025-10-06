@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ReportBase(BaseModel):
-    report_type: str = "standard"
+    report_type: Annotated[str, Field(pattern="^(standard|ai_enhanced)$")] = "standard"
 
 
 class ReportCreate(ReportBase):
@@ -13,8 +14,8 @@ class ReportCreate(ReportBase):
 
 
 class ReportUpdate(BaseModel):
-    status: str | None = None
-    file_path: str | None = None
+    status: Annotated[str, Field(pattern="^(generating|completed|failed|pending|released)$")] | None = None
+    file_path: Annotated[str, Field(max_length=500)] | None = None
     completed_at: datetime | None = None
 
 
@@ -33,4 +34,4 @@ class ReportResponse(BaseModel):
 
 class AIReportRequest(BaseModel):
     assessment_id: uuid.UUID
-    message: str | None = None
+    message: Annotated[str, Field(max_length=2000)] | None = None
