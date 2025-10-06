@@ -3,13 +3,13 @@ import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { adminAPI } from '../../lib/api';
-import { 
-  UserIcon, 
+import {
+  UserIcon,
   MagnifyingGlassIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   TrashIcon,
-  KeyIcon
+  KeyIcon,
 } from '@heroicons/react/24/outline';
 import { toast } from 'react-hot-toast';
 
@@ -21,13 +21,19 @@ export default function AdminUsers() {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [showBulkModal, setShowBulkModal] = useState(false);
-  const [bulkOperation, setBulkOperation] = useState<'activate' | 'deactivate' | 'delete' | null>(null);
+  const [bulkOperation, setBulkOperation] = useState<'activate' | 'deactivate' | 'delete' | null>(
+    null
+  );
   const [newPassword, setNewPassword] = useState('');
   const limit = 20;
   const skip = (currentPage - 1) * limit;
   const queryClient = useQueryClient();
 
-  const { data: usersData, isLoading, error } = useQuery(
+  const {
+    data: usersData,
+    isLoading,
+    error,
+  } = useQuery(
     ['adminUsers', { skip, limit, search }],
     () => adminAPI.getUsers({ skip, limit, search: search || undefined }),
     {
@@ -52,27 +58,24 @@ export default function AdminUsers() {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
-  const deleteUserMutation = useMutation(
-    (userId: string) => adminAPI.deleteUser(userId),
-    {
-      onSuccess: () => {
-        toast.success('User deleted successfully');
-        queryClient.invalidateQueries('adminUsers');
-        setShowDeleteModal(false);
-        setSelectedUser(null);
-      },
-      onError: () => {
-        toast.error('Failed to delete user');
-      }
-    }
-  );
+  const deleteUserMutation = useMutation((userId: string) => adminAPI.deleteUser(userId), {
+    onSuccess: () => {
+      toast.success('User deleted successfully');
+      queryClient.invalidateQueries('adminUsers');
+      setShowDeleteModal(false);
+      setSelectedUser(null);
+    },
+    onError: () => {
+      toast.error('Failed to delete user');
+    },
+  });
 
   const resetPasswordMutation = useMutation(
-    ({ userId, password }: { userId: string; password: string }) => 
+    ({ userId, password }: { userId: string; password: string }) =>
       adminAPI.resetUserPassword(userId, password),
     {
       onSuccess: () => {
@@ -83,12 +86,12 @@ export default function AdminUsers() {
       },
       onError: () => {
         toast.error('Failed to reset password');
-      }
+      },
     }
   );
 
   const bulkUpdateStatusMutation = useMutation(
-    ({ userIds, isActive }: { userIds: string[]; isActive: boolean }) => 
+    ({ userIds, isActive }: { userIds: string[]; isActive: boolean }) =>
       adminAPI.bulkUpdateUserStatus(userIds, isActive),
     {
       onSuccess: (data) => {
@@ -100,25 +103,22 @@ export default function AdminUsers() {
       },
       onError: () => {
         toast.error('Failed to update users');
-      }
+      },
     }
   );
 
-  const bulkDeleteMutation = useMutation(
-    (userIds: string[]) => adminAPI.bulkDeleteUsers(userIds),
-    {
-      onSuccess: (data) => {
-        toast.success(`${data.data.message}`);
-        queryClient.invalidateQueries('adminUsers');
-        setSelectedUsers([]);
-        setShowBulkModal(false);
-        setBulkOperation(null);
-      },
-      onError: () => {
-        toast.error('Failed to delete users');
-      }
-    }
-  );
+  const bulkDeleteMutation = useMutation((userIds: string[]) => adminAPI.bulkDeleteUsers(userIds), {
+    onSuccess: (data) => {
+      toast.success(`${data.data.message}`);
+      queryClient.invalidateQueries('adminUsers');
+      setSelectedUsers([]);
+      setShowBulkModal(false);
+      setBulkOperation(null);
+    },
+    onError: () => {
+      toast.error('Failed to delete users');
+    },
+  });
 
   const handleDeleteUser = (user: any) => {
     setSelectedUser(user);
@@ -151,10 +151,8 @@ export default function AdminUsers() {
   };
 
   const handleSelectUser = (userId: string) => {
-    setSelectedUsers(prev => 
-      prev.includes(userId) 
-        ? prev.filter(id => id !== userId)
-        : [...prev, userId]
+    setSelectedUsers((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
     );
   };
 
@@ -183,12 +181,8 @@ export default function AdminUsers() {
       <Layout title="Users Management">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Users Management
-            </h2>
-            <p className="text-gray-600">
-              View and manage all registered users in the system
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Users Management</h2>
+            <p className="text-gray-600">View and manage all registered users in the system</p>
           </div>
 
           <div className="card mb-6">
@@ -216,19 +210,17 @@ export default function AdminUsers() {
 
           <div className="card">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">
-                All Users ({users.length})
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900">All Users ({users.length})</h3>
               <div className="flex items-center gap-4">
                 {selectedUsers.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600">
-                      {selectedUsers.length} selected
-                    </span>
+                    <span className="text-sm text-gray-600">{selectedUsers.length} selected</span>
                     <select
                       onChange={(e) => {
                         if (e.target.value) {
-                          handleBulkOperation(e.target.value as 'activate' | 'deactivate' | 'delete');
+                          handleBulkOperation(
+                            e.target.value as 'activate' | 'deactivate' | 'delete'
+                          );
                           e.target.value = '';
                         }
                       }}
@@ -244,17 +236,15 @@ export default function AdminUsers() {
                 )}
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                     disabled={!hasPrevPage}
                     className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
                     <ChevronLeftIcon className="h-5 w-5" />
                   </button>
-                  <span className="px-3 py-1 text-sm text-gray-600">
-                    Page {currentPage}
-                  </span>
+                  <span className="px-3 py-1 text-sm text-gray-600">Page {currentPage}</span>
                   <button
-                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
                     disabled={!hasNextPage}
                     className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
@@ -321,11 +311,13 @@ export default function AdminUsers() {
                           <span className="text-gray-900">{user.company_name}</span>
                         </td>
                         <td className="py-4 px-4">
-                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                            user.is_active 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}>
+                          <span
+                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              user.is_active
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
                             {user.is_active ? 'Active' : 'Inactive'}
                           </span>
                         </td>
@@ -366,14 +358,12 @@ export default function AdminUsers() {
                   <h3 className="text-lg font-medium text-gray-900">Delete User</h3>
                   <div className="mt-2 px-7 py-3">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to delete {selectedUser?.full_name}? This action cannot be undone.
+                      Are you sure you want to delete {selectedUser?.full_name}? This action cannot
+                      be undone.
                     </p>
                   </div>
                   <div className="flex justify-center space-x-4 mt-4">
-                    <button
-                      onClick={() => setShowDeleteModal(false)}
-                      className="btn-secondary"
-                    >
+                    <button onClick={() => setShowDeleteModal(false)} className="btn-secondary">
                       Cancel
                     </button>
                     <button
@@ -436,12 +426,16 @@ export default function AdminUsers() {
               <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                 <div className="mt-3 text-center">
                   <h3 className="text-lg font-medium text-gray-900">
-                    {bulkOperation === 'delete' ? 'Delete Users' : 
-                     bulkOperation === 'activate' ? 'Activate Users' : 'Deactivate Users'}
+                    {bulkOperation === 'delete'
+                      ? 'Delete Users'
+                      : bulkOperation === 'activate'
+                        ? 'Activate Users'
+                        : 'Deactivate Users'}
                   </h3>
                   <div className="mt-2 px-7 py-3">
                     <p className="text-sm text-gray-500">
-                      Are you sure you want to {bulkOperation} {selectedUsers.length} selected user{selectedUsers.length > 1 ? 's' : ''}?
+                      Are you sure you want to {bulkOperation} {selectedUsers.length} selected user
+                      {selectedUsers.length > 1 ? 's' : ''}?
                       {bulkOperation === 'delete' && ' This action cannot be undone.'}
                     </p>
                   </div>
@@ -459,15 +453,20 @@ export default function AdminUsers() {
                       onClick={confirmBulkOperation}
                       disabled={bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading}
                       className={`px-4 py-2 rounded-md disabled:opacity-50 ${
-                        bulkOperation === 'delete' 
+                        bulkOperation === 'delete'
                           ? 'bg-red-600 hover:bg-red-700 text-white'
                           : 'btn-primary'
                       }`}
                     >
-                      {(bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading) 
-                        ? 'Processing...' 
-                        : `${bulkOperation === 'delete' ? 'Delete' : 
-                            bulkOperation === 'activate' ? 'Activate' : 'Deactivate'}`}
+                      {bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading
+                        ? 'Processing...'
+                        : `${
+                            bulkOperation === 'delete'
+                              ? 'Delete'
+                              : bulkOperation === 'activate'
+                                ? 'Activate'
+                                : 'Deactivate'
+                          }`}
                     </button>
                   </div>
                 </div>

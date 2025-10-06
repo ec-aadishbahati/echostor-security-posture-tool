@@ -18,7 +18,12 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const { register: registerUser } = useAuth();
   const router = useRouter();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<RegisterForm>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<RegisterForm>();
 
   const password = watch('password');
 
@@ -52,7 +57,10 @@ export default function Register() {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link href="/auth/login" className="font-medium text-primary-600 hover:text-primary-500">
+            <Link
+              href="/auth/login"
+              className="font-medium text-primary-600 hover:text-primary-500"
+            >
               sign in to existing account
             </Link>
           </p>
@@ -96,9 +104,7 @@ export default function Register() {
                 className="form-input"
                 placeholder="Enter your email address"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
 
             <div>
@@ -150,8 +156,7 @@ export default function Register() {
               <input
                 {...register('confirmPassword', {
                   required: 'Please confirm your password',
-                  validate: (value) =>
-                    value === password || 'Passwords do not match',
+                  validate: (value) => value === password || 'Passwords do not match',
                 })}
                 type="password"
                 className="form-input"
@@ -164,11 +169,7 @@ export default function Register() {
           </div>
 
           <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="btn-primary w-full"
-            >
+            <button type="submit" disabled={isLoading} className="btn-primary w-full">
               {isLoading ? 'Creating account...' : 'Create account'}
             </button>
           </div>

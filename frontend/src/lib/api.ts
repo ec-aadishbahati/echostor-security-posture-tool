@@ -1,7 +1,8 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://echostor-security-posture-tool.fly.dev';
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || 'https://echostor-security-posture-tool.fly.dev';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -32,52 +33,46 @@ api.interceptors.response.use(
 export default api;
 
 export const authAPI = {
-  register: (data: {
-    email: string;
-    password: string;
-    full_name: string;
-    company_name: string;
-  }) => api.post('/api/auth/register', data),
-  
-  login: (data: { email: string; password: string }) =>
-    api.post('/api/auth/login', data),
-  
+  register: (data: { email: string; password: string; full_name: string; company_name: string }) =>
+    api.post('/api/auth/register', data),
+
+  login: (data: { email: string; password: string }) => api.post('/api/auth/login', data),
+
   getCurrentUser: () => api.get('/api/auth/me'),
 };
 
 export const assessmentAPI = {
   getStructure: () => api.get('/api/assessment/structure'),
-  
+
   startAssessment: () => api.post('/api/assessment/start'),
-  
+
   getCurrentAssessment: () => api.get('/api/assessment/current'),
-  
-  getResponses: (assessmentId: string) =>
-    api.get(`/api/assessment/${assessmentId}/responses`),
-  
+
+  getResponses: (assessmentId: string) => api.get(`/api/assessment/${assessmentId}/responses`),
+
   saveProgress: (assessmentId: string, responses: Record<string, any>[]) =>
     api.post(`/api/assessment/${assessmentId}/save-progress`, { responses }),
-  
+
   completeAssessment: (assessmentId: string) =>
     api.post(`/api/assessment/${assessmentId}/complete`),
 
-  saveConsultationInterest: (assessmentId: string, consultationData: { consultation_interest: boolean; consultation_details?: string }) =>
-    api.post(`/api/assessment/${assessmentId}/consultation`, consultationData),
+  saveConsultationInterest: (
+    assessmentId: string,
+    consultationData: { consultation_interest: boolean; consultation_details?: string }
+  ) => api.post(`/api/assessment/${assessmentId}/consultation`, consultationData),
 };
 
 export const reportsAPI = {
-  generateReport: (assessmentId: string) =>
-    api.post(`/api/reports/${assessmentId}/generate`),
-  
+  generateReport: (assessmentId: string) => api.post(`/api/reports/${assessmentId}/generate`),
+
   requestAIReport: (assessmentId: string, message?: string) =>
     api.post(`/api/reports/${assessmentId}/request-ai-report`, { message }),
-  
-  getUserReports: (params?: { skip?: number; limit?: number }) => 
+
+  getUserReports: (params?: { skip?: number; limit?: number }) =>
     api.get('/api/reports/user/reports', { params }),
-  
-  getReportStatus: (reportId: string) =>
-    api.get(`/api/reports/${reportId}/status`),
-  
+
+  getReportStatus: (reportId: string) => api.get(`/api/reports/${reportId}/status`),
+
   downloadReport: (reportId: string) =>
     api.get(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
 };
@@ -85,28 +80,25 @@ export const reportsAPI = {
 export const adminAPI = {
   getUsers: (params?: { skip?: number; limit?: number; search?: string }) =>
     api.get('/api/admin/users', { params }),
-  
+
   getUser: (userId: string) => api.get(`/api/admin/users/${userId}`),
-  
-  getUserAssessments: (userId: string) =>
-    api.get(`/api/admin/users/${userId}/assessments`),
-  
+
+  getUserAssessments: (userId: string) => api.get(`/api/admin/users/${userId}/assessments`),
+
   getAssessments: (params?: { skip?: number; limit?: number; status?: string }) =>
     api.get('/api/admin/assessments', { params }),
-  
+
   getDashboardStats: () => api.get('/api/admin/dashboard/stats'),
-  
+
   getReports: (params?: { skip?: number; limit?: number; report_type?: string; status?: string }) =>
     api.get('/api/admin/reports', { params }),
-  
+
   getAlerts: () => api.get('/api/admin/alerts'),
   getUsersProgressSummary: () => api.get('/api/admin/users-progress-summary'),
-  generateAIReport: (reportId: string) =>
-    api.post(`/api/reports/admin/${reportId}/generate-ai`),
-  releaseAIReport: (reportId: string) =>
-    api.post(`/api/reports/admin/${reportId}/release`),
+  generateAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/generate-ai`),
+  releaseAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/release`),
   deleteUser: (userId: string) => api.delete(`/api/admin/users/${userId}`),
-  resetUserPassword: (userId: string, newPassword: string) => 
+  resetUserPassword: (userId: string, newPassword: string) =>
     api.post(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),
   bulkUpdateUserStatus: (userIds: string[], isActive: boolean) =>
     api.post('/api/admin/users/bulk-update-status', { user_ids: userIds, is_active: isActive }),

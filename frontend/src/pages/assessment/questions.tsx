@@ -7,12 +7,12 @@ import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { assessmentAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { 
-  ChevronLeftIcon, 
+import {
+  ChevronLeftIcon,
   ChevronRightIcon,
   BookmarkIcon,
   CheckCircleIcon,
-  ClockIcon
+  ClockIcon,
 } from '@heroicons/react/24/outline';
 
 interface Question {
@@ -40,13 +40,13 @@ export default function AssessmentQuestions() {
   const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
-  
+
   useAutoLogout(async () => {
     if (assessmentId) {
       await saveProgress();
     }
   });
-  
+
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
@@ -62,41 +62,39 @@ export default function AssessmentQuestions() {
     assessmentAPI.getStructure
   );
 
-  const { data: assessment, isLoading: assessmentLoading, error: assessmentError } = useQuery(
-    'currentAssessment',
-    assessmentAPI.getCurrentAssessment,
-    {
-      onSuccess: (data) => {
-        setAssessmentId(data.data.id);
-        assessmentAPI.getResponses(data.data.id).then((responseData) => {
-          const existingResponses: Record<string, any> = {};
-          responseData.data.forEach((response: any) => {
-            existingResponses[response.question_id] = response.answer_value;
-          });
-          setResponses(existingResponses);
+  const {
+    data: _assessment,
+    isLoading: assessmentLoading,
+    error: assessmentError,
+  } = useQuery('currentAssessment', assessmentAPI.getCurrentAssessment, {
+    onSuccess: (data) => {
+      setAssessmentId(data.data.id);
+      assessmentAPI.getResponses(data.data.id).then((responseData) => {
+        const existingResponses: Record<string, any> = {};
+        responseData.data.forEach((response: any) => {
+          existingResponses[response.question_id] = response.answer_value;
         });
-      },
-      onError: (error: any) => {
-        console.log('No active assessment found, will show start assessment UI');
-      },
-      retry: false
-    }
-  );
+        setResponses(existingResponses);
+      });
+    },
+    onError: (_error: any) => {
+      console.log('No active assessment found, will show start assessment UI');
+    },
+    retry: false,
+  });
 
-  const startAssessmentMutation = useMutation(
-    assessmentAPI.startAssessment,
-    {
-      onSuccess: (data) => {
-        setAssessmentId(data.data.id);
-        queryClient.invalidateQueries('currentAssessment');
-      },
-      onError: (error: any) => {
-        console.error('Failed to start assessment:', error);
-        const errorMessage = error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
-        toast.error(errorMessage);
-      }
-    }
-  );
+  const startAssessmentMutation = useMutation(assessmentAPI.startAssessment, {
+    onSuccess: (data) => {
+      setAssessmentId(data.data.id);
+      queryClient.invalidateQueries('currentAssessment');
+    },
+    onError: (error: any) => {
+      console.error('Failed to start assessment:', error);
+      const errorMessage =
+        error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+      toast.error(errorMessage);
+    },
+  });
 
   const saveProgressMutation = useMutation(
     ({ assessmentId, responses }: { assessmentId: string; responses: any[] }) =>
@@ -106,9 +104,9 @@ export default function AssessmentQuestions() {
         setLastSaved(new Date());
         toast.success('Progress saved!');
       },
-      onError: (error: any) => {
+      onError: (_error: any) => {
         toast.error('Failed to save progress');
-      }
+      },
     }
   );
 
@@ -119,18 +117,21 @@ export default function AssessmentQuestions() {
         toast.success('Assessment completed!');
         router.push('/reports');
       },
-      onError: (error: any) => {
+      onError: (_error: any) => {
         toast.error('Failed to complete assessment');
-      }
+      },
     }
   );
 
   useEffect(() => {
     if (!assessmentId) return;
 
-    const interval = setInterval(() => {
-      saveProgress();
-    }, 10 * 60 * 1000); // 10 minutes
+    const interval = setInterval(
+      () => {
+        saveProgress();
+      },
+      10 * 60 * 1000
+    ); // 10 minutes
 
     return () => clearInterval(interval);
   }, [assessmentId, responses]);
@@ -144,7 +145,7 @@ export default function AssessmentQuestions() {
         section_id: question?.section_id || '',
         question_id: questionId,
         answer_value: value,
-        comment: comments[questionId] || null
+        comment: comments[questionId] || null,
       };
     });
 
@@ -152,18 +153,21 @@ export default function AssessmentQuestions() {
   };
 
   const handleCommentChange = (questionId: string, comment: string) => {
-    const wordCount = comment.trim().split(/\s+/).filter(word => word.length > 0).length;
+    const wordCount = comment
+      .trim()
+      .split(/\s+/)
+      .filter((word) => word.length > 0).length;
     if (wordCount <= 150) {
-      setComments(prev => ({
+      setComments((prev) => ({
         ...prev,
-        [questionId]: comment
+        [questionId]: comment,
       }));
     }
   };
 
   const findQuestionById = (questionId: string): Question | undefined => {
     if (!structure) return undefined;
-    
+
     for (const section of structure.data.sections) {
       const question = section.questions.find((q: Question) => q.id === questionId);
       if (question) return question;
@@ -172,9 +176,9 @@ export default function AssessmentQuestions() {
   };
 
   const handleAnswerChange = (questionId: string, value: any) => {
-    setResponses(prev => ({
+    setResponses((prev) => ({
       ...prev,
-      [questionId]: value
+      [questionId]: value,
     }));
   };
 
@@ -194,9 +198,9 @@ export default function AssessmentQuestions() {
     if (!section) return;
 
     if (currentQuestionIndex < section.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex((prev) => prev + 1);
     } else if (currentSectionIndex < (structure?.data?.sections?.length || 0) - 1) {
-      setCurrentSectionIndex(prev => prev + 1);
+      setCurrentSectionIndex((prev) => prev + 1);
       setCurrentQuestionIndex(0);
     } else if (!showConsultationQuestion) {
       setShowConsultationQuestion(true);
@@ -205,9 +209,9 @@ export default function AssessmentQuestions() {
 
   const goToPreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
+      setCurrentQuestionIndex((prev) => prev - 1);
     } else if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(prev => prev - 1);
+      setCurrentSectionIndex((prev) => prev - 1);
       const prevSection = structure?.data?.sections?.[currentSectionIndex - 1];
       setCurrentQuestionIndex(prevSection.questions.length - 1);
     }
@@ -215,7 +219,7 @@ export default function AssessmentQuestions() {
 
   const calculateProgress = () => {
     if (!structure) return 0;
-    
+
     const totalQuestions = structure.data.total_questions;
     const answeredQuestions = Object.keys(responses).length;
     return (answeredQuestions / totalQuestions) * 100;
@@ -223,9 +227,10 @@ export default function AssessmentQuestions() {
 
   const isLastQuestion = () => {
     if (!structure) return false;
-    const isLastAssessmentQuestion = currentSectionIndex === structure.data.sections.length - 1 &&
-           currentQuestionIndex === structure.data.sections[currentSectionIndex].questions.length - 1;
-    
+    const isLastAssessmentQuestion =
+      currentSectionIndex === structure.data.sections.length - 1 &&
+      currentQuestionIndex === structure.data.sections[currentSectionIndex].questions.length - 1;
+
     if (isLastAssessmentQuestion && !showConsultationQuestion) {
       return false;
     }
@@ -234,17 +239,21 @@ export default function AssessmentQuestions() {
 
   const handleCompleteAssessment = async () => {
     if (!assessmentId) return;
-    
-    if (confirm('Are you sure you want to complete the assessment? You won\'t be able to make changes after this.')) {
+
+    if (
+      confirm(
+        'Are you sure you want to complete the assessment? You won&apos;t be able to make changes after this.'
+      )
+    ) {
       try {
         if (consultationInterest !== null) {
           const consultationData = {
             consultation_interest: consultationInterest,
-            consultation_details: consultationInterest ? consultationDetails : undefined
+            consultation_details: consultationInterest ? consultationDetails : undefined,
           };
           await assessmentAPI.saveConsultationInterest(assessmentId, consultationData);
         }
-        
+
         saveProgress();
         setTimeout(() => {
           completeAssessmentMutation.mutate(assessmentId);
@@ -284,11 +293,10 @@ export default function AssessmentQuestions() {
       <Layout title="Assessment Questions">
         <div className="max-w-2xl mx-auto text-center py-12">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-semibold text-red-800 mb-2">
-              Unable to Start Assessment
-            </h3>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Unable to Start Assessment</h3>
             <p className="text-red-700 mb-4">
-              We encountered an issue while trying to start your security assessment. This could be due to a temporary server issue or authentication problem.
+              We encountered an issue while trying to start your security assessment. This could be
+              due to a temporary server issue or authentication problem.
             </p>
             <button
               onClick={() => {
@@ -323,7 +331,8 @@ export default function AssessmentQuestions() {
               Ready to Start Your Assessment?
             </h3>
             <p className="text-blue-700 mb-4">
-              No active assessment was found. Click below to begin your comprehensive security posture evaluation.
+              No active assessment was found. Click below to begin your comprehensive security
+              posture evaluation.
             </p>
             <button
               onClick={() => startAssessmentMutation.mutate()}
@@ -352,7 +361,8 @@ export default function AssessmentQuestions() {
               Assessment Structure Loading
             </h3>
             <p className="text-yellow-700 mb-4">
-              We're having trouble loading the assessment questions. Please try refreshing the page.
+              We&apos;re having trouble loading the assessment questions. Please try refreshing the
+              page.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -382,7 +392,8 @@ export default function AssessmentQuestions() {
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-gray-700">
-                Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of {structure?.data?.total_questions || 0} questions)
+                Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of{' '}
+                {structure?.data?.total_questions || 0} questions)
               </span>
               <div className="flex items-center text-sm text-gray-600">
                 <ClockIcon className="h-4 w-4 mr-1" />
@@ -390,7 +401,7 @@ export default function AssessmentQuestions() {
               </div>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
-              <div 
+              <div
                 className="bg-gradient-to-r from-primary-500 to-primary-600 h-3 rounded-full transition-all duration-500 relative"
                 style={{ width: `${progress}%` }}
               >
@@ -398,20 +409,18 @@ export default function AssessmentQuestions() {
               </div>
             </div>
             <div className="mt-1 text-xs text-gray-500">
-              Section {currentSectionIndex + 1} of {structure?.data?.sections?.length || 0}: {currentSection?.title}
+              Section {currentSectionIndex + 1} of {structure?.data?.sections?.length || 0}:{' '}
+              {currentSection?.title}
             </div>
           </div>
 
           {/* Section Info */}
           <div className="bg-primary-50 rounded-lg p-4 mb-6">
-            <h2 className="text-lg font-semibold text-primary-900 mb-2">
-              {currentSection.title}
-            </h2>
-            <p className="text-primary-700 text-sm">
-              {currentSection.description}
-            </p>
+            <h2 className="text-lg font-semibold text-primary-900 mb-2">{currentSection.title}</h2>
+            <p className="text-primary-700 text-sm">{currentSection.description}</p>
             <div className="mt-2 text-sm text-primary-600">
-              Question {currentQuestionIndex + 1} of {currentSection.questions.length} in this section
+              Question {currentQuestionIndex + 1} of {currentSection.questions.length} in this
+              section
             </div>
           </div>
 
@@ -426,7 +435,7 @@ export default function AssessmentQuestions() {
                   Weight: {currentQuestion.weight}
                 </div>
               </div>
-              
+
               {currentQuestion.explanation && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                   <p className="text-blue-800 text-sm">
@@ -491,18 +500,25 @@ export default function AssessmentQuestions() {
                       <input
                         type="checkbox"
                         value={option.value}
-                        checked={Array.isArray(responses[currentQuestion.id]) && 
-                                responses[currentQuestion.id].includes(option.value)}
+                        checked={
+                          Array.isArray(responses[currentQuestion.id]) &&
+                          responses[currentQuestion.id].includes(option.value)
+                        }
                         onChange={(e) => {
-                          const currentValues = Array.isArray(responses[currentQuestion.id]) 
-                            ? responses[currentQuestion.id] 
+                          const currentValues = Array.isArray(responses[currentQuestion.id])
+                            ? responses[currentQuestion.id]
                             : [];
-                          
+
                           if (e.target.checked) {
-                            handleAnswerChange(currentQuestion.id, [...currentValues, option.value]);
+                            handleAnswerChange(currentQuestion.id, [
+                              ...currentValues,
+                              option.value,
+                            ]);
                           } else {
-                            handleAnswerChange(currentQuestion.id, 
-                              currentValues.filter((v: string) => v !== option.value));
+                            handleAnswerChange(
+                              currentQuestion.id,
+                              currentValues.filter((v: string) => v !== option.value)
+                            );
                           }
                         }}
                         className="mt-1 mr-3 text-primary-600 focus:ring-primary-500 rounded"
@@ -518,13 +534,17 @@ export default function AssessmentQuestions() {
                 </div>
               )}
             </div>
-            
+
             {!showConsultationQuestion && (
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Additional Comments (Optional)
                   <span className="text-xs text-gray-500 ml-2">
-                    {comments[currentQuestion.id]?.trim().split(/\s+/).filter(word => word.length > 0).length || 0}/150 words
+                    {comments[currentQuestion.id]
+                      ?.trim()
+                      .split(/\s+/)
+                      .filter((word) => word.length > 0).length || 0}
+                    /150 words
                   </span>
                 </label>
                 <textarea
@@ -534,7 +554,10 @@ export default function AssessmentQuestions() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   rows={3}
                 />
-                {comments[currentQuestion.id]?.trim().split(/\s+/).filter(word => word.length > 0).length > 150 && (
+                {comments[currentQuestion.id]
+                  ?.trim()
+                  .split(/\s+/)
+                  .filter((word) => word.length > 0).length > 150 && (
                   <p className="text-red-600 text-xs mt-1">Comment exceeds 150 word limit</p>
                 )}
               </div>
@@ -543,13 +566,12 @@ export default function AssessmentQuestions() {
 
           {showConsultationQuestion && (
             <div className="card mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Consultation Interest
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Consultation Interest</h3>
               <p className="text-gray-600 mb-4">
-                Would you like to be contacted by EchoStor's Security Specialist for consultation on any security matters?
+                Would you like to be contacted by EchoStor&apos;s Security Specialist for
+                consultation on any security matters?
               </p>
-              
+
               <div className="space-y-3 mb-4">
                 <label className="flex items-center cursor-pointer">
                   <input
@@ -560,7 +582,9 @@ export default function AssessmentQuestions() {
                     onChange={() => setConsultationInterest(true)}
                     className="mr-3 text-primary-600 focus:ring-primary-500"
                   />
-                  <span className="font-medium text-gray-900">Yes, I'm interested in consultation</span>
+                  <span className="font-medium text-gray-900">
+                    Yes, I&apos;m interested in consultation
+                  </span>
                 </label>
                 <label className="flex items-center cursor-pointer">
                   <input
@@ -580,7 +604,13 @@ export default function AssessmentQuestions() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Consultation Details (Required)
                     <span className="text-xs text-gray-500 ml-2">
-                      {consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length}/300 words (200-300 required)
+                      {
+                        consultationDetails
+                          .trim()
+                          .split(/\s+/)
+                          .filter((word) => word.length > 0).length
+                      }
+                      /300 words (200-300 required)
                     </span>
                   </label>
                   <textarea
@@ -592,9 +622,16 @@ export default function AssessmentQuestions() {
                     required
                   />
                   {(() => {
-                    const wordCount = consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length;
+                    const wordCount = consultationDetails
+                      .trim()
+                      .split(/\s+/)
+                      .filter((word) => word.length > 0).length;
                     if (wordCount < 200) {
-                      return <p className="text-orange-600 text-xs mt-1">Please provide at least 200 words</p>;
+                      return (
+                        <p className="text-orange-600 text-xs mt-1">
+                          Please provide at least 200 words
+                        </p>
+                      );
                     } else if (wordCount > 300) {
                       return <p className="text-red-600 text-xs mt-1">Please limit to 300 words</p>;
                     }
@@ -609,7 +646,9 @@ export default function AssessmentQuestions() {
           <div className="flex justify-between items-center">
             <button
               onClick={goToPreviousQuestion}
-              disabled={currentSectionIndex === 0 && currentQuestionIndex === 0 && !showConsultationQuestion}
+              disabled={
+                currentSectionIndex === 0 && currentQuestionIndex === 0 && !showConsultationQuestion
+              }
               className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid="previous-question-btn"
             >
@@ -633,12 +672,17 @@ export default function AssessmentQuestions() {
                   onClick={handleCompleteAssessment}
                   disabled={
                     completeAssessmentMutation.isLoading ||
-                    consultationInterest === null || 
-                    (consultationInterest === true && (
-                      !consultationDetails.trim() ||
-                      consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length < 200 ||
-                      consultationDetails.trim().split(/\s+/).filter(word => word.length > 0).length > 300
-                    ))
+                    consultationInterest === null ||
+                    (consultationInterest === true &&
+                      (!consultationDetails.trim() ||
+                        consultationDetails
+                          .trim()
+                          .split(/\s+/)
+                          .filter((word) => word.length > 0).length < 200 ||
+                        consultationDetails
+                          .trim()
+                          .split(/\s+/)
+                          .filter((word) => word.length > 0).length > 300))
                   }
                   className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                   data-testid="complete-assessment-btn"

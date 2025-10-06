@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const token = Cookies.get('access_token');
     const adminFlag = Cookies.get('is_admin');
-    
+
     if (token) {
       if (adminFlag === 'true') {
         setIsAdmin(true);
@@ -61,9 +61,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     const response = await authAPI.login({ email, password });
     const { access_token, user: userData } = response.data;
-    
+
     Cookies.set('access_token', access_token, { expires: 1 }); // 1 day
-    
+
     try {
       const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
       if (tokenPayload.is_admin) {
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(userData);
         setIsAdmin(false);
       }
-    } catch (error) {
+    } catch {
       if (userData && userData.is_admin) {
         setIsAdmin(true);
         Cookies.set('is_admin', 'true', { expires: 1 });
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(userData);
       setIsAdmin(false);
     }
-    
+
     return response.data;
   };
 
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }) => {
     const response = await authAPI.register(data);
     const { access_token, user: userData } = response.data;
-    
+
     Cookies.set('access_token', access_token, { expires: 1 });
     setUser(userData);
   };
@@ -119,11 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
   };
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

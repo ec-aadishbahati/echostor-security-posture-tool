@@ -3,13 +3,13 @@ import { useQuery } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import { adminAPI, assessmentAPI } from '../../lib/api';
-import { 
-  DocumentTextIcon, 
+import {
+  DocumentTextIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ClockIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 
 export default function AdminAssessments() {
@@ -18,13 +18,18 @@ export default function AdminAssessments() {
   const limit = 20;
   const skip = (currentPage - 1) * limit;
 
-  const { data: assessmentsData, isLoading, error } = useQuery(
+  const {
+    data: assessmentsData,
+    isLoading,
+    error,
+  } = useQuery(
     ['adminAssessments', { skip, limit, status: statusFilter }],
-    () => adminAPI.getAssessments({ 
-      skip, 
-      limit, 
-      status: statusFilter || undefined 
-    }),
+    () =>
+      adminAPI.getAssessments({
+        skip,
+        limit,
+        status: statusFilter || undefined,
+      }),
     {
       keepPreviousData: true,
       refetchInterval: 30000,
@@ -44,7 +49,7 @@ export default function AdminAssessments() {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -85,18 +90,17 @@ export default function AdminAssessments() {
       <Layout title="Assessments Management">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Assessments Management
-            </h2>
-            <p className="text-gray-600">
-              Monitor all security assessments and their progress
-            </p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Assessments Management</h2>
+            <p className="text-gray-600">Monitor all security assessments and their progress</p>
           </div>
 
           <div className="card mb-6">
             <div className="flex gap-4">
               <div className="flex-1">
-                <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="status-filter"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Filter by Status
                 </label>
                 <select
@@ -124,17 +128,15 @@ export default function AdminAssessments() {
               </h3>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={!hasPrevPage}
                   className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
                   <ChevronLeftIcon className="h-5 w-5" />
                 </button>
-                <span className="px-3 py-1 text-sm text-gray-600">
-                  Page {currentPage}
-                </span>
+                <span className="px-3 py-1 text-sm text-gray-600">Page {currentPage}</span>
                 <button
-                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
                   disabled={!hasNextPage}
                   className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                 >
@@ -156,7 +158,9 @@ export default function AdminAssessments() {
               <div className="text-center py-8">
                 <DocumentTextIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-600">
-                  {statusFilter ? 'No assessments found with the selected status.' : 'No assessments found.'}
+                  {statusFilter
+                    ? 'No assessments found with the selected status.'
+                    : 'No assessments found.'}
                 </p>
               </div>
             ) : (
@@ -176,14 +180,20 @@ export default function AdminAssessments() {
                       <tr key={assessment.id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-4 px-4">
                           <div>
-                            <div className="font-medium text-gray-900">{assessment.user?.full_name || 'Unknown User'}</div>
-                            <div className="text-sm text-gray-600">{assessment.user?.email || 'No email'}</div>
+                            <div className="font-medium text-gray-900">
+                              {assessment.user?.full_name || 'Unknown User'}
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {assessment.user?.email || 'No email'}
+                            </div>
                           </div>
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
                             {getStatusIcon(assessment.status)}
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assessment.status)}`}>
+                            <span
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assessment.status)}`}
+                            >
                               {assessment.status.replace('_', ' ').toUpperCase()}
                             </span>
                           </div>
@@ -191,8 +201,8 @@ export default function AdminAssessments() {
                         <td className="py-4 px-4">
                           <div className="flex items-center gap-2">
                             <div className="w-24 bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-primary-600 h-2 rounded-full" 
+                              <div
+                                className="bg-primary-600 h-2 rounded-full"
                                 style={{ width: `${calculateProgress(assessment.responses)}%` }}
                               ></div>
                             </div>
@@ -205,11 +215,13 @@ export default function AdminAssessments() {
                           <span className="text-gray-600">{formatDate(assessment.created_at)}</span>
                         </td>
                         <td className="py-4 px-4">
-                          <span className={`text-sm ${
-                            new Date(assessment.expires_at) < new Date() 
-                              ? 'text-red-600 font-medium' 
-                              : 'text-gray-600'
-                          }`}>
+                          <span
+                            className={`text-sm ${
+                              new Date(assessment.expires_at) < new Date()
+                                ? 'text-red-600 font-medium'
+                                : 'text-gray-600'
+                            }`}
+                          >
                             {formatDate(assessment.expires_at)}
                           </span>
                         </td>
