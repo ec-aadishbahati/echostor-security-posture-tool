@@ -1,6 +1,5 @@
 import os
 
-import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -10,16 +9,6 @@ from slowapi.errors import RateLimitExceeded
 from app.api import admin, assessment, auth, reports
 from app.core.config import settings
 from app.middleware.rate_limit import limiter
-
-if settings.SENTRY_DSN:
-    sentry_sdk.init(
-        dsn=settings.SENTRY_DSN,
-        environment=settings.SENTRY_ENVIRONMENT,
-        traces_sample_rate=0.1,
-        profiles_sample_rate=0.1,
-        send_default_pii=True,
-        enable_tracing=True,
-    )
 
 app = FastAPI(
     title="EchoStor Security Posture Assessment API",
@@ -58,9 +47,3 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
-
-
-@limiter.exempt
-@app.get("/sentry-debug")
-async def trigger_sentry_error():
-    raise ZeroDivisionError("Test error for Sentry integration")
