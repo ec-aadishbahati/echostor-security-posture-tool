@@ -21,7 +21,7 @@ export default function Reports() {
 
   const { data: reportsData, isLoading, error } = useQuery(
     'userReports',
-    reportsAPI.getUserReports,
+    () => reportsAPI.getUserReports(),
     {
       refetchInterval: 30000,
     }
@@ -74,7 +74,7 @@ export default function Reports() {
     }
   );
 
-  const reports = reportsData?.data || [];
+  const reports = reportsData?.data?.items || [];
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
