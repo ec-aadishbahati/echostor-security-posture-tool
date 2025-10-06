@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import uuid
 
-from app.core.database import WriteSessionLocal
+from app.core.database import SessionLocal
 from app.core.security import get_password_hash
 from app.models.user import User
 
@@ -29,7 +29,7 @@ def create_admin_user():
     if not admin_name:
         admin_name = "Admin User"
 
-    db = WriteSessionLocal()
+    db = SessionLocal()
     try:
         existing_admin = db.query(User).filter(User.email == admin_email).first()
         if existing_admin:

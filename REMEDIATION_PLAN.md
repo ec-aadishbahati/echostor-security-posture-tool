@@ -9,10 +9,9 @@ This plan addresses all critical issues identified in the comprehensive assessme
 **Issue**: Invalid database URLs preventing backend startup
 **Actions**:
 - [ ] Set up PostgreSQL database (local development or cloud)
-- [ ] Update `.env` file with valid database connection strings:
+- [ ] Update `.env` file with valid database connection string:
   ```
-  DATABASE_URL_WRITE=postgresql://username:password@host:5432/echostor_security_db
-  DATABASE_URL_READ=postgresql://username:password@host:5432/echostor_security_db
+  DATABASE_URL=postgresql://username:password@host:5432/echostor_security_db
   ```
 - [ ] Test database connectivity
 - [ ] Run initial database migrations: `poetry run alembic upgrade head`
@@ -75,8 +74,7 @@ This plan addresses all critical issues identified in the comprehensive assessme
   ```
 - [ ] Set production environment variables on Fly.io:
   ```bash
-  flyctl secrets set DATABASE_URL_WRITE=<prod-db-url>
-  flyctl secrets set DATABASE_URL_READ=<prod-db-url>
+  flyctl secrets set DATABASE_URL=<prod-db-url>
   flyctl secrets set JWT_SECRET_KEY=<secure-key>
   flyctl secrets set OPENAI_API_KEY=<api-key>
   flyctl secrets set ADMIN_PASSWORD_HASH=<hash>

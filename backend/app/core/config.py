@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    DATABASE_URL: str | None = None
     DATABASE_URL_WRITE: str | None = None
     DATABASE_URL_READ: str | None = None
 
@@ -39,13 +40,14 @@ class Settings(BaseSettings):
                 "JWT_SECRET_KEY environment variable must be set. "
                 "Generate one with: openssl rand -hex 32"
             )
-        if not self.DATABASE_URL_WRITE:
-            raise ValueError(
-                "DATABASE_URL_WRITE environment variable must be set. "
-                "Example: postgresql://user:pass@host:5432/dbname"
-            )
-        if not self.DATABASE_URL_READ:
-            self.DATABASE_URL_READ = self.DATABASE_URL_WRITE
+        if not self.DATABASE_URL:
+            if self.DATABASE_URL_WRITE:
+                self.DATABASE_URL = self.DATABASE_URL_WRITE
+            else:
+                raise ValueError(
+                    "DATABASE_URL environment variable must be set. "
+                    "Example: postgresql://user:pass@host:5432/dbname"
+                )
         return self
 
     class Config:

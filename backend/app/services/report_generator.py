@@ -8,7 +8,7 @@ from jinja2 import Template
 from weasyprint import HTML
 
 from app.core.config import settings
-from app.core.database import WriteSessionLocal
+from app.core.database import SessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.services.question_parser import load_assessment_structure
 
@@ -19,7 +19,7 @@ if settings.OPENAI_API_KEY:
 async def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
 
-    db = WriteSessionLocal()
+    db = SessionLocal()
     try:
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
@@ -69,7 +69,7 @@ async def generate_standard_report(report_id: str):
 async def generate_ai_report(report_id: str):
     """Generate an AI-enhanced report using ChatGPT"""
 
-    db = WriteSessionLocal()
+    db = SessionLocal()
     try:
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
