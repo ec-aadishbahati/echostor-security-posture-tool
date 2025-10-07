@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import { adminAPI } from '../../lib/api';
 import {
   UserIcon,
@@ -179,7 +180,8 @@ export default function AdminUsers() {
   return (
     <ProtectedRoute adminOnly>
       <Layout title="Users Management">
-        <div className="max-w-7xl mx-auto">
+        <ErrorBoundary>
+          <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Users Management</h2>
             <p className="text-gray-600">View and manage all registered users in the system</p>
@@ -474,6 +476,7 @@ export default function AdminUsers() {
             </div>
           )}
         </div>
+        </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
   );

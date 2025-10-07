@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import { adminAPI, assessmentAPI } from '../../lib/api';
 import {
   DocumentTextIcon,
@@ -88,7 +89,8 @@ export default function AdminAssessments() {
   return (
     <ProtectedRoute adminOnly>
       <Layout title="Assessments Management">
-        <div className="max-w-7xl mx-auto">
+        <ErrorBoundary>
+          <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Assessments Management</h2>
             <p className="text-gray-600">Monitor all security assessments and their progress</p>
@@ -233,6 +235,7 @@ export default function AdminAssessments() {
             )}
           </div>
         </div>
+        </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
   );

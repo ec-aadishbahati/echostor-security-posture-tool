@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { useAutoLogout } from '@/lib/useAutoLogout';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { assessmentAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
 import {
@@ -387,7 +388,8 @@ export default function AssessmentQuestions() {
   return (
     <ProtectedRoute>
       <Layout title="Security Assessment">
-        <div className="max-w-4xl mx-auto">
+        <ErrorBoundary>
+          <div className="max-w-4xl mx-auto">
           {/* Enhanced Progress Bar */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-2">
@@ -703,6 +705,7 @@ export default function AssessmentQuestions() {
             </div>
           </div>
         </div>
+        </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
   );

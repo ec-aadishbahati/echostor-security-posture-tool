@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import { adminAPI } from '../../lib/api';
 import toast from 'react-hot-toast';
 import {
@@ -129,7 +130,8 @@ export default function AdminReports() {
   return (
     <ProtectedRoute adminOnly>
       <Layout title="Reports Management">
-        <div className="max-w-7xl mx-auto">
+        <ErrorBoundary>
+          <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Reports Management</h2>
             <p className="text-gray-600">Monitor all generated reports and their status</p>
@@ -312,6 +314,7 @@ export default function AdminReports() {
             )}
           </div>
         </div>
+        </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
   );

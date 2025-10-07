@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { adminAPI } from '@/lib/api';
 import {
   UserIcon,
@@ -39,7 +40,8 @@ export default function AdminDashboard() {
   return (
     <ProtectedRoute adminOnly>
       <Layout title="Admin Dashboard">
-        <div className="max-w-7xl mx-auto">
+        <ErrorBoundary>
+          <div className="max-w-7xl mx-auto">
           {/* Welcome Section */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Dashboard</h2>
@@ -321,6 +323,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+        </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
   );

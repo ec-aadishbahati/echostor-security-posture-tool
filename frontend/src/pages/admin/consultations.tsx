@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
+import ErrorBoundary from '../../components/ErrorBoundary';
 import { adminAPI } from '../../lib/api';
 import {
   ChatBubbleLeftRightIcon,
@@ -38,10 +39,12 @@ export default function AdminConsultations() {
     return (
       <ProtectedRoute adminOnly>
         <Layout title="Consultation Requests">
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto"></div>
-            <p className="text-gray-600 mt-4">Loading consultation requests...</p>
-          </div>
+          <ErrorBoundary>
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600 mx-auto"></div>
+              <p className="text-gray-600 mt-4">Loading consultation requests...</p>
+            </div>
+          </ErrorBoundary>
         </Layout>
       </ProtectedRoute>
     );
@@ -50,7 +53,8 @@ export default function AdminConsultations() {
   return (
     <ProtectedRoute adminOnly>
       <Layout title="Consultation Requests">
-        <div className="max-w-7xl mx-auto">
+        <ErrorBoundary>
+          <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-semibold text-gray-900">
@@ -124,6 +128,7 @@ export default function AdminConsultations() {
             )}
           </div>
         </div>
+        </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
   );
