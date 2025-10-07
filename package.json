@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "EchoStor Security Posture Assessment Tool - Root workspace configuration",
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "frontend:dev": "cd frontend && pnpm dev",
     "frontend:build": "cd frontend && pnpm build",
