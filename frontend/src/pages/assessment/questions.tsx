@@ -390,321 +390,327 @@ export default function AssessmentQuestions() {
       <Layout title="Security Assessment">
         <ErrorBoundary>
           <div className="max-w-4xl mx-auto">
-          {/* Enhanced Progress Bar */}
-          <div className="mb-8">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">
-                Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of{' '}
-                {structure?.data?.total_questions || 0} questions)
-              </span>
-              <div className="flex items-center text-sm text-gray-600">
-                <ClockIcon className="h-4 w-4 mr-1" />
-                {lastSaved ? `Auto-saved ${lastSaved.toLocaleTimeString()}` : 'Not saved yet'}
-              </div>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
-              <div
-                className="bg-gradient-to-r from-primary-500 to-primary-600 h-3 rounded-full transition-all duration-500 relative"
-                style={{ width: `${progress}%` }}
-              >
-                <div className="absolute right-0 top-0 h-3 w-1 bg-primary-700 rounded-r-full"></div>
-              </div>
-            </div>
-            <div className="mt-1 text-xs text-gray-500">
-              Section {currentSectionIndex + 1} of {structure?.data?.sections?.length || 0}:{' '}
-              {currentSection?.title}
-            </div>
-          </div>
-
-          {/* Section Info */}
-          <div className="bg-primary-50 rounded-lg p-4 mb-6">
-            <h2 className="text-lg font-semibold text-primary-900 mb-2">{currentSection.title}</h2>
-            <p className="text-primary-700 text-sm">{currentSection.description}</p>
-            <div className="mt-2 text-sm text-primary-600">
-              Question {currentQuestionIndex + 1} of {currentSection.questions.length} in this
-              section
-            </div>
-          </div>
-
-          {/* Question */}
-          <div className="card mb-6">
-            <div className="mb-4">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-semibold text-gray-900 flex-1">
-                  {currentQuestion.text}
-                </h3>
-                <div className="ml-4 px-2 py-1 bg-gray-100 rounded text-sm font-medium text-gray-600">
-                  Weight: {currentQuestion.weight}
+            {/* Enhanced Progress Bar */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm font-medium text-gray-700">
+                  Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of{' '}
+                  {structure?.data?.total_questions || 0} questions)
+                </span>
+                <div className="flex items-center text-sm text-gray-600">
+                  <ClockIcon className="h-4 w-4 mr-1" />
+                  {lastSaved ? `Auto-saved ${lastSaved.toLocaleTimeString()}` : 'Not saved yet'}
                 </div>
               </div>
-
-              {currentQuestion.explanation && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                  <p className="text-blue-800 text-sm">
-                    <strong>Explanation:</strong> {currentQuestion.explanation}
-                  </p>
+              <div className="w-full bg-gray-200 rounded-full h-3">
+                <div
+                  className="bg-gradient-to-r from-primary-500 to-primary-600 h-3 rounded-full transition-all duration-500 relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute right-0 top-0 h-3 w-1 bg-primary-700 rounded-r-full"></div>
                 </div>
-              )}
+              </div>
+              <div className="mt-1 text-xs text-gray-500">
+                Section {currentSectionIndex + 1} of {structure?.data?.sections?.length || 0}:{' '}
+                {currentSection?.title}
+              </div>
             </div>
 
-            {/* Answer Options */}
-            <div className="space-y-3">
-              {currentQuestion.type === 'yes_no' && (
-                <div className="space-y-2">
-                  {currentQuestion.options.map((option) => (
-                    <label key={option.value} className="flex items-start cursor-pointer">
-                      <input
-                        type="radio"
-                        name={currentQuestion.id}
-                        value={option.value}
-                        checked={responses[currentQuestion.id] === option.value}
-                        onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                        className="mt-1 mr-3 text-primary-600 focus:ring-primary-500"
-                      />
-                      <div>
-                        <div className="font-medium text-gray-900">{option.label}</div>
-                        {option.description && (
-                          <div className="text-sm text-gray-600 mt-1">{option.description}</div>
-                        )}
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              )}
-
-              {currentQuestion.type === 'multiple_choice' && (
-                <div className="space-y-2">
-                  {currentQuestion.options.map((option) => (
-                    <label key={option.value} className="flex items-start cursor-pointer">
-                      <input
-                        type="radio"
-                        name={currentQuestion.id}
-                        value={option.value}
-                        checked={responses[currentQuestion.id] === option.value}
-                        onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
-                        className="mt-1 mr-3 text-primary-600 focus:ring-primary-500"
-                      />
-                      <div>
-                        <div className="font-medium text-gray-900">{option.label}</div>
-                        {option.description && (
-                          <div className="text-sm text-gray-600 mt-1">{option.description}</div>
-                        )}
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              )}
-
-              {currentQuestion.type === 'multiple_select' && (
-                <div className="space-y-2">
-                  {currentQuestion.options.map((option) => (
-                    <label key={option.value} className="flex items-start cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value={option.value}
-                        checked={
-                          Array.isArray(responses[currentQuestion.id]) &&
-                          responses[currentQuestion.id].includes(option.value)
-                        }
-                        onChange={(e) => {
-                          const currentValues = Array.isArray(responses[currentQuestion.id])
-                            ? responses[currentQuestion.id]
-                            : [];
-
-                          if (e.target.checked) {
-                            handleAnswerChange(currentQuestion.id, [
-                              ...currentValues,
-                              option.value,
-                            ]);
-                          } else {
-                            handleAnswerChange(
-                              currentQuestion.id,
-                              currentValues.filter((v: string) => v !== option.value)
-                            );
-                          }
-                        }}
-                        className="mt-1 mr-3 text-primary-600 focus:ring-primary-500 rounded"
-                      />
-                      <div>
-                        <div className="font-medium text-gray-900">{option.label}</div>
-                        {option.description && (
-                          <div className="text-sm text-gray-600 mt-1">{option.description}</div>
-                        )}
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              )}
+            {/* Section Info */}
+            <div className="bg-primary-50 rounded-lg p-4 mb-6">
+              <h2 className="text-lg font-semibold text-primary-900 mb-2">
+                {currentSection.title}
+              </h2>
+              <p className="text-primary-700 text-sm">{currentSection.description}</p>
+              <div className="mt-2 text-sm text-primary-600">
+                Question {currentQuestionIndex + 1} of {currentSection.questions.length} in this
+                section
+              </div>
             </div>
 
-            {!showConsultationQuestion && (
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Additional Comments (Optional)
-                  <span className="text-xs text-gray-500 ml-2">
-                    {comments[currentQuestion.id]
-                      ?.trim()
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0).length || 0}
-                    /150 words
-                  </span>
-                </label>
-                <textarea
-                  value={comments[currentQuestion.id] || ''}
-                  onChange={(e) => handleCommentChange(currentQuestion.id, e.target.value)}
-                  placeholder="Add any additional context, clarifications, or notes about your answer..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                  rows={3}
-                />
-                {comments[currentQuestion.id]
-                  ?.trim()
-                  .split(/\s+/)
-                  .filter((word) => word.length > 0).length > 150 && (
-                  <p className="text-red-600 text-xs mt-1">Comment exceeds 150 word limit</p>
+            {/* Question */}
+            <div className="card mb-6">
+              <div className="mb-4">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900 flex-1">
+                    {currentQuestion.text}
+                  </h3>
+                  <div className="ml-4 px-2 py-1 bg-gray-100 rounded text-sm font-medium text-gray-600">
+                    Weight: {currentQuestion.weight}
+                  </div>
+                </div>
+
+                {currentQuestion.explanation && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <p className="text-blue-800 text-sm">
+                      <strong>Explanation:</strong> {currentQuestion.explanation}
+                    </p>
+                  </div>
                 )}
               </div>
-            )}
-          </div>
 
-          {showConsultationQuestion && (
-            <div className="card mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Consultation Interest</h3>
-              <p className="text-gray-600 mb-4">
-                Would you like to be contacted by EchoStor&apos;s Security Specialist for
-                consultation on any security matters?
-              </p>
+              {/* Answer Options */}
+              <div className="space-y-3">
+                {currentQuestion.type === 'yes_no' && (
+                  <div className="space-y-2">
+                    {currentQuestion.options.map((option) => (
+                      <label key={option.value} className="flex items-start cursor-pointer">
+                        <input
+                          type="radio"
+                          name={currentQuestion.id}
+                          value={option.value}
+                          checked={responses[currentQuestion.id] === option.value}
+                          onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                          className="mt-1 mr-3 text-primary-600 focus:ring-primary-500"
+                        />
+                        <div>
+                          <div className="font-medium text-gray-900">{option.label}</div>
+                          {option.description && (
+                            <div className="text-sm text-gray-600 mt-1">{option.description}</div>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
 
-              <div className="space-y-3 mb-4">
-                <label className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    name="consultation"
-                    value="yes"
-                    checked={consultationInterest === true}
-                    onChange={() => setConsultationInterest(true)}
-                    className="mr-3 text-primary-600 focus:ring-primary-500"
-                  />
-                  <span className="font-medium text-gray-900">
-                    Yes, I&apos;m interested in consultation
-                  </span>
-                </label>
-                <label className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    name="consultation"
-                    value="no"
-                    checked={consultationInterest === false}
-                    onChange={() => setConsultationInterest(false)}
-                    className="mr-3 text-primary-600 focus:ring-primary-500"
-                  />
-                  <span className="font-medium text-gray-900">No, thank you</span>
-                </label>
+                {currentQuestion.type === 'multiple_choice' && (
+                  <div className="space-y-2">
+                    {currentQuestion.options.map((option) => (
+                      <label key={option.value} className="flex items-start cursor-pointer">
+                        <input
+                          type="radio"
+                          name={currentQuestion.id}
+                          value={option.value}
+                          checked={responses[currentQuestion.id] === option.value}
+                          onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+                          className="mt-1 mr-3 text-primary-600 focus:ring-primary-500"
+                        />
+                        <div>
+                          <div className="font-medium text-gray-900">{option.label}</div>
+                          {option.description && (
+                            <div className="text-sm text-gray-600 mt-1">{option.description}</div>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {currentQuestion.type === 'multiple_select' && (
+                  <div className="space-y-2">
+                    {currentQuestion.options.map((option) => (
+                      <label key={option.value} className="flex items-start cursor-pointer">
+                        <input
+                          type="checkbox"
+                          value={option.value}
+                          checked={
+                            Array.isArray(responses[currentQuestion.id]) &&
+                            responses[currentQuestion.id].includes(option.value)
+                          }
+                          onChange={(e) => {
+                            const currentValues = Array.isArray(responses[currentQuestion.id])
+                              ? responses[currentQuestion.id]
+                              : [];
+
+                            if (e.target.checked) {
+                              handleAnswerChange(currentQuestion.id, [
+                                ...currentValues,
+                                option.value,
+                              ]);
+                            } else {
+                              handleAnswerChange(
+                                currentQuestion.id,
+                                currentValues.filter((v: string) => v !== option.value)
+                              );
+                            }
+                          }}
+                          className="mt-1 mr-3 text-primary-600 focus:ring-primary-500 rounded"
+                        />
+                        <div>
+                          <div className="font-medium text-gray-900">{option.label}</div>
+                          {option.description && (
+                            <div className="text-sm text-gray-600 mt-1">{option.description}</div>
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {consultationInterest === true && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
+              {!showConsultationQuestion && (
+                <div className="mt-6 pt-4 border-t border-gray-200">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Consultation Details (Required)
+                    Additional Comments (Optional)
                     <span className="text-xs text-gray-500 ml-2">
-                      {
-                        consultationDetails
-                          .trim()
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0).length
-                      }
-                      /300 words (200-300 required)
+                      {comments[currentQuestion.id]
+                        ?.trim()
+                        .split(/\s+/)
+                        .filter((word) => word.length > 0).length || 0}
+                      /150 words
                     </span>
                   </label>
                   <textarea
-                    value={consultationDetails}
-                    onChange={(e) => setConsultationDetails(e.target.value)}
-                    placeholder="Please describe the security topics or areas you'd like to discuss with our specialist..."
+                    value={comments[currentQuestion.id] || ''}
+                    onChange={(e) => handleCommentChange(currentQuestion.id, e.target.value)}
+                    placeholder="Add any additional context, clarifications, or notes about your answer..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-                    rows={5}
-                    required
+                    rows={3}
                   />
-                  {(() => {
-                    const wordCount = consultationDetails
-                      .trim()
-                      .split(/\s+/)
-                      .filter((word) => word.length > 0).length;
-                    if (wordCount < 200) {
-                      return (
-                        <p className="text-orange-600 text-xs mt-1">
-                          Please provide at least 200 words
-                        </p>
-                      );
-                    } else if (wordCount > 300) {
-                      return <p className="text-red-600 text-xs mt-1">Please limit to 300 words</p>;
-                    }
-                    return null;
-                  })()}
+                  {comments[currentQuestion.id]
+                    ?.trim()
+                    .split(/\s+/)
+                    .filter((word) => word.length > 0).length > 150 && (
+                    <p className="text-red-600 text-xs mt-1">Comment exceeds 150 word limit</p>
+                  )}
                 </div>
               )}
             </div>
-          )}
 
-          {/* Navigation */}
-          <div className="flex justify-between items-center">
-            <button
-              onClick={goToPreviousQuestion}
-              disabled={
-                currentSectionIndex === 0 && currentQuestionIndex === 0 && !showConsultationQuestion
-              }
-              className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-              data-testid="previous-question-btn"
-            >
-              <ChevronLeftIcon className="h-4 w-4 mr-2" />
-              Previous
-            </button>
+            {showConsultationQuestion && (
+              <div className="card mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Consultation Interest</h3>
+                <p className="text-gray-600 mb-4">
+                  Would you like to be contacted by EchoStor&apos;s Security Specialist for
+                  consultation on any security matters?
+                </p>
 
-            <div className="flex space-x-4">
+                <div className="space-y-3 mb-4">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="consultation"
+                      value="yes"
+                      checked={consultationInterest === true}
+                      onChange={() => setConsultationInterest(true)}
+                      className="mr-3 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="font-medium text-gray-900">
+                      Yes, I&apos;m interested in consultation
+                    </span>
+                  </label>
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="consultation"
+                      value="no"
+                      checked={consultationInterest === false}
+                      onChange={() => setConsultationInterest(false)}
+                      className="mr-3 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="font-medium text-gray-900">No, thank you</span>
+                  </label>
+                </div>
+
+                {consultationInterest === true && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Consultation Details (Required)
+                      <span className="text-xs text-gray-500 ml-2">
+                        {
+                          consultationDetails
+                            .trim()
+                            .split(/\s+/)
+                            .filter((word) => word.length > 0).length
+                        }
+                        /300 words (200-300 required)
+                      </span>
+                    </label>
+                    <textarea
+                      value={consultationDetails}
+                      onChange={(e) => setConsultationDetails(e.target.value)}
+                      placeholder="Please describe the security topics or areas you'd like to discuss with our specialist..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                      rows={5}
+                      required
+                    />
+                    {(() => {
+                      const wordCount = consultationDetails
+                        .trim()
+                        .split(/\s+/)
+                        .filter((word) => word.length > 0).length;
+                      if (wordCount < 200) {
+                        return (
+                          <p className="text-orange-600 text-xs mt-1">
+                            Please provide at least 200 words
+                          </p>
+                        );
+                      } else if (wordCount > 300) {
+                        return (
+                          <p className="text-red-600 text-xs mt-1">Please limit to 300 words</p>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Navigation */}
+            <div className="flex justify-between items-center">
               <button
-                onClick={saveProgress}
-                disabled={saveProgressMutation.isLoading}
-                className="btn-secondary flex items-center"
-                data-testid="save-progress-btn"
+                onClick={goToPreviousQuestion}
+                disabled={
+                  currentSectionIndex === 0 &&
+                  currentQuestionIndex === 0 &&
+                  !showConsultationQuestion
+                }
+                className="btn-secondary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                data-testid="previous-question-btn"
               >
-                <BookmarkIcon className="h-4 w-4 mr-2" />
-                {saveProgressMutation.isLoading ? 'Saving...' : 'Save Progress'}
+                <ChevronLeftIcon className="h-4 w-4 mr-2" />
+                Previous
               </button>
 
-              {isLastQuestion() ? (
+              <div className="flex space-x-4">
                 <button
-                  onClick={handleCompleteAssessment}
-                  disabled={
-                    completeAssessmentMutation.isLoading ||
-                    consultationInterest === null ||
-                    (consultationInterest === true &&
-                      (!consultationDetails.trim() ||
-                        consultationDetails
-                          .trim()
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0).length < 200 ||
-                        consultationDetails
-                          .trim()
-                          .split(/\s+/)
-                          .filter((word) => word.length > 0).length > 300))
-                  }
-                  className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-                  data-testid="complete-assessment-btn"
+                  onClick={saveProgress}
+                  disabled={saveProgressMutation.isLoading}
+                  className="btn-secondary flex items-center"
+                  data-testid="save-progress-btn"
                 >
-                  <CheckCircleIcon className="h-4 w-4 mr-2" />
-                  {completeAssessmentMutation.isLoading ? 'Completing...' : 'Complete Assessment'}
+                  <BookmarkIcon className="h-4 w-4 mr-2" />
+                  {saveProgressMutation.isLoading ? 'Saving...' : 'Save Progress'}
                 </button>
-              ) : (
-                <button
-                  onClick={goToNextQuestion}
-                  className="btn-primary flex items-center"
-                  data-testid="next-question-btn"
-                >
-                  Next
-                  <ChevronRightIcon className="h-4 w-4 ml-2" />
-                </button>
-              )}
+
+                {isLastQuestion() ? (
+                  <button
+                    onClick={handleCompleteAssessment}
+                    disabled={
+                      completeAssessmentMutation.isLoading ||
+                      consultationInterest === null ||
+                      (consultationInterest === true &&
+                        (!consultationDetails.trim() ||
+                          consultationDetails
+                            .trim()
+                            .split(/\s+/)
+                            .filter((word) => word.length > 0).length < 200 ||
+                          consultationDetails
+                            .trim()
+                            .split(/\s+/)
+                            .filter((word) => word.length > 0).length > 300))
+                    }
+                    className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    data-testid="complete-assessment-btn"
+                  >
+                    <CheckCircleIcon className="h-4 w-4 mr-2" />
+                    {completeAssessmentMutation.isLoading ? 'Completing...' : 'Complete Assessment'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={goToNextQuestion}
+                    className="btn-primary flex items-center"
+                    data-testid="next-question-btn"
+                  >
+                    Next
+                    <ChevronRightIcon className="h-4 w-4 ml-2" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
         </ErrorBoundary>
       </Layout>
     </ProtectedRoute>

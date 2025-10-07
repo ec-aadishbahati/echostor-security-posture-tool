@@ -25,12 +25,10 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Something went wrong
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Something went wrong</h3>
           <p className="text-gray-600 mb-4">
-            We encountered an unexpected error. Please try again or contact support if the
-            problem persists.
+            We encountered an unexpected error. Please try again or contact support if the problem
+            persists.
           </p>
           {error && (
             <details className="text-left mb-4">
@@ -46,10 +44,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
             <button onClick={resetErrorBoundary} className="btn-primary">
               Try Again
             </button>
-            <button
-              onClick={() => (window.location.href = '/')}
-              className="btn-secondary"
-            >
+            <button onClick={() => (window.location.href = '/')} className="btn-secondary">
               Go Home
             </button>
           </div>
