@@ -182,300 +182,305 @@ export default function AdminUsers() {
       <Layout title="Users Management">
         <ErrorBoundary>
           <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Users Management</h2>
-            <p className="text-gray-600">View and manage all registered users in the system</p>
-          </div>
-
-          <div className="card mb-6">
-            <form onSubmit={handleSearch} className="flex gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search by name, email, or company..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-              <button
-                type="submit"
-                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-              >
-                Search
-              </button>
-            </form>
-          </div>
-
-          <div className="card">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">All Users ({users.length})</h3>
-              <div className="flex items-center gap-4">
-                {selectedUsers.length > 0 && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-600">{selectedUsers.length} selected</span>
-                    <select
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          handleBulkOperation(
-                            e.target.value as 'activate' | 'deactivate' | 'delete'
-                          );
-                          e.target.value = '';
-                        }
-                      }}
-                      className="text-sm border border-gray-300 rounded px-2 py-1"
-                      defaultValue=""
-                    >
-                      <option value="">Bulk Actions</option>
-                      <option value="activate">Activate Users</option>
-                      <option value="deactivate">Deactivate Users</option>
-                      <option value="delete">Delete Users</option>
-                    </select>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                    disabled={!hasPrevPage}
-                    className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                  >
-                    <ChevronLeftIcon className="h-5 w-5" />
-                  </button>
-                  <span className="px-3 py-1 text-sm text-gray-600">Page {currentPage}</span>
-                  <button
-                    onClick={() => setCurrentPage((prev) => prev + 1)}
-                    disabled={!hasNextPage}
-                    className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                  >
-                    <ChevronRightIcon className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Users Management</h2>
+              <p className="text-gray-600">View and manage all registered users in the system</p>
             </div>
 
-            {isLoading ? (
-              <div className="text-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-                <p className="text-gray-600 mt-2">Loading users...</p>
+            <div className="card mb-6">
+              <form onSubmit={handleSearch} className="flex gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search by name, email, or company..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                >
+                  Search
+                </button>
+              </form>
+            </div>
+
+            <div className="card">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">All Users ({users.length})</h3>
+                <div className="flex items-center gap-4">
+                  {selectedUsers.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">{selectedUsers.length} selected</span>
+                      <select
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            handleBulkOperation(
+                              e.target.value as 'activate' | 'deactivate' | 'delete'
+                            );
+                            e.target.value = '';
+                          }
+                        }}
+                        className="text-sm border border-gray-300 rounded px-2 py-1"
+                        defaultValue=""
+                      >
+                        <option value="">Bulk Actions</option>
+                        <option value="activate">Activate Users</option>
+                        <option value="deactivate">Deactivate Users</option>
+                        <option value="delete">Delete Users</option>
+                      </select>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                      disabled={!hasPrevPage}
+                      className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      <ChevronLeftIcon className="h-5 w-5" />
+                    </button>
+                    <span className="px-3 py-1 text-sm text-gray-600">Page {currentPage}</span>
+                    <button
+                      onClick={() => setCurrentPage((prev) => prev + 1)}
+                      disabled={!hasNextPage}
+                      className="p-2 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    >
+                      <ChevronRightIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
               </div>
-            ) : error ? (
-              <div className="text-center py-8">
-                <p className="text-red-600">Error loading users. Please try again.</p>
-              </div>
-            ) : users.length === 0 ? (
-              <div className="text-center py-8">
-                <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">
-                  {search ? 'No users found matching your search.' : 'No users found.'}
-                </p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                        <input
-                          type="checkbox"
-                          checked={selectedUsers.length === users.length && users.length > 0}
-                          onChange={handleSelectAll}
-                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                        />
-                      </th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900">User</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900">Company</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900">Status</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900">Joined</th>
-                      <th className="text-left py-3 px-4 font-semibold text-gray-900">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user: any) => (
-                      <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-4 px-4">
+
+              {isLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
+                  <p className="text-gray-600 mt-2">Loading users...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-8">
+                  <p className="text-red-600">Error loading users. Please try again.</p>
+                </div>
+              ) : users.length === 0 ? (
+                <div className="text-center py-8">
+                  <UserIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600">
+                    {search ? 'No users found matching your search.' : 'No users found.'}
+                  </p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
                           <input
                             type="checkbox"
-                            checked={selectedUsers.includes(user.id)}
-                            onChange={() => handleSelectUser(user.id)}
+                            checked={selectedUsers.length === users.length && users.length > 0}
+                            onChange={handleSelectAll}
                             className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                           />
-                        </td>
-                        <td className="py-4 px-4">
-                          <div>
-                            <div className="font-medium text-gray-900">{user.full_name}</div>
-                            <div className="text-sm text-gray-600">{user.email}</div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <span className="text-gray-900">{user.company_name}</span>
-                        </td>
-                        <td className="py-4 px-4">
-                          <span
-                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              user.is_active
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
-                            }`}
-                          >
-                            {user.is_active ? 'Active' : 'Inactive'}
-                          </span>
-                        </td>
-                        <td className="py-4 px-4">
-                          <span className="text-gray-600">{formatDate(user.created_at)}</span>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => handleResetPassword(user)}
-                              className="text-indigo-600 hover:text-indigo-900 flex items-center"
-                              title="Reset Password"
-                            >
-                              <KeyIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteUser(user)}
-                              className="text-red-600 hover:text-red-900 flex items-center"
-                              title="Delete User"
-                            >
-                              <TrashIcon className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
+                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">User</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Company</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Status</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Joined</th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {users.map((user: any) => (
+                        <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="py-4 px-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedUsers.includes(user.id)}
+                              onChange={() => handleSelectUser(user.id)}
+                              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                            />
+                          </td>
+                          <td className="py-4 px-4">
+                            <div>
+                              <div className="font-medium text-gray-900">{user.full_name}</div>
+                              <div className="text-sm text-gray-600">{user.email}</div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-4">
+                            <span className="text-gray-900">{user.company_name}</span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <span
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                user.is_active
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'
+                              }`}
+                            >
+                              {user.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <span className="text-gray-600">{formatDate(user.created_at)}</span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => handleResetPassword(user)}
+                                className="text-indigo-600 hover:text-indigo-900 flex items-center"
+                                title="Reset Password"
+                              >
+                                <KeyIcon className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteUser(user)}
+                                className="text-red-600 hover:text-red-900 flex items-center"
+                                title="Delete User"
+                              >
+                                <TrashIcon className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                  <div className="mt-3 text-center">
+                    <h3 className="text-lg font-medium text-gray-900">Delete User</h3>
+                    <div className="mt-2 px-7 py-3">
+                      <p className="text-sm text-gray-500">
+                        Are you sure you want to delete {selectedUser?.full_name}? This action
+                        cannot be undone.
+                      </p>
+                    </div>
+                    <div className="flex justify-center space-x-4 mt-4">
+                      <button onClick={() => setShowDeleteModal(false)} className="btn-secondary">
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmDelete}
+                        disabled={deleteUserMutation.isLoading}
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
+                      >
+                        {deleteUserMutation.isLoading ? 'Deleting...' : 'Delete'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Password Reset Modal */}
+            {showPasswordModal && (
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                  <div className="mt-3">
+                    <h3 className="text-lg font-medium text-gray-900 text-center">
+                      Reset Password
+                    </h3>
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700">
+                        New Password for {selectedUser?.full_name}
+                      </label>
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                        placeholder="Enter new password"
+                      />
+                    </div>
+                    <div className="flex justify-center space-x-4 mt-6">
+                      <button
+                        onClick={() => {
+                          setShowPasswordModal(false);
+                          setNewPassword('');
+                        }}
+                        className="btn-secondary"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmPasswordReset}
+                        disabled={resetPasswordMutation.isLoading || !newPassword}
+                        className="btn-primary disabled:opacity-50"
+                      >
+                        {resetPasswordMutation.isLoading ? 'Resetting...' : 'Reset Password'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Bulk Operation Confirmation Modal */}
+            {showBulkModal && bulkOperation && (
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                  <div className="mt-3 text-center">
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {bulkOperation === 'delete'
+                        ? 'Delete Users'
+                        : bulkOperation === 'activate'
+                          ? 'Activate Users'
+                          : 'Deactivate Users'}
+                    </h3>
+                    <div className="mt-2 px-7 py-3">
+                      <p className="text-sm text-gray-500">
+                        Are you sure you want to {bulkOperation} {selectedUsers.length} selected
+                        user
+                        {selectedUsers.length > 1 ? 's' : ''}?
+                        {bulkOperation === 'delete' && ' This action cannot be undone.'}
+                      </p>
+                    </div>
+                    <div className="flex justify-center space-x-4 mt-4">
+                      <button
+                        onClick={() => {
+                          setShowBulkModal(false);
+                          setBulkOperation(null);
+                        }}
+                        className="btn-secondary"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmBulkOperation}
+                        disabled={
+                          bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading
+                        }
+                        className={`px-4 py-2 rounded-md disabled:opacity-50 ${
+                          bulkOperation === 'delete'
+                            ? 'bg-red-600 hover:bg-red-700 text-white'
+                            : 'btn-primary'
+                        }`}
+                      >
+                        {bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading
+                          ? 'Processing...'
+                          : `${
+                              bulkOperation === 'delete'
+                                ? 'Delete'
+                                : bulkOperation === 'activate'
+                                  ? 'Activate'
+                                  : 'Deactivate'
+                            }`}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           </div>
-
-          {/* Delete Confirmation Modal */}
-          {showDeleteModal && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div className="mt-3 text-center">
-                  <h3 className="text-lg font-medium text-gray-900">Delete User</h3>
-                  <div className="mt-2 px-7 py-3">
-                    <p className="text-sm text-gray-500">
-                      Are you sure you want to delete {selectedUser?.full_name}? This action cannot
-                      be undone.
-                    </p>
-                  </div>
-                  <div className="flex justify-center space-x-4 mt-4">
-                    <button onClick={() => setShowDeleteModal(false)} className="btn-secondary">
-                      Cancel
-                    </button>
-                    <button
-                      onClick={confirmDelete}
-                      disabled={deleteUserMutation.isLoading}
-                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
-                    >
-                      {deleteUserMutation.isLoading ? 'Deleting...' : 'Delete'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Password Reset Modal */}
-          {showPasswordModal && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div className="mt-3">
-                  <h3 className="text-lg font-medium text-gray-900 text-center">Reset Password</h3>
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      New Password for {selectedUser?.full_name}
-                    </label>
-                    <input
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                      placeholder="Enter new password"
-                    />
-                  </div>
-                  <div className="flex justify-center space-x-4 mt-6">
-                    <button
-                      onClick={() => {
-                        setShowPasswordModal(false);
-                        setNewPassword('');
-                      }}
-                      className="btn-secondary"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={confirmPasswordReset}
-                      disabled={resetPasswordMutation.isLoading || !newPassword}
-                      className="btn-primary disabled:opacity-50"
-                    >
-                      {resetPasswordMutation.isLoading ? 'Resetting...' : 'Reset Password'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Bulk Operation Confirmation Modal */}
-          {showBulkModal && bulkOperation && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-              <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div className="mt-3 text-center">
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {bulkOperation === 'delete'
-                      ? 'Delete Users'
-                      : bulkOperation === 'activate'
-                        ? 'Activate Users'
-                        : 'Deactivate Users'}
-                  </h3>
-                  <div className="mt-2 px-7 py-3">
-                    <p className="text-sm text-gray-500">
-                      Are you sure you want to {bulkOperation} {selectedUsers.length} selected user
-                      {selectedUsers.length > 1 ? 's' : ''}?
-                      {bulkOperation === 'delete' && ' This action cannot be undone.'}
-                    </p>
-                  </div>
-                  <div className="flex justify-center space-x-4 mt-4">
-                    <button
-                      onClick={() => {
-                        setShowBulkModal(false);
-                        setBulkOperation(null);
-                      }}
-                      className="btn-secondary"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={confirmBulkOperation}
-                      disabled={bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading}
-                      className={`px-4 py-2 rounded-md disabled:opacity-50 ${
-                        bulkOperation === 'delete'
-                          ? 'bg-red-600 hover:bg-red-700 text-white'
-                          : 'btn-primary'
-                      }`}
-                    >
-                      {bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading
-                        ? 'Processing...'
-                        : `${
-                            bulkOperation === 'delete'
-                              ? 'Delete'
-                              : bulkOperation === 'activate'
-                                ? 'Activate'
-                                : 'Deactivate'
-                          }`}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
         </ErrorBoundary>
       </Layout>
     </ProtectedRoute>
