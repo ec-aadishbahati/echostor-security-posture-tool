@@ -1,8 +1,27 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
+import axiosRetry, { isNetworkError, isRetryableError } from 'axios-retry';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://echostor-security-posture-tool.fly.dev';
+
+const pendingRequests = new Map<string, Promise<any>>();
+
+function generateRequestKey(config: InternalAxiosRequestConfig): string {
+  const { method, url, params, data } = config;
+  return `${method}:${url}:${JSON.stringify(params)}:${JSON.stringify(data)}`;
+}
+
+function addPendingRequest(config: InternalAxiosRequestConfig, promise: Promise<any>) {
+  const key = generateRequestKey(config);
+  pendingRequests.set(key, promise);
+  promise.finally(() => pendingRequests.delete(key));
+}
+
+function getPendingRequest(config: InternalAxiosRequestConfig): Promise<any> | undefined {
+  const key = generateRequestKey(config);
+  return pendingRequests.get(key);
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,7 +30,19 @@ const api = axios.create({
   },
 });
 
+axiosRetry(api, {
+  retries: 3,
+  retryDelay: (retryCount: number) => axiosRetry.exponentialDelay(retryCount, undefined, 500),
+  retryCondition: (error: AxiosError) => isNetworkError(error) || isRetryableError(error),
+  shouldResetTimeout: true,
+});
+
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const pendingRequest = getPendingRequest(config);
+  if (pendingRequest) {
+    return Promise.reject({ _isDuplicate: true, promise: pendingRequest });
+  }
+
   const token = Cookies.get('access_token');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -20,12 +51,26 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 });
 
 api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: AxiosError) => {
+  (response: AxiosResponse) => {
+    if (response.config) {
+      addPendingRequest(response.config as InternalAxiosRequestConfig, Promise.resolve(response));
+    }
+    return response;
+  },
+  (error: AxiosError | any) => {
+    if (error._isDuplicate) {
+      return error.promise;
+    }
+
     if (error.response?.status === 401) {
       Cookies.remove('access_token');
       window.location.href = '/auth/login';
     }
+
+    if (error.config) {
+      addPendingRequest(error.config, Promise.reject(error));
+    }
+
     return Promise.reject(error);
   }
 );
