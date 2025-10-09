@@ -12,7 +12,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U echostor"]
       interval: 10s
@@ -33,7 +32,8 @@ services:
       ADMIN_EMAIL: aadish.bahati@echostor.com
       ASSESSMENT_EXPIRY_DAYS: 15
       AUTO_SAVE_INTERVAL_MINUTES: 10
-      ALLOWED_ORIGINS: http://localhost:3000,http://frontend:3000
+      ALLOWED_ORIGINS: '["http://localhost:3000","http://frontend:3000"]'
+      RATE_LIMIT_ENABLED: 'false'
       # Optional: Uncomment for AI-enhanced reports
       # OPENAI_API_KEY: your-openai-api-key-here
     ports:
@@ -50,25 +50,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: echostor_frontend
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
-      NEXT_PUBLIC_APP_NAME: EchoStor Security Posture Assessment
-    ports:
-      - "3000:3000"
-    depends_on:
-      backend:
-        condition: service_healthy
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules  # Prevent overwriting node_modules
-      - /app/.next        # Prevent overwriting Next.js build cache
-    command: pnpm run dev
 
 volumes:
   postgres_data:

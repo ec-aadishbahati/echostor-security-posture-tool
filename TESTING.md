@@ -2,7 +2,46 @@
 
 ## Overview
 
-This document describes the testing strategy and infrastructure for the EchoStor Security Posture Assessment Tool. The project uses pytest for backend testing and Jest with React Testing Library for frontend testing.
+This document describes the testing strategy and infrastructure for the EchoStor Security Posture Assessment Tool. The project uses pytest for backend testing, Jest with React Testing Library for frontend unit testing, and Playwright for end-to-end testing.
+
+## End-to-End Testing
+
+### Overview
+
+E2E tests use Playwright to test the complete user flows across frontend and backend.
+
+### Running E2E Tests
+
+```bash
+# Start backend services
+docker-compose up -d
+
+# Run E2E tests
+cd frontend
+pnpm run test:e2e
+
+# Run in UI mode
+pnpm run test:e2e:ui
+
+# Run in debug mode
+pnpm run test:e2e:debug
+```
+
+### Test Coverage
+
+- User registration flow
+- Login and authentication
+- Complete assessment flow with auto-save
+- Report generation and download
+- Admin user management (CRUD operations)
+
+### CI Integration
+
+E2E tests run automatically on pull requests via GitHub Actions (`.github/workflows/frontend-ci.yml`).
+
+### Writing Tests
+
+See `frontend/e2e/README.md` for test structure and guidelines.
 
 ## Backend Testing
 
