@@ -12,13 +12,19 @@ const nextConfig = {
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'EchoStor Security Posture Assessment',
   },
   async headers() {
+    const isDev = process.env.NODE_ENV !== 'production';
+
+    const scriptSrc = isDev
+      ? "'self' 'unsafe-eval'"
+      : "'self'";
+
     return [
       {
         source: '/:path*',
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://echostor-security-posture-tool.fly.dev; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+            value: `default-src 'self'; script-src ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://echostor-security-posture-tool.fly.dev; frame-ancestors 'none'; base-uri 'self'; form-action 'self'`,
           },
           {
             key: 'Strict-Transport-Security',
