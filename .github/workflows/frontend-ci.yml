@@ -83,9 +83,9 @@ jobs:
         working-directory: ./backend
         run: poetry install
 
-      - name: Start backend services with docker-compose
+      - name: Start backend services with docker compose
         run: |
-          docker-compose up -d postgres backend
+          docker compose up -d postgres backend
           sleep 10
 
       - name: Wait for backend to be ready
@@ -114,6 +114,6 @@ jobs:
           path: frontend/playwright-report/
           retention-days: 30
 
-      - name: Stop docker-compose services
+      - name: Stop docker compose services
         if: always()
-        run: docker-compose down
+        run: docker compose down
