@@ -17,7 +17,7 @@ from app.schemas.assessment import (
     ConsultationRequest,
     SaveProgressRequest,
 )
-from app.services.question_parser import load_assessment_structure
+from app.services.question_parser import load_assessment_structure_cached
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ router = APIRouter()
 @router.get("/structure", response_model=AssessmentStructure)
 async def get_assessment_structure(request: Request):
     """Get the complete assessment structure with all questions"""
-    return load_assessment_structure()
+    return load_assessment_structure_cached()
 
 
 @router.post("/start", response_model=AssessmentResponse)
@@ -228,7 +228,7 @@ async def save_assessment_progress(
         .count()
     )
 
-    structure = load_assessment_structure()
+    structure = load_assessment_structure_cached()
     total_questions = structure.total_questions
 
     if total_questions > 0:

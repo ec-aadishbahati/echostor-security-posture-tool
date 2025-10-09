@@ -16,6 +16,7 @@ from app.schemas.user import (
     BulkUpdateUserStatusRequest,
     UserResponse,
 )
+from app.services.cache import cache_service
 
 router = APIRouter()
 
@@ -191,6 +192,13 @@ async def get_dashboard_stats(
 ):
     """Get dashboard statistics"""
 
+    CACHE_KEY = "dashboard:stats"
+    CACHE_TTL = 300
+
+    cached_stats = cache_service.get(CACHE_KEY)
+    if cached_stats:
+        return cached_stats
+
     try:
         total_users = db.query(func.count(User.id)).scalar()
 
@@ -251,6 +259,8 @@ async def get_dashboard_stats(
             "stuck_assessments": stuck_assessments or 0,
             "average_completion_hours": round(avg_completion_time or 0, 2),
         }
+
+        cache_service.set(CACHE_KEY, stats, ttl=CACHE_TTL)
 
         await log_admin_action(
             admin_email=current_admin["email"],
