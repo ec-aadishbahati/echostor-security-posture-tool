@@ -9,6 +9,7 @@ from slowapi.errors import RateLimitExceeded
 from app.api import admin, assessment, auth, health, reports
 from app.core.config import settings
 from app.middleware.rate_limit import limiter
+from app.middleware.security_headers import SecurityHeadersMiddleware
 
 app = FastAPI(
     title="EchoStor Security Posture Assessment API",
@@ -26,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 os.makedirs("reports", exist_ok=True)
 
