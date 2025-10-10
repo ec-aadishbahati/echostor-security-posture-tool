@@ -1,4 +1,6 @@
+import logging
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,10 +13,28 @@ from app.core.config import settings
 from app.middleware.rate_limit import limiter
 from app.middleware.security_headers import SecurityHeadersMiddleware
 
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Starting cache warming...")
+    try:
+        from app.services.question_parser import load_assessment_structure_cached
+
+        load_assessment_structure_cached()
+        logger.info("Cache warming completed")
+    except Exception as e:
+        logger.error(f"Cache warming failed: {e}")
+
+    yield
+
+
 app = FastAPI(
     title="EchoStor Security Posture Assessment API",
     description="API for comprehensive security posture assessment tool",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 app.state.limiter = limiter

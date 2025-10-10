@@ -201,6 +201,25 @@ def load_assessment_structure() -> AssessmentStructure:
         )
 
 
+def load_assessment_structure_cached() -> AssessmentStructure:
+    from app.services.cache import cache_service
+
+    CACHE_KEY = "assessment:structure"
+
+    if cache_service.has_questions_file_changed():
+        cache_service.delete(CACHE_KEY)
+
+    cached_data = cache_service.get(CACHE_KEY)
+    if cached_data:
+        return AssessmentStructure(**cached_data)
+
+    structure = load_assessment_structure()
+
+    cache_service.set(CACHE_KEY, structure.model_dump())
+
+    return structure
+
+
 def create_sample_assessment_structure() -> AssessmentStructure:
     """Create a sample assessment structure for testing"""
 
