@@ -17,9 +17,8 @@ os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key-for-testing-only-not-se
 from app.core.database import Base, get_db
 from app.core.security import create_access_token, get_password_hash
 from app.main import app
-from app.models.assessment import Assessment
+from app.models.assessment import Assessment, Report
 from app.models.assessment import AssessmentResponse as AssessmentResponseModel
-from app.models.assessment import Report
 from app.models.user import User
 
 engine = create_engine(

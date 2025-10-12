@@ -254,9 +254,9 @@ async def generate_ai_insights(
 
             except Exception as e:
                 print(f"Error generating AI insight for section {section.id}: {e}")
-                insights[
-                    section.id
-                ] = "AI analysis temporarily unavailable for this section."
+                insights[section.id] = (
+                    "AI analysis temporarily unavailable for this section."
+                )
 
     return insights
 
