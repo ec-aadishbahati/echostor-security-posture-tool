@@ -2,6 +2,7 @@ import logging
 import os
 from contextlib import asynccontextmanager
 
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -10,10 +11,27 @@ from slowapi.errors import RateLimitExceeded
 
 from app.api import admin, assessment, auth, health, reports
 from app.core.config import settings
+from app.middleware.performance import PerformanceMiddleware
 from app.middleware.rate_limit import limiter
 from app.middleware.security_headers import SecurityHeadersMiddleware
 
 logger = logging.getLogger(__name__)
+
+if settings.SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=settings.SENTRY_DSN,
+        environment=settings.SENTRY_ENVIRONMENT,
+        traces_sample_rate=settings.SENTRY_TRACES_SAMPLE_RATE,
+        profiles_sample_rate=settings.SENTRY_PROFILES_SAMPLE_RATE,
+        enable_tracing=True,
+        integrations=[
+            sentry_sdk.integrations.fastapi.FastApiIntegration(),
+            sentry_sdk.integrations.sqlalchemy.SqlalchemyIntegration(),
+        ],
+    )
+    logger.info("Sentry performance monitoring initialized")
+else:
+    logger.warning("Sentry DSN not configured, performance monitoring disabled")
 
 
 @asynccontextmanager
@@ -50,6 +68,7 @@ app.add_middleware(
 )
 
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(PerformanceMiddleware)
 
 os.makedirs("reports", exist_ok=True)
 

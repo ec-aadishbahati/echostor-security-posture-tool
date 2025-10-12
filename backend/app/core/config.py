@@ -34,6 +34,11 @@ class Settings(BaseSettings):
     REDIS_URL: str | None = None
     RATE_LIMIT_ENABLED: bool = True
 
+    SENTRY_DSN: str | None = None
+    SENTRY_ENVIRONMENT: str = "development"
+    SENTRY_TRACES_SAMPLE_RATE: float = 1.0
+    SENTRY_PROFILES_SAMPLE_RATE: float = 1.0
+
     @model_validator(mode="after")
     def validate_required_settings(self):
         if not self.JWT_SECRET_KEY:

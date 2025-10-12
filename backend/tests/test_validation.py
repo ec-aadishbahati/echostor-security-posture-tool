@@ -1,10 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from app.schemas.assessment import (
-    AssessmentResponseCreate,
-    ConsultationRequest,
-)
+from app.schemas.assessment import AssessmentResponseCreate, ConsultationRequest
 from app.schemas.user import UserCreate
 
 
