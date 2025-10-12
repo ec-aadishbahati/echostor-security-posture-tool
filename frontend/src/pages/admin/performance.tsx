@@ -49,9 +49,7 @@ export default function PerformanceDashboard() {
         <ErrorBoundary>
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Performance Monitoring
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Performance Monitoring</h2>
               <p className="text-gray-600">
                 Monitor API response times, database queries, and user experience metrics
               </p>
@@ -66,7 +64,8 @@ export default function PerformanceDashboard() {
                       Sentry Not Configured
                     </h3>
                     <p className="text-sm text-yellow-700">
-                      To enable full performance monitoring, set the following environment variables:
+                      To enable full performance monitoring, set the following environment
+                      variables:
                     </p>
                     <ul className="mt-2 text-sm text-yellow-700 list-disc list-inside space-y-1">
                       <li>
@@ -213,8 +212,8 @@ export default function PerformanceDashboard() {
                   <h4 className="font-semibold text-gray-800 mb-2">Backend Monitoring</h4>
                   <ul className="text-sm text-gray-600 space-y-2 list-disc list-inside">
                     <li>
-                      <strong>API Performance:</strong> Response times tracked via middleware,
-                      added to X-Response-Time header
+                      <strong>API Performance:</strong> Response times tracked via middleware, added
+                      to X-Response-Time header
                     </li>
                     <li>
                       <strong>Database Queries:</strong> SQLAlchemy event listeners track query

@@ -54,7 +54,7 @@ export function initWebVitals(): void {
   getCLS(reportMetric);
   getFID(reportMetric);
   getLCP(reportMetric);
-  
+
   getFCP(reportMetric);
   getTTFB(reportMetric);
 }
