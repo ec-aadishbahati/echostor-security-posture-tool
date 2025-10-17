@@ -1,13 +1,13 @@
 from datetime import UTC, datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_user
 from app.core.config import settings
 from app.core.database import get_db
-from app.models.assessment import Assessment
+from app.models.assessment import Assessment, Report
 from app.models.assessment import AssessmentResponse as AssessmentResponseModel
 from app.models.user import User
 from app.schemas.assessment import (
@@ -18,6 +18,7 @@ from app.schemas.assessment import (
     SaveProgressRequest,
 )
 from app.services.question_parser import load_assessment_structure_cached
+from app.services.report_generator import generate_standard_report
 
 router = APIRouter()
 
@@ -246,10 +247,11 @@ async def save_assessment_progress(
 async def complete_assessment(
     request: Request,
     assessment_id: str,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Complete an assessment"""
+    """Complete an assessment and automatically generate standard report"""
 
     assessment = (
         db.query(Assessment)
@@ -284,7 +286,30 @@ async def complete_assessment(
 
     db.commit()
 
-    return {"message": "Assessment completed successfully"}
+    existing_report = (
+        db.query(Report)
+        .filter(
+            and_(
+                Report.assessment_id == assessment_id, Report.report_type == "standard"
+            )
+        )
+        .first()
+    )
+
+    if not existing_report:
+        report = Report(
+            assessment_id=assessment_id, report_type="standard", status="generating"
+        )
+
+        db.add(report)
+        db.commit()
+        db.refresh(report)
+
+        background_tasks.add_task(generate_standard_report, str(report.id))
+
+    return {
+        "message": "Assessment completed successfully. Your report is being generated."
+    }
 
 
 @router.post("/{assessment_id}/consultation")
