@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useAuth } from '@/lib/auth';
@@ -8,6 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { assessmentAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
+import { crossTabSync, SyncEventType } from '@/lib/crossTabSync';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -41,6 +42,7 @@ export default function AssessmentQuestions() {
   const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const hasNavigatedToResumePoint = useRef(false);
 
   useAutoLogout(async () => {
     if (assessmentId) {
@@ -57,6 +59,7 @@ export default function AssessmentQuestions() {
   const [showConsultationQuestion, setShowConsultationQuestion] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
+  const [savedProgress, setSavedProgress] = useState<number>(0);
 
   const { data: structure, isLoading: structureLoading } = useQuery(
     'assessmentStructure',
@@ -70,12 +73,18 @@ export default function AssessmentQuestions() {
   } = useQuery('currentAssessment', assessmentAPI.getCurrentAssessment, {
     onSuccess: (data) => {
       setAssessmentId(data.data.id);
+      setSavedProgress(data.data.progress_percentage || 0);
       assessmentAPI.getResponses(data.data.id).then((responseData) => {
         const existingResponses: Record<string, any> = {};
+        const existingComments: Record<string, string> = {};
         responseData.data.forEach((response: any) => {
           existingResponses[response.question_id] = response.answer_value;
+          if (response.comment) {
+            existingComments[response.question_id] = response.comment;
+          }
         });
         setResponses(existingResponses);
+        setComments(existingComments);
       });
     },
     onError: (_error: any) => {
@@ -88,6 +97,7 @@ export default function AssessmentQuestions() {
     onSuccess: (data) => {
       setAssessmentId(data.data.id);
       queryClient.invalidateQueries('currentAssessment');
+      crossTabSync.broadcast(SyncEventType.ASSESSMENT_STARTED, data.data.id);
     },
     onError: (error: any) => {
       console.error('Failed to start assessment:', error);
@@ -101,8 +111,12 @@ export default function AssessmentQuestions() {
     ({ assessmentId, responses }: { assessmentId: string; responses: any[] }) =>
       assessmentAPI.saveProgress(assessmentId, responses),
     {
-      onSuccess: () => {
+      onSuccess: (data, variables) => {
         setLastSaved(new Date());
+        if (data.data.progress_percentage !== undefined) {
+          setSavedProgress(data.data.progress_percentage);
+        }
+        crossTabSync.broadcast(SyncEventType.PROGRESS_SAVED, variables.assessmentId);
         toast.success('Progress saved!');
       },
       onError: (_error: any) => {
@@ -114,7 +128,8 @@ export default function AssessmentQuestions() {
   const completeAssessmentMutation = useMutation(
     (assessmentId: string) => assessmentAPI.completeAssessment(assessmentId),
     {
-      onSuccess: () => {
+      onSuccess: (_data, assessmentId) => {
+        crossTabSync.broadcast(SyncEventType.ASSESSMENT_COMPLETED, assessmentId);
         toast.success('Assessment completed!');
         router.push('/reports');
       },
@@ -136,6 +151,39 @@ export default function AssessmentQuestions() {
 
     return () => clearInterval(interval);
   }, [assessmentId, responses]);
+
+  useEffect(() => {
+    if (!structure || !responses || hasNavigatedToResumePoint.current) return;
+    if (Object.keys(responses).length === 0) return;
+
+    const { sectionIndex, questionIndex } = findFirstUnansweredQuestion();
+    setCurrentSectionIndex(sectionIndex);
+    setCurrentQuestionIndex(questionIndex);
+    hasNavigatedToResumePoint.current = true;
+  }, [structure, responses]);
+
+  useEffect(() => {
+    const unsubscribe = crossTabSync.subscribe((event) => {
+      if (event.assessmentId !== assessmentId && assessmentId) return;
+
+      switch (event.type) {
+        case SyncEventType.ASSESSMENT_STARTED:
+        case SyncEventType.PROGRESS_SAVED:
+          queryClient.invalidateQueries('currentAssessment');
+          toast('Assessment updated in another tab', { icon: '🔄' });
+          break;
+        case SyncEventType.ASSESSMENT_COMPLETED:
+          queryClient.invalidateQueries('currentAssessment');
+          toast.success('Assessment completed in another tab');
+          router.push('/reports');
+          break;
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [assessmentId, queryClient, router]);
 
   const saveProgress = () => {
     if (!assessmentId || !structure) return;
@@ -174,6 +222,21 @@ export default function AssessmentQuestions() {
       if (question) return question;
     }
     return undefined;
+  };
+
+  const findFirstUnansweredQuestion = (): { sectionIndex: number; questionIndex: number } => {
+    if (!structure) return { sectionIndex: 0, questionIndex: 0 };
+
+    for (let sectionIndex = 0; sectionIndex < structure.data.sections.length; sectionIndex++) {
+      const section = structure.data.sections[sectionIndex];
+      for (let questionIndex = 0; questionIndex < section.questions.length; questionIndex++) {
+        const question = section.questions[questionIndex];
+        if (!responses[question.id]) {
+          return { sectionIndex, questionIndex };
+        }
+      }
+    }
+    return { sectionIndex: 0, questionIndex: 0 };
   };
 
   const handleAnswerChange = (questionId: string, value: any) => {
@@ -216,14 +279,6 @@ export default function AssessmentQuestions() {
       const prevSection = structure?.data?.sections?.[currentSectionIndex - 1];
       setCurrentQuestionIndex(prevSection.questions.length - 1);
     }
-  };
-
-  const calculateProgress = () => {
-    if (!structure) return 0;
-
-    const totalQuestions = structure.data.total_questions;
-    const answeredQuestions = Object.keys(responses).length;
-    return (answeredQuestions / totalQuestions) * 100;
   };
 
   const isLastQuestion = () => {
@@ -351,7 +406,7 @@ export default function AssessmentQuestions() {
 
   const currentQuestion = getCurrentQuestion();
   const currentSection = getCurrentSection();
-  const progress = calculateProgress();
+  const progress = savedProgress;
 
   if (!currentQuestion || !currentSection) {
     return (
