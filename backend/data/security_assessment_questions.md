@@ -681,6 +681,32 @@
 
 **Explanation:** Comprehensive metrics provide visibility into different aspects of security posture.
 
+**Answer Options:**
+**Option 1: Security incidents count**
+*Basic Description:* Number of security incidents per period
+
+**Option 2: Mean time to detect (MTTD)**
+*Basic Description:* Average time to detect security incidents
+
+**Option 3: Mean time to respond (MTTR)**
+*Basic Description:* Average time to respond to incidents
+
+**Option 4: Vulnerability remediation time**
+*Basic Description:* Time taken to remediate vulnerabilities
+
+**Option 5: Patch compliance rate**
+*Basic Description:* Percentage of systems with current patches
+
+**Option 6: User awareness training completion**
+*Basic Description:* Training completion rates
+
+**Option 7: Security audit findings**
+*Basic Description:* Number and severity of audit findings
+
+**Option 8: Risk assessment scores**
+*Basic Description:* Overall risk posture scores
+
+
 
 #### Question 1.4.4
 
@@ -729,6 +755,29 @@
 
 **Explanation:** Security KPIs provide measurable insights into security program effectiveness.
 
+**Answer Options:**
+**Option 1: Incident response time**
+*Basic Description:* Time to detect and respond to incidents
+
+**Option 2: Vulnerability remediation rate**
+*Basic Description:* Speed of vulnerability patching
+
+**Option 3: Security awareness metrics**
+*Basic Description:* Training completion and phishing test results
+
+**Option 4: Compliance status**
+*Basic Description:* Adherence to regulatory requirements
+
+**Option 5: Access control effectiveness**
+*Basic Description:* Proper access provisioning and reviews
+
+**Option 6: Security tool coverage**
+*Basic Description:* Percentage of assets protected
+
+**Option 7: No KPIs maintained**
+*Basic Description:* KPIs not currently tracked
+
+
 
 #### Question 1.4.7
 
@@ -756,6 +805,26 @@
 
 **Explanation:** Maturity measurement guides security program improvement and investment decisions.
 
+**Answer Options:**
+**Option 1: Maturity model framework**
+*Basic Description:* Using CMMI, NIST CSF, or similar
+
+**Option 2: Capability assessments**
+*Basic Description:* Regular capability evaluations
+
+**Option 3: Benchmark comparisons**
+*Basic Description:* Comparing against industry standards
+
+**Option 4: Audit results**
+*Basic Description:* Based on internal/external audit findings
+
+**Option 5: Self-assessment**
+*Basic Description:* Internal maturity evaluations
+
+**Option 6: Not measured**
+*Basic Description:* Maturity not currently assessed
+
+
 
 #### Question 1.4.9
 
@@ -766,6 +835,32 @@
 **Weight:** 3
 
 **Explanation:** Board-level security metrics ensure executive visibility into security program performance.
+
+**Answer Options:**
+**Option 1: Incident statistics**
+*Basic Description:* Number and severity of security incidents
+
+**Option 2: Risk posture**
+*Basic Description:* Overall organizational risk levels
+
+**Option 3: Compliance status**
+*Basic Description:* Regulatory compliance metrics
+
+**Option 4: Security investments**
+*Basic Description:* Budget and resource allocation
+
+**Option 5: Program maturity**
+*Basic Description:* Security program maturity scores
+
+**Option 6: Vulnerability metrics**
+*Basic Description:* Critical vulnerability counts and trends
+
+**Option 7: Third-party risk**
+*Basic Description:* Vendor security risk metrics
+
+**Option 8: No board reporting**
+*Basic Description:* Security metrics not reported to board
+
 
 
 
@@ -922,6 +1017,23 @@
 
 **Explanation:** Directory monitoring ensures reliable identity services and detects security issues.
 
+**Answer Options:**
+**Option 1: Automated monitoring tools**
+*Basic Description:* Using SIEM, monitoring platforms, or similar
+
+**Option 2: Manual reviews**
+*Basic Description:* Regular manual checks and reviews
+
+**Option 3: Combination approach**
+*Basic Description:* Mix of automated and manual monitoring
+
+**Option 4: Third-party service**
+*Basic Description:* Outsourced monitoring
+
+**Option 5: Not monitored**
+*Basic Description:* Not currently monitored
+
+
 
 
 ### Subsection 4.2: Access Control & Authorization
@@ -974,6 +1086,26 @@
 
 **Explanation:** Privileged account management protects high-risk administrative access.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 4.2.4
 
@@ -996,6 +1128,26 @@
 **Type:** multiple_select
 
 **Explanation:** Emergency access procedures balance security with operational needs during crises.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 4.2.6
@@ -1037,6 +1189,26 @@
 
 **Explanation:** Structured onboarding ensures users receive appropriate access from day one.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 4.3.3
 
@@ -1071,6 +1243,26 @@
 **Type:** multiple_select
 
 **Explanation:** Role change processes ensure access remains appropriate as responsibilities change.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 4.3.5
@@ -1152,6 +1344,26 @@
 
 **Explanation:** Multiple MFA methods provide flexibility while maintaining security.
 
+**Answer Options:**
+**Option 1: SMS/Text message**
+*Basic Description:* One-time codes via SMS
+
+**Option 2: Authenticator app**
+*Basic Description:* TOTP-based authenticator apps
+
+**Option 3: Hardware token**
+*Basic Description:* Physical security keys like YubiKey
+
+**Option 4: Biometric**
+*Basic Description:* Fingerprint or facial recognition
+
+**Option 5: Push notification**
+*Basic Description:* Mobile app push approvals
+
+**Option 6: Not implemented**
+*Basic Description:* MFA not currently implemented
+
+
 
 #### Question 4.4.3
 
@@ -1197,6 +1409,26 @@
 **Type:** multiple_select
 
 **Explanation:** MFA bypass procedures should balance security with operational needs.
+
+**Answer Options:**
+**Option 1: SMS/Text message**
+*Basic Description:* One-time codes via SMS
+
+**Option 2: Authenticator app**
+*Basic Description:* TOTP-based authenticator apps
+
+**Option 3: Hardware token**
+*Basic Description:* Physical security keys like YubiKey
+
+**Option 4: Biometric**
+*Basic Description:* Fingerprint or facial recognition
+
+**Option 5: Push notification**
+*Basic Description:* Mobile app push approvals
+
+**Option 6: Not implemented**
+*Basic Description:* MFA not currently implemented
+
 
 
 
@@ -1361,6 +1593,23 @@
 **Type:** multiple_select
 
 **Explanation:** Multiple treatment strategies provide flexibility in addressing different types of risks.
+
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 2.2.2
@@ -1651,6 +1900,23 @@
 **Type:** multiple_select
 
 **Explanation:** Comprehensive asset tracking covers all technology components that could pose security risks.
+
+**Answer Options:**
+**Option 1: Type A**
+*Basic Description:* Primary implementation type
+
+**Option 2: Type B**
+*Basic Description:* Secondary implementation type
+
+**Option 3: Type C**
+*Basic Description:* Alternative implementation type
+
+**Option 4: Hybrid**
+*Basic Description:* Combination of multiple types
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 3.1.6
@@ -1945,6 +2211,23 @@
 
 **Explanation:** Multiple segmentation techniques provide defense in depth.
 
+**Answer Options:**
+**Option 1: Physical segmentation**
+*Basic Description:* Separate physical networks
+
+**Option 2: Virtual segmentation (VLANs)**
+*Basic Description:* Virtual LANs
+
+**Option 3: Software-defined networking (SDN)**
+*Basic Description:* SDN-based segmentation
+
+**Option 4: Micro-segmentation**
+*Basic Description:* Granular workload-level segmentation
+
+**Option 5: No segmentation**
+*Basic Description:* No network segmentation implemented
+
+
 
 #### Question 5.1.3
 
@@ -2014,6 +2297,26 @@
 
 **Explanation:** Wireless security prevents unauthorized network access and data interception.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 5.1.7
 
@@ -2039,6 +2342,23 @@
 **Type:** multiple_select
 
 **Explanation:** Multiple firewall types provide layered protection at different network levels.
+
+**Answer Options:**
+**Option 1: Next-generation firewall (NGFW)**
+*Basic Description:* Advanced firewall with IPS/IDS
+
+**Option 2: Traditional firewall**
+*Basic Description:* Standard packet filtering firewall
+
+**Option 3: Web application firewall (WAF)**
+*Basic Description:* Application-layer firewall
+
+**Option 4: Cloud firewall**
+*Basic Description:* Cloud-native firewall service
+
+**Option 5: Not deployed**
+*Basic Description:* No firewall deployed
+
 
 
 #### Question 5.2.2
@@ -2180,6 +2500,23 @@
 
 **Explanation:** Multiple monitoring tools provide comprehensive visibility into network activity.
 
+**Answer Options:**
+**Option 1: Commercial solution**
+*Basic Description:* Vendor-provided commercial product
+
+**Option 2: Open-source solution**
+*Basic Description:* Open-source tools and platforms
+
+**Option 3: Custom-built solution**
+*Basic Description:* Internally developed solution
+
+**Option 4: Managed service**
+*Basic Description:* Third-party managed service
+
+**Option 5: Not deployed**
+*Basic Description:* Not currently deployed
+
+
 
 #### Question 5.3.3
 
@@ -2264,6 +2601,23 @@
 
 **Explanation:** Secure remote access is essential for modern distributed workforces.
 
+**Answer Options:**
+**Option 1: Commercial solution**
+*Basic Description:* Vendor-provided commercial product
+
+**Option 2: Open-source solution**
+*Basic Description:* Open-source tools and platforms
+
+**Option 3: Custom-built solution**
+*Basic Description:* Internally developed solution
+
+**Option 4: Managed service**
+*Basic Description:* Third-party managed service
+
+**Option 5: Not deployed**
+*Basic Description:* Not currently deployed
+
+
 
 #### Question 5.4.2
 
@@ -2286,6 +2640,23 @@
 **Type:** multiple_select
 
 **Explanation:** Modern VPN protocols provide better security and performance than legacy options.
+
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 5.4.4
@@ -2356,6 +2727,23 @@
 **Type:** multiple_select
 
 **Explanation:** Multiple endpoint protection layers provide comprehensive defense against various threats.
+
+**Answer Options:**
+**Option 1: Commercial solution**
+*Basic Description:* Vendor-provided commercial product
+
+**Option 2: Open-source solution**
+*Basic Description:* Open-source tools and platforms
+
+**Option 3: Custom-built solution**
+*Basic Description:* Internally developed solution
+
+**Option 4: Managed service**
+*Basic Description:* Third-party managed service
+
+**Option 5: Not deployed**
+*Basic Description:* Not currently deployed
+
 
 
 #### Question 6.1.2
@@ -2490,6 +2878,23 @@
 **Type:** multiple_select
 
 **Explanation:** Mobile policies protect corporate data on personal and company devices.
+
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 6.2.3
@@ -2688,6 +3093,23 @@
 
 **Explanation:** Strong encryption standards provide robust protection for sensitive data.
 
+**Answer Options:**
+**Option 1: AES-256**
+*Basic Description:* Advanced Encryption Standard 256-bit
+
+**Option 2: AES-128**
+*Basic Description:* Advanced Encryption Standard 128-bit
+
+**Option 3: RSA**
+*Basic Description:* RSA encryption
+
+**Option 4: Other encryption**
+*Basic Description:* Other encryption methods
+
+**Option 5: Not encrypted**
+*Basic Description:* Data not encrypted
+
+
 
 #### Question 7.1.4
 
@@ -2732,6 +3154,26 @@
 
 **Explanation:** Mobile data protection prevents loss of sensitive information on portable devices.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 7.1.7
 
@@ -2762,6 +3204,26 @@
 **Type:** multiple_select
 
 **Explanation:** Understanding applicable regulations is essential for compliance planning.
+
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Option 5**
+*Basic Description:* Fifth option
+
+**Option 6: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 7.2.2
@@ -2892,6 +3354,23 @@
 
 **Explanation:** Multiple backup locations protect against site-specific disasters.
 
+**Answer Options:**
+**Option 1: Daily**
+*Basic Description:* Daily backup schedule
+
+**Option 2: Weekly**
+*Basic Description:* Weekly backup schedule
+
+**Option 3: Monthly**
+*Basic Description:* Monthly backup schedule
+
+**Option 4: Real-time/Continuous**
+*Basic Description:* Continuous data protection
+
+**Option 5: No regular backups**
+*Basic Description:* Backups not performed regularly
+
+
 
 #### Question 7.3.4
 
@@ -2981,6 +3460,26 @@
 
 **Explanation:** Efficient DSAR handling ensures compliance with privacy regulations.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 7.4.3
 
@@ -3013,6 +3512,26 @@
 
 **Explanation:** Proper transfer mechanisms ensure lawful international data transfers.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 7.4.5
 
@@ -3023,6 +3542,23 @@
 **Weight:** 3
 
 **Explanation:** Consent management ensures lawful processing and user control over personal data.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 
@@ -3074,6 +3610,23 @@
 **Type:** multiple_select
 
 **Explanation:** SAST tools automatically identify security vulnerabilities in source code.
+
+**Answer Options:**
+**Option 1: Commercial SAST tool**
+*Basic Description:* Vendor SAST solution
+
+**Option 2: Open-source SAST tool**
+*Basic Description:* Open-source static analysis
+
+**Option 3: IDE-integrated analysis**
+*Basic Description:* Built into development environment
+
+**Option 4: Manual code review**
+*Basic Description:* Manual security code review
+
+**Option 5: Not performed**
+*Basic Description:* SAST not performed
+
 
 
 #### Question 8.1.4
@@ -3176,6 +3729,26 @@
 
 **Explanation:** Proper authentication mechanisms protect against unauthorized access.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 8.2.4
 
@@ -3234,6 +3807,26 @@
 **Type:** multiple_select
 
 **Explanation:** API security prevents unauthorized access and abuse of application interfaces.
+
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
 
 
 #### Question 8.3.2
@@ -3324,6 +3917,23 @@
 
 **Explanation:** Automated security testing in CI/CD enables early detection of vulnerabilities.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 8.4.2
 
@@ -3334,6 +3944,23 @@
 **Weight:** 3
 
 **Explanation:** Merge gates prevent vulnerable code from reaching production.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 8.4.3
@@ -3346,6 +3973,20 @@
 
 **Explanation:** Secret scanning prevents credential exposure in source code.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 8.4.4
 
@@ -3356,6 +3997,23 @@
 **Weight:** 3
 
 **Explanation:** IaC scanning identifies misconfigurations before deployment.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 8.4.5
@@ -3368,6 +4026,26 @@
 
 **Explanation:** Structured handling ensures security findings are addressed promptly.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 8.4.6
 
@@ -3379,6 +4057,23 @@
 
 **Explanation:** SBOM enforcement provides supply chain transparency and enables vulnerability tracking.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 8.4.7
 
@@ -3389,6 +4084,23 @@
 **Weight:** 5
 
 **Explanation:** Mandatory IaC policies prevent misconfigurations and enforce security standards.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 
@@ -3407,6 +4119,26 @@
 **Type:** multiple_select
 
 **Explanation:** Different service models require different security approaches and responsibilities.
+
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Option 5**
+*Basic Description:* Fifth option
+
+**Option 6: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 9.1.2
@@ -3431,6 +4163,26 @@
 
 **Explanation:** Secure configurations prevent common cloud misconfigurations and vulnerabilities.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 9.1.4
 
@@ -3440,6 +4192,23 @@
 
 **Explanation:** Cloud network security controls protect against unauthorized access and attacks.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 9.1.5
 
@@ -3448,6 +4217,23 @@
 **Type:** multiple_select
 
 **Explanation:** Cloud security monitoring provides visibility into threats and compliance issues.
+
+**Answer Options:**
+**Option 1: Automated monitoring tools**
+*Basic Description:* Using SIEM, monitoring platforms, or similar
+
+**Option 2: Manual reviews**
+*Basic Description:* Regular manual checks and reviews
+
+**Option 3: Combination approach**
+*Basic Description:* Mix of automated and manual monitoring
+
+**Option 4: Third-party service**
+*Basic Description:* Outsourced monitoring
+
+**Option 5: Not monitored**
+*Basic Description:* Not currently monitored
+
 
 
 #### Question 9.1.6
@@ -3494,6 +4280,26 @@
 
 **Explanation:** Proper cloud identity management ensures secure access to cloud resources.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 9.2.2
 
@@ -3516,6 +4322,26 @@
 **Type:** multiple_select
 
 **Explanation:** API security prevents unauthorized access to cloud management interfaces.
+
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
 
 
 #### Question 9.2.4
@@ -3595,6 +4421,26 @@
 
 **Explanation:** Container image security prevents deployment of vulnerable or malicious containers.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 9.3.3
 
@@ -3604,6 +4450,23 @@
 
 **Explanation:** Runtime security protects containers during execution from various threats.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 9.3.4
 
@@ -3612,6 +4475,26 @@
 **Type:** multiple_select
 
 **Explanation:** Serverless security addresses unique risks in function-as-a-service environments.
+
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
 
 
 #### Question 9.3.5
@@ -3715,6 +4598,23 @@
 
 **Explanation:** Clear roles ensure effective coordination and decision-making during incidents.
 
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 10.1.5
 
@@ -3779,6 +4679,20 @@
 
 **Explanation:** Multiple detection methods improve the likelihood of identifying security incidents quickly.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 10.2.2
 
@@ -3823,6 +4737,20 @@
 
 **Explanation:** Containment prevents incidents from spreading and causing additional damage.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 10.2.5
 
@@ -3845,6 +4773,20 @@
 **Type:** multiple_select
 
 **Explanation:** Effective communication keeps stakeholders informed and coordinates response efforts.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 
@@ -3918,6 +4860,20 @@
 **Type:** multiple_select
 
 **Explanation:** Metrics help measure incident response effectiveness and identify improvement areas.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 10.3.6
@@ -4071,6 +5027,23 @@
 
 **Explanation:** Multiple recovery options provide flexibility and resilience against different disaster scenarios.
 
+**Answer Options:**
+**Option 1: Commercial SAST tool**
+*Basic Description:* Vendor SAST solution
+
+**Option 2: Open-source SAST tool**
+*Basic Description:* Open-source static analysis
+
+**Option 3: IDE-integrated analysis**
+*Basic Description:* Built into development environment
+
+**Option 4: Manual code review**
+*Basic Description:* Manual security code review
+
+**Option 5: Not performed**
+*Basic Description:* SAST not performed
+
+
 
 #### Question 11.2.3
 
@@ -4120,6 +5093,23 @@
 
 **Explanation:** Effective communication keeps stakeholders informed during recovery operations.
 
+**Answer Options:**
+**Option 1: Commercial SAST tool**
+*Basic Description:* Vendor SAST solution
+
+**Option 2: Open-source SAST tool**
+*Basic Description:* Open-source static analysis
+
+**Option 3: IDE-integrated analysis**
+*Basic Description:* Built into development environment
+
+**Option 4: Manual code review**
+*Basic Description:* Manual security code review
+
+**Option 5: Not performed**
+*Basic Description:* SAST not performed
+
+
 
 
 ### Subsection 11.3: Crisis Management
@@ -4160,6 +5150,20 @@
 
 **Explanation:** External coordination ensures comprehensive crisis response and stakeholder management.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 11.3.4
 
@@ -4187,6 +5191,26 @@
 **Type:** multiple_select
 
 **Explanation:** Clear decision-making authority enables rapid crisis response.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 11.3.6
@@ -4228,6 +5252,20 @@
 
 **Explanation:** Recovery prioritization ensures critical functions are restored first.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 11.4.3
 
@@ -4264,6 +5302,20 @@
 **Type:** multiple_select
 
 **Explanation:** Coordinated recovery ensures efficient restoration of operations.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 11.4.6
@@ -4311,6 +5363,23 @@
 
 **Explanation:** Multiple evaluation criteria provide comprehensive vendor risk assessment.
 
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 12.1.3
 
@@ -4338,6 +5407,23 @@
 **Type:** multiple_select
 
 **Explanation:** Security certifications provide assurance of vendor security practices.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 12.1.5
@@ -4383,6 +5469,26 @@
 
 **Explanation:** High-risk vendors require additional security measures and oversight.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 
 ### Subsection 12.2: Contract Management
@@ -4408,6 +5514,23 @@
 **Type:** multiple_select
 
 **Explanation:** Comprehensive security clauses protect organizational interests and data.
+
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 12.2.3
@@ -4472,6 +5595,26 @@
 
 **Explanation:** Termination requirements ensure secure end-of-relationship procedures.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 
 ### Subsection 12.3: Vendor Monitoring & Oversight
@@ -4483,6 +5626,23 @@
 **Type:** multiple_select
 
 **Explanation:** Ongoing monitoring ensures vendors maintain security standards.
+
+**Answer Options:**
+**Option 1: Automated monitoring tools**
+*Basic Description:* Using SIEM, monitoring platforms, or similar
+
+**Option 2: Manual reviews**
+*Basic Description:* Regular manual checks and reviews
+
+**Option 3: Combination approach**
+*Basic Description:* Mix of automated and manual monitoring
+
+**Option 4: Third-party service**
+*Basic Description:* Outsourced monitoring
+
+**Option 5: Not monitored**
+*Basic Description:* Not currently monitored
+
 
 
 #### Question 12.3.2
@@ -4547,6 +5707,26 @@
 
 **Explanation:** Structured incident handling ensures effective response to vendor security events.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 12.3.6
 
@@ -4596,6 +5776,20 @@
 
 **Explanation:** Software integrity verification prevents tampering and ensures authenticity.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 12.4.3
 
@@ -4606,6 +5800,23 @@
 **Weight:** 3
 
 **Explanation:** Open source risk assessment identifies potential security and compliance issues.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 12.4.4
@@ -4618,6 +5829,26 @@
 
 **Explanation:** SaaS security assessment ensures third-party services meet security standards.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 12.4.5
 
@@ -4628,6 +5859,23 @@
 **Weight:** 3
 
 **Explanation:** Supply chain monitoring enables rapid response to emerging threats.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 
@@ -4687,6 +5935,23 @@
 
 **Explanation:** Comprehensive topics ensure broad security awareness coverage.
 
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 13.1.4
 
@@ -4695,6 +5960,20 @@
 **Type:** multiple_select
 
 **Explanation:** Multiple delivery methods accommodate different learning preferences and reinforce messages.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 13.1.5
@@ -4802,6 +6081,20 @@
 
 **Explanation:** Security culture measurement identifies areas for improvement in human security factors.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 
 ### Subsection 13.2: Phishing & Social Engineering
@@ -4848,6 +6141,26 @@
 **Type:** multiple_select
 
 **Explanation:** Appropriate responses help improve individual security awareness without being punitive.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 13.2.4
@@ -4910,6 +6223,23 @@
 
 **Explanation:** Different roles face different security risks and require tailored training.
 
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 13.3.3
 
@@ -4933,6 +6263,20 @@
 
 **Explanation:** Effectiveness measurement helps improve training programs and demonstrate value.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 13.3.5
 
@@ -4955,6 +6299,26 @@
 **Type:** multiple_select
 
 **Explanation:** Remote workers face unique security challenges requiring tailored training approaches.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 
@@ -4981,6 +6345,26 @@
 **Type:** multiple_select
 
 **Explanation:** Compliance requirements drive training content and frequency decisions.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 13.4.3
@@ -5033,6 +6417,23 @@
 
 **Explanation:** External providers can offer specialized expertise and current threat intelligence.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 13.4.6
 
@@ -5041,6 +6442,20 @@
 **Type:** multiple_select
 
 **Explanation:** Customized training improves relevance and effectiveness for different user groups.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 13.4.7
@@ -5064,6 +6479,20 @@
 **Type:** multiple_select
 
 **Explanation:** Clear communication ensures employees understand training expectations and deadlines.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 
@@ -5097,6 +6526,26 @@
 
 **Explanation:** Multiple access control methods provide layered physical security protection.
 
+**Answer Options:**
+**Option 1: Biometric**
+*Basic Description:* Fingerprint, facial recognition, etc.
+
+**Option 2: Card/badge access**
+*Basic Description:* RFID or magnetic stripe cards
+
+**Option 3: PIN/password**
+*Basic Description:* Numeric or alphanumeric codes
+
+**Option 4: Multi-factor**
+*Basic Description:* Combination of multiple methods
+
+**Option 5: Security personnel**
+*Basic Description:* Manned security checkpoints
+
+**Option 6: No formal controls**
+*Basic Description:* No formal access control system
+
+
 
 #### Question 14.1.3
 
@@ -5106,6 +6555,23 @@
 
 **Explanation:** Surveillance systems provide detection and deterrence for physical security threats.
 
+**Answer Options:**
+**Option 1: 24/7 monitoring**
+*Basic Description:* Continuous surveillance monitoring
+
+**Option 2: Recording only**
+*Basic Description:* Cameras record but not actively monitored
+
+**Option 3: Motion-activated**
+*Basic Description:* Cameras activate on motion detection
+
+**Option 4: Limited coverage**
+*Basic Description:* Partial surveillance coverage
+
+**Option 5: No surveillance**
+*Basic Description:* No surveillance system
+
+
 
 #### Question 14.1.4
 
@@ -5114,6 +6580,26 @@
 **Type:** multiple_select
 
 **Explanation:** Visitor management ensures unauthorized individuals cannot access sensitive areas.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 14.1.5
@@ -5162,6 +6648,23 @@
 
 **Explanation:** Environmental monitoring protects equipment and data from environmental threats.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 14.2.2
 
@@ -5192,6 +6695,26 @@
 
 **Explanation:** Fire protection systems prevent damage to equipment and data from fire incidents.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 14.2.4
 
@@ -5218,6 +6741,26 @@
 
 **Explanation:** Equipment security prevents theft and unauthorized access to devices.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 14.3.2
 
@@ -5240,6 +6783,26 @@
 **Type:** multiple_select
 
 **Explanation:** Mobile device security protects against data loss and unauthorized access.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 14.3.4
@@ -5264,6 +6827,26 @@
 
 **Explanation:** Server room security protects critical infrastructure from physical threats.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 14.3.6
 
@@ -5286,6 +6869,26 @@
 **Type:** multiple_select
 
 **Explanation:** Equipment loan procedures prevent unauthorized use and ensure accountability.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 14.3.8
@@ -5315,6 +6918,26 @@
 
 **Explanation:** Network infrastructure security prevents unauthorized access and tampering.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 14.3.10
 
@@ -5337,6 +6960,26 @@
 **Type:** multiple_select
 
 **Explanation:** EMI protection ensures equipment operates reliably and data remains secure.
+
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
 
 
 #### Question 14.3.12
@@ -5361,6 +7004,23 @@
 
 **Explanation:** Backup media security ensures data recovery capabilities are protected.
 
+**Answer Options:**
+**Option 1: Daily**
+*Basic Description:* Daily backup schedule
+
+**Option 2: Weekly**
+*Basic Description:* Weekly backup schedule
+
+**Option 3: Monthly**
+*Basic Description:* Monthly backup schedule
+
+**Option 4: Real-time/Continuous**
+*Basic Description:* Continuous data protection
+
+**Option 5: No regular backups**
+*Basic Description:* Backups not performed regularly
+
+
 
 #### Question 14.3.14
 
@@ -5383,6 +7043,26 @@
 **Type:** multiple_select
 
 **Explanation:** Construction security prevents unauthorized access during facility changes.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 14.3.16
@@ -5434,6 +7114,23 @@
 **Type:** multiple_select
 
 **Explanation:** Multiple monitoring tools provide comprehensive visibility into security events.
+
+**Answer Options:**
+**Option 1: Commercial solution**
+*Basic Description:* Vendor-provided commercial product
+
+**Option 2: Open-source solution**
+*Basic Description:* Open-source tools and platforms
+
+**Option 3: Custom-built solution**
+*Basic Description:* Internally developed solution
+
+**Option 4: Managed service**
+*Basic Description:* Third-party managed service
+
+**Option 5: Not deployed**
+*Basic Description:* Not currently deployed
+
 
 
 #### Question 15.1.3
@@ -5512,6 +7209,26 @@
 
 **Explanation:** Effective alert handling ensures timely response to genuine security threats.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 
 ### Subsection 15.2: Threat Detection
@@ -5537,6 +7254,23 @@
 **Type:** multiple_select
 
 **Explanation:** Multiple detection methods improve coverage against different types of threats.
+
+**Answer Options:**
+**Option 1: Type A**
+*Basic Description:* Primary implementation type
+
+**Option 2: Type B**
+*Basic Description:* Secondary implementation type
+
+**Option 3: Type C**
+*Basic Description:* Alternative implementation type
+
+**Option 4: Hybrid**
+*Basic Description:* Combination of multiple types
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 15.2.3
@@ -5566,6 +7300,20 @@
 
 **Explanation:** APT detection requires sophisticated monitoring and analysis capabilities.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 15.2.5
 
@@ -5588,6 +7336,20 @@
 **Type:** multiple_select
 
 **Explanation:** Validation ensures detection capabilities are working effectively against real threats.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 
@@ -5614,6 +7376,23 @@
 **Type:** multiple_select
 
 **Explanation:** Comprehensive log collection provides better visibility into security events.
+
+**Answer Options:**
+**Option 1: Type A**
+*Basic Description:* Primary implementation type
+
+**Option 2: Type B**
+*Basic Description:* Secondary implementation type
+
+**Option 3: Type C**
+*Basic Description:* Alternative implementation type
+
+**Option 4: Hybrid**
+*Basic Description:* Combination of multiple types
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 #### Question 15.3.3
@@ -5647,6 +7426,23 @@
 
 **Explanation:** Log integrity protection ensures logs cannot be tampered with by attackers.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 15.3.5
 
@@ -5655,6 +7451,20 @@
 **Type:** multiple_select
 
 **Explanation:** Effective log analysis helps identify security incidents and trends.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 15.3.6
@@ -5725,6 +7535,23 @@
 
 **Explanation:** Comprehensive assessments cover all potential attack vectors and system types.
 
+**Answer Options:**
+**Option 1: Type A**
+*Basic Description:* Primary implementation type
+
+**Option 2: Type B**
+*Basic Description:* Secondary implementation type
+
+**Option 3: Type C**
+*Basic Description:* Alternative implementation type
+
+**Option 4: Hybrid**
+*Basic Description:* Combination of multiple types
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 16.1.4
 
@@ -5767,6 +7594,20 @@
 
 **Explanation:** Validation ensures scan results are accurate and actionable.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 16.1.7
 
@@ -5807,6 +7648,20 @@
 
 **Explanation:** Effective prioritization ensures critical vulnerabilities are addressed first.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 16.2.3
 
@@ -5835,6 +7690,20 @@
 
 **Explanation:** Progress tracking ensures vulnerabilities are remediated within target timeframes.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 16.2.5
 
@@ -5857,6 +7726,26 @@
 **Type:** multiple_select
 
 **Explanation:** Zero-day handling requires rapid response and alternative protection measures.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 
@@ -5887,6 +7776,20 @@
 **Weight:** 5
 
 **Explanation:** Patch prioritization ensures critical vulnerabilities are addressed first.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 16.3.3
@@ -5922,6 +7825,20 @@
 
 **Explanation:** Patch testing prevents deployment issues while maintaining security.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 16.3.5
 
@@ -5954,6 +7871,20 @@
 
 **Explanation:** Deployment tracking ensures patches are successfully applied across all systems.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 16.3.7
 
@@ -5964,6 +7895,26 @@
 **Weight:** 3
 
 **Explanation:** Rollback procedures enable quick recovery from problematic patches.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 16.3.8
@@ -6008,6 +7959,26 @@
 
 **Explanation:** End-of-life systems require alternative security measures when patching is not possible.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 
 ---
@@ -6025,6 +7996,29 @@
 **Type:** multiple_select
 
 **Explanation:** Understanding applicable regulations is essential for compliance planning and implementation.
+
+**Answer Options:**
+**Option 1: GDPR**
+*Basic Description:* General Data Protection Regulation
+
+**Option 2: HIPAA**
+*Basic Description:* Health Insurance Portability and Accountability Act
+
+**Option 3: PCI DSS**
+*Basic Description:* Payment Card Industry Data Security Standard
+
+**Option 4: SOC 2**
+*Basic Description:* Service Organization Control 2
+
+**Option 5: ISO 27001**
+*Basic Description:* International Organization for Standardization 27001
+
+**Option 6: NIST CSF**
+*Basic Description:* NIST Cybersecurity Framework
+
+**Option 7: Not applicable**
+*Basic Description:* No specific compliance requirements
+
 
 
 #### Question 17.1.2
@@ -6048,6 +8042,20 @@
 **Type:** multiple_select
 
 **Explanation:** Effective tracking ensures ongoing compliance and identifies gaps before they become violations.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 17.1.4
@@ -6081,6 +8089,26 @@
 
 **Explanation:** Structured violation handling ensures proper response and prevents recurrence.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
+
 
 #### Question 17.1.6
 
@@ -6103,6 +8131,20 @@
 **Type:** multiple_select
 
 **Explanation:** Staying current with regulatory changes ensures ongoing compliance as requirements evolve.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 
@@ -6151,6 +8193,23 @@
 
 **Explanation:** Comprehensive audit coverage ensures all critical security areas are evaluated.
 
+**Answer Options:**
+**Option 1: Option 1**
+*Basic Description:* First option
+
+**Option 2: Option 2**
+*Basic Description:* Second option
+
+**Option 3: Option 3**
+*Basic Description:* Third option
+
+**Option 4: Option 4**
+*Basic Description:* Fourth option
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 17.2.4
 
@@ -6180,6 +8239,20 @@
 **Type:** multiple_select
 
 **Explanation:** Systematic tracking ensures audit findings are properly addressed and resolved.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 17.2.6
@@ -6221,6 +8294,23 @@
 
 **Explanation:** Different audit types serve various compliance and business requirements.
 
+**Answer Options:**
+**Option 1: Type A**
+*Basic Description:* Primary implementation type
+
+**Option 2: Type B**
+*Basic Description:* Secondary implementation type
+
+**Option 3: Type C**
+*Basic Description:* Alternative implementation type
+
+**Option 4: Hybrid**
+*Basic Description:* Combination of multiple types
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 17.3.3
 
@@ -6229,6 +8319,20 @@
 **Type:** multiple_select
 
 **Explanation:** Proper preparation increases audit success and reduces findings.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 17.3.4
@@ -6239,6 +8343,23 @@
 
 **Explanation:** Security certifications demonstrate commitment to security best practices.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 17.3.5
 
@@ -6247,6 +8368,26 @@
 **Type:** multiple_select
 
 **Explanation:** Efficient evidence collection streamlines audit processes and reduces burden.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 17.3.6
@@ -6270,6 +8411,20 @@
 **Type:** multiple_select
 
 **Explanation:** Effective communication ensures stakeholders understand audit outcomes and required actions.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 
@@ -6307,6 +8462,20 @@
 
 **Explanation:** Network segmentation protects critical OT systems from IT-based attacks.
 
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
+
 
 #### Question 18.1.3
 
@@ -6333,6 +8502,26 @@
 **Weight:** 3
 
 **Explanation:** OT patching requires careful coordination to maintain system availability and safety.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 18.1.5
@@ -6401,6 +8590,26 @@
 
 **Explanation:** Secure communications protect IoT data and prevent unauthorized access.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 18.2.3
 
@@ -6432,6 +8641,26 @@
 **Weight:** 3
 
 **Explanation:** Regular firmware updates address security vulnerabilities in IoT devices.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Third-party managed**
+*Basic Description:* Outsourced to service provider
+
+**Option 5: Informal process**
+*Basic Description:* Ad-hoc handling without formal procedures
+
+**Option 6: Not currently managed**
+*Basic Description:* Not currently managed
+
 
 
 #### Question 18.2.5
@@ -6490,6 +8719,23 @@
 
 **Explanation:** Model registries provide centralized governance and security for ML artifacts.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 19.1.3
 
@@ -6500,6 +8746,20 @@
 **Weight:** 3
 
 **Explanation:** Model provenance ensures traceability and helps identify security risks in the ML pipeline.
+
+**Answer Options:**
+**Option 1: Formal documented process**
+*Basic Description:* Documented procedures and workflows
+
+**Option 2: Automated system**
+*Basic Description:* Using automation tools or platforms
+
+**Option 3: Manual process**
+*Basic Description:* Manual handling and tracking
+
+**Option 4: Not currently implemented**
+*Basic Description:* Not currently implemented
+
 
 
 #### Question 19.1.4
@@ -6533,6 +8793,26 @@
 
 **Explanation:** Data poisoning protection prevents malicious manipulation of training data.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 19.1.6
 
@@ -6543,6 +8823,23 @@
 **Weight:** 3
 
 **Explanation:** Explainability and bias detection ensure responsible and secure AI deployment.
+
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
 
 
 
@@ -6558,6 +8855,26 @@
 
 **Explanation:** ML pipeline security prevents unauthorized access and resource abuse.
 
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
+
 
 #### Question 19.2.2
 
@@ -6569,6 +8886,23 @@
 
 **Explanation:** Feature store security protects sensitive data used in ML model training and inference.
 
+**Answer Options:**
+**Option 1: Fully implemented**
+*Basic Description:* Fully implemented and operational
+
+**Option 2: Partially implemented**
+*Basic Description:* Partially implemented or in progress
+
+**Option 3: Planned**
+*Basic Description:* Planned but not yet implemented
+
+**Option 4: Not implemented**
+*Basic Description:* Not currently implemented
+
+**Option 5: Not applicable**
+*Basic Description:* Not applicable to our organization
+
+
 
 #### Question 19.2.3
 
@@ -6579,6 +8913,26 @@
 **Weight:** 5
 
 **Explanation:** Inference endpoint security prevents abuse and protects model intellectual property.
+
+**Answer Options:**
+**Option 1: Encryption**
+*Basic Description:* Data encryption at rest and in transit
+
+**Option 2: Access controls**
+*Basic Description:* Role-based access control and authentication
+
+**Option 3: Network segmentation**
+*Basic Description:* Isolated network zones
+
+**Option 4: Monitoring and logging**
+*Basic Description:* Continuous monitoring and audit logs
+
+**Option 5: Security policies**
+*Basic Description:* Documented security policies and procedures
+
+**Option 6: Not currently secured**
+*Basic Description:* No specific security measures
+
 
 
 #### Question 19.2.4

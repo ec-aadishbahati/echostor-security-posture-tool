@@ -60,6 +60,8 @@ export default function AssessmentQuestions() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [assessmentId, setAssessmentId] = useState<string | null>(null);
   const [savedProgress, setSavedProgress] = useState<number>(0);
+  const [hasManuallyNavigated, setHasManuallyNavigated] = useState(false);
+  const responsesRef = useRef(responses);
 
   const { data: structure, isLoading: structureLoading } = useQuery(
     'assessmentStructure',
@@ -140,27 +142,50 @@ export default function AssessmentQuestions() {
   );
 
   useEffect(() => {
+    responsesRef.current = responses;
+  }, [responses]);
+
+  useEffect(() => {
     if (!assessmentId) return;
 
     const interval = setInterval(
       () => {
-        saveProgress();
+        const currentResponses = responsesRef.current;
+        if (Object.keys(currentResponses).length > 0) {
+          const responseArray = Object.entries(currentResponses).map(([questionId, value]) => {
+            const question = findQuestionById(questionId);
+            return {
+              section_id: question?.section_id || '',
+              question_id: questionId,
+              answer_value: value,
+              comment: comments[questionId] || null,
+            };
+          });
+          
+          saveProgressMutation.mutate({ assessmentId, responses: responseArray });
+        }
       },
       10 * 60 * 1000
-    ); // 10 minutes
+    );
 
     return () => clearInterval(interval);
-  }, [assessmentId, responses]);
+  }, [assessmentId]);
 
   useEffect(() => {
     if (!structure || !responses || hasNavigatedToResumePoint.current) return;
     if (Object.keys(responses).length === 0) return;
+    if (hasManuallyNavigated) return;
 
     const { sectionIndex, questionIndex } = findFirstUnansweredQuestion();
     setCurrentSectionIndex(sectionIndex);
     setCurrentQuestionIndex(questionIndex);
     hasNavigatedToResumePoint.current = true;
-  }, [structure, responses]);
+  }, [structure, responses, hasManuallyNavigated]);
+
+  useEffect(() => {
+    setHasManuallyNavigated(false);
+    hasNavigatedToResumePoint.current = false;
+  }, [assessmentId]);
 
   useEffect(() => {
     const unsubscribe = crossTabSync.subscribe((event) => {
@@ -246,6 +271,18 @@ export default function AssessmentQuestions() {
     }));
   };
 
+  const isCurrentQuestionAnswered = (): boolean => {
+    if (!currentQuestion) return false;
+    
+    const answer = responses[currentQuestion.id];
+    
+    if (currentQuestion.type === 'multiple_select') {
+      return Array.isArray(answer) && answer.length > 0;
+    }
+    
+    return answer !== undefined && answer !== null && answer !== '';
+  };
+
   const getCurrentQuestion = (): Question | null => {
     if (!structure || !structure.data.sections[currentSectionIndex]) return null;
     const section = structure.data.sections[currentSectionIndex];
@@ -264,9 +301,11 @@ export default function AssessmentQuestions() {
     if (currentQuestionIndex < section.questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else if (currentSectionIndex < (structure?.data?.sections?.length || 0) - 1) {
+      saveProgress();
       setCurrentSectionIndex((prev) => prev + 1);
       setCurrentQuestionIndex(0);
     } else if (!showConsultationQuestion) {
+      saveProgress();
       setShowConsultationQuestion(true);
     }
   };
@@ -416,6 +455,7 @@ export default function AssessmentQuestions() {
   };
 
   const goToSection = (sectionIndex: number) => {
+    setHasManuallyNavigated(true);
     setCurrentSectionIndex(sectionIndex);
     setCurrentQuestionIndex(0);
   };
@@ -867,7 +907,8 @@ export default function AssessmentQuestions() {
                   ) : (
                     <button
                       onClick={goToNextQuestion}
-                      className="btn-primary flex items-center"
+                      disabled={!isCurrentQuestionAnswered()}
+                      className="btn-primary flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                       data-testid="next-question-btn"
                     >
                       Next
