@@ -161,7 +161,7 @@ export default function AssessmentQuestions() {
               comment: comments[questionId] || null,
             };
           });
-          
+
           saveProgressMutation.mutate({ assessmentId, responses: responseArray });
         }
       },
@@ -273,13 +273,13 @@ export default function AssessmentQuestions() {
 
   const isCurrentQuestionAnswered = (): boolean => {
     if (!currentQuestion) return false;
-    
+
     const answer = responses[currentQuestion.id];
-    
+
     if (currentQuestion.type === 'multiple_select') {
       return Array.isArray(answer) && answer.length > 0;
     }
-    
+
     return answer !== undefined && answer !== null && answer !== '';
   };
 
