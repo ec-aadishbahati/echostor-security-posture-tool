@@ -26,7 +26,7 @@ async def generate_standard_report(report_id: str):
     report = None
     try:
         logger.info(f"Starting standard report generation for report_id: {report_id}")
-        
+
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
             logger.error(f"Report not found: {report_id}")
@@ -75,8 +75,10 @@ async def generate_standard_report(report_id: str):
         report.status = "completed"
         report.completed_at = datetime.utcnow()
         db.commit()
-        
-        logger.info(f"Report generation completed successfully for report_id: {report_id}")
+
+        logger.info(
+            f"Report generation completed successfully for report_id: {report_id}"
+        )
 
     except Exception as e:
         error_msg = f"Error generating standard report {report_id}: {str(e)}"
@@ -95,7 +97,7 @@ async def generate_ai_report(report_id: str):
     report = None
     try:
         logger.info(f"Starting AI report generation for report_id: {report_id}")
-        
+
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
             logger.error(f"Report not found: {report_id}")
@@ -155,8 +157,10 @@ async def generate_ai_report(report_id: str):
         report.status = "completed"
         report.completed_at = datetime.utcnow()
         db.commit()
-        
-        logger.info(f"AI report generation completed successfully for report_id: {report_id}")
+
+        logger.info(
+            f"AI report generation completed successfully for report_id: {report_id}"
+        )
 
     except Exception as e:
         error_msg = f"Error generating AI report {report_id}: {str(e)}"
