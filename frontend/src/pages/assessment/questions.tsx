@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useAuth } from '@/lib/auth';
@@ -264,12 +264,12 @@ export default function AssessmentQuestions() {
     return { sectionIndex: 0, questionIndex: 0 };
   };
 
-  const handleAnswerChange = (questionId: string, value: any) => {
+  const handleAnswerChange = useCallback((questionId: string, value: any) => {
     setResponses((prev) => ({
       ...prev,
       [questionId]: value,
     }));
-  };
+  }, []);
 
   const isCurrentQuestionAnswered = (): boolean => {
     if (!currentQuestion) return false;
@@ -311,6 +311,10 @@ export default function AssessmentQuestions() {
   };
 
   const goToPreviousQuestion = () => {
+    if (showConsultationQuestion) {
+      setShowConsultationQuestion(false);
+      return;
+    }
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
     } else if (currentSectionIndex > 0) {
@@ -458,6 +462,7 @@ export default function AssessmentQuestions() {
     setHasManuallyNavigated(true);
     setCurrentSectionIndex(sectionIndex);
     setCurrentQuestionIndex(0);
+    setShowConsultationQuestion(false);
   };
 
   if (!currentQuestion || !currentSection) {
