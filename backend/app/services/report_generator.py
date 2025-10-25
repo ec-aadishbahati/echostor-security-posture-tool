@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 from datetime import datetime
@@ -12,6 +13,8 @@ from app.core.database import SessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.services.question_parser import load_assessment_structure
 
+logger = logging.getLogger(__name__)
+
 if settings.OPENAI_API_KEY:
     openai.api_key = settings.OPENAI_API_KEY
 
@@ -20,45 +23,64 @@ async def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
 
     db = SessionLocal()
+    report = None
     try:
+        logger.info(f"Starting standard report generation for report_id: {report_id}")
+        
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
+            logger.error(f"Report not found: {report_id}")
             return
 
         assessment = (
             db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
         )
         if not assessment:
+            logger.error(f"Assessment not found for report: {report_id}")
             report.status = "failed"
             db.commit()
             return
 
+        logger.info(f"Loading responses for assessment: {assessment.id}")
         responses = (
             db.query(AssessmentResponse)
             .filter(AssessmentResponse.assessment_id == assessment.id)
             .all()
         )
+        logger.info(f"Found {len(responses)} responses")
 
+        logger.info("Loading assessment structure")
         structure = load_assessment_structure()
 
+        logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
 
+        logger.info("Generating HTML content")
         html_content = generate_report_html(assessment, responses, scores, structure)
 
         filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
         file_path = os.path.join(settings.REPORTS_DIR, filename)
 
+        logger.info(f"Creating reports directory: {settings.REPORTS_DIR}")
         os.makedirs(settings.REPORTS_DIR, exist_ok=True)
 
+        logger.info(f"Generating PDF at: {file_path}")
         HTML(string=html_content).write_pdf(file_path)
 
+        if not os.path.exists(file_path):
+            raise Exception(f"PDF file was not created at {file_path}")
+
+        logger.info(f"PDF generated successfully: {file_path}")
         report.file_path = file_path
         report.status = "completed"
         report.completed_at = datetime.utcnow()
         db.commit()
+        
+        logger.info(f"Report generation completed successfully for report_id: {report_id}")
 
     except Exception as e:
-        print(f"Error generating standard report: {e}")
+        error_msg = f"Error generating standard report {report_id}: {str(e)}"
+        logger.error(error_msg, exc_info=True)
         if report:
             report.status = "failed"
             db.commit()
@@ -70,13 +92,17 @@ async def generate_ai_report(report_id: str):
     """Generate an AI-enhanced report using ChatGPT"""
 
     db = SessionLocal()
+    report = None
     try:
+        logger.info(f"Starting AI report generation for report_id: {report_id}")
+        
         report = db.query(Report).filter(Report.id == report_id).first()
         if not report:
+            logger.error(f"Report not found: {report_id}")
             return
 
         if not settings.OPENAI_API_KEY:
-            print("OPENAI_API_KEY not configured - cannot generate AI report")
+            logger.error("OPENAI_API_KEY not configured - cannot generate AI report")
             report.status = "failed"
             db.commit()
             return
@@ -85,22 +111,29 @@ async def generate_ai_report(report_id: str):
             db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
         )
         if not assessment:
+            logger.error(f"Assessment not found for report: {report_id}")
             report.status = "failed"
             db.commit()
             return
 
+        logger.info(f"Loading responses for assessment: {assessment.id}")
         responses = (
             db.query(AssessmentResponse)
             .filter(AssessmentResponse.assessment_id == assessment.id)
             .all()
         )
+        logger.info(f"Found {len(responses)} responses")
 
+        logger.info("Loading assessment structure")
         structure = load_assessment_structure()
 
+        logger.info("Generating AI insights")
         ai_insights = await generate_ai_insights(responses, structure)
 
+        logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
 
+        logger.info("Generating AI report HTML")
         html_content = generate_ai_report_html(
             assessment, responses, scores, structure, ai_insights
         )
@@ -108,17 +141,26 @@ async def generate_ai_report(report_id: str):
         filename = f"ai_report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
         file_path = os.path.join(settings.REPORTS_DIR, filename)
 
+        logger.info(f"Creating reports directory: {settings.REPORTS_DIR}")
         os.makedirs(settings.REPORTS_DIR, exist_ok=True)
 
+        logger.info(f"Generating AI PDF at: {file_path}")
         HTML(string=html_content).write_pdf(file_path)
 
+        if not os.path.exists(file_path):
+            raise Exception(f"PDF file was not created at {file_path}")
+
+        logger.info(f"AI PDF generated successfully: {file_path}")
         report.file_path = file_path
         report.status = "completed"
         report.completed_at = datetime.utcnow()
         db.commit()
+        
+        logger.info(f"AI report generation completed successfully for report_id: {report_id}")
 
     except Exception as e:
-        print(f"Error generating AI report: {e}")
+        error_msg = f"Error generating AI report {report_id}: {str(e)}"
+        logger.error(error_msg, exc_info=True)
         if report:
             report.status = "failed"
             db.commit()
