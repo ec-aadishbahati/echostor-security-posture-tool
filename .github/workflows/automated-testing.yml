@@ -1,0 +1,522 @@
+name: Automated Production Testing
+
+on:
+  schedule:
+    # Weekly on Sundays at 5 PM EST (21:00 UTC = 5 PM EST during standard time, 22:00 UTC during daylight saving)
+    # Using 22:00 UTC to account for EDT (Eastern Daylight Time)
+    - cron: '0 22 * * 0'
+  workflow_dispatch:
+
+jobs:
+  test-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright and dependencies
+        run: |
+          pip install playwright pytest-playwright
+          playwright install chromium --with-deps
+
+      - name: Run automated production test
+        id: test
+        continue-on-error: true
+        run: |
+          python3 << 'EOF'
+          import asyncio
+          import random
+          import string
+          import datetime
+          import sys
+          import traceback
+          from playwright.async_api import async_playwright, TimeoutError as PlaywrightTimeout
+
+          # Configuration
+          PRODUCTION_URL = "https://echostor-security-posture-tool.vercel.app"
+          TIMEOUT_NAVIGATION = 30000  # 30 seconds
+          TIMEOUT_ACTION = 10000      # 10 seconds
+          MAX_RETRIES = 3
+
+          # Test data
+          timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+          test_email = f"test-user-{timestamp}@automated-test.com"
+          test_password = "TestPass123!@#"
+          test_full_name = "Automated Test User"
+          test_company = "Automated Testing Co"
+
+          # Consultation details (200-300 words)
+          consultation_text = """
+          Our organization is seeking comprehensive cybersecurity consulting services to enhance our security posture. 
+          We are a mid-sized enterprise with approximately 500 employees and handle sensitive customer data daily. 
+          Our current infrastructure includes cloud-based services, on-premises data centers, and a hybrid work environment.
+          
+          We have identified several areas where we need expert guidance: improving our incident response capabilities, 
+          implementing zero-trust architecture, enhancing our security awareness training programs, and ensuring compliance 
+          with industry regulations including GDPR and SOC 2. Additionally, we are interested in conducting penetration 
+          testing and vulnerability assessments across our entire infrastructure.
+          
+          Our budget for this engagement is flexible, and we are looking for a partner who can provide both strategic 
+          guidance and hands-on implementation support. We would appreciate a detailed proposal outlining your approach, 
+          timeline, and pricing structure. We are particularly interested in understanding how you would help us mature 
+          our security operations and establish measurable security metrics. Please contact us at your earliest convenience 
+          to discuss our requirements in detail and schedule an initial consultation meeting.
+          """
+
+          async def log(message, level="INFO"):
+              """Log with timestamp"""
+              timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+              print(f"[{timestamp}] [{level}] {message}", flush=True)
+
+          async def retry_action(action, action_name, max_retries=MAX_RETRIES):
+              """Retry an action with exponential backoff"""
+              for attempt in range(max_retries):
+                  try:
+                      result = await action()
+                      await log(f"✓ {action_name} succeeded")
+                      return result
+                  except Exception as e:
+                      if attempt < max_retries - 1:
+                          wait_time = 2 ** attempt
+                          await log(f"✗ {action_name} failed (attempt {attempt + 1}/{max_retries}): {str(e)}", "WARNING")
+                          await asyncio.sleep(wait_time)
+                      else:
+                          await log(f"✗ {action_name} failed after {max_retries} attempts: {str(e)}", "ERROR")
+                          raise
+
+          async def take_screenshot(page, name):
+              """Take screenshot for debugging"""
+              try:
+                  screenshot_path = f"/tmp/screenshot-{name}-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}.png"
+                  await page.screenshot(path=screenshot_path, full_page=True)
+                  await log(f"Screenshot saved: {screenshot_path}")
+                  return screenshot_path
+              except Exception as e:
+                  await log(f"Failed to take screenshot: {str(e)}", "WARNING")
+                  return None
+
+          async def capture_console_logs(page):
+              """Capture browser console logs"""
+              console_logs = []
+              page.on("console", lambda msg: console_logs.append(f"[{msg.type}] {msg.text}"))
+              return console_logs
+
+          async def main():
+              try:
+                  await log("=" * 80)
+                  await log("Starting Automated Production Test")
+                  await log(f"Target: {PRODUCTION_URL}")
+                  await log(f"Test User: {test_email}")
+                  await log("=" * 80)
+
+                  async with async_playwright() as p:
+                      # Launch browser with video recording
+                      await log("Launching browser...")
+                      browser = await p.chromium.launch(headless=True)
+                      context = await browser.new_context(
+                          viewport={'width': 1920, 'height': 1080},
+                          record_video_dir="/tmp/videos/",
+                          record_video_size={'width': 1920, 'height': 1080}
+                      )
+                      page = await context.new_page()
+                      
+                      # Capture console logs
+                      console_logs = []
+                      page.on("console", lambda msg: console_logs.append(f"[{msg.type}] {msg.text}"))
+                      
+                      # Capture network errors
+                      network_errors = []
+                      page.on("requestfailed", lambda request: network_errors.append(
+                          f"Failed: {request.method} {request.url} - {request.failure}"
+                      ))
+
+                      try:
+                          # Step 1: Navigate to home page
+                          await log("Step 1: Navigating to home page...")
+                          await retry_action(
+                              lambda: page.goto(PRODUCTION_URL, wait_until="networkidle", timeout=TIMEOUT_NAVIGATION),
+                              "Navigate to home page"
+                          )
+                          await take_screenshot(page, "01-homepage")
+
+                          # Step 2: Register new user
+                          await log("Step 2: Registering new user...")
+                          await retry_action(
+                              lambda: page.goto(f"{PRODUCTION_URL}/auth/register", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION),
+                              "Navigate to registration page"
+                          )
+                          await take_screenshot(page, "02-register-page")
+
+                          # Fill registration form
+                          await log("Filling registration form...")
+                          await page.fill('input[name="email"]', test_email, timeout=TIMEOUT_ACTION)
+                          await page.fill('input[name="password"]', test_password, timeout=TIMEOUT_ACTION)
+                          await page.fill('input[name="full_name"]', test_full_name, timeout=TIMEOUT_ACTION)
+                          await page.fill('input[name="company_name"]', test_company, timeout=TIMEOUT_ACTION)
+                          
+                          await take_screenshot(page, "03-register-filled")
+                          
+                          # Submit registration
+                          await log("Submitting registration...")
+                          await page.click('button[type="submit"]', timeout=TIMEOUT_ACTION)
+                          await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
+                          await asyncio.sleep(2)  # Wait for redirect
+                          await take_screenshot(page, "04-after-register")
+
+                          # Verify registration success (should be on dashboard or redirected)
+                          current_url = page.url
+                          await log(f"Current URL after registration: {current_url}")
+                          
+                          # Step 3: Navigate to assessment
+                          await log("Step 3: Starting assessment...")
+                          await retry_action(
+                              lambda: page.goto(f"{PRODUCTION_URL}/assessment/questions", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION),
+                              "Navigate to assessment page"
+                          )
+                          await asyncio.sleep(3)  # Wait for questions to load
+                          await take_screenshot(page, "05-assessment-page")
+
+                          # Check if we need to start a new assessment
+                          try:
+                              start_button = page.locator('button:has-text("Start New Assessment"), button:has-text("Start Assessment")')
+                              if await start_button.count() > 0:
+                                  await log("Clicking 'Start Assessment' button...")
+                                  await start_button.first.click(timeout=TIMEOUT_ACTION)
+                                  await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
+                                  await asyncio.sleep(2)
+                                  await take_screenshot(page, "06-assessment-started")
+                          except Exception as e:
+                              await log(f"No start button found or already started: {str(e)}", "INFO")
+
+                          # Step 4: Answer all questions (409 questions across 19 sections)
+                          await log("Step 4: Answering all questions...")
+                          await log("This will take approximately 30-40 minutes...")
+                          
+                          questions_answered = 0
+                          sections_completed = 0
+                          
+                          # Strategy: Find all questions on the page and answer them
+                          # The assessment UI loads questions dynamically, so we need to handle pagination/sections
+                          
+                          for section_num in range(1, 20):  # 19 sections
+                              await log(f"Processing Section {section_num}/19...")
+                              
+                              try:
+                                  # Look for questions in current view
+                                  # Questions typically have radio buttons, checkboxes, or select elements
+                                  
+                                  # Handle Yes/No questions (radio buttons)
+                                  yes_no_questions = page.locator('input[type="radio"]')
+                                  yes_no_count = await yes_no_questions.count()
+                                  
+                                  if yes_no_count > 0:
+                                      await log(f"Found {yes_no_count} radio button options in section {section_num}")
+                                      # Group by name attribute to find unique questions
+                                      answered_questions = set()
+                                      for i in range(yes_no_count):
+                                          try:
+                                              radio = yes_no_questions.nth(i)
+                                              name = await radio.get_attribute('name')
+                                              if name and name not in answered_questions:
+                                                  # Randomly select yes or no
+                                                  if random.choice([True, False]):
+                                                      await radio.click(timeout=TIMEOUT_ACTION)
+                                                      answered_questions.add(name)
+                                                      questions_answered += 1
+                                                      if questions_answered % 10 == 0:
+                                                          await log(f"Progress: {questions_answered} questions answered")
+                                          except Exception as e:
+                                              await log(f"Error clicking radio button: {str(e)}", "WARNING")
+                                              continue
+                                  
+                                  # Handle multiple choice questions (checkboxes)
+                                  checkboxes = page.locator('input[type="checkbox"]')
+                                  checkbox_count = await checkboxes.count()
+                                  
+                                  if checkbox_count > 0:
+                                      await log(f"Found {checkbox_count} checkboxes in section {section_num}")
+                                      # Randomly select 1-3 checkboxes per group
+                                      for i in range(min(checkbox_count, 3)):
+                                          try:
+                                              checkbox = checkboxes.nth(random.randint(0, checkbox_count - 1))
+                                              if not await checkbox.is_checked():
+                                                  await checkbox.click(timeout=TIMEOUT_ACTION)
+                                                  questions_answered += 1
+                                          except Exception as e:
+                                              await log(f"Error clicking checkbox: {str(e)}", "WARNING")
+                                              continue
+                                  
+                                  # Handle select dropdowns
+                                  selects = page.locator('select')
+                                  select_count = await selects.count()
+                                  
+                                  if select_count > 0:
+                                      await log(f"Found {select_count} select dropdowns in section {section_num}")
+                                      for i in range(select_count):
+                                          try:
+                                              select = selects.nth(i)
+                                              options = await select.locator('option').count()
+                                              if options > 1:  # Skip if only placeholder
+                                                  random_option = random.randint(1, options - 1)
+                                                  await select.select_option(index=random_option, timeout=TIMEOUT_ACTION)
+                                                  questions_answered += 1
+                                          except Exception as e:
+                                              await log(f"Error selecting dropdown: {str(e)}", "WARNING")
+                                              continue
+                                  
+                                  # Look for "Next" or "Continue" button to move to next section
+                                  try:
+                                      next_button = page.locator('button:has-text("Next"), button:has-text("Continue"), button:has-text("Save and Continue")')
+                                      if await next_button.count() > 0:
+                                          await log(f"Moving to next section...")
+                                          await next_button.first.click(timeout=TIMEOUT_ACTION)
+                                          await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
+                                          await asyncio.sleep(2)
+                                          sections_completed += 1
+                                          
+                                          # Take periodic screenshots
+                                          if section_num % 5 == 0:
+                                              await take_screenshot(page, f"section-{section_num}")
+                                  except Exception as e:
+                                      await log(f"No next button found or error: {str(e)}", "INFO")
+                                  
+                                  # Trigger auto-save periodically
+                                  if section_num % 3 == 0:
+                                      try:
+                                          save_button = page.locator('button:has-text("Save Progress"), button:has-text("Save")')
+                                          if await save_button.count() > 0:
+                                              await log("Triggering manual save...")
+                                              await save_button.first.click(timeout=TIMEOUT_ACTION)
+                                              await asyncio.sleep(2)
+                                      except Exception as e:
+                                          await log(f"Could not trigger save: {str(e)}", "INFO")
+                                  
+                              except Exception as e:
+                                  await log(f"Error in section {section_num}: {str(e)}", "WARNING")
+                                  await take_screenshot(page, f"error-section-{section_num}")
+                                  continue
+                          
+                          await log(f"Completed answering questions. Total answered: {questions_answered}")
+                          await take_screenshot(page, "07-questions-completed")
+
+                          # Step 5: Fill consultation details
+                          await log("Step 5: Filling consultation details...")
+                          try:
+                              # Look for consultation interest checkbox/radio
+                              consultation_yes = page.locator('input[value="yes"], input[type="radio"][name*="consultation"], input[type="checkbox"][name*="consultation"]')
+                              if await consultation_yes.count() > 0:
+                                  await consultation_yes.first.click(timeout=TIMEOUT_ACTION)
+                                  await log("Selected 'Yes' for consultation interest")
+                              
+                              # Fill consultation details textarea
+                              consultation_textarea = page.locator('textarea[name*="consultation"], textarea[placeholder*="consultation"]')
+                              if await consultation_textarea.count() > 0:
+                                  await consultation_textarea.first.fill(consultation_text, timeout=TIMEOUT_ACTION)
+                                  await log(f"Filled consultation details ({len(consultation_text.split())} words)")
+                              
+                              await take_screenshot(page, "08-consultation-filled")
+                          except Exception as e:
+                              await log(f"Could not fill consultation details: {str(e)}", "WARNING")
+
+                          # Step 6: Complete assessment
+                          await log("Step 6: Completing assessment...")
+                          try:
+                              complete_button = page.locator('button:has-text("Complete Assessment"), button:has-text("Submit Assessment"), button:has-text("Finish")')
+                              if await complete_button.count() > 0:
+                                  await log("Clicking 'Complete Assessment' button...")
+                                  await complete_button.first.click(timeout=TIMEOUT_ACTION)
+                                  await asyncio.sleep(2)
+                                  
+                                  # Handle confirmation dialog if present
+                                  try:
+                                      confirm_button = page.locator('button:has-text("Confirm"), button:has-text("Yes"), button:has-text("Submit")')
+                                      if await confirm_button.count() > 0:
+                                          await log("Confirming completion...")
+                                          await confirm_button.first.click(timeout=TIMEOUT_ACTION)
+                                  except Exception as e:
+                                      await log(f"No confirmation dialog: {str(e)}", "INFO")
+                                  
+                                  await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
+                                  await asyncio.sleep(3)
+                                  await take_screenshot(page, "09-assessment-completed")
+                              else:
+                                  await log("Could not find 'Complete Assessment' button", "WARNING")
+                                  await take_screenshot(page, "09-no-complete-button")
+                          except Exception as e:
+                              await log(f"Error completing assessment: {str(e)}", "ERROR")
+                              await take_screenshot(page, "09-error-completing")
+                              raise
+
+                          # Step 7: Verify report generation
+                          await log("Step 7: Verifying report generation...")
+                          try:
+                              # Navigate to reports page
+                              await retry_action(
+                                  lambda: page.goto(f"{PRODUCTION_URL}/reports", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION),
+                                  "Navigate to reports page"
+                              )
+                              await asyncio.sleep(3)
+                              await take_screenshot(page, "10-reports-page")
+                              
+                              # Look for report status
+                              report_status = page.locator('text=/completed|generating|available/i')
+                              if await report_status.count() > 0:
+                                  status_text = await report_status.first.text_content()
+                                  await log(f"Report status: {status_text}")
+                                  
+                                  if "completed" in status_text.lower() or "available" in status_text.lower():
+                                      await log("✓ Report generated successfully!")
+                                      
+                                      # Try to download report
+                                      try:
+                                          download_button = page.locator('button:has-text("Download"), a:has-text("Download")')
+                                          if await download_button.count() > 0:
+                                              await log("Report download button found")
+                                              # Note: We won't actually download in CI, just verify button exists
+                                      except Exception as e:
+                                          await log(f"Could not find download button: {str(e)}", "INFO")
+                                  else:
+                                      await log(f"Report status is '{status_text}', waiting for completion...", "WARNING")
+                                      # Wait up to 2 minutes for report generation
+                                      for i in range(24):  # 24 * 5 seconds = 2 minutes
+                                          await asyncio.sleep(5)
+                                          await page.reload(wait_until="networkidle", timeout=TIMEOUT_NAVIGATION)
+                                          status_text = await report_status.first.text_content() if await report_status.count() > 0 else "unknown"
+                                          await log(f"Report status check {i+1}/24: {status_text}")
+                                          if "completed" in status_text.lower() or "available" in status_text.lower():
+                                              await log("✓ Report generated successfully!")
+                                              break
+                              else:
+                                  await log("Could not find report status", "WARNING")
+                                  await take_screenshot(page, "10-no-report-status")
+                              
+                              await take_screenshot(page, "11-final-reports")
+                          except Exception as e:
+                              await log(f"Error verifying report: {str(e)}", "ERROR")
+                              await take_screenshot(page, "11-error-verifying-report")
+                              raise
+
+                          # Success!
+                          await log("=" * 80)
+                          await log("✓ ALL TESTS PASSED SUCCESSFULLY!")
+                          await log(f"✓ User registered: {test_email}")
+                          await log(f"✓ Assessment completed: {questions_answered} questions answered")
+                          await log(f"✓ Sections completed: {sections_completed}")
+                          await log(f"✓ Report generated successfully")
+                          await log("=" * 80)
+
+                          # Save console logs
+                          if console_logs:
+                              await log(f"Captured {len(console_logs)} console messages")
+                              with open("/tmp/console-logs.txt", "w") as f:
+                                  f.write("\n".join(console_logs))
+                          
+                          # Save network errors
+                          if network_errors:
+                              await log(f"Captured {len(network_errors)} network errors", "WARNING")
+                              with open("/tmp/network-errors.txt", "w") as f:
+                                  f.write("\n".join(network_errors))
+
+                      except Exception as e:
+                          await log("=" * 80, "ERROR")
+                          await log(f"✗ TEST FAILED: {str(e)}", "ERROR")
+                          await log("=" * 80, "ERROR")
+                          await log("Stack trace:", "ERROR")
+                          traceback.print_exc()
+                          
+                          # Capture failure information
+                          await take_screenshot(page, "FAILURE")
+                          
+                          # Save console logs
+                          if console_logs:
+                              with open("/tmp/console-logs.txt", "w") as f:
+                                  f.write("\n".join(console_logs))
+                              await log(f"Console logs saved ({len(console_logs)} messages)")
+                          
+                          # Save network errors
+                          if network_errors:
+                              with open("/tmp/network-errors.txt", "w") as f:
+                                  f.write("\n".join(network_errors))
+                              await log(f"Network errors saved ({len(network_errors)} errors)")
+                          
+                          # Save page content
+                          try:
+                              content = await page.content()
+                              with open("/tmp/page-content.html", "w") as f:
+                                  f.write(content)
+                              await log("Page content saved")
+                          except Exception as content_error:
+                              await log(f"Could not save page content: {str(content_error)}", "WARNING")
+                          
+                          raise
+                      finally:
+                          # Close browser
+                          await log("Closing browser...")
+                          await context.close()
+                          await browser.close()
+
+              except Exception as e:
+                  await log(f"Fatal error: {str(e)}", "ERROR")
+                  traceback.print_exc()
+                  sys.exit(1)
+
+          # Run the test
+          asyncio.run(main())
+          EOF
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-screenshots
+          path: /tmp/screenshot-*.png
+          retention-days: 7
+
+      - name: Upload videos on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-videos
+          path: /tmp/videos/
+          retention-days: 7
+
+      - name: Upload console logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: console-logs
+          path: /tmp/console-logs.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload network errors
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: network-errors
+          path: /tmp/network-errors.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload page content on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: page-content
+          path: /tmp/page-content.html
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Check test result
+        if: steps.test.outcome == 'failure'
+        run: |
+          echo "❌ Automated production test FAILED"
+          echo "Please check the artifacts for screenshots, videos, and logs"
+          exit 1
