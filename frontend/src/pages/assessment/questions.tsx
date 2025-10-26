@@ -175,12 +175,13 @@ export default function AssessmentQuestions() {
     if (!structure || !responses || hasNavigatedToResumePoint.current) return;
     if (Object.keys(responses).length === 0) return;
     if (hasManuallyNavigated) return;
+    if (savedProgress <= 0) return; // Only resume if there's existing progress from server
 
     const { sectionIndex, questionIndex } = findFirstUnansweredQuestion();
     setCurrentSectionIndex(sectionIndex);
     setCurrentQuestionIndex(questionIndex);
     hasNavigatedToResumePoint.current = true;
-  }, [structure, responses, hasManuallyNavigated]);
+  }, [structure, responses, hasManuallyNavigated, savedProgress]);
 
   useEffect(() => {
     setHasManuallyNavigated(false);
