@@ -123,18 +123,23 @@ class TestAssessmentValidation:
 
 
 class TestConsultationValidation:
-    def test_consultation_details_required_when_interest_true(self):
-        with pytest.raises(ValidationError) as exc_info:
-            ConsultationRequest(consultation_interest=True, consultation_details=None)
-        assert "required when consultation interest is true" in str(exc_info.value)
+    def test_consultation_details_optional_when_interest_true(self):
+        request = ConsultationRequest(consultation_interest=True, consultation_details=None)
+        assert request.consultation_interest is True
+        assert request.consultation_details is None
+
+    def test_consultation_details_optional_empty_string(self):
+        request = ConsultationRequest(consultation_interest=True, consultation_details="")
+        assert request.consultation_interest is True
+        assert request.consultation_details is None
 
     def test_consultation_details_word_count_minimum(self):
-        short_text = " ".join(["word"] * 100)
+        short_text = " ".join(["word"] * 5)
         with pytest.raises(ValidationError) as exc_info:
             ConsultationRequest(
                 consultation_interest=True, consultation_details=short_text
             )
-        assert "at least 200 words" in str(exc_info.value)
+        assert "at least 10 words" in str(exc_info.value)
 
     def test_consultation_details_word_count_maximum(self):
         long_text = " ".join(["word"] * 350)
@@ -144,8 +149,22 @@ class TestConsultationValidation:
             )
         assert "must not exceed 300 words" in str(exc_info.value)
 
-    def test_consultation_details_valid_word_count(self):
-        valid_text = " ".join(["word"] * 250)
+    def test_consultation_details_valid_word_count_minimum(self):
+        valid_text = " ".join(["word"] * 10)
+        request = ConsultationRequest(
+            consultation_interest=True, consultation_details=valid_text
+        )
+        assert request.consultation_details == valid_text
+
+    def test_consultation_details_valid_word_count_mid(self):
+        valid_text = " ".join(["word"] * 150)
+        request = ConsultationRequest(
+            consultation_interest=True, consultation_details=valid_text
+        )
+        assert request.consultation_details == valid_text
+
+    def test_consultation_details_valid_word_count_maximum(self):
+        valid_text = " ".join(["word"] * 300)
         request = ConsultationRequest(
             consultation_interest=True, consultation_details=valid_text
         )
