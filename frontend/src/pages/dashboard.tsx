@@ -10,6 +10,7 @@ import {
   ChartBarIcon,
   ClockIcon,
   ArrowRightIcon,
+  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
@@ -38,9 +39,8 @@ export default function Dashboard() {
   const hasActiveAssessment = assessment && !assessmentError;
   const isCompleted = hasActiveAssessment && assessment.data.status === 'completed';
   const progressPercentage = hasActiveAssessment ? assessment.data.progress_percentage || 0 : 0;
-  const timeRemaining = hasActiveAssessment && !isCompleted
-    ? calculateTimeRemaining(assessment.data.expires_at)
-    : null;
+  const timeRemaining =
+    hasActiveAssessment && !isCompleted ? calculateTimeRemaining(assessment.data.expires_at) : null;
 
   return (
     <ProtectedRoute>
@@ -69,15 +69,15 @@ export default function Dashboard() {
                     {isCompleted
                       ? 'View Reports'
                       : hasActiveAssessment
-                      ? 'Continue Assessment'
-                      : 'Start Assessment'}
+                        ? 'Continue Assessment'
+                        : 'Start Assessment'}
                   </h3>
                   <p className="text-gray-600">
                     {isCompleted
                       ? 'Download your completed reports'
                       : hasActiveAssessment
-                      ? 'Resume your security evaluation'
-                      : 'Begin your security evaluation'}
+                        ? 'Resume your security evaluation'
+                        : 'Begin your security evaluation'}
                   </p>
                 </div>
                 <ArrowRightIcon className="h-5 w-5 text-gray-400 ml-auto" />
@@ -143,21 +143,25 @@ export default function Dashboard() {
               {isCompleted
                 ? 'Assessment Complete'
                 : hasActiveAssessment
-                ? 'Your Assessment Progress'
-                : 'About Your Assessment'}
+                  ? 'Your Assessment Progress'
+                  : 'About Your Assessment'}
             </h3>
             <p className="text-gray-600 mb-4">
               {isCompleted
                 ? `Congratulations! You have completed your security posture assessment with a score of ${progressPercentage.toFixed(1)}%. Your reports are ready for download.`
                 : hasActiveAssessment
-                ? `You have completed ${progressPercentage.toFixed(1)}% of your security posture assessment. Continue where you left off to receive personalized recommendations and an AI-enhanced report.`
-                : 'Complete your comprehensive security posture assessment to receive personalized recommendations and an AI-enhanced report for your organization.'}
+                  ? `You have completed ${progressPercentage.toFixed(1)}% of your security posture assessment. Continue where you left off to receive personalized recommendations and an AI-enhanced report.`
+                  : 'Complete your comprehensive security posture assessment to receive personalized recommendations and an AI-enhanced report for your organization.'}
             </p>
             <Link
               href={isCompleted ? '/reports' : '/assessment/questions'}
               className="btn-primary inline-flex items-center"
             >
-              {isCompleted ? 'View Reports' : hasActiveAssessment ? 'Continue Assessment' : 'Get Started'}
+              {isCompleted
+                ? 'View Reports'
+                : hasActiveAssessment
+                  ? 'Continue Assessment'
+                  : 'Get Started'}
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Link>
           </div>
