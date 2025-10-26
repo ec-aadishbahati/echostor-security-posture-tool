@@ -112,16 +112,14 @@ class ConsultationRequest(BaseModel):
     def validate_consultation_details(cls, v: str | None, info) -> str | None:
         consultation_interest = info.data.get("consultation_interest", False)
 
-        if consultation_interest:
-            if not v or not v.strip():
-                raise ValueError(
-                    "Consultation details are required when consultation interest is true"
-                )
+        if v is not None and not v.strip():
+            return None
 
+        if consultation_interest and v and v.strip():
             word_count = len(v.split())
-            if word_count < 200:
+            if word_count < 10:
                 raise ValueError(
-                    f"Consultation details must be at least 200 words (currently {word_count} words)"
+                    f"Consultation details must be at least 10 words (currently {word_count} words)"
                 )
             if word_count > 300:
                 raise ValueError(

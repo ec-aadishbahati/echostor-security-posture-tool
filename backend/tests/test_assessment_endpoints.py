@@ -180,4 +180,4 @@ def test_save_consultation_interest_invalid_word_count(
         json={"consultation_interest": True, "consultation_details": short_details},
     )
     assert response.status_code == 422
-    assert "200" in str(response.json())
+    assert "at least 10 words" in str(response.json())
