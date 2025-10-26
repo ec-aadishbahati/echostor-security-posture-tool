@@ -67,26 +67,6 @@ async def register(
 async def login(
     request: Request, user_credentials: UserLogin, db: Session = Depends(get_db)
 ):
-    if (
-        settings.ADMIN_LOGIN_USER
-        and user_credentials.email == settings.ADMIN_LOGIN_USER
-        and settings.ADMIN_LOGIN_PASSWORD
-    ):
-        if user_credentials.password == settings.ADMIN_LOGIN_PASSWORD:
-            access_token = create_access_token(
-                data={"sub": settings.ADMIN_LOGIN_USER, "is_admin": True}, is_admin=True
-            )
-
-            return Token(
-                access_token=access_token,
-                expires_in=settings.ADMIN_TOKEN_EXPIRE_HOURS * 3600,
-            )
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect email or password",
-            )
-
     if user_credentials.email == settings.ADMIN_EMAIL:
         if not settings.ADMIN_PASSWORD_HASH:
             raise HTTPException(
@@ -148,10 +128,9 @@ async def get_current_user(
             if user:
                 return CurrentUserResponse.model_validate(user)
 
-        admin_email = settings.ADMIN_LOGIN_USER or settings.ADMIN_EMAIL
         return CurrentUserResponse(
             id="admin",
-            email=admin_email,
+            email=settings.ADMIN_EMAIL,
             full_name="Administrator",
             company_name="EchoStor",
             is_admin=True,
