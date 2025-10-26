@@ -12,7 +12,7 @@ from app.core.security import (
 )
 from app.middleware.rate_limit import limiter
 from app.models.user import User
-from app.schemas.user import Token, UserCreate, UserLogin, UserResponse
+from app.schemas.user import CurrentUserResponse, Token, UserCreate, UserLogin, UserResponse
 
 router = APIRouter()
 security = HTTPBearer()
@@ -133,22 +133,24 @@ async def login(
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
-):
+) -> CurrentUserResponse:
     token_data = verify_token(credentials.credentials)
 
-    if token_data.get("is_admin") and token_data.get("user_id"):
-        user_id = token_data.get("user_id")
-        user = db.query(User).filter(User.id == user_id).first()
-        if user:
-            return user
-
     if token_data.get("is_admin"):
-        admin_email = (
-            settings.ADMIN_LOGIN_USER
-            if settings.ADMIN_LOGIN_USER
-            else settings.ADMIN_EMAIL
+        if token_data.get("user_id"):
+            user = db.query(User).filter(User.id == token_data["user_id"]).first()
+            if user:
+                return CurrentUserResponse.model_validate(user)
+        
+        admin_email = settings.ADMIN_LOGIN_USER or settings.ADMIN_EMAIL
+        return CurrentUserResponse(
+            id="admin",
+            email=admin_email,
+            full_name="Administrator",
+            company_name="EchoStor",
+            is_admin=True,
+            is_active=True
         )
-        return {"email": admin_email, "is_admin": True}
 
     email = token_data.get("sub")
     if not email:
@@ -163,31 +165,36 @@ async def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
         )
 
-    return user
+    return CurrentUserResponse.model_validate(user)
 
 
-async def get_current_admin_user(current_user=Depends(get_current_user)):
-    if hasattr(current_user, "is_admin") and current_user.is_admin:
-        return {
-            "email": current_user.email,
-            "is_admin": True,
-            "user_id": str(current_user.id),
-        }
-    elif isinstance(current_user, dict) and current_user.get("is_admin"):
-        return current_user
-    else:
+async def get_current_admin_user(
+    current_user: CurrentUserResponse = Depends(get_current_user)
+) -> CurrentUserResponse:
+    if not current_user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required"
         )
+    return current_user
 
 
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(
-    request: Request, current_user=Depends(get_current_user)
+    request: Request, 
+    current_user: CurrentUserResponse = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
-    if isinstance(current_user, dict) and current_user.get("is_admin"):
+    if current_user.is_admin and current_user.id == "admin":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Admin user info not available",
         )
-    return UserResponse.model_validate(current_user)
+    
+    user = db.query(User).filter(User.id == current_user.id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    return UserResponse.model_validate(user)

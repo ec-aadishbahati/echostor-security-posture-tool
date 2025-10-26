@@ -17,6 +17,7 @@ from app.schemas.assessment import (
     ConsultationRequest,
     SaveProgressRequest,
 )
+from app.schemas.user import CurrentUserResponse
 from app.services.question_parser import load_assessment_structure_cached
 from app.services.report_generator import generate_standard_report
 
@@ -32,7 +33,7 @@ async def get_assessment_structure(request: Request):
 @router.post("/start", response_model=AssessmentResponse)
 async def start_assessment(
     request: Request,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Start a new assessment for the current user"""
@@ -90,7 +91,7 @@ async def start_assessment(
 @router.get("/current", response_model=AssessmentResponse)
 async def get_current_assessment(
     request: Request,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get the current assessment for the user"""
@@ -129,7 +130,7 @@ async def get_current_assessment(
 async def get_assessment_responses(
     request: Request,
     assessment_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get all responses for an assessment"""
@@ -163,7 +164,7 @@ async def save_assessment_progress(
     request: Request,
     assessment_id: str,
     progress_data: SaveProgressRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Save assessment progress"""
@@ -248,7 +249,7 @@ async def complete_assessment(
     request: Request,
     assessment_id: str,
     background_tasks: BackgroundTasks,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Complete an assessment and automatically generate standard report"""
@@ -317,7 +318,7 @@ async def save_consultation_interest(
     request: Request,
     assessment_id: str,
     consultation_data: ConsultationRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Save consultation interest and details"""
