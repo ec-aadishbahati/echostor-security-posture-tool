@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import and_, desc, func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.api.auth import get_current_admin_user
 from app.core.database import get_db
@@ -289,16 +289,17 @@ async def get_users_progress_summary(
     """Get detailed progress summary for all users"""
 
     try:
-        users_with_progress = db.query(User).outerjoin(Assessment).all()
+        users_with_progress = (
+            db.query(User)
+            .options(joinedload(User.assessments))
+            .all()
+        )
 
         summary = []
         for user in users_with_progress:
-            assessment = (
-                db.query(Assessment)
-                .filter(Assessment.user_id == user.id)
-                .order_by(desc(Assessment.created_at))
-                .first()
-            )
+            assessment = None
+            if user.assessments:
+                assessment = max(user.assessments, key=lambda a: a.created_at)
 
             user_data = {
                 "user_id": str(user.id),
