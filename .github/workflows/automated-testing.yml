@@ -577,6 +577,10 @@ jobs:
                           await log(f"✓ Assessment completed: {questions_answered} questions answered")
                           await log(f"✓ Report generated and verified")
                           await log("=" * 80)
+                          await log("📋 TEST CREDENTIALS SUMMARY:")
+                          await log(f"   Email: {test_email}")
+                          await log(f"   Password: {test_password}")
+                          await log("=" * 80)
 
                           # Save artifacts
                           if console_logs:
