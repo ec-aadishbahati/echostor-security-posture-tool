@@ -35,14 +35,15 @@ else:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting application startup...")
-    
+
     import os
+
     try:
         os.makedirs(settings.REPORTS_DIR, exist_ok=True)
         logger.info(f"Reports directory ensured at: {settings.REPORTS_DIR}")
     except Exception as e:
         logger.error(f"Failed to create reports directory: {e}")
-    
+
     logger.info("Starting cache warming...")
     try:
         from app.services.question_parser import load_assessment_structure_cached
