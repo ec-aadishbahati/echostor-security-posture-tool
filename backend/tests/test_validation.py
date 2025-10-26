@@ -124,12 +124,16 @@ class TestAssessmentValidation:
 
 class TestConsultationValidation:
     def test_consultation_details_optional_when_interest_true(self):
-        request = ConsultationRequest(consultation_interest=True, consultation_details=None)
+        request = ConsultationRequest(
+            consultation_interest=True, consultation_details=None
+        )
         assert request.consultation_interest is True
         assert request.consultation_details is None
 
     def test_consultation_details_optional_empty_string(self):
-        request = ConsultationRequest(consultation_interest=True, consultation_details="")
+        request = ConsultationRequest(
+            consultation_interest=True, consultation_details=""
+        )
         assert request.consultation_interest is True
         assert request.consultation_details is None
 
