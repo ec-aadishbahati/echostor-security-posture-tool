@@ -1,11 +1,9 @@
 import logging
-import os
 from contextlib import asynccontextmanager
 
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -69,10 +67,6 @@ app.add_middleware(
 
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(PerformanceMiddleware)
-
-os.makedirs("reports", exist_ok=True)
-
-app.mount("/reports", StaticFiles(directory="reports"), name="reports")
 
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(assessment.router, prefix="/api/assessment", tags=["assessment"])
