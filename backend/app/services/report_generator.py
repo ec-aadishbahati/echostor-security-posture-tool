@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import Any
 
 import openai
-from jinja2 import Template
+from jinja2 import Environment
 from weasyprint import HTML
 
 from app.core.config import settings
@@ -14,6 +14,8 @@ from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.services.question_parser import load_assessment_structure
 
 logger = logging.getLogger(__name__)
+
+jinja_env = Environment(autoescape=True)
 
 if settings.OPENAI_API_KEY:
     openai.api_key = settings.OPENAI_API_KEY
@@ -332,7 +334,7 @@ def format_responses_for_ai(responses: list[dict]) -> str:
 def generate_report_html(assessment, responses, scores, structure) -> str:
     """Generate HTML content for standard report"""
 
-    template = Template(
+    template = jinja_env.from_string(
         """
     <!DOCTYPE html>
     <html>
@@ -451,7 +453,7 @@ def generate_ai_report_html(
 ) -> str:
     """Generate HTML content for AI-enhanced report"""
 
-    template = Template(
+    template = jinja_env.from_string(
         """
     <!DOCTYPE html>
     <html>
@@ -500,7 +502,7 @@ def generate_ai_report_html(
                 {% if ai_insights[section.id] %}
                 <div class="ai-insight">
                     <h4>🤖 AI Analysis</h4>
-                    <p>{{ ai_insights[section.id] | replace('\n', '<br>') | safe }}</p>
+                    <p>{{ ai_insights[section.id] | replace('\n', '<br>') }}</p>
                 </div>
                 {% endif %}
             </div>
