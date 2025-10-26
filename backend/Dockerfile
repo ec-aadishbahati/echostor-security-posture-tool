@@ -8,11 +8,13 @@ RUN apt-get update && apt-get install -y \
     g++ \
     libpq-dev \
     libffi-dev \
-    libcairo2-dev \
-    libpango1.0-dev \
-    libgdk-pixbuf-xlib-2.0-dev \
-    libxml2-dev \
-    libxslt1-dev \
+    libcairo2 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libgdk-pixbuf-2.0-0 \
+    libxml2 \
+    libxslt1.1 \
+    fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry

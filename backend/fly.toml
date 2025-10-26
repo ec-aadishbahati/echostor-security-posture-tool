@@ -42,6 +42,11 @@ primary_region = "iad"
 [env]
   PORT = "8000"
   RESTART_TIMESTAMP = "1726477055"
+  REPORTS_DIR = "/data/reports"
+
+[[mounts]]
+  source = "reports_data"
+  destination = "/data"
 
 # Machine configuration for multi-region deployment
 # Total of 4 machines distributed across 3 regions
