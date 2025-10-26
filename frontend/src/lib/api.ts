@@ -93,6 +93,8 @@ export const assessmentAPI = {
 
   getCurrentAssessment: () => api.get('/api/assessment/current'),
 
+  getLatestAssessment: () => api.get('/api/assessment/latest'),
+
   getResponses: (assessmentId: string) => api.get(`/api/assessment/${assessmentId}/responses`),
 
   saveProgress: (assessmentId: string, responses: Record<string, any>[]) =>

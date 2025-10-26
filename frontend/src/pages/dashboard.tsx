@@ -19,7 +19,7 @@ export default function Dashboard() {
     data: assessment,
     isLoading: assessmentLoading,
     error: assessmentError,
-  } = useQuery('currentAssessment', assessmentAPI.getCurrentAssessment, {
+  } = useQuery('latestAssessment', assessmentAPI.getLatestAssessment, {
     retry: false,
     refetchOnWindowFocus: false,
   });
@@ -36,10 +36,11 @@ export default function Dashboard() {
   };
 
   const hasActiveAssessment = assessment && !assessmentError;
+  const isCompleted = hasActiveAssessment && assessment.data.status === 'completed';
   const progressPercentage = hasActiveAssessment ? assessment.data.progress_percentage || 0 : 0;
-  const timeRemaining = hasActiveAssessment
+  const timeRemaining = hasActiveAssessment && !isCompleted
     ? calculateTimeRemaining(assessment.data.expires_at)
-    : '15 days';
+    : null;
 
   return (
     <ProtectedRoute>
@@ -56,7 +57,7 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <Link
-              href="/assessment/questions"
+              href={isCompleted ? '/reports' : '/assessment/questions'}
               className="card hover:shadow-lg transition-shadow cursor-pointer"
             >
               <div className="flex items-center">
@@ -65,10 +66,16 @@ export default function Dashboard() {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">
-                    {hasActiveAssessment ? 'Continue Assessment' : 'Start Assessment'}
+                    {isCompleted
+                      ? 'View Reports'
+                      : hasActiveAssessment
+                      ? 'Continue Assessment'
+                      : 'Start Assessment'}
                   </h3>
                   <p className="text-gray-600">
-                    {hasActiveAssessment
+                    {isCompleted
+                      ? 'Download your completed reports'
+                      : hasActiveAssessment
                       ? 'Resume your security evaluation'
                       : 'Begin your security evaluation'}
                   </p>
@@ -101,32 +108,56 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="card">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <ClockIcon className="h-8 w-8 text-blue-600" />
-                </div>
-                <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Time Remaining</h3>
-                  <p className="text-gray-600">
-                    {assessmentLoading ? 'Loading...' : timeRemaining}
-                  </p>
+            {!isCompleted && (
+              <div className="card">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <ClockIcon className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Time Remaining</h3>
+                    <p className="text-gray-600">
+                      {assessmentLoading ? 'Loading...' : timeRemaining || '15 days'}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+            {isCompleted && (
+              <div className="card">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <CheckCircleIcon className="h-8 w-8 text-green-600" />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Status</h3>
+                    <p className="text-gray-600">Assessment Completed</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="card">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              {hasActiveAssessment ? 'Your Assessment Progress' : 'About Your Assessment'}
+              {isCompleted
+                ? 'Assessment Complete'
+                : hasActiveAssessment
+                ? 'Your Assessment Progress'
+                : 'About Your Assessment'}
             </h3>
             <p className="text-gray-600 mb-4">
-              {hasActiveAssessment
+              {isCompleted
+                ? `Congratulations! You have completed your security posture assessment with a score of ${progressPercentage.toFixed(1)}%. Your reports are ready for download.`
+                : hasActiveAssessment
                 ? `You have completed ${progressPercentage.toFixed(1)}% of your security posture assessment. Continue where you left off to receive personalized recommendations and an AI-enhanced report.`
                 : 'Complete your comprehensive security posture assessment to receive personalized recommendations and an AI-enhanced report for your organization.'}
             </p>
-            <Link href="/assessment/questions" className="btn-primary inline-flex items-center">
-              {hasActiveAssessment ? 'Continue Assessment' : 'Get Started'}
+            <Link
+              href={isCompleted ? '/reports' : '/assessment/questions'}
+              className="btn-primary inline-flex items-center"
+            >
+              {isCompleted ? 'View Reports' : hasActiveAssessment ? 'Continue Assessment' : 'Get Started'}
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Link>
           </div>

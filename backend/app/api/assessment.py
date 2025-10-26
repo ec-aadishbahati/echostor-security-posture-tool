@@ -124,6 +124,54 @@ async def get_current_assessment(
     return AssessmentResponse.model_validate(assessment)
 
 
+@router.get("/latest", response_model=AssessmentResponse)
+async def get_latest_assessment(
+    request: Request,
+    current_user: CurrentUserResponse = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Get the latest assessment for the user (in-progress if exists, else most recent completed)"""
+
+    in_progress_assessment = (
+        db.query(Assessment)
+        .filter(
+            and_(
+                Assessment.user_id == current_user.id,
+                Assessment.status == "in_progress",
+            )
+        )
+        .first()
+    )
+
+    if in_progress_assessment:
+        if in_progress_assessment.expires_at and datetime.now(UTC) > in_progress_assessment.expires_at.replace(
+            tzinfo=UTC
+        ):
+            in_progress_assessment.status = "expired"
+            db.commit()
+        else:
+            return AssessmentResponse.model_validate(in_progress_assessment)
+
+    completed_assessment = (
+        db.query(Assessment)
+        .filter(
+            and_(
+                Assessment.user_id == current_user.id,
+                Assessment.status == "completed",
+            )
+        )
+        .order_by(Assessment.completed_at.desc())
+        .first()
+    )
+
+    if completed_assessment:
+        return AssessmentResponse.model_validate(completed_assessment)
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail="No assessment found"
+    )
+
+
 @router.get(
     "/{assessment_id}/responses", response_model=list[AssessmentResponseResponse]
 )
