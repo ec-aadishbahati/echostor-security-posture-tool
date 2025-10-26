@@ -19,9 +19,6 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str = "aadish.bahati@echostor.com"
     ADMIN_PASSWORD_HASH: str | None = None
 
-    ADMIN_LOGIN_USER: str | None = None
-    ADMIN_LOGIN_PASSWORD: str | None = None
-
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
         "http://localhost:3001",
