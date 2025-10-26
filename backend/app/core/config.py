@@ -1,3 +1,5 @@
+import os
+
 from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
@@ -29,7 +31,9 @@ class Settings(BaseSettings):
     ASSESSMENT_EXPIRY_DAYS: int = 15
     AUTO_SAVE_INTERVAL_MINUTES: int = 10
 
-    REPORTS_DIR: str = "/data/reports"
+    REPORTS_DIR: str = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "reports")
+    )
     AI_REPORT_DELIVERY_DAYS: int = 5
     REDIS_URL: str | None = None
     RATE_LIMIT_ENABLED: bool = True
