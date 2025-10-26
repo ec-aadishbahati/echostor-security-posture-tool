@@ -289,11 +289,7 @@ async def get_users_progress_summary(
     """Get detailed progress summary for all users"""
 
     try:
-        users_with_progress = (
-            db.query(User)
-            .options(joinedload(User.assessments))
-            .all()
-        )
+        users_with_progress = db.query(User).options(joinedload(User.assessments)).all()
 
         summary = []
         for user in users_with_progress:
