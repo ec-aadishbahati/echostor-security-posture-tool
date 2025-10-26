@@ -359,6 +359,11 @@ jobs:
                                   await textarea.first.fill(consultation_text, timeout=TIMEOUT_ACTION)
                                   word_count = len(consultation_text.split())
                                   await log(f"Filled consultation details ({word_count} words)")
+                                  
+                                  # CRITICAL: Blur the textarea to trigger validation
+                                  await textarea.first.blur()
+                                  await log("Blurred textarea to trigger validation")
+                                  await asyncio.sleep(1)
                               
                               await take_screenshot(page, "09-consultation-filled")
                           except Exception as e:
@@ -368,30 +373,104 @@ jobs:
                           # Step 6: Complete assessment
                           await log("Step 6: Completing assessment...")
                           try:
-                              complete_button = page.get_by_role("button", name="Complete Assessment")
-                              if await complete_button.count() == 0:
-                                  # Try alternative button texts
-                                  complete_button = page.get_by_role("button", name="Submit Assessment")
+                              # Use robust selector with data-testid
+                              complete_button = page.locator('[data-testid="complete-assessment-btn"]')
                               
-                              if await complete_button.count() > 0:
-                                  await log("Clicking 'Complete Assessment' button...")
+                              # If data-testid not found, fallback to role-based selector
+                              if await complete_button.count() == 0:
+                                  await log("data-testid not found, trying role-based selector")
+                                  complete_button = page.get_by_role("button", name="Complete Assessment")
+                              
+                              if await complete_button.count() == 0:
+                                  raise AssertionError("Could not find 'Complete Assessment' button")
+                              
+                              # Use .last() in case there are multiple matches
+                              complete_button = complete_button.last
+                              
+                              # Log button state before clicking
+                              try:
+                                  is_visible = await complete_button.is_visible()
+                                  is_enabled = await complete_button.is_enabled()
+                                  is_disabled = await complete_button.get_attribute("disabled")
+                                  button_classes = await complete_button.get_attribute("class")
+                                  await log(f"Button state: visible={is_visible}, enabled={is_enabled}, disabled_attr={is_disabled}")
+                                  await log(f"Button classes: {button_classes}")
+                              except Exception as e:
+                                  await log(f"Could not check button state: {str(e)}", "WARNING")
+                              
+                              # Wait for button to be enabled (not just visible)
+                              await log("Waiting for Complete Assessment button to be enabled...")
+                              max_wait_seconds = 30
+                              button_enabled = False
+                              for i in range(max_wait_seconds):
+                                  try:
+                                      if await complete_button.is_enabled():
+                                          button_enabled = True
+                                          await log(f"✓ Button enabled after {i} seconds")
+                                          break
+                                  except Exception:
+                                      pass
+                                  
+                                  if i < max_wait_seconds - 1:
+                                      await asyncio.sleep(1)
+                              
+                              if not button_enabled:
+                                  # Try clicking Save Progress button to trigger validation
+                                  await log("Button still disabled, trying Save Progress button...")
+                                  try:
+                                      save_button = page.locator('[data-testid="save-progress-btn"]')
+                                      if await save_button.count() == 0:
+                                          save_button = page.get_by_role("button", name="Save Progress")
+                                      
+                                      if await save_button.count() > 0:
+                                          await save_button.first.click(timeout=TIMEOUT_ACTION)
+                                          await log("Clicked Save Progress button")
+                                          await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
+                                          await asyncio.sleep(2)
+                                          
+                                          # Check button state again
+                                          if await complete_button.is_enabled():
+                                              button_enabled = True
+                                              await log("✓ Button enabled after Save Progress")
+                                  except Exception as e:
+                                      await log(f"Could not click Save Progress: {str(e)}", "WARNING")
+                              
+                              if not button_enabled:
+                                  await take_screenshot(page, "10-button-still-disabled")
+                                  raise AssertionError("Complete Assessment button is still disabled after 30 seconds")
+                              
+                              # Scroll button into view
+                              await complete_button.scroll_into_view_if_needed()
+                              await log("Scrolled button into view")
+                              
+                              # Click the button with dialog handling
+                              await log("Clicking 'Complete Assessment' button...")
+                              
+                              # Handle confirmation dialog if present
+                              dialog_handled = False
+                              async def handle_dialog(dialog):
+                                  nonlocal dialog_handled
+                                  await log(f"Dialog appeared: {dialog.message}")
+                                  await dialog.accept()
+                                  dialog_handled = True
+                                  await log("Accepted confirmation dialog")
+                              
+                              page.on("dialog", handle_dialog)
+                              
+                              try:
                                   await complete_button.click(timeout=TIMEOUT_ACTION)
                                   await asyncio.sleep(2)
                                   
-                                  # Handle confirmation dialog
-                                  try:
-                                      # Playwright's page.on('dialog') would be better, but for simplicity, look for confirm button
-                                      await asyncio.sleep(1)
-                                      # The confirm() dialog in browser will auto-accept in headless mode
-                                  except Exception:
-                                      pass
+                                  if dialog_handled:
+                                      await log("✓ Confirmation dialog was handled")
                                   
                                   await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
                                   await asyncio.sleep(3)
                                   await take_screenshot(page, "10-assessment-completed")
                                   await log("✓ Assessment completed successfully")
-                              else:
-                                  raise AssertionError("Could not find 'Complete Assessment' button")
+                              finally:
+                                  page.remove_listener("dialog", handle_dialog)
+                              
                           except Exception as e:
                               await log(f"Error completing assessment: {str(e)}", "ERROR")
                               await take_screenshot(page, "10-error-completing")
