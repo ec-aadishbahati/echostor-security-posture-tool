@@ -52,7 +52,7 @@ jobs:
           test_full_name = "Automated Test User"
           test_company = "Automated Testing Co"
 
-          # Consultation details (200-300 words)
+          # Consultation details (10-300 words, optional)
           consultation_text = """
           Our organization is seeking comprehensive cybersecurity consulting services to enhance our security posture. 
           We are a mid-sized enterprise with approximately 500 employees and handle sensitive customer data daily. 
