@@ -130,7 +130,9 @@ jobs:
                           
                           await take_screenshot(page, "02-register-filled")
                           
-                          await page.get_by_role("button", name="Register").click()
+                          # Click "Create account" button (case-insensitive)
+                          register_button = page.locator('button[type="submit"]').first
+                          await register_button.click()
                           await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
                           await asyncio.sleep(2)
                           await take_screenshot(page, "03-after-register")
@@ -144,7 +146,9 @@ jobs:
                           
                           await page.get_by_label("Email", exact=False).fill(test_email)
                           await page.get_by_label("Password", exact=False).fill(test_password)
-                          await page.get_by_role("button", name="Sign In").click()
+                          # Click "Sign in" button (case-insensitive)
+                          login_button = page.locator('button[type="submit"]').first
+                          await login_button.click()
                           await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
                           await asyncio.sleep(2)
                           await take_screenshot(page, "05-after-login")
