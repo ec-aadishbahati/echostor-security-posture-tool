@@ -237,91 +237,170 @@ jobs:
                                       await log("Reached consultation question")
                                       break
                                   
+                                  # Scope to current question card to avoid clicking wrong elements
+                                  question_card = page.locator('div.card').first
+                                  if await question_card.count() == 0:
+                                      await log("No question card found", "WARNING")
+                                      break
+                                  
                                   # Look for radio buttons (yes_no and multiple_choice questions)
-                                  # Click the label wrapper, not the raw input (inputs are visually hidden)
-                                  radio_labels = page.locator('label:has(input[type="radio"])')
-                                  radio_count = await radio_labels.count()
+                                  radio_inputs = question_card.locator('input[type="radio"]')
+                                  radio_count = await radio_inputs.count()
                                   
                                   if radio_count > 0:
-                                      # Find the first unchecked radio button and click its label
+                                      # Try to select the first unchecked radio with robust fallback sequence
+                                      selection_successful = False
                                       for i in range(radio_count):
-                                          label = radio_labels.nth(i)
-                                          radio_input = label.locator('input[type="radio"]')
-                                          if not await radio_input.is_checked():
-                                              # Scroll into view and click the label wrapper
-                                              await label.scroll_into_view_if_needed()
-                                              await label.click(timeout=TIMEOUT_ACTION)
-                                              
-                                              # Verify selection took
+                                          radio = radio_inputs.nth(i)
+                                          if await radio.is_checked():
+                                              continue
+                                          
+                                          await log(f"Attempting to select radio option {i+1}/{radio_count}")
+                                          
+                                          # Method 1: Use Playwright's check() - designed for form inputs
+                                          try:
+                                              await radio.scroll_into_view_if_needed()
+                                              await radio.check(timeout=TIMEOUT_ACTION)
                                               await asyncio.sleep(0.3)
-                                              if await radio_input.is_checked():
-                                                  await log(f"Selected radio option {i+1}/{radio_count}")
-                                              else:
-                                                  await log(f"Warning: Radio selection may not have registered", "WARNING")
-                                              break
+                                              if await radio.is_checked():
+                                                  await log(f"✓ Selected radio option {i+1} via check()")
+                                                  selection_successful = True
+                                                  break
+                                          except Exception as e:
+                                              await log(f"check() failed: {str(e)}", "WARNING")
+                                          
+                                          # Method 2: Focus + Space key + blur (triggers validation)
+                                          try:
+                                              await radio.focus()
+                                              await page.keyboard.press('Space')
+                                              await radio.evaluate('el => el.blur()')
+                                              await asyncio.sleep(0.3)
+                                              if await radio.is_checked():
+                                                  await log(f"✓ Selected radio option {i+1} via Space key")
+                                                  selection_successful = True
+                                                  break
+                                          except Exception as e:
+                                              await log(f"Space key failed: {str(e)}", "WARNING")
+                                          
+                                          # Method 3: JavaScript dispatch events (React Hook Form listens to onChange)
+                                          try:
+                                              await radio.evaluate('''el => {
+                                                  el.checked = true;
+                                                  el.dispatchEvent(new Event('input', {bubbles: true}));
+                                                  el.dispatchEvent(new Event('change', {bubbles: true}));
+                                                  el.blur();
+                                              }''')
+                                              await asyncio.sleep(0.3)
+                                              if await radio.is_checked():
+                                                  await log(f"✓ Selected radio option {i+1} via JS events")
+                                                  selection_successful = True
+                                                  break
+                                          except Exception as e:
+                                              await log(f"JS events failed: {str(e)}", "WARNING")
+                                      
+                                      if not selection_successful:
+                                          await log("Failed to select any radio option after all fallbacks", "WARNING")
+                                          await take_screenshot(page, f"radio-selection-failed-{iteration}")
                                   
                                   # Look for checkboxes (multiple_select questions)
-                                  # Click the label wrapper, not the raw input (inputs are visually hidden)
-                                  checkbox_labels = page.locator('label:has(input[type="checkbox"])')
-                                  checkbox_count = await checkbox_labels.count()
+                                  checkbox_inputs = question_card.locator('input[type="checkbox"]')
+                                  checkbox_count = await checkbox_inputs.count()
                                   
                                   if checkbox_count > 0:
-                                      # Randomly select 1-2 checkboxes
+                                      # Randomly select 1-2 checkboxes with robust fallback
                                       num_to_select = random.randint(1, min(2, checkbox_count))
                                       selected_count = 0
                                       for _ in range(num_to_select):
                                           idx = random.randint(0, checkbox_count - 1)
-                                          label = checkbox_labels.nth(idx)
-                                          checkbox_input = label.locator('input[type="checkbox"]')
-                                          if not await checkbox_input.is_checked():
-                                              # Scroll into view and click the label wrapper
-                                              await label.scroll_into_view_if_needed()
-                                              await label.click(timeout=TIMEOUT_ACTION)
+                                          checkbox = checkbox_inputs.nth(idx)
+                                          if await checkbox.is_checked():
+                                              continue
+                                          
+                                          # Try check() method first
+                                          try:
+                                              await checkbox.scroll_into_view_if_needed()
+                                              await checkbox.check(timeout=TIMEOUT_ACTION)
                                               await asyncio.sleep(0.2)
-                                              selected_count += 1
+                                              if await checkbox.is_checked():
+                                                  selected_count += 1
+                                          except Exception:
+                                              # Fallback: JS events
+                                              try:
+                                                  await checkbox.evaluate('''el => {
+                                                      el.checked = true;
+                                                      el.dispatchEvent(new Event('input', {bubbles: true}));
+                                                      el.dispatchEvent(new Event('change', {bubbles: true}));
+                                                  }''')
+                                                  await asyncio.sleep(0.2)
+                                                  if await checkbox.is_checked():
+                                                      selected_count += 1
+                                              except Exception:
+                                                  pass
+                                      
                                       if selected_count > 0:
                                           await log(f"Selected {selected_count} checkbox option(s)")
                                   
                                   # Wait for Next button to be enabled, then click to advance
                                   try:
-                                      next_button = page.locator('[data-testid="next-question-btn"]')
-                                      if await next_button.count() > 0:
-                                          # Wait for Next button to be enabled (selection must register first)
+                                      # Wait for Next button to be enabled (not disabled)
+                                      # This is more reliable than polling is_disabled()
+                                      try:
+                                          await page.wait_for_selector(
+                                              '[data-testid="next-question-btn"]:not([disabled])',
+                                              timeout=10000
+                                          )
+                                          await log("✓ Next button enabled")
+                                      except Exception as e:
+                                          await log(f"Next button still disabled after 10s: {str(e)}", "WARNING")
+                                          await take_screenshot(page, f"next-disabled-{iteration}")
+                                          
+                                          # Fallback: Try clicking "Save Progress" button
+                                          # The UI shows "Not saved yet" - saving might enable Next
                                           try:
-                                              await next_button.wait_for(state="visible", timeout=5000)
-                                              # Wait for button to be enabled (disabled attribute removed)
-                                              for retry in range(10):
-                                                  is_disabled = await next_button.is_disabled()
-                                                  if not is_disabled:
-                                                      break
-                                                  if retry < 9:
-                                                      await asyncio.sleep(0.5)
-                                              
-                                              if is_disabled:
-                                                  await log("Warning: Next button still disabled after selection", "WARNING")
-                                                  await take_screenshot(page, f"next-disabled-{iteration}")
-                                                  # Try clicking anyway as fallback
-                                              
-                                              await next_button.click(timeout=TIMEOUT_ACTION)
-                                              await asyncio.sleep(0.5)  # Brief pause for UI update
-                                              questions_answered += 1
-                                              if questions_answered % 10 == 0:
-                                                  await log(f"Answered {questions_answered} questions")
-                                          except Exception as e:
-                                              await log(f"Error waiting for/clicking Next button: {str(e)}", "WARNING")
+                                              await log("Trying Save Progress as fallback...")
+                                              save_button = page.locator('[data-testid="save-progress-btn"]')
+                                              if await save_button.count() > 0:
+                                                  await save_button.click(timeout=TIMEOUT_ACTION)
+                                                  await asyncio.sleep(2)
+                                                  await log("Clicked Save Progress, waiting for Next to enable...")
+                                                  
+                                                  # Wait again for Next to be enabled
+                                                  await page.wait_for_selector(
+                                                      '[data-testid="next-question-btn"]:not([disabled])',
+                                                      timeout=5000
+                                                  )
+                                                  await log("✓ Next button enabled after Save Progress")
+                                              else:
+                                                  await log("Save Progress button not found", "WARNING")
+                                                  raise Exception("Next button never enabled")
+                                          except Exception as save_error:
+                                              await log(f"Save Progress fallback failed: {str(save_error)}", "WARNING")
                                               raise
-                                      else:
-                                          # Try alternative button selectors
-                                          next_button_alt = page.get_by_role("button", name="Next")
-                                          if await next_button_alt.count() > 0:
-                                              await next_button_alt.click(timeout=TIMEOUT_ACTION)
-                                              await asyncio.sleep(0.5)
-                                              questions_answered += 1
-                                          else:
-                                              await log("Could not find Next button", "WARNING")
-                                              break
+                                      
+                                      # Click Next button
+                                      next_button = page.locator('[data-testid="next-question-btn"]')
+                                      await next_button.click(timeout=TIMEOUT_ACTION)
+                                      await asyncio.sleep(0.5)
+                                      
+                                      # Verify progress changed before incrementing counter
+                                      await asyncio.sleep(0.5)
+                                      try:
+                                          progress_elem = page.get_by_text("Assessment Progress:", exact=False)
+                                          if await progress_elem.count() > 0:
+                                              new_progress = await progress_elem.first.text_content()
+                                              if new_progress != last_progress_text:
+                                                  questions_answered += 1
+                                                  if questions_answered % 10 == 0:
+                                                      await log(f"Answered {questions_answered} questions")
+                                              else:
+                                                  await log("Warning: Progress text didn't change after clicking Next", "WARNING")
+                                      except Exception:
+                                          # If we can't verify, assume it worked
+                                          questions_answered += 1
+                                      
                                   except Exception as e:
                                       await log(f"Could not advance to next question: {str(e)}", "WARNING")
+                                      await take_screenshot(page, f"next-error-{iteration}")
                                       # May have reached the end
                                       break
                                   
