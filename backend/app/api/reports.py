@@ -16,7 +16,6 @@ from sqlalchemy.orm import Session
 from app.api.auth import get_current_admin_user, get_current_user
 from app.core.database import get_db
 from app.models.assessment import Assessment, Report
-from app.models.user import User
 from app.schemas.report import AIReportRequest, ReportResponse
 from app.schemas.user import CurrentUserResponse
 from app.services.report_generator import generate_ai_report, generate_standard_report
