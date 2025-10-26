@@ -891,7 +891,7 @@ export default function AssessmentQuestions() {
                         completeAssessmentMutation.isLoading ||
                         consultationInterest === null ||
                         (consultationInterest === true &&
-                          consultationDetails.trim() &&
+                          consultationDetails.trim().length > 0 &&
                           (consultationDetails
                             .trim()
                             .split(/\s+/)
