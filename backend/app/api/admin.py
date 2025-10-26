@@ -14,6 +14,7 @@ from app.schemas.report import ReportResponse
 from app.schemas.user import (
     BulkDeleteUsersRequest,
     BulkUpdateUserStatusRequest,
+    CurrentUserResponse,
     UserResponse,
 )
 from app.services.cache import cache_service
@@ -27,7 +28,7 @@ async def get_all_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     search: str | None = Query(None),
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get all users with pagination and search"""
@@ -46,7 +47,7 @@ async def get_all_users(
     users = query.offset(skip).limit(limit).all()
 
     await log_admin_action(
-        admin_email=current_admin["email"],
+        admin_email=current_admin.email,
         action="view_users",
         details={"search": search, "count": len(users)},
         db=db,
@@ -66,7 +67,7 @@ async def get_all_users(
 async def get_user(
     request: Request,
     user_id: str,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get a specific user by ID"""
@@ -78,7 +79,7 @@ async def get_user(
         )
 
     await log_admin_action(
-        admin_email=current_admin["email"],
+        admin_email=current_admin.email,
         action="view_user",
         target_user_id=user_id,
         db=db,
@@ -93,7 +94,7 @@ async def get_user(
 async def get_user_assessments(
     request: Request,
     user_id: str,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get all assessments for a specific user"""
@@ -113,7 +114,7 @@ async def get_user_assessments(
         )
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="view_user_assessments",
             target_user_id=user_id,
             details={"assessment_count": len(assessments)},
@@ -141,7 +142,7 @@ async def get_all_assessments(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     status: str | None = Query(None),
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get all assessments with filtering"""
@@ -158,7 +159,7 @@ async def get_all_assessments(
         )
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="view_assessments",
             details={"status_filter": status, "count": len(assessments)},
             db=db,
@@ -187,7 +188,7 @@ async def get_all_assessments(
 @router.get("/dashboard/stats")
 async def get_dashboard_stats(
     request: Request,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get dashboard statistics"""
@@ -263,7 +264,7 @@ async def get_dashboard_stats(
         cache_service.set(CACHE_KEY, stats, ttl=CACHE_TTL)
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="view_dashboard",
             details=stats,
             db=db,
@@ -282,7 +283,7 @@ async def get_dashboard_stats(
 @router.get("/users-progress-summary")
 async def get_users_progress_summary(
     request: Request,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get detailed progress summary for all users"""
@@ -319,7 +320,7 @@ async def get_users_progress_summary(
             summary.append(user_data)
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="view_users_progress",
             details={"user_count": len(summary)},
             db=db,
@@ -342,7 +343,7 @@ async def get_all_reports(
     limit: int = Query(100, ge=1, le=1000),
     report_type: str | None = Query(None),
     status: str | None = Query(None),
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get all reports with filtering"""
@@ -362,7 +363,7 @@ async def get_all_reports(
         )
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="view_reports",
             details={
                 "type_filter": report_type,
@@ -392,7 +393,7 @@ async def get_all_reports(
 @router.get("/alerts")
 async def get_alerts(
     request: Request,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get system alerts for admin dashboard"""
@@ -476,7 +477,7 @@ async def get_alerts(
 async def delete_user(
     request: Request,
     user_id: str,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Delete a user and all associated data"""
@@ -500,7 +501,7 @@ async def delete_user(
         db.commit()
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="delete_user",
             target_user_id=user_id,
             db=db,
@@ -524,7 +525,7 @@ async def reset_user_password(
     request: Request,
     user_id: str,
     request_data: dict,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Reset a user's password"""
@@ -547,7 +548,7 @@ async def reset_user_password(
         db.commit()
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="reset_password",
             target_user_id=user_id,
             db=db,
@@ -571,7 +572,7 @@ async def get_consultation_requests(
     request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Get all consultation requests from users"""
@@ -617,7 +618,7 @@ async def get_consultation_requests(
 async def bulk_update_user_status(
     request: Request,
     request_data: BulkUpdateUserStatusRequest,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Bulk activate/deactivate users"""
@@ -631,7 +632,7 @@ async def bulk_update_user_status(
         db.commit()
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="bulk_update_status",
             details={
                 "user_ids": request_data.user_ids,
@@ -661,7 +662,7 @@ async def bulk_update_user_status(
 async def bulk_delete_users(
     request: Request,
     request_data: BulkDeleteUsersRequest,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
     """Bulk delete users and all associated data"""
@@ -678,7 +679,7 @@ async def bulk_delete_users(
         db.commit()
 
         await log_admin_action(
-            admin_email=current_admin["email"],
+            admin_email=current_admin.email,
             action="bulk_delete_users",
             details={"user_ids": request_data.user_ids, "deleted_count": deleted_count},
             db=db,

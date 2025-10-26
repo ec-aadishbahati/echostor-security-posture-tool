@@ -46,6 +46,20 @@ class UserResponse(UserBase):
         from_attributes = True
 
 
+class CurrentUserResponse(BaseModel):
+    """Unified response model for current user (from get_current_user)"""
+
+    id: str
+    email: EmailStr
+    full_name: str | None = None
+    company_name: str | None = None
+    is_admin: bool
+    is_active: bool = True
+
+    class Config:
+        from_attributes = True
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str

@@ -16,8 +16,8 @@ from sqlalchemy.orm import Session
 from app.api.auth import get_current_admin_user, get_current_user
 from app.core.database import get_db
 from app.models.assessment import Assessment, Report
-from app.models.user import User
 from app.schemas.report import AIReportRequest, ReportResponse
+from app.schemas.user import CurrentUserResponse
 from app.services.report_generator import generate_ai_report, generate_standard_report
 
 router = APIRouter()
@@ -28,7 +28,7 @@ async def generate_report(
     request: Request,
     assessment_id: str,
     background_tasks: BackgroundTasks,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Generate a standard PDF report for a completed assessment"""
@@ -82,7 +82,7 @@ async def request_ai_report(
     request: Request,
     assessment_id: str,
     request_data: AIReportRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Request an AI-enhanced report (admin will generate it)"""
@@ -248,7 +248,7 @@ async def admin_release_ai_report(
 async def download_report(
     request: Request,
     report_id: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Download a completed report"""
@@ -260,16 +260,10 @@ async def download_report(
             status_code=status.HTTP_404_NOT_FOUND, detail="Report not found"
         )
 
-    is_admin = isinstance(current_user, dict) and current_user.get("is_admin")
-    if not is_admin:
-        if isinstance(current_user, dict):
-            user_id = current_user.get("id")
-        else:
-            user_id = getattr(current_user, "id", None)
-        if report.assessment.user_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
-            )
+    if not current_user.is_admin and report.assessment.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
+        )
 
     if (report.status not in ["completed", "released"]) or not report.file_path:
         raise HTTPException(
@@ -293,7 +287,7 @@ async def get_user_reports(
     request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    current_user: User = Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get all reports for the current user with pagination"""
@@ -319,7 +313,7 @@ async def get_user_reports(
 async def get_report_status(
     request: Request,
     report_id: str,
-    current_user=Depends(get_current_user),
+    current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
     """Get the status of a specific report"""
@@ -331,15 +325,9 @@ async def get_report_status(
             status_code=status.HTTP_404_NOT_FOUND, detail="Report not found"
         )
 
-    is_admin = isinstance(current_user, dict) and current_user.get("is_admin")
-    if not is_admin:
-        if isinstance(current_user, dict):
-            user_id = current_user.get("id")
-        else:
-            user_id = getattr(current_user, "id", None)
-        if report.assessment.user_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
-            )
+    if not current_user.is_admin and report.assessment.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
+        )
 
     return ReportResponse.model_validate(report)
