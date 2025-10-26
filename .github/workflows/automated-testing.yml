@@ -238,50 +238,90 @@ jobs:
                                       break
                                   
                                   # Look for radio buttons (yes_no and multiple_choice questions)
-                                  radio_inputs = page.locator('input[type="radio"]')
-                                  radio_count = await radio_inputs.count()
+                                  # Click the label wrapper, not the raw input (inputs are visually hidden)
+                                  radio_labels = page.locator('label:has(input[type="radio"])')
+                                  radio_count = await radio_labels.count()
                                   
                                   if radio_count > 0:
-                                      # Find the first unchecked radio button and click it
+                                      # Find the first unchecked radio button and click its label
                                       for i in range(radio_count):
-                                          radio = radio_inputs.nth(i)
-                                          if not await radio.is_checked():
-                                              await radio.click(timeout=TIMEOUT_ACTION)
-                                              questions_answered += 1
-                                              if questions_answered % 10 == 0:
-                                                  await log(f"Answered {questions_answered} questions")
+                                          label = radio_labels.nth(i)
+                                          radio_input = label.locator('input[type="radio"]')
+                                          if not await radio_input.is_checked():
+                                              # Scroll into view and click the label wrapper
+                                              await label.scroll_into_view_if_needed()
+                                              await label.click(timeout=TIMEOUT_ACTION)
+                                              
+                                              # Verify selection took
+                                              await asyncio.sleep(0.3)
+                                              if await radio_input.is_checked():
+                                                  await log(f"Selected radio option {i+1}/{radio_count}")
+                                              else:
+                                                  await log(f"Warning: Radio selection may not have registered", "WARNING")
                                               break
                                   
                                   # Look for checkboxes (multiple_select questions)
-                                  checkbox_inputs = page.locator('input[type="checkbox"]')
-                                  checkbox_count = await checkbox_inputs.count()
+                                  # Click the label wrapper, not the raw input (inputs are visually hidden)
+                                  checkbox_labels = page.locator('label:has(input[type="checkbox"])')
+                                  checkbox_count = await checkbox_labels.count()
                                   
                                   if checkbox_count > 0:
                                       # Randomly select 1-2 checkboxes
                                       num_to_select = random.randint(1, min(2, checkbox_count))
+                                      selected_count = 0
                                       for _ in range(num_to_select):
                                           idx = random.randint(0, checkbox_count - 1)
-                                          checkbox = checkbox_inputs.nth(idx)
-                                          if not await checkbox.is_checked():
-                                              await checkbox.click(timeout=TIMEOUT_ACTION)
-                                              questions_answered += 1
+                                          label = checkbox_labels.nth(idx)
+                                          checkbox_input = label.locator('input[type="checkbox"]')
+                                          if not await checkbox_input.is_checked():
+                                              # Scroll into view and click the label wrapper
+                                              await label.scroll_into_view_if_needed()
+                                              await label.click(timeout=TIMEOUT_ACTION)
+                                              await asyncio.sleep(0.2)
+                                              selected_count += 1
+                                      if selected_count > 0:
+                                          await log(f"Selected {selected_count} checkbox option(s)")
                                   
-                                  # Click Next button to advance
+                                  # Wait for Next button to be enabled, then click to advance
                                   try:
-                                      next_button = page.get_by_role("button", name="Next")
+                                      next_button = page.locator('[data-testid="next-question-btn"]')
                                       if await next_button.count() > 0:
-                                          await next_button.click(timeout=TIMEOUT_ACTION)
-                                          await asyncio.sleep(0.5)  # Brief pause for UI update
+                                          # Wait for Next button to be enabled (selection must register first)
+                                          try:
+                                              await next_button.wait_for(state="visible", timeout=5000)
+                                              # Wait for button to be enabled (disabled attribute removed)
+                                              for retry in range(10):
+                                                  is_disabled = await next_button.is_disabled()
+                                                  if not is_disabled:
+                                                      break
+                                                  if retry < 9:
+                                                      await asyncio.sleep(0.5)
+                                              
+                                              if is_disabled:
+                                                  await log("Warning: Next button still disabled after selection", "WARNING")
+                                                  await take_screenshot(page, f"next-disabled-{iteration}")
+                                                  # Try clicking anyway as fallback
+                                              
+                                              await next_button.click(timeout=TIMEOUT_ACTION)
+                                              await asyncio.sleep(0.5)  # Brief pause for UI update
+                                              questions_answered += 1
+                                              if questions_answered % 10 == 0:
+                                                  await log(f"Answered {questions_answered} questions")
+                                          except Exception as e:
+                                              await log(f"Error waiting for/clicking Next button: {str(e)}", "WARNING")
+                                              raise
                                       else:
-                                          # Try alternative button texts
-                                          for btn_text in ["Continue", "Save and Continue"]:
-                                              alt_button = page.get_by_role("button", name=btn_text)
-                                              if await alt_button.count() > 0:
-                                                  await alt_button.click(timeout=TIMEOUT_ACTION)
-                                                  await asyncio.sleep(0.5)
-                                                  break
+                                          # Try alternative button selectors
+                                          next_button_alt = page.get_by_role("button", name="Next")
+                                          if await next_button_alt.count() > 0:
+                                              await next_button_alt.click(timeout=TIMEOUT_ACTION)
+                                              await asyncio.sleep(0.5)
+                                              questions_answered += 1
+                                          else:
+                                              await log("Could not find Next button", "WARNING")
+                                              break
                                   except Exception as e:
-                                      await log(f"Could not find Next button: {str(e)}", "WARNING")
+                                      await log(f"Could not advance to next question: {str(e)}", "WARNING")
                                       # May have reached the end
                                       break
                                   
