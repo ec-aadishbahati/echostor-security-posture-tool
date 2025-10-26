@@ -72,6 +72,22 @@ def test_user(db_session):
 
 
 @pytest.fixture
+def test_user2(db_session):
+    user = User(
+        email="testuser2@example.com",
+        full_name="Test User 2",
+        company_name="Test Company 2",
+        password_hash=get_password_hash("TestPass123!"),
+        is_active=True,
+        is_admin=False,
+    )
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    return user
+
+
+@pytest.fixture
 def test_admin_user(db_session):
     admin = User(
         email="admin@example.com",
@@ -91,6 +107,13 @@ def test_admin_user(db_session):
 def auth_token(test_user):
     return create_access_token(
         data={"sub": test_user.email, "user_id": str(test_user.id), "is_admin": False}
+    )
+
+
+@pytest.fixture
+def test_user2_token(test_user2):
+    return create_access_token(
+        data={"sub": test_user2.email, "user_id": str(test_user2.id), "is_admin": False}
     )
 
 
