@@ -123,12 +123,15 @@ jobs:
                           await page.goto(f"{PRODUCTION_URL}/auth/register", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION)
                           await take_screenshot(page, "01-register-page")
 
-                          # Fill registration form with correct labels
-                          await page.get_by_label("Full Name", exact=False).fill(test_full_name)
-                          await page.get_by_label("Email Address", exact=False).fill(test_email)
-                          await page.get_by_label("Company Name", exact=False).fill(test_company)
-                          await page.get_by_label("Password", exact=False).first.fill(test_password)
-                          await page.get_by_label("Confirm Password", exact=False).fill(test_password)
+                          # Fill registration form using robust name selectors
+                          # Wait for form to be ready
+                          await page.locator('input[name="full_name"]').wait_for(state="visible", timeout=TIMEOUT_ACTION)
+                          
+                          await page.locator('input[name="full_name"]').fill(test_full_name)
+                          await page.locator('input[name="email"]').fill(test_email)
+                          await page.locator('input[name="company_name"]').fill(test_company)
+                          await page.locator('input[name="password"]').fill(test_password)
+                          await page.locator('input[name="confirmPassword"]').fill(test_password)
                           
                           await take_screenshot(page, "02-register-filled")
                           
@@ -146,9 +149,12 @@ jobs:
                           await page.goto(f"{PRODUCTION_URL}/auth/login", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION)
                           await take_screenshot(page, "04-login-page")
                           
-                          # Fill login form with correct labels
-                          await page.get_by_label("Email address", exact=False).fill(test_email)
-                          await page.get_by_label("Password", exact=False).fill(test_password)
+                          # Fill login form using robust name selectors
+                          # Wait for form to be ready
+                          await page.locator('input[name="email"]').wait_for(state="visible", timeout=TIMEOUT_ACTION)
+                          
+                          await page.locator('input[name="email"]').fill(test_email)
+                          await page.locator('input[name="password"]').fill(test_password)
                           # Click "Sign in" button
                           login_button = page.locator('button[type="submit"]').first
                           await login_button.click()
