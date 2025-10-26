@@ -824,7 +824,7 @@ export default function AssessmentQuestions() {
                               .split(/\s+/)
                               .filter((word) => word.length > 0).length
                           }
-                          /300 words (10-300 words)
+                          /300 words (200-300 words)
                         </span>
                       </label>
                       <textarea
@@ -839,10 +839,10 @@ export default function AssessmentQuestions() {
                           .trim()
                           .split(/\s+/)
                           .filter((word) => word.length > 0).length;
-                        if (wordCount > 0 && wordCount < 10) {
+                        if (wordCount > 0 && wordCount < 200) {
                           return (
                             <p className="text-orange-600 text-xs mt-1">
-                              Please provide at least 10 words
+                              Please provide at least 200 words
                             </p>
                           );
                         } else if (wordCount > 300) {
@@ -891,11 +891,11 @@ export default function AssessmentQuestions() {
                         completeAssessmentMutation.isLoading ||
                         consultationInterest === null ||
                         (consultationInterest === true &&
-                          consultationDetails.trim() &&
+                          consultationDetails.trim().length > 0 &&
                           (consultationDetails
                             .trim()
                             .split(/\s+/)
-                            .filter((word) => word.length > 0).length < 10 ||
+                            .filter((word) => word.length > 0).length < 200 ||
                             consultationDetails
                               .trim()
                               .split(/\s+/)

@@ -66,8 +66,16 @@ jobs:
           Our budget for this engagement is flexible, and we are looking for a partner who can provide both strategic 
           guidance and hands-on implementation support. We would appreciate a detailed proposal outlining your approach, 
           timeline, and pricing structure. We are particularly interested in understanding how you would help us mature 
-          our security operations and establish measurable security metrics. Please contact us at your earliest convenience 
-          to discuss our requirements in detail and schedule an initial consultation meeting.
+          our security operations and establish measurable security metrics.
+          
+          We are also looking to improve our data loss prevention capabilities and implement advanced threat detection 
+          mechanisms. Our team needs assistance with security architecture reviews and developing a comprehensive disaster 
+          recovery plan. We want to ensure our security controls are aligned with industry best practices and that we have 
+          proper monitoring and alerting systems in place. Furthermore, we need help establishing a security governance 
+          framework and defining clear security policies and procedures for our organization.
+          
+          Please contact us at your earliest convenience to discuss our requirements in detail and schedule an initial 
+          consultation meeting.
           """
 
           async def log(message, level="INFO"):
