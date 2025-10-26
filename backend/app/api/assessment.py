@@ -144,9 +144,9 @@ async def get_latest_assessment(
     )
 
     if in_progress_assessment:
-        if in_progress_assessment.expires_at and datetime.now(UTC) > in_progress_assessment.expires_at.replace(
-            tzinfo=UTC
-        ):
+        if in_progress_assessment.expires_at and datetime.now(
+            UTC
+        ) > in_progress_assessment.expires_at.replace(tzinfo=UTC):
             in_progress_assessment.status = "expired"
             db.commit()
         else:
