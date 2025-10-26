@@ -346,29 +346,74 @@ jobs:
                           # Step 5: Fill consultation details
                           await log("Step 5: Filling consultation details...")
                           try:
-                              # Look for consultation interest radio buttons
-                              yes_radio = page.get_by_label("Yes", exact=False).first
-                              if await yes_radio.count() > 0:
-                                  await yes_radio.click(timeout=TIMEOUT_ACTION)
-                                  await log("Selected 'Yes' for consultation interest")
-                                  await asyncio.sleep(1)
+                              # Use robust selectors with name/value attributes (not get_by_label which matches many "Yes" on page)
+                              yes_radio = page.locator('input[name="consultation"][value="yes"]').first
+                              no_radio = page.locator('input[name="consultation"][value="no"]').first
+                              
+                              # Attempt 1: Use input.check() (most reliable for React forms)
+                              try:
+                                  await yes_radio.check(timeout=TIMEOUT_ACTION)
+                                  await log("Checked consultation 'Yes' via input.check()")
+                              except Exception as e:
+                                  await log(f"check() failed: {str(e)}", "WARNING")
+                                  
+                                  # Attempt 2: Keyboard approach (focus + Space + blur)
+                                  try:
+                                      await yes_radio.focus()
+                                      await page.keyboard.press("Space")
+                                      await yes_radio.blur()
+                                      await log("Checked consultation 'Yes' via keyboard Space")
+                                  except Exception as e2:
+                                      await log(f"keyboard fallback failed: {str(e2)}", "WARNING")
+                                      
+                                      # Attempt 3: JavaScript dispatch (last resort)
+                                      await page.evaluate("""
+                                          (sel) => {
+                                              const el = document.querySelector(sel);
+                                              if (!el) return;
+                                              el.checked = true;
+                                              el.dispatchEvent(new Event('input', { bubbles: true }));
+                                              el.dispatchEvent(new Event('change', { bubbles: true }));
+                                          }
+                                      """, 'input[name="consultation"][value="yes"]')
+                                      await log("Checked consultation 'Yes' via JS dispatch")
+                              
+                              await asyncio.sleep(1)
+                              
+                              # CRITICAL: Verify the selection registered
+                              yes_checked = await yes_radio.is_checked()
+                              no_checked = await no_radio.is_checked()
+                              await log(f"Consultation radio states: yes_checked={yes_checked}, no_checked={no_checked}")
+                              
+                              if not yes_checked:
+                                  await take_screenshot(page, "09-consultation-yes-not-checked")
+                                  raise AssertionError("Consultation 'Yes' radio did not register selection")
+                              
+                              # Wait for consultation textarea to appear (it only shows when "Yes" is selected)
+                              await log("Waiting for consultation textarea to appear...")
+                              try:
+                                  await page.wait_for_selector('textarea', state='visible', timeout=10000)
+                                  await log("✓ Consultation textarea is visible")
+                              except Exception as e:
+                                  await take_screenshot(page, "09-textarea-not-visible")
+                                  raise AssertionError(f"Consultation textarea did not appear after selecting 'Yes': {str(e)}")
                               
                               # Fill consultation details textarea
-                              textarea = page.locator('textarea')
-                              if await textarea.count() > 0:
-                                  await textarea.first.fill(consultation_text, timeout=TIMEOUT_ACTION)
-                                  word_count = len(consultation_text.split())
-                                  await log(f"Filled consultation details ({word_count} words)")
-                                  
-                                  # CRITICAL: Blur the textarea to trigger validation
-                                  await textarea.first.blur()
-                                  await log("Blurred textarea to trigger validation")
-                                  await asyncio.sleep(1)
+                              textarea = page.locator('textarea').first
+                              await textarea.fill(consultation_text, timeout=TIMEOUT_ACTION)
+                              word_count = len(consultation_text.split())
+                              await log(f"Filled consultation details ({word_count} words)")
+                              
+                              # CRITICAL: Blur the textarea to trigger validation
+                              await textarea.blur()
+                              await log("Blurred textarea to trigger validation")
+                              await asyncio.sleep(1)
                               
                               await take_screenshot(page, "09-consultation-filled")
                           except Exception as e:
-                              await log(f"Could not fill consultation details: {str(e)}", "WARNING")
+                              await log(f"Could not fill consultation details: {str(e)}", "ERROR")
                               await take_screenshot(page, "09-consultation-error")
+                              raise
 
                           # Step 6: Complete assessment
                           await log("Step 6: Completing assessment...")
