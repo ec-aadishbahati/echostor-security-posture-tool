@@ -123,14 +123,16 @@ jobs:
                           await page.goto(f"{PRODUCTION_URL}/auth/register", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION)
                           await take_screenshot(page, "01-register-page")
 
-                          await page.get_by_label("Email", exact=False).fill(test_email)
-                          await page.get_by_label("Password", exact=False).fill(test_password)
+                          # Fill registration form with correct labels
                           await page.get_by_label("Full Name", exact=False).fill(test_full_name)
+                          await page.get_by_label("Email Address", exact=False).fill(test_email)
                           await page.get_by_label("Company Name", exact=False).fill(test_company)
+                          await page.get_by_label("Password", exact=False).first.fill(test_password)
+                          await page.get_by_label("Confirm Password", exact=False).fill(test_password)
                           
                           await take_screenshot(page, "02-register-filled")
                           
-                          # Click "Create account" button (case-insensitive)
+                          # Click "Create account" button
                           register_button = page.locator('button[type="submit"]').first
                           await register_button.click()
                           await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
@@ -144,9 +146,10 @@ jobs:
                           await page.goto(f"{PRODUCTION_URL}/auth/login", wait_until="networkidle", timeout=TIMEOUT_NAVIGATION)
                           await take_screenshot(page, "04-login-page")
                           
-                          await page.get_by_label("Email", exact=False).fill(test_email)
+                          # Fill login form with correct labels
+                          await page.get_by_label("Email address", exact=False).fill(test_email)
                           await page.get_by_label("Password", exact=False).fill(test_password)
-                          # Click "Sign in" button (case-insensitive)
+                          # Click "Sign in" button
                           login_button = page.locator('button[type="submit"]').first
                           await login_button.click()
                           await page.wait_for_load_state("networkidle", timeout=TIMEOUT_NAVIGATION)
