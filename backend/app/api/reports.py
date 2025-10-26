@@ -173,6 +173,44 @@ async def admin_generate_ai_report(
     return ReportResponse.model_validate(report)
 
 
+@router.post("/admin/{report_id}/retry-standard", response_model=ReportResponse)
+async def admin_retry_standard_report(
+    request: Request,
+    report_id: str,
+    background_tasks: BackgroundTasks,
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    """Admin endpoint to retry generating a failed standard report"""
+
+    report = (
+        db.query(Report)
+        .filter(
+            and_(
+                Report.id == report_id,
+                Report.report_type == "standard",
+                Report.status == "failed",
+            )
+        )
+        .first()
+    )
+
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Report not found or not in failed status",
+        )
+
+    report.status = "generating"
+    report.file_path = None
+    report.completed_at = None
+    db.commit()
+
+    background_tasks.add_task(generate_standard_report, str(report.id))
+
+    return ReportResponse.model_validate(report)
+
+
 @router.post("/admin/{report_id}/release")
 async def admin_release_ai_report(
     request: Request,

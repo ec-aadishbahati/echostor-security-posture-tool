@@ -57,15 +57,23 @@ async def generate_standard_report(report_id: str):
 
         logger.info("Generating HTML content")
         html_content = generate_report_html(assessment, responses, scores, structure)
+        logger.info(f"HTML content generated successfully ({len(html_content)} bytes)")
 
         filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
         file_path = os.path.join(settings.REPORTS_DIR, filename)
 
+        logger.info(f"REPORTS_DIR configured as: {settings.REPORTS_DIR}")
         logger.info(f"Creating reports directory: {settings.REPORTS_DIR}")
         os.makedirs(settings.REPORTS_DIR, exist_ok=True)
+        logger.info(f"Reports directory created/verified successfully")
 
         logger.info(f"Generating PDF at: {file_path}")
-        HTML(string=html_content).write_pdf(file_path)
+        try:
+            HTML(string=html_content).write_pdf(file_path)
+            logger.info(f"WeasyPrint PDF generation completed")
+        except Exception as pdf_error:
+            logger.error(f"WeasyPrint PDF generation failed: {str(pdf_error)}", exc_info=True)
+            raise
 
         if not os.path.exists(file_path):
             raise Exception(f"PDF file was not created at {file_path}")
