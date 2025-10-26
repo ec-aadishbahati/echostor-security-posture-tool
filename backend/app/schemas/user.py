@@ -48,6 +48,7 @@ class UserResponse(UserBase):
 
 class CurrentUserResponse(BaseModel):
     """Unified response model for current user (from get_current_user)"""
+
     id: str
     email: EmailStr
     full_name: str | None = None
