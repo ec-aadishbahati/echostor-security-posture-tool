@@ -250,7 +250,8 @@ def test_user_reports_ordered_by_requested_at(
     client: TestClient, auth_token, completed_assessment, db_session
 ):
     """Test that user reports are returned in descending order by requested_at."""
-    from datetime import datetime, timedelta, UTC
+    from datetime import UTC, datetime, timedelta
+
     from app.models.assessment import Report
 
     base_time = datetime.now(UTC)
