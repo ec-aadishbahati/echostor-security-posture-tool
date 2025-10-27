@@ -247,17 +247,24 @@ async def save_assessment_progress(
             status_code=status.HTTP_410_GONE, detail="Assessment has expired"
         )
 
-    for response_data in progress_data.responses:
-        existing_response = (
-            db.query(AssessmentResponseModel)
-            .filter(
-                and_(
-                    AssessmentResponseModel.assessment_id == assessment_id,
-                    AssessmentResponseModel.question_id == response_data.question_id,
-                )
+    question_ids = [r.question_id for r in progress_data.responses]
+    existing_responses = (
+        db.query(AssessmentResponseModel)
+        .filter(
+            and_(
+                AssessmentResponseModel.assessment_id == assessment_id,
+                AssessmentResponseModel.question_id.in_(question_ids),
             )
-            .first()
         )
+        .all()
+    )
+
+    existing_by_question = {r.question_id: r for r in existing_responses}
+
+    new_responses_count = 0
+
+    for response_data in progress_data.responses:
+        existing_response = existing_by_question.get(response_data.question_id)
 
         if existing_response:
             existing_response.answer_value = response_data.answer_value
@@ -272,14 +279,20 @@ async def save_assessment_progress(
                 comment=response_data.comment,
             )
             db.add(new_response)
+            new_responses_count += 1
 
     assessment.last_saved_at = datetime.now(UTC)
 
-    total_responses = (
-        db.query(AssessmentResponseModel)
-        .filter(AssessmentResponseModel.assessment_id == assessment_id)
-        .count()
-    )
+    # Optimize progress calculation: only count if we added new responses
+    # Otherwise, use the existing count + new responses
+    if new_responses_count > 0:
+        total_responses = (
+            db.query(AssessmentResponseModel)
+            .filter(AssessmentResponseModel.assessment_id == assessment_id)
+            .count()
+        )
+    else:
+        total_responses = len(existing_responses)
 
     structure = load_assessment_structure_cached()
     total_questions = structure.total_questions
