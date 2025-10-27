@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.api.auth import get_current_user
 from app.core.config import settings
 from app.core.database import get_db
+from app.middleware.rate_limit import limiter
 from app.models.assessment import Assessment, Report
 from app.models.assessment import AssessmentResponse as AssessmentResponseModel
 from app.models.user import User
@@ -209,6 +210,7 @@ async def get_assessment_responses(
 
 
 @router.post("/{assessment_id}/save-progress")
+@limiter.exempt
 async def save_assessment_progress(
     request: Request,
     assessment_id: str,
