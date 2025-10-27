@@ -80,7 +80,8 @@ async def generate_report(
             db.query(Report)
             .filter(
                 and_(
-                    Report.assessment_id == assessment_id, Report.report_type == "standard"
+                    Report.assessment_id == assessment_id,
+                    Report.report_type == "standard",
                 )
             )
             .first()

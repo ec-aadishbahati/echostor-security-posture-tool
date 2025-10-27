@@ -144,7 +144,8 @@ export const adminAPI = {
   getUsersProgressSummary: () => api.get('/api/admin/users-progress-summary'),
   generateAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/generate-ai`),
   releaseAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/release`),
-  retryStandardReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/retry-standard`),
+  retryStandardReport: (reportId: string) =>
+    api.post(`/api/reports/admin/${reportId}/retry-standard`),
   deleteUser: (userId: string) => api.delete(`/api/admin/users/${userId}`),
   resetUserPassword: (userId: string, newPassword: string) =>
     api.post(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),
