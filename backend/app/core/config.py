@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     REDIS_URL: str | None = None
     RATE_LIMIT_ENABLED: bool = True
 
+    STORAGE_BACKEND: str = "local"
+    S3_BUCKET: str | None = None
+    S3_REGION: str = "us-east-1"
+    AWS_ACCESS_KEY_ID: str | None = None
+    AWS_SECRET_ACCESS_KEY: str | None = None
+    S3_ENDPOINT_URL: str | None = None
+
     SENTRY_DSN: str | None = None
     SENTRY_ENVIRONMENT: str = "development"
     SENTRY_TRACES_SAMPLE_RATE: float = 1.0

@@ -17,14 +17,19 @@ from sqlalchemy.orm import Session, joinedload
 from app.api.auth import get_current_admin_user, get_current_user
 from app.core.database import get_db
 from app.models.assessment import Assessment, Report
-from app.schemas.report import AIReportRequest, ReportResponse
+from app.schemas.report import (
+    AIReportRequest,
+    AdminReportResponse,
+    ReportResponse,
+    UserReportResponse,
+)
 from app.schemas.user import CurrentUserResponse
 from app.services.report_generator import generate_ai_report, generate_standard_report
 
 router = APIRouter()
 
 
-@router.post("/{assessment_id}/generate", response_model=ReportResponse)
+@router.post("/{assessment_id}/generate", response_model=UserReportResponse)
 async def generate_report(
     request: Request,
     assessment_id: str,
@@ -63,7 +68,7 @@ async def generate_report(
     )
 
     if existing_report:
-        return ReportResponse.model_validate(existing_report)
+        return UserReportResponse.model_validate(existing_report)
 
     report = Report(
         assessment_id=assessment_id, report_type="standard", status="generating"
@@ -87,10 +92,10 @@ async def generate_report(
             .first()
         )
         if existing_report:
-            return ReportResponse.model_validate(existing_report)
+            return UserReportResponse.model_validate(existing_report)
         raise
 
-    return ReportResponse.model_validate(report)
+    return UserReportResponse.model_validate(report)
 
 
 @router.post("/{assessment_id}/request-ai-report")
@@ -173,7 +178,7 @@ async def request_ai_report(
     }
 
 
-@router.post("/admin/{report_id}/generate-ai", response_model=ReportResponse)
+@router.post("/admin/{report_id}/generate-ai", response_model=AdminReportResponse)
 async def admin_generate_ai_report(
     request: Request,
     report_id: str,
@@ -206,10 +211,10 @@ async def admin_generate_ai_report(
 
     background_tasks.add_task(generate_ai_report, str(report.id))
 
-    return ReportResponse.model_validate(report)
+    return AdminReportResponse.model_validate(report)
 
 
-@router.post("/admin/{report_id}/retry-standard", response_model=ReportResponse)
+@router.post("/admin/{report_id}/retry-standard", response_model=AdminReportResponse)
 async def admin_retry_standard_report(
     request: Request,
     report_id: str,
@@ -244,7 +249,7 @@ async def admin_retry_standard_report(
 
     background_tasks.add_task(generate_standard_report, str(report.id))
 
-    return ReportResponse.model_validate(report)
+    return AdminReportResponse.model_validate(report)
 
 
 @router.post("/admin/{report_id}/release")
@@ -278,6 +283,61 @@ async def admin_release_ai_report(
     db.commit()
 
     return {"message": "AI report released to user", "report_id": report_id}
+
+
+@router.post("/admin/release-bulk")
+async def admin_bulk_release_ai_reports(
+    request: Request,
+    report_ids: list[str],
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    """Admin endpoint to bulk release multiple AI-enhanced reports"""
+
+    if not report_ids:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No report IDs provided",
+        )
+
+    reports = (
+        db.query(Report)
+        .filter(
+            and_(
+                Report.id.in_(report_ids),
+                Report.report_type == "ai_enhanced",
+                Report.status == "completed",
+            )
+        )
+        .all()
+    )
+
+    if not reports:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No reports found ready for release",
+        )
+
+    released_count = 0
+    released_ids = []
+    skipped_ids = []
+
+    for report in reports:
+        if report.status == "completed":
+            report.status = "released"
+            released_count += 1
+            released_ids.append(str(report.id))
+        else:
+            skipped_ids.append(str(report.id))
+
+    db.commit()
+
+    return {
+        "message": f"Released {released_count} AI reports",
+        "released_count": released_count,
+        "released_ids": released_ids,
+        "skipped_ids": skipped_ids,
+    }
 
 
 @router.get("/{report_id}/download")
@@ -341,14 +401,14 @@ async def get_user_reports(
     from app.utils.pagination import paginate
 
     return paginate(
-        items=[ReportResponse.model_validate(report) for report in reports],
+        items=[UserReportResponse.model_validate(report) for report in reports],
         total=total,
         skip=skip,
         limit=limit,
     )
 
 
-@router.get("/{report_id}/status", response_model=ReportResponse)
+@router.get("/{report_id}/status", response_model=UserReportResponse)
 async def get_report_status(
     request: Request,
     report_id: str,
@@ -369,4 +429,4 @@ async def get_report_status(
             status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
         )
 
-    return ReportResponse.model_validate(report)
+    return UserReportResponse.model_validate(report)
