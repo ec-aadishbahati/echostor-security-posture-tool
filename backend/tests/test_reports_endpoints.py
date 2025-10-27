@@ -510,9 +510,7 @@ def test_reports_admin_overview_flow(
     assert users_response.status_code == 200
     assert users_response.json()["total"] >= 1
 
-    user_detail = client.get(
-        f"/api/admin/users/{test_user.id}", headers=headers
-    )
+    user_detail = client.get(f"/api/admin/users/{test_user.id}", headers=headers)
     assert user_detail.status_code == 200
     assert user_detail.json()["email"] == test_user.email
 
@@ -540,17 +538,13 @@ def test_reports_admin_overview_flow(
     assert alerts_response.status_code == 200
     assert "alerts" in alerts_response.json()
 
-    progress_summary = client.get(
-        "/api/admin/users-progress-summary", headers=headers
-    )
+    progress_summary = client.get("/api/admin/users-progress-summary", headers=headers)
     assert progress_summary.status_code == 200
 
     consultations = client.get("/api/admin/consultations", headers=headers)
     assert consultations.status_code == 200
 
-    filtered_reports = client.get(
-        "/api/admin/reports?status=pending", headers=headers
-    )
+    filtered_reports = client.get("/api/admin/reports?status=pending", headers=headers)
     assert filtered_reports.status_code == 200
 
     password_reset = client.post(
@@ -585,14 +579,10 @@ def test_reports_user_health_flow(
 
     headers = {"Authorization": f"Bearer {auth_token}"}
 
-    structure_response = client.get(
-        "/api/assessment/structure", headers=headers
-    )
+    structure_response = client.get("/api/assessment/structure", headers=headers)
     assert structure_response.status_code == 200
 
-    current_assessment = client.get(
-        "/api/assessment/current", headers=headers
-    )
+    current_assessment = client.get("/api/assessment/current", headers=headers)
     assert current_assessment.status_code in (200, 404)
 
     responses_response = client.get(
