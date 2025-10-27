@@ -438,3 +438,180 @@ def test_admin_retry_standard_report_includes_file_path(
         assert "file_path" in data
         assert "id" in data
         assert "status" in data
+
+
+def test_reports_admin_overview_flow(
+    client: TestClient,
+    admin_token,
+    test_user,
+    completed_assessment,
+    db_session,
+):
+    """Exercise key admin overview endpoints to guard the reporting workflow."""
+
+    from datetime import UTC, datetime, timedelta
+
+    from app.models.assessment import Assessment, Report
+    from app.models.user import User
+
+    headers = {"Authorization": f"Bearer {admin_token}"}
+
+    stale_assessment = Assessment(
+        user_id=test_user.id,
+        status="in_progress",
+        started_at=datetime.now(UTC) - timedelta(days=10),
+        last_saved_at=datetime.now(UTC) - timedelta(days=8),
+        expires_at=datetime.now(UTC) + timedelta(hours=12),
+        progress_percentage=42.0,
+    )
+
+    pending_ai_report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="ai_enhanced",
+        status="pending",
+    )
+
+    completed_report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="standard",
+        status="completed",
+        file_path="/tmp/report.pdf",
+    )
+
+    consultation_assessment = Assessment(
+        user_id=test_user.id,
+        status="completed",
+        consultation_interest=True,
+        consultation_details="Need follow-up",
+        started_at=datetime.now(UTC) - timedelta(days=2),
+        completed_at=datetime.now(UTC) - timedelta(days=1),
+    )
+
+    extra_user = User(
+        email="report-temp@example.com",
+        full_name="Report Temp",
+        company_name="Coverage Inc",
+        password_hash=test_user.password_hash,
+        is_active=True,
+    )
+
+    db_session.add_all(
+        [
+            stale_assessment,
+            pending_ai_report,
+            completed_report,
+            consultation_assessment,
+            extra_user,
+        ]
+    )
+    db_session.commit()
+
+    users_response = client.get("/api/admin/users", headers=headers)
+    assert users_response.status_code == 200
+    assert users_response.json()["total"] >= 1
+
+    user_detail = client.get(
+        f"/api/admin/users/{test_user.id}", headers=headers
+    )
+    assert user_detail.status_code == 200
+    assert user_detail.json()["email"] == test_user.email
+
+    assessments_response = client.get(
+        f"/api/admin/users/{test_user.id}/assessments", headers=headers
+    )
+    assert assessments_response.status_code == 200
+    assert isinstance(assessments_response.json(), list)
+
+    all_assessments = client.get("/api/admin/assessments", headers=headers)
+    assert all_assessments.status_code == 200
+    assert all_assessments.json()["total"] >= 1
+
+    reports_response = client.get("/api/admin/reports", headers=headers)
+    assert reports_response.status_code == 200
+    assert reports_response.json()["total"] >= 1
+
+    dashboard_stats = client.get("/api/admin/dashboard/stats", headers=headers)
+    assert dashboard_stats.status_code == 200
+    stats_payload = dashboard_stats.json()
+    assert "active_assessments" in stats_payload
+    assert "average_completion_hours" in stats_payload
+
+    alerts_response = client.get("/api/admin/alerts", headers=headers)
+    assert alerts_response.status_code == 200
+    assert "alerts" in alerts_response.json()
+
+    progress_summary = client.get(
+        "/api/admin/users-progress-summary", headers=headers
+    )
+    assert progress_summary.status_code == 200
+
+    consultations = client.get("/api/admin/consultations", headers=headers)
+    assert consultations.status_code == 200
+
+    filtered_reports = client.get(
+        "/api/admin/reports?status=pending", headers=headers
+    )
+    assert filtered_reports.status_code == 200
+
+    password_reset = client.post(
+        f"/api/admin/users/{test_user.id}/reset-password",
+        headers=headers,
+        json={"new_password": "ResetPass123!"},
+    )
+    assert password_reset.status_code == 200
+
+    bulk_update = client.post(
+        "/api/admin/users/bulk-update-status",
+        headers=headers,
+        json={"user_ids": [str(test_user.id)], "is_active": True},
+    )
+    assert bulk_update.status_code == 200
+
+    bulk_delete = client.post(
+        "/api/admin/users/bulk-delete",
+        headers=headers,
+        json={"user_ids": [str(extra_user.id)]},
+    )
+    assert bulk_delete.status_code == 200
+
+
+def test_reports_user_health_flow(
+    client: TestClient,
+    auth_token,
+    test_assessment,
+    test_assessment_response,
+):
+    """Run user, auth, and health endpoints to maintain coverage for report pipelines."""
+
+    headers = {"Authorization": f"Bearer {auth_token}"}
+
+    structure_response = client.get(
+        "/api/assessment/structure", headers=headers
+    )
+    assert structure_response.status_code == 200
+
+    current_assessment = client.get(
+        "/api/assessment/current", headers=headers
+    )
+    assert current_assessment.status_code in (200, 404)
+
+    responses_response = client.get(
+        f"/api/assessment/{test_assessment.id}/responses", headers=headers
+    )
+    assert responses_response.status_code == 200
+
+    user_info = client.get("/api/auth/me", headers=headers)
+    assert user_info.status_code == 200
+    assert user_info.json()["email"]
+
+    root_response = client.get("/")
+    assert root_response.status_code == 200
+
+    health_response = client.get("/health")
+    assert health_response.status_code in (200, 503)
+
+    liveness_response = client.get("/health/live")
+    assert liveness_response.status_code == 200
+
+    readiness_response = client.get("/health/ready")
+    assert readiness_response.status_code in (200, 503)
