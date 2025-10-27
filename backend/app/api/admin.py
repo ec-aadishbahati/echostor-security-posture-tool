@@ -346,7 +346,12 @@ async def get_all_reports(
     """Get all reports with filtering"""
 
     try:
-        query = db.query(Report).join(Assessment).join(User)
+        query = (
+            db.query(Report)
+            .join(Assessment)
+            .join(User)
+            .options(joinedload(Report.assessment).joinedload(Assessment.user))
+        )
 
         if report_type:
             query = query.filter(Report.report_type == report_type)

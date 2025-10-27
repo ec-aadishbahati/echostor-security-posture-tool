@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
 from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_user
@@ -351,10 +352,22 @@ async def complete_assessment(
         )
 
         db.add(report)
-        db.commit()
-        db.refresh(report)
-
-        background_tasks.add_task(generate_standard_report, str(report.id))
+        try:
+            db.commit()
+            db.refresh(report)
+            background_tasks.add_task(generate_standard_report, str(report.id))
+        except IntegrityError:
+            db.rollback()
+            existing_report = (
+                db.query(Report)
+                .filter(
+                    and_(
+                        Report.assessment_id == assessment_id,
+                        Report.report_type == "standard",
+                    )
+                )
+                .first()
+            )
 
     return {
         "message": "Assessment completed successfully. Your report is being generated."

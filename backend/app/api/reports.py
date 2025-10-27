@@ -10,8 +10,9 @@ from fastapi import (
     status,
 )
 from fastapi.responses import FileResponse
-from sqlalchemy import and_
-from sqlalchemy.orm import Session
+from sqlalchemy import and_, desc
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import Session, joinedload
 
 from app.api.auth import get_current_admin_user, get_current_user
 from app.core.database import get_db
@@ -69,10 +70,25 @@ async def generate_report(
     )
 
     db.add(report)
-    db.commit()
-    db.refresh(report)
-
-    background_tasks.add_task(generate_standard_report, str(report.id))
+    try:
+        db.commit()
+        db.refresh(report)
+        background_tasks.add_task(generate_standard_report, str(report.id))
+    except IntegrityError:
+        db.rollback()
+        existing_report = (
+            db.query(Report)
+            .filter(
+                and_(
+                    Report.assessment_id == assessment_id,
+                    Report.report_type == "standard",
+                )
+            )
+            .first()
+        )
+        if existing_report:
+            return ReportResponse.model_validate(existing_report)
+        raise
 
     return ReportResponse.model_validate(report)
 
@@ -128,7 +144,27 @@ async def request_ai_report(
     )
 
     db.add(report)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        existing_report = (
+            db.query(Report)
+            .filter(
+                and_(
+                    Report.assessment_id == assessment_id,
+                    Report.report_type == "ai_enhanced",
+                )
+            )
+            .first()
+        )
+        if existing_report:
+            return {
+                "message": "AI report already requested",
+                "status": existing_report.status,
+                "estimated_delivery": "3-5 business days",
+            }
+        raise
 
     return {
         "message": "AI report requested successfully",
@@ -293,11 +329,14 @@ async def get_user_reports(
     """Get all reports for the current user with pagination"""
 
     query = (
-        db.query(Report).join(Assessment).filter(Assessment.user_id == current_user.id)
+        db.query(Report)
+        .join(Assessment)
+        .filter(Assessment.user_id == current_user.id)
+        .options(joinedload(Report.assessment).joinedload(Assessment.user))
     )
 
     total = query.count()
-    reports = query.offset(skip).limit(limit).all()
+    reports = query.order_by(desc(Report.requested_at)).offset(skip).limit(limit).all()
 
     from app.utils.pagination import paginate
 
