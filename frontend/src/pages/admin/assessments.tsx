@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import ErrorBoundary from '../../components/ErrorBoundary';
-import { adminAPI, assessmentAPI } from '../../lib/api';
+import { adminAPI } from '../../lib/api';
 import {
   DocumentTextIcon,
   ChevronLeftIcon,
@@ -36,8 +36,6 @@ export default function AdminAssessments() {
       refetchInterval: 30000,
     }
   );
-
-  const { data: structure } = useQuery('assessmentStructure', assessmentAPI.getStructure);
 
   const assessments = assessmentsData?.data?.items || [];
   const pagination = assessmentsData?.data;
@@ -80,10 +78,8 @@ export default function AdminAssessments() {
     }
   };
 
-  const calculateProgress = (responses: any[]) => {
-    if (!responses || responses.length === 0) return 0;
-    const totalQuestions = structure?.data?.total_questions || 409;
-    return Math.round((responses.length / totalQuestions) * 100);
+  const getProgress = (progressPercentage: number) => {
+    return Math.round(progressPercentage || 0);
   };
 
   return (
@@ -210,17 +206,19 @@ export default function AdminAssessments() {
                               <div className="w-24 bg-gray-200 rounded-full h-2">
                                 <div
                                   className="bg-primary-600 h-2 rounded-full"
-                                  style={{ width: `${calculateProgress(assessment.responses)}%` }}
+                                  style={{
+                                    width: `${getProgress(assessment.progress_percentage)}%`,
+                                  }}
                                 ></div>
                               </div>
                               <span className="text-sm text-gray-600">
-                                {calculateProgress(assessment.responses)}%
+                                {getProgress(assessment.progress_percentage)}%
                               </span>
                             </div>
                           </td>
                           <td className="py-4 px-4">
                             <span className="text-gray-600">
-                              {formatDate(assessment.created_at)}
+                              {formatDate(assessment.started_at)}
                             </span>
                           </td>
                           <td className="py-4 px-4">
