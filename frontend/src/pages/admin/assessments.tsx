@@ -206,7 +206,9 @@ export default function AdminAssessments() {
                               <div className="w-24 bg-gray-200 rounded-full h-2">
                                 <div
                                   className="bg-primary-600 h-2 rounded-full"
-                                  style={{ width: `${getProgress(assessment.progress_percentage)}%` }}
+                                  style={{
+                                    width: `${getProgress(assessment.progress_percentage)}%`,
+                                  }}
                                 ></div>
                               </div>
                               <span className="text-sm text-gray-600">
