@@ -111,8 +111,7 @@ async def test_generate_ai_insights():
         assert isinstance(insights, dict)
 
 
-@pytest.mark.asyncio
-async def test_generate_standard_report(
+def test_generate_standard_report(
     db_session, test_report, completed_assessment, test_assessment_response
 ):
     from app.services.report_generator import generate_standard_report
@@ -130,7 +129,7 @@ async def test_generate_standard_report(
             mock_storage.exists.return_value = True
             mock_storage_factory.return_value = mock_storage
 
-            await generate_standard_report(str(test_report.id))
+            generate_standard_report(str(test_report.id))
 
             mock_storage.save.assert_called_once()
 

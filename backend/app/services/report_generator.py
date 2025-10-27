@@ -21,7 +21,7 @@ if settings.OPENAI_API_KEY:
     openai.api_key = settings.OPENAI_API_KEY
 
 
-async def generate_standard_report(report_id: str):
+def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
 
     db = SessionLocal()
