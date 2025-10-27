@@ -1,5 +1,3 @@
-import os
-
 from fastapi import (
     APIRouter,
     BackgroundTasks,
@@ -9,10 +7,11 @@ from fastapi import (
     Request,
     status,
 )
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 from sqlalchemy import and_, desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
+from starlette.background import BackgroundTask
 
 from app.api.auth import get_current_admin_user, get_current_user
 from app.core.database import get_db
@@ -24,6 +23,7 @@ from app.schemas.report import (
 )
 from app.schemas.user import CurrentUserResponse
 from app.services.report_generator import generate_ai_report, generate_standard_report
+from app.services.storage import get_storage_service
 
 router = APIRouter()
 
@@ -366,14 +366,38 @@ async def download_report(
             detail="Report not ready for download",
         )
 
-    if not os.path.exists(report.file_path):
+    filename = f"security_assessment_report_{report.report_type}_{report_id}.pdf"
+    storage_service = get_storage_service()
+
+    if not storage_service.exists(report.file_path):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Report file not found"
         )
 
-    filename = f"security_assessment_report_{report.report_type}_{report_id}.pdf"
-    return FileResponse(
-        path=report.file_path, filename=filename, media_type="application/pdf"
+    try:
+        file_handle = storage_service.open(report.file_path)
+    except FileNotFoundError:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Report file not found"
+        )
+
+    if hasattr(file_handle, "seek"):
+        file_handle.seek(0)
+
+    headers = {
+        "Content-Disposition": f'attachment; filename="{filename}"',
+        "Content-Type": "application/pdf",
+    }
+
+    background = None
+    if hasattr(file_handle, "close"):
+        background = BackgroundTask(file_handle.close)
+
+    return StreamingResponse(
+        file_handle,
+        media_type="application/pdf",
+        headers=headers,
+        background=background,
     )
 
 

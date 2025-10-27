@@ -117,15 +117,24 @@ async def test_generate_standard_report(
 ):
     from app.services.report_generator import generate_standard_report
 
-    with patch("weasyprint.HTML") as mock_html_class:
+    with patch("app.services.report_generator.HTML") as mock_html_class:
         mock_html_instance = MagicMock()
         mock_html_class.return_value = mock_html_instance
-        mock_html_instance.write_pdf = MagicMock()
+        mock_html_instance.write_pdf = MagicMock(return_value=b"pdf-bytes")
 
-        with patch("builtins.open", MagicMock()):
+        with patch(
+            "app.services.report_generator.get_storage_service"
+        ) as mock_storage_factory:
+            mock_storage = MagicMock()
+            mock_storage.save.return_value = "/tmp/report.pdf"
+            mock_storage.exists.return_value = True
+            mock_storage_factory.return_value = mock_storage
+
             await generate_standard_report(str(test_report.id))
 
-        db_session.refresh(test_report)
+            mock_storage.save.assert_called_once()
+
+    db_session.refresh(test_report)
 
 
 @pytest.mark.asyncio
@@ -133,6 +142,7 @@ async def test_generate_ai_report(
     db_session, completed_assessment, test_assessment_response
 ):
     from app.models.assessment import Report
+    from app.services import report_generator as report_generator_module
     from app.services.report_generator import generate_ai_report
 
     ai_report = Report(
@@ -144,19 +154,29 @@ async def test_generate_ai_report(
     db_session.commit()
     db_session.refresh(ai_report)
 
-    with patch("openai.ChatCompletion.acreate") as mock_openai:
-        mock_response = MagicMock()
-        mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = "AI insights"
-        mock_openai.return_value = mock_response
+    with patch.object(report_generator_module.settings, "OPENAI_API_KEY", "test-key"):
+        with patch("openai.ChatCompletion.acreate") as mock_openai:
+            mock_response = MagicMock()
+            mock_response.choices = [MagicMock()]
+            mock_response.choices[0].message.content = "AI insights"
+            mock_openai.return_value = mock_response
 
-        with patch("weasyprint.HTML") as mock_html_class:
-            mock_html_instance = MagicMock()
-            mock_html_class.return_value = mock_html_instance
-            mock_html_instance.write_pdf = MagicMock()
+            with patch("app.services.report_generator.HTML") as mock_html_class:
+                mock_html_instance = MagicMock()
+                mock_html_class.return_value = mock_html_instance
+                mock_html_instance.write_pdf = MagicMock(return_value=b"pdf-bytes")
 
-            with patch("builtins.open", MagicMock()):
-                await generate_ai_report(str(ai_report.id))
+                with patch(
+                    "app.services.report_generator.get_storage_service"
+                ) as mock_storage_factory:
+                    mock_storage = MagicMock()
+                    mock_storage.save.return_value = "/tmp/ai-report.pdf"
+                    mock_storage.exists.return_value = True
+                    mock_storage_factory.return_value = mock_storage
+
+                    await generate_ai_report(str(ai_report.id))
+
+                    mock_storage.save.assert_called_once()
 
             db_session.refresh(ai_report)
 

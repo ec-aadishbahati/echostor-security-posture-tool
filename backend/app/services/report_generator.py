@@ -1,5 +1,4 @@
 import logging
-import os
 import uuid
 from datetime import datetime
 from typing import Any
@@ -12,6 +11,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.services.question_parser import load_assessment_structure
+from app.services.storage import get_storage_service
 
 logger = logging.getLogger(__name__)
 
@@ -62,28 +62,29 @@ async def generate_standard_report(report_id: str):
         logger.info(f"HTML content generated successfully ({len(html_content)} bytes)")
 
         filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
-        file_path = os.path.join(settings.REPORTS_DIR, filename)
+        storage_service = get_storage_service()
 
         logger.info("REPORTS_DIR configured as: %s", settings.REPORTS_DIR)
-        logger.info("Creating reports directory: %s", settings.REPORTS_DIR)
-        os.makedirs(settings.REPORTS_DIR, exist_ok=True)
-        logger.info("Reports directory created/verified successfully")
-
-        logger.info("Generating PDF at: %s", file_path)
+        logger.info("Generating PDF bytes for storage")
         try:
-            HTML(string=html_content).write_pdf(file_path)
-            logger.info("WeasyPrint PDF generation completed")
+            pdf_bytes = HTML(string=html_content).write_pdf()
+            logger.info("WeasyPrint PDF byte generation completed")
         except Exception as pdf_error:
             logger.error(
                 "WeasyPrint PDF generation failed: %s", str(pdf_error), exc_info=True
             )
             raise
 
-        if not os.path.exists(file_path):
-            raise Exception(f"PDF file was not created at {file_path}")
+        logger.info("Saving report to configured storage backend")
+        storage_location = storage_service.save(pdf_bytes, filename)
 
-        logger.info(f"PDF generated successfully: {file_path}")
-        report.file_path = file_path
+        if not storage_service.exists(storage_location):
+            raise Exception(
+                f"PDF file was not persisted at storage location {storage_location}"
+            )
+
+        logger.info("PDF generated and stored successfully: %s", storage_location)
+        report.file_path = storage_location
         report.status = "completed"
         report.completed_at = datetime.now(datetime.UTC)
         db.commit()
@@ -153,19 +154,22 @@ async def generate_ai_report(report_id: str):
         )
 
         filename = f"ai_report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
-        file_path = os.path.join(settings.REPORTS_DIR, filename)
+        storage_service = get_storage_service()
 
-        logger.info(f"Creating reports directory: {settings.REPORTS_DIR}")
-        os.makedirs(settings.REPORTS_DIR, exist_ok=True)
+        logger.info("Generating AI PDF bytes")
+        pdf_bytes = HTML(string=html_content).write_pdf()
 
-        logger.info(f"Generating AI PDF at: {file_path}")
-        HTML(string=html_content).write_pdf(file_path)
+        logger.info("Saving AI report to configured storage backend")
+        storage_location = storage_service.save(pdf_bytes, filename)
 
-        if not os.path.exists(file_path):
-            raise Exception(f"PDF file was not created at {file_path}")
+        if not storage_service.exists(storage_location):
+            raise Exception(
+                "AI PDF file was not persisted at storage location "
+                f"{storage_location}"
+            )
 
-        logger.info(f"AI PDF generated successfully: {file_path}")
-        report.file_path = file_path
+        logger.info(f"AI PDF generated successfully: {storage_location}")
+        report.file_path = storage_location
         report.status = "completed"
         report.completed_at = datetime.now(datetime.UTC)
         db.commit()
