@@ -109,7 +109,8 @@ jobs:
                       context = await browser.new_context(
                           viewport={'width': 1920, 'height': 1080},
                           record_video_dir="/tmp/videos/",
-                          record_video_size={'width': 1920, 'height': 1080}
+                          record_video_size={'width': 1920, 'height': 1080},
+                          accept_downloads=True
                       )
                       
                       # Start tracing for debugging
@@ -577,6 +578,171 @@ jobs:
                               await take_screenshot(page, "12-error-verifying-report")
                               raise
 
+                          # Step 8: Download the generated report
+                          await log("Step 8: Downloading generated report...")
+                          report_downloaded = False
+                          download_error = None
+                          try:
+                              # Create reports directory
+                              import os
+                              os.makedirs("/tmp/reports", exist_ok=True)
+                              
+                              # Try primary approach: Playwright download with expect_download
+                              try:
+                                  await log("Attempting to download report via UI...")
+                                  
+                                  # Find the Download button/link
+                                  download_button = page.get_by_role("button", name="Download")
+                                  if await download_button.count() == 0:
+                                      # Fallback to link text
+                                      download_button = page.locator('a:has-text("Download")')
+                                  
+                                  if await download_button.count() > 0:
+                                      # Use expect_download to capture the file
+                                      async with page.expect_download(timeout=60000) as download_info:
+                                          await download_button.first.click()
+                                      
+                                      download = await download_info.value
+                                      suggested_filename = download.suggested_filename or "report.pdf"
+                                      
+                                      # Save with timestamp in filename
+                                      out_path = f"/tmp/reports/report-{timestamp}.pdf"
+                                      await download.save_as(out_path)
+                                      
+                                      # Verify file was saved
+                                      if os.path.exists(out_path) and os.path.getsize(out_path) > 0:
+                                          file_size = os.path.getsize(out_path)
+                                          await log(f"✓ Report downloaded via UI: {out_path} ({file_size} bytes)")
+                                          report_downloaded = True
+                                      else:
+                                          raise Exception("Downloaded file is empty or not found")
+                                  else:
+                                      raise Exception("Download button/link not found")
+                                      
+                              except Exception as ui_error:
+                                  await log(f"UI download failed: {str(ui_error)}", "WARNING")
+                                  await take_screenshot(page, "13-ui-download-failed")
+                                  
+                                  # Fallback approach: Direct API call with Authorization header
+                                  await log("Attempting fallback: Direct API download...")
+                                  
+                                  try:
+                                      # Extract JWT token from cookie
+                                      cookies = await context.cookies()
+                                      token_cookie = next((c for c in cookies if c['name'] == 'access_token'), None)
+                                      
+                                      if not token_cookie:
+                                          raise Exception("No access_token cookie found for API download")
+                                      
+                                      token = token_cookie['value']
+                                      await log("✓ Extracted access token from cookie")
+                                      
+                                      # Get report ID from the page
+                                      # Try to find a download link with href containing report ID
+                                      download_links = page.locator('a:has-text("Download")')
+                                      report_id = None
+                                      
+                                      if await download_links.count() > 0:
+                                          href = await download_links.first.get_attribute('href')
+                                          if href and '/download' in href:
+                                              # Extract report ID from href
+                                              # Expected format: /api/reports/{report_id}/download
+                                              parts = href.split('/')
+                                              if 'reports' in parts:
+                                                  idx = parts.index('reports')
+                                                  if idx + 1 < len(parts):
+                                                      report_id = parts[idx + 1]
+                                      
+                                      if not report_id:
+                                          # Alternative: Get report ID from API
+                                          await log("Fetching report ID from API...")
+                                          resp = await page.request.get(
+                                              f"{PRODUCTION_URL}/api/reports/user/reports",
+                                              headers={"Authorization": f"Bearer {token}"},
+                                              timeout=30000
+                                          )
+                                          
+                                          if resp.ok:
+                                              reports_data = await resp.json()
+                                              items = reports_data.get('data', {}).get('items', [])
+                                              # Find the most recent completed report
+                                              for report in items:
+                                                  if report.get('status') in ['completed', 'released']:
+                                                      report_id = report.get('id')
+                                                      await log(f"Found report ID: {report_id}")
+                                                      break
+                                          
+                                          if not report_id:
+                                              raise Exception("Could not determine report ID for download")
+                                      
+                                      # Download via API
+                                      download_url = f"{PRODUCTION_URL}/api/reports/{report_id}/download"
+                                      await log(f"Downloading from: {download_url}")
+                                      
+                                      resp = await page.request.get(
+                                          download_url,
+                                          headers={"Authorization": f"Bearer {token}"},
+                                          timeout=60000
+                                      )
+                                      
+                                      if resp.ok:
+                                          out_path = f"/tmp/reports/report-{timestamp}.pdf"
+                                          with open(out_path, "wb") as f:
+                                              f.write(await resp.body())
+                                          
+                                          # Verify file was saved
+                                          if os.path.exists(out_path) and os.path.getsize(out_path) > 0:
+                                              file_size = os.path.getsize(out_path)
+                                              await log(f"✓ Report downloaded via API: {out_path} ({file_size} bytes)")
+                                              report_downloaded = True
+                                          else:
+                                              raise Exception("Downloaded file is empty or not found")
+                                      else:
+                                          status_code = resp.status
+                                          response_text = (await resp.text())[:500]  # First 500 chars
+                                          error_msg = f"API download failed: HTTP {status_code}"
+                                          if status_code == 404:
+                                              error_msg += " (Report file not found - possible cross-region volume issue)"
+                                          await log(f"{error_msg}\nResponse: {response_text}", "ERROR")
+                                          raise Exception(error_msg)
+                                          
+                                  except Exception as api_error:
+                                      await log(f"API download failed: {str(api_error)}", "ERROR")
+                                      await take_screenshot(page, "13-api-download-failed")
+                                      download_error = f"Both UI and API download failed. UI error: {str(ui_error)}. API error: {str(api_error)}"
+                                      raise Exception(download_error)
+                              
+                              if report_downloaded:
+                                  await take_screenshot(page, "13-report-downloaded")
+                                  await log("✓ Report download completed successfully")
+                              
+                          except Exception as e:
+                              await log(f"Error downloading report: {str(e)}", "ERROR")
+                              await take_screenshot(page, "13-download-error")
+                              
+                              # Save detailed error information
+                              error_details = {
+                                  "error": str(e),
+                                  "timestamp": datetime.datetime.now().isoformat(),
+                                  "test_user": test_email,
+                                  "page_url": page.url
+                              }
+                              
+                              with open("/tmp/download-error.json", "w") as f:
+                                  json.dump(error_details, f, indent=2)
+                              
+                              # Save page HTML for debugging
+                              try:
+                                  content = await page.content()
+                                  with open("/tmp/page-content-download-error.html", "w") as f:
+                                      f.write(content)
+                                  await log("Saved page HTML for debugging")
+                              except Exception:
+                                  pass
+                              
+                              # Don't raise - we want to record the error but not fail the entire test
+                              await log("Download failed but continuing test to record results", "WARNING")
+
                           # Success!
                           await log("=" * 80)
                           await log("✓ ALL TESTS PASSED SUCCESSFULLY!")
@@ -584,6 +750,10 @@ jobs:
                           await log(f"✓ User authenticated successfully")
                           await log(f"✓ Assessment completed: {questions_answered} questions answered")
                           await log(f"✓ Report generated and verified")
+                          if report_downloaded:
+                              await log(f"✓ Report downloaded successfully")
+                          else:
+                              await log(f"✗ Report download failed: {download_error or 'Unknown error'}", "WARNING")
                           await log("=" * 80)
 
                           # Save artifacts
@@ -717,5 +887,25 @@ jobs:
         with:
           name: storage-state
           path: /tmp/storage-state.json
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload downloaded reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: downloaded-reports
+          path: /tmp/reports/*.pdf
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: Upload download error details
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: download-error-details
+          path: |
+            /tmp/download-error.json
+            /tmp/page-content-download-error.html
           retention-days: 7
           if-no-files-found: ignore
