@@ -1,3 +1,5 @@
+import os
+
 from fastapi import (
     APIRouter,
     BackgroundTasks,
@@ -7,7 +9,7 @@ from fastapi import (
     Request,
     status,
 )
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, StreamingResponse
 from sqlalchemy import and_, desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
@@ -37,6 +39,11 @@ async def generate_report(
     db: Session = Depends(get_db),
 ):
     """Generate a standard PDF report for a completed assessment"""
+
+    region = os.getenv("FLY_REGION")
+    primary = os.getenv("FLY_PRIMARY_REGION", "iad")
+    if region and primary and region != primary:
+        return Response(status_code=409, headers={"fly-replay": f"region={primary}"})
 
     assessment = (
         db.query(Assessment)
@@ -223,6 +230,11 @@ async def admin_retry_standard_report(
 ):
     """Admin endpoint to retry generating a failed standard report"""
 
+    region = os.getenv("FLY_REGION")
+    primary = os.getenv("FLY_PRIMARY_REGION", "iad")
+    if region and primary and region != primary:
+        return Response(status_code=409, headers={"fly-replay": f"region={primary}"})
+
     report = (
         db.query(Report)
         .filter(
@@ -347,6 +359,11 @@ async def download_report(
     db: Session = Depends(get_db),
 ):
     """Download a completed report"""
+
+    region = os.getenv("FLY_REGION")
+    primary = os.getenv("FLY_PRIMARY_REGION", "iad")
+    if region and primary and region != primary:
+        return Response(status_code=409, headers={"fly-replay": f"region={primary}"})
 
     report = db.query(Report).join(Assessment).filter(Report.id == report_id).first()
 
