@@ -21,7 +21,7 @@ if settings.OPENAI_API_KEY:
     openai.api_key = settings.OPENAI_API_KEY
 
 
-async def generate_standard_report(report_id: str):
+def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
 
     db = SessionLocal()
@@ -164,8 +164,7 @@ async def generate_ai_report(report_id: str):
 
         if not storage_service.exists(storage_location):
             raise Exception(
-                "AI PDF file was not persisted at storage location "
-                f"{storage_location}"
+                f"AI PDF file was not persisted at storage location {storage_location}"
             )
 
         logger.info(f"AI PDF generated successfully: {storage_location}")
