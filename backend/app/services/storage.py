@@ -52,10 +52,10 @@ class LocalStorage(StorageService):
         """Save content to local filesystem and return file path."""
         file_path = os.path.join(self.base_path, filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        
+
         with open(file_path, "wb") as f:
             f.write(content)
-        
+
         return file_path
 
     def open(self, location: str) -> BinaryIO:
