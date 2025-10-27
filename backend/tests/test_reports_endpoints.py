@@ -285,7 +285,9 @@ def test_user_reports_ordered_by_requested_at(
             next_time = datetime.fromisoformat(
                 items[i + 1]["requested_at"].replace("Z", "+00:00")
             )
-            assert current_time >= next_time, "Reports should be ordered by requested_at DESC"
+            assert current_time >= next_time, (
+                "Reports should be ordered by requested_at DESC"
+            )
 
 
 def test_admin_retry_failed_standard_report(
