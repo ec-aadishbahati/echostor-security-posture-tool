@@ -2,7 +2,17 @@ import uuid
 from datetime import datetime
 from typing import Annotated, Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+
+class UserSummary(BaseModel):
+    id: str
+    email: EmailStr
+    full_name: str
+    company_name: str
+
+    class Config:
+        from_attributes = True
 
 
 class AssessmentBase(BaseModel):
@@ -34,6 +44,7 @@ class AssessmentResponse(BaseModel):
     progress_percentage: float
     consultation_interest: bool = False
     consultation_details: Annotated[str, Field(max_length=5000)] | None = None
+    user: UserSummary | None = None
 
     class Config:
         from_attributes = True

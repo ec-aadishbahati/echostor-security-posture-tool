@@ -148,7 +148,7 @@ async def get_all_assessments(
     """Get all assessments with filtering"""
 
     try:
-        query = db.query(Assessment).join(User)
+        query = db.query(Assessment).options(joinedload(Assessment.user)).join(User)
 
         if status:
             query = query.filter(Assessment.status == status)
