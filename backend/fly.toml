@@ -43,6 +43,7 @@ primary_region = "iad"
   PORT = "8000"
   RESTART_TIMESTAMP = "1726477055"
   REPORTS_DIR = "/data/reports"
+  FLY_PRIMARY_REGION = "iad"
 
 [[mounts]]
   source = "reports_data"
