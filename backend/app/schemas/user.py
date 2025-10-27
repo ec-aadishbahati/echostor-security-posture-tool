@@ -39,6 +39,7 @@ class UserUpdate(BaseModel):
 class UserResponse(UserBase):
     id: str
     is_active: bool
+    is_admin: bool
     created_at: datetime
     updated_at: datetime
 
