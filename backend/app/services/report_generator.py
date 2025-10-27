@@ -85,7 +85,7 @@ async def generate_standard_report(report_id: str):
         logger.info(f"PDF generated successfully: {file_path}")
         report.file_path = file_path
         report.status = "completed"
-        report.completed_at = datetime.utcnow()
+        report.completed_at = datetime.now(datetime.UTC)
         db.commit()
 
         logger.info(
@@ -167,7 +167,7 @@ async def generate_ai_report(report_id: str):
         logger.info(f"AI PDF generated successfully: {file_path}")
         report.file_path = file_path
         report.status = "completed"
-        report.completed_at = datetime.utcnow()
+        report.completed_at = datetime.now(datetime.UTC)
         db.commit()
 
         logger.info(

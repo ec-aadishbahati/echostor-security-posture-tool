@@ -45,6 +45,19 @@ export default function AdminReports() {
     },
   });
 
+  const retryStandardReportMutation = useMutation(
+    (reportId: string) => adminAPI.retryStandardReport(reportId),
+    {
+      onSuccess: () => {
+        toast.success('Standard report retry started');
+        queryClient.invalidateQueries('adminReports');
+      },
+      onError: (error: any) => {
+        toast.error(error.response?.data?.detail || 'Failed to retry standard report');
+      },
+    }
+  );
+
   const {
     data: reportsData,
     isLoading,
@@ -178,7 +191,9 @@ export default function AdminReports() {
                   >
                     <option value="">All Statuses</option>
                     <option value="pending">Pending</option>
+                    <option value="generating">Generating</option>
                     <option value="completed">Completed</option>
+                    <option value="released">Released</option>
                     <option value="failed">Failed</option>
                   </select>
                 </div>
@@ -284,6 +299,16 @@ export default function AdminReports() {
                               <span className="text-gray-600">
                                 {report.completed_at ? formatDate(report.completed_at) : '-'}
                               </span>
+                              {report.report_type === 'standard' && report.status === 'failed' && (
+                                <button
+                                  onClick={() => retryStandardReportMutation.mutate(report.id)}
+                                  disabled={retryStandardReportMutation.isLoading}
+                                  className="btn-secondary text-xs flex items-center"
+                                >
+                                  <ExclamationTriangleIcon className="h-3 w-3 mr-1" />
+                                  {retryStandardReportMutation.isLoading ? 'Retrying...' : 'Retry'}
+                                </button>
+                              )}
                               {report.report_type === 'ai_enhanced' &&
                                 report.status === 'pending' && (
                                   <button

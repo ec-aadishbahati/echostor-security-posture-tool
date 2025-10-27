@@ -79,7 +79,7 @@ class Report(Base):
     file_path = Column(String(500))
     status = Column(
         String(50), default="pending"
-    )  # pending, generating, completed, failed
+    )  # pending, generating, completed, released, failed
     requested_at = Column(DateTime(timezone=True), server_default=func.now())
     completed_at = Column(DateTime(timezone=True))
 
