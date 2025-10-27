@@ -10,7 +10,7 @@ from app.core.security import get_password_hash
 from app.models.assessment import AdminAuditLog, Assessment, AssessmentResponse, Report
 from app.models.user import User
 from app.schemas.assessment import AssessmentResponse as AssessmentResponseSchema
-from app.schemas.report import ReportResponse
+from app.schemas.report import AdminReportResponse
 from app.schemas.user import (
     BulkDeleteUsersRequest,
     BulkUpdateUserStatusRequest,
@@ -340,10 +340,11 @@ async def get_all_reports(
     limit: int = Query(100, ge=1, le=1000),
     report_type: str | None = Query(None),
     status: str | None = Query(None),
+    search: str | None = Query(None),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
-    """Get all reports with filtering"""
+    """Get all reports with filtering and search"""
 
     try:
         query = (
@@ -359,6 +360,12 @@ async def get_all_reports(
         if status:
             query = query.filter(Report.status == status)
 
+        if search:
+            search_param = f"%{search}%"
+            query = query.filter(
+                User.email.ilike(search_param) | User.company_name.ilike(search_param)
+            )
+
         total = query.count()
         reports = (
             query.order_by(desc(Report.requested_at)).offset(skip).limit(limit).all()
@@ -370,6 +377,7 @@ async def get_all_reports(
             details={
                 "type_filter": report_type,
                 "status_filter": status,
+                "search": search,
                 "count": len(reports),
             },
             db=db,
@@ -378,7 +386,7 @@ async def get_all_reports(
         from app.utils.pagination import paginate
 
         return paginate(
-            items=[ReportResponse.model_validate(report) for report in reports],
+            items=[AdminReportResponse.model_validate(report) for report in reports],
             total=total,
             skip=skip,
             limit=limit,

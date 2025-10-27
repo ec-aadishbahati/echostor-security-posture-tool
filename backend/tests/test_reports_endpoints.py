@@ -337,3 +337,104 @@ def test_admin_retry_non_failed_report_fails(
     )
     assert response.status_code == 404
     assert "not found" in response.json()["detail"].lower()
+
+
+def test_user_generate_report_excludes_file_path(
+    client: TestClient, auth_token, completed_assessment
+):
+    """Test that user generate report endpoint excludes file_path from response."""
+    with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
+        response = client.post(
+            f"/api/reports/{completed_assessment.id}/generate",
+            headers={"Authorization": f"Bearer {auth_token}"},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "file_path" not in data
+        assert "id" in data
+        assert "status" in data
+
+
+def test_user_get_reports_excludes_file_path(
+    client: TestClient, auth_token, test_report
+):
+    """Test that user get reports endpoint excludes file_path from response."""
+    response = client.get(
+        "/api/reports/user/reports", headers={"Authorization": f"Bearer {auth_token}"}
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "items" in data
+    for item in data["items"]:
+        assert "file_path" not in item
+        assert "id" in item
+        assert "status" in item
+
+
+def test_user_get_report_status_excludes_file_path(
+    client: TestClient, auth_token, test_report
+):
+    """Test that user get report status endpoint excludes file_path from response."""
+    response = client.get(
+        f"/api/reports/{test_report.id}/status",
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "file_path" not in data
+    assert "id" in data
+    assert "status" in data
+
+
+def test_admin_generate_ai_report_includes_file_path(
+    client: TestClient, admin_token, db_session, completed_assessment
+):
+    """Test that admin generate AI report endpoint includes file_path in response."""
+    from app.models.assessment import Report
+
+    ai_report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="ai_enhanced",
+        status="pending",
+    )
+    db_session.add(ai_report)
+    db_session.commit()
+    db_session.refresh(ai_report)
+
+    with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
+        response = client.post(
+            f"/api/reports/admin/{ai_report.id}/generate-ai",
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "file_path" in data
+        assert "id" in data
+        assert "status" in data
+
+
+def test_admin_retry_standard_report_includes_file_path(
+    client: TestClient, admin_token, completed_assessment, db_session
+):
+    """Test that admin retry standard report endpoint includes file_path in response."""
+    from app.models.assessment import Report
+
+    failed_report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="standard",
+        status="failed",
+    )
+    db_session.add(failed_report)
+    db_session.commit()
+    db_session.refresh(failed_report)
+
+    with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
+        response = client.post(
+            f"/api/reports/admin/{failed_report.id}/retry-standard",
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert "file_path" in data
+        assert "id" in data
+        assert "status" in data

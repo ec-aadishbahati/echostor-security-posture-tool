@@ -44,11 +44,12 @@ class MinimalAssessmentResponse(BaseModel):
         from_attributes = True
 
 
-class ReportResponse(BaseModel):
+class ReportBaseOut(BaseModel):
+    """Base response model for reports with common fields"""
+
     id: uuid.UUID
     assessment_id: uuid.UUID
     report_type: str
-    file_path: str | None  # Internal use only, use download endpoint for access
     status: str
     requested_at: datetime
     completed_at: datetime | None
@@ -56,6 +57,24 @@ class ReportResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserReportResponse(ReportBaseOut):
+    """Report response for non-admin users (excludes file_path)"""
+
+    pass
+
+
+class AdminReportResponse(ReportBaseOut):
+    """Report response for admin users (includes file_path)"""
+
+    file_path: str | None = None
+
+
+class ReportResponse(AdminReportResponse):
+    """Deprecated: Use UserReportResponse or AdminReportResponse instead"""
+
+    pass
 
 
 class AIReportRequest(BaseModel):
