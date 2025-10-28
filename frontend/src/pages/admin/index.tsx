@@ -9,6 +9,7 @@ import {
   ChartBarIcon,
   ExclamationTriangleIcon,
   ArrowTrendingUpIcon,
+  KeyIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -201,6 +202,13 @@ export default function AdminDashboard() {
                   >
                     <ChartBarIcon className="h-6 w-6 text-primary-600 mr-3" />
                     <span>Manage Reports</span>
+                  </Link>
+                  <Link
+                    href="/admin/openai-keys"
+                    className="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    <KeyIcon className="h-6 w-6 text-primary-600 mr-3" />
+                    <span>Manage OpenAI Keys</span>
                   </Link>
                 </div>
               </div>

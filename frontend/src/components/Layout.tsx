@@ -8,6 +8,7 @@ import {
   UserIcon,
   ArrowRightOnRectangleIcon,
   ChatBubbleLeftRightIcon,
+  KeyIcon,
 } from '@heroicons/react/24/outline';
 
 interface LayoutProps {
@@ -25,6 +26,7 @@ export default function Layout({ children, title }: LayoutProps) {
         { name: 'Assessments', href: '/admin/assessments', icon: DocumentTextIcon },
         { name: 'Reports', href: '/admin/reports', icon: ChartBarIcon },
         { name: 'Consultations', href: '/admin/consultations', icon: ChatBubbleLeftRightIcon },
+        { name: 'OpenAI Keys', href: '/admin/openai-keys', icon: KeyIcon },
       ]
     : [
         { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
