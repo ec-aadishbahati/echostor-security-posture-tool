@@ -97,20 +97,36 @@ def test_calculate_assessment_scores_empty():
     assert scores["overall"]["max_score"] > 0
 
 
-@pytest.mark.asyncio
-async def test_generate_ai_insights():
+def test_generate_ai_insights(encryption_key, mocker):
     from app.services.question_parser import create_sample_assessment_structure
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
     responses = []
 
-    with patch("openai.ChatCompletion.acreate") as mock_openai:
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+    
+    mock_key = mocker.MagicMock()
+    mock_key.id = "test-key-id"
+    mock_key.encrypted_key = encrypt_api_key("test-api-key")
+    mock_key.is_active = True
+    mock_key.cooldown_until = None
+    mock_key.last_used_at = None
+    mock_key.usage_count = 0
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.return_value = mock_key
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client = MagicMock()
+        mock_openai_class.return_value = mock_client
+        
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Test insight"
-        mock_openai.return_value = mock_response
+        mock_client.chat.completions.create.return_value = mock_response
 
-        insights = await generate_ai_insights(responses, structure)
+        insights = generate_ai_insights(responses, structure, key_manager)
 
         assert insights is not None
         assert isinstance(insights, dict)
@@ -141,12 +157,10 @@ def test_generate_standard_report(
     db_session.refresh(test_report)
 
 
-@pytest.mark.asyncio
-async def test_generate_ai_report(
-    db_session, completed_assessment, test_assessment_response
+def test_generate_ai_report(
+    encryption_key, db_session, completed_assessment, test_assessment_response
 ):
     from app.models.assessment import Report
-    from app.services import report_generator as report_generator_module
     from app.services.report_generator import generate_ai_report
 
     ai_report = Report(
@@ -158,12 +172,19 @@ async def test_generate_ai_report(
     db_session.commit()
     db_session.refresh(ai_report)
 
-    with patch.object(report_generator_module.settings, "OPENAI_API_KEY", "test-key"):
-        with patch("openai.ChatCompletion.acreate") as mock_openai:
+    with patch("app.services.report_generator.OpenAIKeyManager") as mock_key_manager_class:
+        mock_key_manager = MagicMock()
+        mock_key_manager_class.return_value = mock_key_manager
+        mock_key_manager.get_next_key.return_value = ("test-key-id", "test-api-key")
+
+        with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+            mock_client = MagicMock()
+            mock_openai_class.return_value = mock_client
+            
             mock_response = MagicMock()
             mock_response.choices = [MagicMock()]
             mock_response.choices[0].message.content = "AI insights"
-            mock_openai.return_value = mock_response
+            mock_client.chat.completions.create.return_value = mock_response
 
             with patch("app.services.report_generator.HTML") as mock_html_class:
                 mock_html_instance = MagicMock()
@@ -178,7 +199,7 @@ async def test_generate_ai_report(
                     mock_storage.exists.return_value = True
                     mock_storage_factory.return_value = mock_storage
 
-                    await generate_ai_report(str(ai_report.id))
+                    generate_ai_report(str(ai_report.id))
 
                     mock_storage.save.assert_called_once()
 

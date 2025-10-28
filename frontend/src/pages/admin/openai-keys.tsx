@@ -73,33 +73,27 @@ export default function OpenAIKeysManagement() {
     }
   );
 
-  const deleteKeyMutation = useMutation(
-    (key_id: string) => adminAPI.deleteOpenAIKey(key_id),
-    {
-      onSuccess: () => {
-        toast.success('API key deleted successfully');
-        queryClient.invalidateQueries('openaiKeys');
-      },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to delete API key');
-      },
-    }
-  );
+  const deleteKeyMutation = useMutation((key_id: string) => adminAPI.deleteOpenAIKey(key_id), {
+    onSuccess: () => {
+      toast.success('API key deleted successfully');
+      queryClient.invalidateQueries('openaiKeys');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.detail || 'Failed to delete API key');
+    },
+  });
 
-  const testKeyMutation = useMutation(
-    (api_key: string) => adminAPI.testOpenAIKey(api_key),
-    {
-      onSuccess: (data) => {
-        setTestResult(data.data);
-      },
-      onError: (error: any) => {
-        setTestResult({
-          is_valid: false,
-          message: error?.response?.data?.detail || 'Test failed',
-        });
-      },
-    }
-  );
+  const testKeyMutation = useMutation((api_key: string) => adminAPI.testOpenAIKey(api_key), {
+    onSuccess: (data) => {
+      setTestResult(data.data);
+    },
+    onError: (error: any) => {
+      setTestResult({
+        is_valid: false,
+        message: error?.response?.data?.detail || 'Test failed',
+      });
+    },
+  });
 
   const handleAddKey = () => {
     if (!newKeyName.trim() || !newApiKey.trim()) {
