@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     ADMIN_TOKEN_EXPIRE_HOURS: int = 8
 
     OPENAI_API_KEY: str | None = None
+    OPENAI_MODEL: str = "gpt-4"
+    OPENAI_MAX_TOKENS: int = 1000
+    OPENAI_TEMPERATURE: float = 0.7
+    OPENAI_TIMEOUT: int = 60
+    OPENAI_KEYS_ENCRYPTION_KEY: str | None = None
 
     ADMIN_EMAIL: str = "aadish.bahati@echostor.com"
     ADMIN_PASSWORD_HASH: str | None = None

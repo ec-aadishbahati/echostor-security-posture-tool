@@ -161,4 +161,17 @@ export const adminAPI = {
     });
     return api.get(`/api/admin/consultations?${params}`);
   },
+
+  listOpenAIKeys: (includeInactive = false) =>
+    api.get('/api/admin/openai-keys/', { params: { include_inactive: includeInactive } }),
+
+  createOpenAIKey: (data: { key_name: string; api_key: string }) =>
+    api.post('/api/admin/openai-keys/', data),
+
+  testOpenAIKey: (apiKey: string) => api.post('/api/admin/openai-keys/test', { api_key: apiKey }),
+
+  toggleOpenAIKey: (keyId: string, isActive: boolean) =>
+    api.patch(`/api/admin/openai-keys/${keyId}/toggle`, { is_active: isActive }),
+
+  deleteOpenAIKey: (keyId: string) => api.delete(`/api/admin/openai-keys/${keyId}`),
 };
