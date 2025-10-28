@@ -23,10 +23,10 @@ def get_encryption_key() -> bytes:
 
     if not key:
         try:
-            with open("/run/secrets/OPENAI_KEYS_ENCRYPTION_KEY", "r") as f:
+            with open("/run/secrets/OPENAI_KEYS_ENCRYPTION_KEY") as f:
                 key = f.read().strip()
-        except (FileNotFoundError, PermissionError):
-            pass
+        except (FileNotFoundError, PermissionError, OSError):
+            key = ""
 
     if not key:
         raise ValueError(
