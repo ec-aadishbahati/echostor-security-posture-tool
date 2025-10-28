@@ -11,15 +11,22 @@ logger = logging.getLogger(__name__)
 
 
 def get_encryption_key() -> bytes:
-    """Get the encryption key from settings or environment variable.
+    """Get the encryption key from settings, environment variable, or secrets file.
 
-    Tries to read from settings first, then falls back to os.getenv()
-    to handle cases where Pydantic settings don't pick up the env var.
+    Tries to read from settings first, then os.getenv(), then /run/secrets file.
+    This handles different ways Fly.io and other platforms expose secrets.
     """
     key = (
         settings.OPENAI_KEYS_ENCRYPTION_KEY
         or os.getenv("OPENAI_KEYS_ENCRYPTION_KEY", "")
     ).strip()
+
+    if not key:
+        try:
+            with open("/run/secrets/OPENAI_KEYS_ENCRYPTION_KEY") as f:
+                key = f.read().strip()
+        except (FileNotFoundError, PermissionError, OSError):
+            key = ""
 
     if not key:
         raise ValueError(
