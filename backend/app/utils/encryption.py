@@ -12,12 +12,15 @@ logger = logging.getLogger(__name__)
 
 def get_encryption_key() -> bytes:
     """Get the encryption key from settings or environment variable.
-    
+
     Tries to read from settings first, then falls back to os.getenv()
     to handle cases where Pydantic settings don't pick up the env var.
     """
-    key = (settings.OPENAI_KEYS_ENCRYPTION_KEY or os.getenv("OPENAI_KEYS_ENCRYPTION_KEY", "")).strip()
-    
+    key = (
+        settings.OPENAI_KEYS_ENCRYPTION_KEY
+        or os.getenv("OPENAI_KEYS_ENCRYPTION_KEY", "")
+    ).strip()
+
     if not key:
         raise ValueError(
             "OPENAI_KEYS_ENCRYPTION_KEY environment variable must be set. "
