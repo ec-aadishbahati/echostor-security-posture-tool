@@ -52,12 +52,12 @@ async def create_openai_key(
                 api_key=key_data.api_key,
                 created_by=current_admin.email,
             )
-            
+
             keys = manager.list_keys(include_inactive=True)
             for k in keys:
                 if k["id"] == key.id:
                     return k
-            
+
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Failed to retrieve created key",
@@ -82,9 +82,7 @@ async def test_openai_key(
             is_valid, message = manager.test_key(key_data.api_key)
             return OpenAIKeyTestResponse(is_valid=is_valid, message=message)
     except Exception as e:
-        return OpenAIKeyTestResponse(
-            is_valid=False, message=f"Test failed: {str(e)}"
-        )
+        return OpenAIKeyTestResponse(is_valid=False, message=f"Test failed: {str(e)}")
 
 
 @router.patch("/{key_id}/toggle", response_model=OpenAIKeyResponse)
@@ -99,12 +97,12 @@ async def toggle_openai_key(
     try:
         with OpenAIKeyManager(db) as manager:
             manager.toggle_key(key_id, toggle_data.is_active)
-            
+
             keys = manager.list_keys(include_inactive=True)
             for k in keys:
                 if k["id"] == key_id:
                     return k
-            
+
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Key not found after toggle",

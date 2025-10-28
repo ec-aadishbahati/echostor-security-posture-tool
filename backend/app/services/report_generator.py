@@ -316,12 +316,14 @@ def generate_ai_insights(
                 )
 
                 insights[section.id] = response.choices[0].message.content
-                
+
                 if len(insights) == 1:
                     key_manager.record_success(key_id)
 
             except Exception as e:
-                logger.error(f"Error generating AI insight for section {section.id}: {e}")
+                logger.error(
+                    f"Error generating AI insight for section {section.id}: {e}"
+                )
                 key_manager.record_failure(key_id, e)
                 insights[section.id] = (
                     "AI analysis temporarily unavailable for this section."

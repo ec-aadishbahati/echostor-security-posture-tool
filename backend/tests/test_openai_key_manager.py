@@ -1,12 +1,13 @@
 """Tests for OpenAI API key management functionality."""
 
+from datetime import UTC, datetime, timedelta
+from unittest.mock import MagicMock, Mock, patch
+
 import pytest
-from datetime import datetime, timedelta, UTC
-from unittest.mock import Mock, patch, MagicMock
 
 from app.models.openai_key import OpenAIAPIKey
 from app.services.openai_key_manager import OpenAIKeyManager
-from app.utils.encryption import encrypt_api_key, decrypt_api_key, mask_api_key
+from app.utils.encryption import decrypt_api_key, encrypt_api_key, mask_api_key
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ class TestEncryption:
         original_key = "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
         encrypted = encrypt_api_key(original_key)
         decrypted = decrypt_api_key(encrypted)
-        
+
         assert decrypted == original_key
         assert encrypted != original_key
 
@@ -41,7 +42,7 @@ class TestEncryption:
         """Test API key masking."""
         api_key = "sk-test1234567890abcdefghijklmnopqrstuvwxyz"
         masked = mask_api_key(api_key)
-        
+
         assert masked.startswith("sk-...")
         assert masked.endswith(api_key[-4:])
         assert len(masked) < len(api_key)
@@ -50,7 +51,7 @@ class TestEncryption:
         """Test masking of short API keys."""
         api_key = "sk-123"
         masked = mask_api_key(api_key)
-        
+
         assert masked == "***-123"
 
 
@@ -59,13 +60,13 @@ class TestOpenAIKeyManager:
 
     def test_add_key_success(self, key_manager, db_session):
         """Test adding a new API key."""
-        with patch.object(key_manager, 'test_key', return_value=(True, "Valid key")):
+        with patch.object(key_manager, "test_key", return_value=(True, "Valid key")):
             key = key_manager.add_key(
                 key_name="Test Key",
                 api_key="sk-test1234567890",
-                created_by="admin@test.com"
+                created_by="admin@test.com",
             )
-            
+
             assert key.key_name == "Test Key"
             assert key.is_active is True
             assert key.usage_count == 0
@@ -76,14 +77,14 @@ class TestOpenAIKeyManager:
 
     def test_add_key_invalid(self, key_manager, db_session):
         """Test adding an invalid API key."""
-        with patch.object(key_manager, 'test_key', return_value=(False, "Invalid key")):
+        with patch.object(key_manager, "test_key", return_value=(False, "Invalid key")):
             with pytest.raises(ValueError, match="API key validation failed"):
                 key_manager.add_key(
                     key_name="Invalid Key",
                     api_key="sk-invalid",
-                    created_by="admin@test.com"
+                    created_by="admin@test.com",
                 )
-            
+
             db_session.add.assert_not_called()
             db_session.commit.assert_not_called()
 
@@ -100,7 +101,7 @@ class TestOpenAIKeyManager:
         mock_key1.error_count = 0
         mock_key1.created_at = datetime.now(UTC)
         mock_key1.created_by = "admin@test.com"
-        
+
         mock_key2 = Mock(spec=OpenAIAPIKey)
         mock_key2.id = "key2"
         mock_key2.key_name = "Key 2"
@@ -112,11 +113,11 @@ class TestOpenAIKeyManager:
         mock_key2.error_count = 0
         mock_key2.created_at = datetime.now(UTC)
         mock_key2.created_by = "admin@test.com"
-        
+
         db_session.query.return_value.filter.return_value.all.return_value = [mock_key1]
-        
+
         keys = key_manager.list_keys(include_inactive=False)
-        
+
         assert len(keys) == 1
         assert keys[0]["id"] == "key1"
         assert keys[0]["key_name"] == "Key 1"
@@ -136,7 +137,7 @@ class TestOpenAIKeyManager:
         mock_key1.error_count = 0
         mock_key1.created_at = datetime.now(UTC)
         mock_key1.created_by = "admin@test.com"
-        
+
         mock_key2 = Mock(spec=OpenAIAPIKey)
         mock_key2.id = "key2"
         mock_key2.key_name = "Key 2"
@@ -148,11 +149,11 @@ class TestOpenAIKeyManager:
         mock_key2.error_count = 0
         mock_key2.created_at = datetime.now(UTC)
         mock_key2.created_by = "admin@test.com"
-        
+
         db_session.query.return_value.all.return_value = [mock_key1, mock_key2]
-        
+
         keys = key_manager.list_keys(include_inactive=True)
-        
+
         assert len(keys) == 2
         assert keys[0]["id"] == "key1"
         assert keys[1]["id"] == "key2"
@@ -160,25 +161,25 @@ class TestOpenAIKeyManager:
     def test_get_next_key_lru_selection(self, key_manager, db_session):
         """Test LRU key selection."""
         now = datetime.now(UTC)
-        
+
         mock_key1 = Mock(spec=OpenAIAPIKey)
         mock_key1.id = "key1"
         mock_key1.encrypted_key = encrypt_api_key("sk-test1")
         mock_key1.last_used_at = now - timedelta(hours=2)
         mock_key1.usage_count = 10
         mock_key1.cooldown_until = None
-        
+
         mock_key2 = Mock(spec=OpenAIAPIKey)
         mock_key2.id = "key2"
         mock_key2.encrypted_key = encrypt_api_key("sk-test2")
         mock_key2.last_used_at = now - timedelta(hours=1)
         mock_key2.usage_count = 5
         mock_key2.cooldown_until = None
-        
+
         db_session.query.return_value.filter.return_value.order_by.return_value.first.return_value = mock_key1
-        
+
         key_id, api_key = key_manager.get_next_key()
-        
+
         assert key_id == "key1"
         assert api_key == "sk-test1"
         assert mock_key1.usage_count == 11
@@ -188,30 +189,30 @@ class TestOpenAIKeyManager:
     def test_get_next_key_no_keys_available(self, key_manager, db_session):
         """Test error when no keys are available."""
         db_session.query.return_value.filter.return_value.order_by.return_value.first.return_value = None
-        
+
         with pytest.raises(ValueError, match="No active OpenAI API keys available"):
             key_manager.get_next_key()
 
     def test_get_next_key_skip_cooldown(self, key_manager, db_session):
         """Test that keys in cooldown are skipped."""
         now = datetime.now(UTC)
-        
+
         mock_key1 = Mock(spec=OpenAIAPIKey)
         mock_key1.id = "key1"
         mock_key1.encrypted_key = encrypt_api_key("sk-test1")
         mock_key1.cooldown_until = now + timedelta(minutes=5)
-        
+
         mock_key2 = Mock(spec=OpenAIAPIKey)
         mock_key2.id = "key2"
         mock_key2.encrypted_key = encrypt_api_key("sk-test2")
         mock_key2.cooldown_until = None
         mock_key2.last_used_at = None
         mock_key2.usage_count = 0
-        
+
         db_session.query.return_value.filter.return_value.order_by.return_value.first.return_value = mock_key2
-        
+
         key_id, api_key = key_manager.get_next_key()
-        
+
         assert key_id == "key2"
         assert api_key == "sk-test2"
 
@@ -220,11 +221,11 @@ class TestOpenAIKeyManager:
         mock_key = Mock(spec=OpenAIAPIKey)
         mock_key.error_count = 3
         mock_key.cooldown_until = datetime.now(UTC) + timedelta(minutes=5)
-        
+
         db_session.query.return_value.filter.return_value.first.return_value = mock_key
-        
+
         key_manager.record_success("key1")
-        
+
         assert mock_key.error_count == 0
         assert mock_key.cooldown_until is None
         db_session.commit.assert_called_once()
@@ -236,14 +237,14 @@ class TestOpenAIKeyManager:
         mock_key.key_name = "Test Key"
         mock_key.error_count = 2
         mock_key.is_active = True
-        
+
         db_session.query.return_value.filter.return_value.first.return_value = mock_key
-        
+
         error = Exception("Rate limit exceeded")
         error.status_code = 429
-        
+
         key_manager.record_failure("key1", error)
-        
+
         assert mock_key.error_count == 3
         assert mock_key.cooldown_until is not None
         db_session.commit.assert_called()
@@ -255,14 +256,14 @@ class TestOpenAIKeyManager:
         mock_key.key_name = "Test Key"
         mock_key.error_count = 4
         mock_key.is_active = True
-        
+
         db_session.query.return_value.filter.return_value.first.return_value = mock_key
-        
+
         error = Exception("Rate limit exceeded")
         error.status_code = 429
-        
+
         key_manager.record_failure("key1", error)
-        
+
         assert mock_key.error_count == 5
         assert mock_key.is_active is False
         db_session.commit.assert_called()
@@ -271,11 +272,11 @@ class TestOpenAIKeyManager:
         """Test activating a key."""
         mock_key = Mock(spec=OpenAIAPIKey)
         mock_key.is_active = False
-        
+
         db_session.query.return_value.filter.return_value.first.return_value = mock_key
-        
+
         key_manager.toggle_key("key1", True)
-        
+
         assert mock_key.is_active is True
         db_session.commit.assert_called_once()
 
@@ -283,65 +284,65 @@ class TestOpenAIKeyManager:
         """Test deactivating a key."""
         mock_key = Mock(spec=OpenAIAPIKey)
         mock_key.is_active = True
-        
+
         db_session.query.return_value.filter.return_value.first.return_value = mock_key
-        
+
         key_manager.toggle_key("key1", False)
-        
+
         assert mock_key.is_active is False
         db_session.commit.assert_called_once()
 
     def test_toggle_key_not_found(self, key_manager, db_session):
         """Test toggling non-existent key."""
         db_session.query.return_value.filter.return_value.first.return_value = None
-        
+
         with pytest.raises(ValueError, match="API key not found"):
             key_manager.toggle_key("nonexistent", True)
 
     def test_delete_key(self, key_manager, db_session):
         """Test deleting a key."""
         mock_key = Mock(spec=OpenAIAPIKey)
-        
+
         db_session.query.return_value.filter.return_value.first.return_value = mock_key
-        
+
         key_manager.delete_key("key1")
-        
+
         db_session.delete.assert_called_once_with(mock_key)
         db_session.commit.assert_called_once()
 
     def test_delete_key_not_found(self, key_manager, db_session):
         """Test deleting non-existent key."""
         db_session.query.return_value.filter.return_value.first.return_value = None
-        
+
         with pytest.raises(ValueError, match="API key not found"):
             key_manager.delete_key("nonexistent")
 
-    @patch('app.services.openai_key_manager.OpenAI')
+    @patch("app.services.openai_key_manager.OpenAI")
     def test_test_key_valid(self, mock_openai_class, key_manager):
         """Test validating a valid API key."""
         mock_client = MagicMock()
         mock_openai_class.return_value = mock_client
-        
+
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Test response"
         mock_client.chat.completions.create.return_value = mock_response
-        
+
         is_valid, message = key_manager.test_key("sk-valid-key")
-        
+
         assert is_valid is True
         assert "valid" in message.lower()
 
-    @patch('app.services.openai_key_manager.OpenAI')
+    @patch("app.services.openai_key_manager.OpenAI")
     def test_test_key_invalid(self, mock_openai_class, key_manager):
         """Test validating an invalid API key."""
         mock_client = MagicMock()
         mock_openai_class.return_value = mock_client
-        
+
         mock_client.chat.completions.create.side_effect = Exception("Invalid API key")
-        
+
         is_valid, message = key_manager.test_key("sk-invalid-key")
-        
+
         assert is_valid is False
         assert "Invalid API key" in message
 
@@ -349,7 +350,7 @@ class TestOpenAIKeyManager:
         """Test OpenAIKeyManager as context manager."""
         with OpenAIKeyManager(db_session) as manager:
             assert manager.db == db_session
-        
+
         db_session.close.assert_called_once()
 
 
@@ -359,48 +360,51 @@ class TestKeyRotationScenarios:
     def test_round_robin_with_three_keys(self, key_manager, db_session):
         """Test round-robin rotation with three keys."""
         now = datetime.now(UTC)
-        
+
         keys = []
         for i in range(3):
             mock_key = Mock(spec=OpenAIAPIKey)
-            mock_key.id = f"key{i+1}"
-            mock_key.encrypted_key = encrypt_api_key(f"sk-test{i+1}")
-            mock_key.last_used_at = now - timedelta(hours=3-i)
+            mock_key.id = f"key{i + 1}"
+            mock_key.encrypted_key = encrypt_api_key(f"sk-test{i + 1}")
+            mock_key.last_used_at = now - timedelta(hours=3 - i)
             mock_key.usage_count = i * 5
             mock_key.cooldown_until = None
             keys.append(mock_key)
-        
+
         call_count = 0
+
         def mock_query_side_effect(*args, **kwargs):
             nonlocal call_count
             result = Mock()
-            result.filter.return_value.order_by.return_value.first.return_value = keys[call_count % 3]
+            result.filter.return_value.order_by.return_value.first.return_value = keys[
+                call_count % 3
+            ]
             call_count += 1
             return result
-        
+
         db_session.query.side_effect = mock_query_side_effect
-        
+
         selected_keys = []
         for _ in range(3):
             key_id, _ = key_manager.get_next_key()
             selected_keys.append(key_id)
-        
+
         assert len(set(selected_keys)) == 3
 
     def test_recovery_after_cooldown(self, key_manager, db_session):
         """Test that keys become available after cooldown expires."""
         now = datetime.now(UTC)
-        
+
         mock_key = Mock(spec=OpenAIAPIKey)
         mock_key.id = "key1"
         mock_key.encrypted_key = encrypt_api_key("sk-test1")
         mock_key.cooldown_until = now - timedelta(seconds=1)
         mock_key.last_used_at = None
         mock_key.usage_count = 0
-        
+
         db_session.query.return_value.filter.return_value.order_by.return_value.first.return_value = mock_key
-        
+
         key_id, api_key = key_manager.get_next_key()
-        
+
         assert key_id == "key1"
         assert api_key == "sk-test1"

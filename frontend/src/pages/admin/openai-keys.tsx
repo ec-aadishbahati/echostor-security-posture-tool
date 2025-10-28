@@ -10,7 +10,6 @@ import {
   TrashIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ClockIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
@@ -36,7 +35,7 @@ export default function OpenAIKeysManagement() {
   const [testApiKey, setTestApiKey] = useState('');
   const [testResult, setTestResult] = useState<{ is_valid: boolean; message: string } | null>(null);
 
-  const { data: keys, isLoading, refetch } = useQuery<{ data: OpenAIKey[] }>(
+  const { data: keys, isLoading } = useQuery<{ data: OpenAIKey[] }>(
     'openaiKeys',
     () => adminAPI.listOpenAIKeys(true),
     {
