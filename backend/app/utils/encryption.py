@@ -1,6 +1,7 @@
 """Encryption utilities for sensitive data like API keys."""
 
 import logging
+import os
 
 from cryptography.fernet import Fernet
 
@@ -10,14 +11,19 @@ logger = logging.getLogger(__name__)
 
 
 def get_encryption_key() -> bytes:
-    """Get the encryption key from settings."""
-    if not settings.OPENAI_KEYS_ENCRYPTION_KEY:
+    """Get the encryption key from settings or environment variable.
+    
+    Tries to read from settings first, then falls back to os.getenv()
+    to handle cases where Pydantic settings don't pick up the env var.
+    """
+    key = (settings.OPENAI_KEYS_ENCRYPTION_KEY or os.getenv("OPENAI_KEYS_ENCRYPTION_KEY", "")).strip()
+    
+    if not key:
         raise ValueError(
             "OPENAI_KEYS_ENCRYPTION_KEY environment variable must be set. "
             "Generate one with: python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'"
         )
 
-    key = settings.OPENAI_KEYS_ENCRYPTION_KEY
     if isinstance(key, str):
         key = key.encode()
 
