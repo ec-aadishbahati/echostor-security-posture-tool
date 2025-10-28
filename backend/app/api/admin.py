@@ -298,9 +298,7 @@ async def get_users_progress_summary(
             if user.assessments:
                 assessment = max(user.assessments, key=lambda a: a.created_at)
 
-            last_activity = (
-                assessment.last_saved_at if assessment else user.created_at
-            )
+            last_activity = assessment.last_saved_at if assessment else user.created_at
             user_data = {
                 "user_id": str(user.id),
                 "full_name": user.full_name,
