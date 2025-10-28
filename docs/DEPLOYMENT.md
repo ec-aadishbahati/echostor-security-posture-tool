@@ -74,6 +74,10 @@ ALLOWED_ORIGINS=https://your-frontend-domain.vercel.app,https://www.yourdomain.c
 # OpenAI Integration (for AI reports)
 OPENAI_API_KEY=your-openai-api-key
 
+# OpenAI Keys Management (Required if using OpenAI Keys feature)
+# Generate with: python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'
+OPENAI_KEYS_ENCRYPTION_KEY=your-fernet-encryption-key
+
 # Admin Login (alternative to using database admin user)
 ADMIN_LOGIN_USER=admin@yourdomain.com
 ADMIN_PASSWORD_HASH=your-bcrypt-hashed-password
@@ -162,6 +166,10 @@ flyctl secrets set ADMIN_EMAIL="aadish.bahati@echostor.com"
 # Optional secrets
 flyctl secrets set OPENAI_API_KEY="your-openai-api-key"
 flyctl secrets set ADMIN_PASSWORD_HASH="your-bcrypt-hashed-password"
+
+# OpenAI Keys Management (Required if using OpenAI Keys feature)
+# Generate encryption key with: python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'
+flyctl secrets set OPENAI_KEYS_ENCRYPTION_KEY="your-fernet-encryption-key"
 
 # List all secrets to verify
 flyctl secrets list
