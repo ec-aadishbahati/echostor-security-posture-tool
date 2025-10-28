@@ -35,7 +35,7 @@ TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def encryption_key(monkeypatch):
     """Set up encryption key for tests."""
     from app.core.config import settings
-    
+
     key = Fernet.generate_key().decode()
     monkeypatch.setattr(settings, "OPENAI_KEYS_ENCRYPTION_KEY", key)
     return key

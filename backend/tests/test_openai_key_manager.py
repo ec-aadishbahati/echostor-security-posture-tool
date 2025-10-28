@@ -77,7 +77,9 @@ class TestOpenAIKeyManager:
         with patch("app.services.openai_key_manager.OpenAI") as mock_openai_class:
             mock_client = MagicMock()
             mock_openai_class.return_value = mock_client
-            mock_client.chat.completions.create.side_effect = Exception("Invalid API key")
+            mock_client.chat.completions.create.side_effect = Exception(
+                "Invalid API key"
+            )
 
             is_valid, message = key_manager.test_key("sk-invalid")
 
@@ -110,7 +112,9 @@ class TestOpenAIKeyManager:
         mock_key2.created_at = datetime.now(UTC)
         mock_key2.created_by = "admin@test.com"
 
-        db_session.query.return_value.filter.return_value.order_by.return_value.all.return_value = [mock_key1]
+        db_session.query.return_value.filter.return_value.order_by.return_value.all.return_value = [
+            mock_key1
+        ]
 
         keys = key_manager.list_keys(include_inactive=False)
 
@@ -146,7 +150,10 @@ class TestOpenAIKeyManager:
         mock_key2.created_at = datetime.now(UTC)
         mock_key2.created_by = "admin@test.com"
 
-        db_session.query.return_value.order_by.return_value.all.return_value = [mock_key1, mock_key2]
+        db_session.query.return_value.order_by.return_value.all.return_value = [
+            mock_key1,
+            mock_key2,
+        ]
 
         keys = key_manager.list_keys(include_inactive=True)
 

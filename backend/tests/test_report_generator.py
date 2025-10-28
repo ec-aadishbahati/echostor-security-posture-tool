@@ -1,7 +1,5 @@
 from unittest.mock import MagicMock, patch
 
-import pytest
-
 from app.schemas.assessment import Question, QuestionOption
 from app.services.report_generator import (
     calculate_assessment_scores,
@@ -98,8 +96,8 @@ def test_calculate_assessment_scores_empty():
 
 
 def test_generate_ai_insights(encryption_key, mocker):
-    from app.services.question_parser import create_sample_assessment_structure
     from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
@@ -107,7 +105,7 @@ def test_generate_ai_insights(encryption_key, mocker):
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
-    
+
     mock_key = mocker.MagicMock()
     mock_key.id = "test-key-id"
     mock_key.encrypted_key = encrypt_api_key("test-api-key")
@@ -120,7 +118,7 @@ def test_generate_ai_insights(encryption_key, mocker):
     with patch("app.services.report_generator.OpenAI") as mock_openai_class:
         mock_client = MagicMock()
         mock_openai_class.return_value = mock_client
-        
+
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
         mock_response.choices[0].message.content = "Test insight"
@@ -172,7 +170,9 @@ def test_generate_ai_report(
     db_session.commit()
     db_session.refresh(ai_report)
 
-    with patch("app.services.report_generator.OpenAIKeyManager") as mock_key_manager_class:
+    with patch(
+        "app.services.report_generator.OpenAIKeyManager"
+    ) as mock_key_manager_class:
         mock_key_manager = MagicMock()
         mock_key_manager_class.return_value = mock_key_manager
         mock_key_manager.get_next_key.return_value = ("test-key-id", "test-api-key")
@@ -180,7 +180,7 @@ def test_generate_ai_report(
         with patch("app.services.report_generator.OpenAI") as mock_openai_class:
             mock_client = MagicMock()
             mock_openai_class.return_value = mock_client
-            
+
             mock_response = MagicMock()
             mock_response.choices = [MagicMock()]
             mock_response.choices[0].message.content = "AI insights"
