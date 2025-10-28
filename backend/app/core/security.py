@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from fastapi import HTTPException, status
 from jose import JWTError, jwt
@@ -22,14 +22,14 @@ def create_access_token(
 ) -> str:
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(UTC) + expires_delta
     else:
         hours = (
             settings.ADMIN_TOKEN_EXPIRE_HOURS
             if is_admin
             else settings.ACCESS_TOKEN_EXPIRE_HOURS
         )
-        expire = datetime.utcnow() + timedelta(hours=hours)
+        expire = datetime.now(UTC) + timedelta(hours=hours)
 
     to_encode.update({"exp": expire, "is_admin": is_admin})
     encoded_jwt = jwt.encode(

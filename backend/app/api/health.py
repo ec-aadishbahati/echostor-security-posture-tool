@@ -1,5 +1,5 @@
 import time
-from datetime import datetime
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
@@ -60,7 +60,7 @@ async def health_check():
         "status": "healthy",
         "version": "1.0.0",
         "uptime_seconds": round(uptime, 2),
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "checks": {
             "database": db_health,
         },
@@ -92,7 +92,7 @@ async def liveness_probe():
         "status": "alive",
         "version": "1.0.0",
         "uptime_seconds": round(get_uptime_seconds(), 2),
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 
@@ -109,7 +109,7 @@ async def readiness_probe():
         "status": "ready" if db_health["status"] == "healthy" else "not_ready",
         "version": "1.0.0",
         "uptime_seconds": round(uptime, 2),
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "checks": {"database": db_health},
     }
 
