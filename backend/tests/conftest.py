@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from cryptography.fernet import Fernet
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -28,6 +29,16 @@ engine = create_engine(
     poolclass=StaticPool,
 )
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+@pytest.fixture
+def encryption_key(monkeypatch):
+    """Set up encryption key for tests."""
+    from app.core.config import settings
+
+    key = Fernet.generate_key().decode()
+    monkeypatch.setattr(settings, "OPENAI_KEYS_ENCRYPTION_KEY", key)
+    return key
 
 
 @pytest.fixture(scope="function")

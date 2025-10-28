@@ -3,23 +3,21 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any
 
-import openai
 from jinja2 import Environment
+from openai import OpenAI
 from weasyprint import HTML
 
 from app.core.config import settings
 from app.core.database import SessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.schemas.assessment import Question
+from app.services.openai_key_manager import OpenAIKeyManager
 from app.services.question_parser import load_assessment_structure
 from app.services.storage import get_storage_service
 
 logger = logging.getLogger(__name__)
 
 jinja_env = Environment(autoescape=True)
-
-if settings.OPENAI_API_KEY:
-    openai.api_key = settings.OPENAI_API_KEY
 
 
 def generate_standard_report(report_id: str):
@@ -104,11 +102,12 @@ def generate_standard_report(report_id: str):
         db.close()
 
 
-async def generate_ai_report(report_id: str):
+def generate_ai_report(report_id: str):
     """Generate an AI-enhanced report using ChatGPT"""
 
     db = SessionLocal()
     report = None
+    key_manager = None
     try:
         logger.info(f"Starting AI report generation for report_id: {report_id}")
 
@@ -117,11 +116,7 @@ async def generate_ai_report(report_id: str):
             logger.error(f"Report not found: {report_id}")
             return
 
-        if not settings.OPENAI_API_KEY:
-            logger.error("OPENAI_API_KEY not configured - cannot generate AI report")
-            report.status = "failed"
-            db.commit()
-            return
+        key_manager = OpenAIKeyManager(db)
 
         assessment = (
             db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
@@ -144,7 +139,7 @@ async def generate_ai_report(report_id: str):
         structure = load_assessment_structure()
 
         logger.info("Generating AI insights")
-        ai_insights = await generate_ai_insights(responses, structure)
+        ai_insights = generate_ai_insights(responses, structure, key_manager)
 
         logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
@@ -263,13 +258,21 @@ def calculate_question_score(response: AssessmentResponse, question) -> int:
     return 0
 
 
-async def generate_ai_insights(
-    responses: list[AssessmentResponse], structure
+def generate_ai_insights(
+    responses: list[AssessmentResponse], structure, key_manager: OpenAIKeyManager
 ) -> dict[str, str]:
-    """Generate AI insights for each section"""
+    """Generate AI insights for each section using round-robin key rotation"""
 
     insights = {}
     response_dict = {r.question_id: r for r in responses}
+
+    try:
+        key_id, api_key = key_manager.get_next_key()
+        client = OpenAI(api_key=api_key, timeout=settings.OPENAI_TIMEOUT)
+        logger.info(f"Using API key {key_id} for AI report generation")
+    except ValueError as e:
+        logger.error(f"Failed to get OpenAI API key: {e}")
+        raise
 
     for section in structure.sections:
         section_responses = []
@@ -305,17 +308,23 @@ async def generate_ai_insights(
                 Keep the response professional and actionable, around 300-400 words.
                 """
 
-                response = await openai.ChatCompletion.acreate(
-                    model="gpt-4",
+                response = client.chat.completions.create(
+                    model=settings.OPENAI_MODEL,
                     messages=[{"role": "user", "content": prompt}],
-                    max_tokens=500,
-                    temperature=0.7,
+                    max_tokens=settings.OPENAI_MAX_TOKENS,
+                    temperature=settings.OPENAI_TEMPERATURE,
                 )
 
                 insights[section.id] = response.choices[0].message.content
 
+                if len(insights) == 1:
+                    key_manager.record_success(key_id)
+
             except Exception as e:
-                print(f"Error generating AI insight for section {section.id}: {e}")
+                logger.error(
+                    f"Error generating AI insight for section {section.id}: {e}"
+                )
+                key_manager.record_failure(key_id, e)
                 insights[section.id] = (
                     "AI analysis temporarily unavailable for this section."
                 )
@@ -793,20 +802,27 @@ def generate_ai_report_html(
         <meta charset="utf-8">
         <title>AI-Enhanced Security Posture Assessment Report</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            .header { text-align: center; margin-bottom: 40px; }
+            body { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 12px; margin: 0; padding: 40px; line-height: 1.6; color: #333; }
+            .container { max-width: 85%; margin: 0 auto; }
+            .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #2c3e50; padding-bottom: 20px; }
             .section { margin-bottom: 30px; page-break-inside: avoid; }
             .score-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; }
             .ai-insight { background: #e3f2fd; padding: 15px; border-left: 4px solid #2196f3; margin: 15px 0; }
-            .high-score { background: #d4edda; }
-            .medium-score { background: #fff3cd; }
-            .low-score { background: #f8d7da; }
-            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            .high-score { background: #d4edda; border-left: 4px solid #28a745; }
+            .medium-score { background: #fff3cd; border-left: 4px solid #ffc107; }
+            .low-score { background: #f8d7da; border-left: 4px solid #dc3545; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9em; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
+            th { background-color: #2c3e50; color: white; font-weight: bold; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+            h1 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 16px; color: #2c3e50; }
+            h2 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 16px; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-top: 30px; }
+            h3 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 14px; color: #495057; margin-top: 20px; }
+            h4 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 12px; color: #2196f3; font-weight: bold; }
         </style>
     </head>
     <body>
+        <div class="container">
         <div class="header">
             <h1>AI-Enhanced Security Posture Assessment Report</h1>
             <p>Generated on: {{ report_date }}</p>
@@ -856,6 +872,7 @@ def generate_ai_report_html(
             The AI analysis is provided for informational purposes and should be validated by security professionals. 
             For comprehensive security architecture planning, please contact EchoStor's security team 
             for a detailed professional assessment.</p>
+        </div>
         </div>
     </body>
     </html>
