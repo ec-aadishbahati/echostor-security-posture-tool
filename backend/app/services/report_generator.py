@@ -346,7 +346,8 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
         <meta charset="utf-8">
         <title>Security Posture Assessment Report</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; color: #333; }
+            body { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 12px; margin: 0; padding: 40px; line-height: 1.6; color: #333; }
+            .container { max-width: 85%; margin: 0 auto; }
             .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #2c3e50; padding-bottom: 20px; }
             .section { margin-bottom: 30px; page-break-inside: avoid; }
             .score-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; }
@@ -375,14 +376,16 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
             .answer-text { color: #495057; }
             .comment-text { font-style: italic; color: #6c757d; background: #f8f9fa; padding: 5px; border-radius: 3px; }
             .weight-badge { background: #6c757d; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; }
-            h2 { color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-top: 30px; }
-            h3 { color: #495057; margin-top: 20px; }
+            h1 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 16px; color: #2c3e50; }
+            h2 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 16px; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-top: 30px; }
+            h3 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 14px; color: #495057; margin-top: 20px; }
             .summary-box { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #6c757d; }
             .strength-item { color: #28a745; }
             .gap-item { color: #dc3545; }
         </style>
     </head>
     <body>
+        <div class="container">
         <div class="header">
             <h1>Security Posture Assessment Report</h1>
             <p><strong>Generated on:</strong> {{ report_date }}</p>
@@ -673,6 +676,7 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
             The scores and recommendations are indicative and should be validated through comprehensive security audits. 
             For detailed security architecture planning, penetration testing, or compliance assessments, 
             please contact EchoStor's security team for a professional evaluation tailored to your organization's specific needs.</p>
+        </div>
         </div>
     </body>
     </html>
