@@ -1,9 +1,12 @@
 """Admin API endpoints for OpenAI API key management."""
 
+import os
+
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_admin_user
+from app.core.config import settings
 from app.core.database import get_db
 from app.schemas.openai_key import (
     OpenAIKeyCreate,
@@ -14,6 +17,7 @@ from app.schemas.openai_key import (
 )
 from app.schemas.user import CurrentUserResponse
 from app.services.openai_key_manager import OpenAIKeyManager
+from app.utils.encryption import get_encryption_key
 
 router = APIRouter()
 
@@ -141,3 +145,27 @@ async def delete_openai_key(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete API key: {str(e)}",
         )
+
+
+@router.get("/diagnostics")
+async def encryption_diagnostics(
+    request: Request,
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
+):
+    """Diagnostic endpoint to check encryption key sources (admin only)."""
+    diagnostics = {
+        "settings_present": bool(settings.OPENAI_KEYS_ENCRYPTION_KEY),
+        "env_present": bool(os.getenv("OPENAI_KEYS_ENCRYPTION_KEY")),
+        "secrets_file_exists": os.path.exists("/run/secrets/OPENAI_KEYS_ENCRYPTION_KEY"),
+    }
+    
+    try:
+        key = get_encryption_key()
+        diagnostics["effective_key_len"] = len(key)
+        diagnostics["can_load_key"] = True
+    except Exception as e:
+        diagnostics["effective_key_len"] = 0
+        diagnostics["can_load_key"] = False
+        diagnostics["error"] = str(e)
+    
+    return diagnostics
