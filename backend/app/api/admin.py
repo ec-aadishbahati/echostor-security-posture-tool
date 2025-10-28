@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import and_, desc, func
@@ -221,12 +221,12 @@ async def get_dashboard_stats(
             .scalar()
         )
 
-        week_ago = datetime.utcnow() - timedelta(days=7)
+        week_ago = datetime.now(UTC) - timedelta(days=7)
         new_users_this_week = (
             db.query(func.count(User.id)).filter(User.created_at >= week_ago).scalar()
         )
 
-        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        seven_days_ago = datetime.now(UTC) - timedelta(days=7)
         stuck_assessments = (
             db.query(func.count(Assessment.id))
             .filter(
@@ -310,7 +310,7 @@ async def get_users_progress_summary(
                 if assessment
                 else user.created_at,
                 "days_since_activity": (
-                    datetime.utcnow()
+                    datetime.now(UTC)
                     - (assessment.last_saved_at if assessment else user.created_at)
                 ).days,
             }
@@ -411,7 +411,7 @@ async def get_alerts(
     try:
         alerts = []
 
-        seven_days_ago = datetime.utcnow() - timedelta(days=7)
+        seven_days_ago = datetime.now(UTC) - timedelta(days=7)
         stuck_assessments = (
             db.query(Assessment)
             .filter(
@@ -433,7 +433,7 @@ async def get_alerts(
                 }
             )
 
-        tomorrow = datetime.utcnow() + timedelta(days=1)
+        tomorrow = datetime.now(UTC) + timedelta(days=1)
         expiring_soon = (
             db.query(Assessment)
             .filter(

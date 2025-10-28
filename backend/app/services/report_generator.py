@@ -1,6 +1,6 @@
 import logging
 import uuid
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 import openai
@@ -86,7 +86,7 @@ def generate_standard_report(report_id: str):
         logger.info("PDF generated and stored successfully: %s", storage_location)
         report.file_path = storage_location
         report.status = "completed"
-        report.completed_at = datetime.now(datetime.UTC)
+        report.completed_at = datetime.now(UTC)
         db.commit()
 
         logger.info(
@@ -170,7 +170,7 @@ async def generate_ai_report(report_id: str):
         logger.info(f"AI PDF generated successfully: {storage_location}")
         report.file_path = storage_location
         report.status = "completed"
-        report.completed_at = datetime.now(datetime.UTC)
+        report.completed_at = datetime.now(UTC)
         db.commit()
 
         logger.info(
