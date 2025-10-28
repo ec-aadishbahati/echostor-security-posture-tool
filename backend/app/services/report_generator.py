@@ -10,6 +10,7 @@ from weasyprint import HTML
 from app.core.config import settings
 from app.core.database import SessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
+from app.schemas.assessment import Question
 from app.services.question_parser import load_assessment_structure
 from app.services.storage import get_storage_service
 
@@ -345,55 +346,260 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
         <meta charset="utf-8">
         <title>Security Posture Assessment Report</title>
         <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            .header { text-align: center; margin-bottom: 40px; }
+            body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; color: #333; }
+            .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #2c3e50; padding-bottom: 20px; }
             .section { margin-bottom: 30px; page-break-inside: avoid; }
             .score-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; }
-            .high-score { background: #d4edda; }
-            .medium-score { background: #fff3cd; }
-            .low-score { background: #f8d7da; }
-            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            .high-score { background: #d4edda; border-left: 4px solid #28a745; }
+            .medium-score { background: #fff3cd; border-left: 4px solid #ffc107; }
+            .low-score { background: #f8d7da; border-left: 4px solid #dc3545; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9em; }
             th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
+            th { background-color: #2c3e50; color: white; font-weight: bold; }
+            tr:nth-child(even) { background-color: #f9f9f9; }
+            .toc { background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
+            .toc ul { list-style-type: none; padding-left: 0; }
+            .toc li { margin: 8px 0; }
+            .toc a { color: #2c3e50; text-decoration: none; }
+            .toc a:hover { text-decoration: underline; }
+            .metadata-box { background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0; }
+            .confidence-box { padding: 10px; border-radius: 5px; margin: 10px 0; font-weight: bold; }
+            .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin: 20px 0; }
+            .heatmap-item { padding: 15px; border-radius: 5px; text-align: center; }
+            .remediation-table td { vertical-align: top; }
+            .priority-p1 { color: #dc3545; font-weight: bold; }
+            .priority-p2 { color: #fd7e14; font-weight: bold; }
+            .priority-p3 { color: #28a745; font-weight: bold; }
+            .question-row { page-break-inside: avoid; }
+            .question-text { font-weight: bold; color: #2c3e50; }
+            .answer-text { color: #495057; }
+            .comment-text { font-style: italic; color: #6c757d; background: #f8f9fa; padding: 5px; border-radius: 3px; }
+            .weight-badge { background: #6c757d; color: white; padding: 2px 8px; border-radius: 3px; font-size: 0.85em; }
+            h2 { color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-top: 30px; }
+            h3 { color: #495057; margin-top: 20px; }
+            .summary-box { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #6c757d; }
+            .strength-item { color: #28a745; }
+            .gap-item { color: #dc3545; }
         </style>
     </head>
     <body>
         <div class="header">
             <h1>Security Posture Assessment Report</h1>
-            <p>Generated on: {{ report_date }}</p>
-            <p>Assessment Period: {{ assessment.started_at.strftime('%Y-%m-%d') }} to {{ assessment.completed_at.strftime('%Y-%m-%d') }}</p>
+            <p><strong>Generated on:</strong> {{ report_date }}</p>
+            <p><strong>Assessment Period:</strong> {{ assessment.started_at.strftime('%Y-%m-%d') }} to {{ assessment.completed_at.strftime('%Y-%m-%d') }}</p>
         </div>
         
-        <div class="section">
-            <h2>Executive Summary</h2>
+        <div class="section toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#executive-summary">1. Executive Summary</a></li>
+                <li><a href="#assessment-overview">2. Assessment Overview and Metadata</a></li>
+                <li><a href="#methodology">3. Methodology and Scoring</a></li>
+                <li><a href="#data-quality">4. Data Quality and Confidence Level</a></li>
+                <li><a href="#domain-heatmap">5. Domain Heatmap and Maturity Tiers</a></li>
+                <li><a href="#section-scores">6. Section Scores</a></li>
+                <li><a href="#remediation-plan">7. Prioritized Remediation Plan</a></li>
+                <li><a href="#section-summaries">8. Section Summaries</a></li>
+                <li><a href="#recommendations">9. Overall Recommendations</a></li>
+                <li><a href="#detailed-responses">10. Detailed Responses (All Questions and Answers)</a></li>
+                <li><a href="#comments-digest">11. Comments Digest</a></li>
+                {% if assessment.consultation_interest %}
+                <li><a href="#consultation">12. Consultation Request</a></li>
+                {% endif %}
+                <li><a href="#disclaimer">Disclaimer</a></li>
+            </ul>
+        </div>
+        
+        <div class="section" id="executive-summary">
+            <h2>1. Executive Summary</h2>
             <div class="score-box {{ overall_score_class }}">
                 <h3>Overall Security Score: {{ "%.1f"|format(scores.overall.percentage) }}%</h3>
                 <p>{{ overall_assessment }}</p>
             </div>
         </div>
         
-        <div class="section">
-            <h2>Section Scores</h2>
+        <div class="section" id="assessment-overview">
+            <h2>2. Assessment Overview and Metadata</h2>
+            <div class="metadata-box">
+                <p><strong>Assessment ID:</strong> {{ assessment.id }}</p>
+                <p><strong>Started:</strong> {{ assessment.started_at.strftime('%Y-%m-%d %H:%M UTC') }}</p>
+                <p><strong>Completed:</strong> {{ assessment.completed_at.strftime('%Y-%m-%d %H:%M UTC') }}</p>
+                <p><strong>Total Questions:</strong> {{ structure.total_questions }}</p>
+                <p><strong>Questions Answered:</strong> {{ responses|length }}</p>
+                <p><strong>Overall Progress:</strong> {{ "%.1f"|format(assessment.progress_percentage) }}%</p>
+                <p><strong>Report Version:</strong> Standard Report v1.0</p>
+            </div>
+            <p>This assessment evaluates your organization's cybersecurity posture across {{ structure.sections|length }} key security domains. 
+            The evaluation is based on industry best practices and provides actionable insights for improving your security program.</p>
+        </div>
+        
+        <div class="section" id="methodology">
+            <h2>3. Methodology and Scoring</h2>
+            <p>This assessment uses a weighted scoring methodology to evaluate your security posture:</p>
+            <ul>
+                <li><strong>Question Types:</strong>
+                    <ul>
+                        <li><em>Yes/No Questions:</em> Full weight awarded for "Yes" answers, zero for "No"</li>
+                        <li><em>Multiple Choice:</em> Weight awarded for selecting an answer</li>
+                        <li><em>Multiple Select:</em> Weight awarded for selecting one or more answers</li>
+                        <li><em>Text Questions:</em> Not scored, used for context and planning</li>
+                    </ul>
+                </li>
+                <li><strong>Question Weights:</strong> Questions are weighted 1-5 based on their importance to security posture</li>
+                <li><strong>Section Scores:</strong> Calculated as (total points earned / total possible points) × 100%</li>
+                <li><strong>Overall Score:</strong> Aggregate of all section scores weighted equally</li>
+                <li><strong>Maturity Tiers:</strong>
+                    <ul>
+                        <li><em>Strong (≥80%):</em> Robust security practices in place</li>
+                        <li><em>Moderate (60-79%):</em> Foundational practices with room for improvement</li>
+                        <li><em>Needs Improvement (<60%):</em> Significant gaps requiring attention</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="section" id="data-quality">
+            <h2>4. Data Quality and Confidence Level</h2>
+            <div class="confidence-box {{ confidence_class }}">
+                <p><strong>Confidence Level:</strong> {{ confidence_level }}</p>
+                <p>{{ confidence_description }}</p>
+            </div>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Total Questions</td>
+                    <td>{{ structure.total_questions }}</td>
+                </tr>
+                <tr>
+                    <td>Questions Answered</td>
+                    <td>{{ responses|length }}</td>
+                </tr>
+                <tr>
+                    <td>Questions Unanswered</td>
+                    <td>{{ structure.total_questions - responses|length }}</td>
+                </tr>
+                <tr>
+                    <td>Overall Completion Rate</td>
+                    <td>{{ "%.1f"|format(assessment.progress_percentage) }}%</td>
+                </tr>
+                <tr>
+                    <td>Comments Provided</td>
+                    <td>{{ comments_count }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section" id="domain-heatmap">
+            <h2>5. Domain Heatmap and Maturity Tiers</h2>
+            <p>Visual overview of security maturity across all domains:</p>
+            <div class="heatmap">
+                {% for section in structure.sections %}
+                <div class="heatmap-item {{ maturity_tiers[section.id].css_class }}">
+                    <strong>{{ section.title }}</strong><br>
+                    {{ "%.1f"|format(scores[section.id].percentage) }}%<br>
+                    <small>{{ maturity_tiers[section.id].tier }}</small>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="section" id="section-scores">
+            <h2>6. Section Scores</h2>
             <table>
                 <tr>
                     <th>Section</th>
                     <th>Score</th>
                     <th>Completion</th>
-                    <th>Status</th>
+                    <th>Maturity Tier</th>
                 </tr>
                 {% for section in structure.sections %}
                 <tr>
                     <td>{{ section.title }}</td>
                     <td>{{ "%.1f"|format(scores[section.id].percentage) }}%</td>
                     <td>{{ "%.1f"|format(scores[section.id].completion_rate) }}%</td>
-                    <td>{{ get_score_status(scores[section.id].percentage) }}</td>
+                    <td>{{ maturity_tiers[section.id].tier }}</td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
         
-        <div class="section">
-            <h2>Recommendations</h2>
+        <div class="section" id="remediation-plan">
+            <h2>7. Prioritized Remediation Plan</h2>
+            <p>Recommended actions prioritized by impact and urgency:</p>
+            {% if remediation_items %}
+            <table class="remediation-table">
+                <tr>
+                    <th>Priority</th>
+                    <th>Domain</th>
+                    <th>Current Score</th>
+                    <th>Effort</th>
+                    <th>Timeframe</th>
+                </tr>
+                {% for item in remediation_items %}
+                <tr>
+                    <td class="priority-{{ item.priority|lower }}">{{ item.priority }}</td>
+                    <td>{{ item.domain }}</td>
+                    <td>{{ item.current_score }}</td>
+                    <td>{{ item.effort }}</td>
+                    <td>{{ item.timeframe }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <p><strong>Priority Levels:</strong></p>
+            <ul>
+                <li><span class="priority-p1">P1 (Critical):</span> Address immediately - significant security gaps</li>
+                <li><span class="priority-p2">P2 (High):</span> Address within 30-90 days - important improvements</li>
+                <li><span class="priority-p3">P3 (Medium):</span> Quick wins - low effort, visible improvements</li>
+            </ul>
+            {% else %}
+            <p>No critical remediation items identified. Continue maintaining current security practices.</p>
+            {% endif %}
+        </div>
+        
+        <div class="section" id="section-summaries">
+            <h2>8. Section Summaries</h2>
+            <p>Detailed analysis of each security domain:</p>
+            {% for summary in section_summaries %}
+            <div class="summary-box">
+                <h3>{{ summary.section.title }}</h3>
+                <p><strong>Score:</strong> {{ "%.1f"|format(summary.score) }}% | 
+                   <strong>Completion:</strong> {{ "%.1f"|format(summary.completion) }}%</p>
+                
+                {% if summary.strengths %}
+                <p><strong>Key Strengths:</strong></p>
+                <ul>
+                    {% for strength in summary.strengths %}
+                    <li class="strength-item">{{ strength }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                
+                {% if summary.gaps %}
+                <p><strong>Critical Gaps:</strong></p>
+                <ul>
+                    {% for gap in summary.gaps %}
+                    <li class="gap-item">{{ gap }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                
+                {% if summary.recommendations %}
+                <p><strong>Recommendations:</strong></p>
+                <ul>
+                    {% for rec in summary.recommendations %}
+                    <li>{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="section" id="recommendations">
+            <h2>9. Overall Recommendations</h2>
             <ul>
                 {% for recommendation in recommendations %}
                 <li>{{ recommendation }}</li>
@@ -401,11 +607,72 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
             </ul>
         </div>
         
-        <div class="section">
+        <div class="section" id="detailed-responses">
+            <h2>10. Detailed Responses (All Questions and Answers)</h2>
+            <p>Complete record of all assessment questions with your submitted answers and comments:</p>
+            {% for section in structure.sections %}
+            <div class="section">
+                <h3>{{ section.title }}</h3>
+                <table>
+                    <tr>
+                        <th style="width: 50%;">Question</th>
+                        <th style="width: 25%;">Answer</th>
+                        <th style="width: 15%;">Comment</th>
+                        <th style="width: 10%;">Weight</th>
+                    </tr>
+                    {% for question in section.questions %}
+                    <tr class="question-row">
+                        <td class="question-text">{{ question.text }}</td>
+                        <td class="answer-text">{{ question_answers[question.id] }}</td>
+                        <td class="comment-text">{{ question_comments[question.id] }}</td>
+                        <td><span class="weight-badge">{{ question.weight }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="section" id="comments-digest">
+            <h2>11. Comments Digest</h2>
+            <p>All comments provided during the assessment, grouped by domain:</p>
+            {% if all_comments %}
+            {% for section in structure.sections %}
+                {% if section_comments[section.id] %}
+                <div class="summary-box">
+                    <h3>{{ section.title }}</h3>
+                    {% for comment_item in section_comments[section.id] %}
+                    <p><strong>Q:</strong> {{ comment_item.question }}<br>
+                       <strong>Comment:</strong> <em>{{ comment_item.comment }}</em></p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% else %}
+            <p>No comments were provided during this assessment.</p>
+            {% endif %}
+        </div>
+        
+        {% if assessment.consultation_interest %}
+        <div class="section" id="consultation">
+            <h2>12. Consultation Request</h2>
+            <div class="score-box medium-score">
+                <p><strong>Consultation Interest:</strong> Yes</p>
+                {% if assessment.consultation_details %}
+                <p><strong>Details:</strong></p>
+                <p>{{ assessment.consultation_details }}</p>
+                {% endif %}
+                <p><em>An EchoStor security consultant will contact you to discuss your specific needs and how we can help improve your security posture.</em></p>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="section" id="disclaimer">
             <h2>Disclaimer</h2>
-            <p>This assessment provides general guidance based on industry best practices. 
-            For comprehensive security architecture planning, please contact EchoStor's security team 
-            for a detailed professional assessment.</p>
+            <p>This assessment provides general guidance based on industry best practices and your self-reported responses. 
+            The scores and recommendations are indicative and should be validated through comprehensive security audits. 
+            For detailed security architecture planning, penetration testing, or compliance assessments, 
+            please contact EchoStor's security team for a professional evaluation tailored to your organization's specific needs.</p>
         </div>
     </body>
     </html>
@@ -431,23 +698,81 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
 
     recommendations = generate_recommendations(scores, structure)
 
-    def get_score_status(percentage):
-        if percentage >= 80:
-            return "Strong"
-        elif percentage >= 60:
-            return "Moderate"
-        else:
-            return "Needs Improvement"
+    confidence_level, confidence_description = calculate_confidence_level(scores)
+    if confidence_level == "High":
+        confidence_class = "high-score"
+    elif confidence_level == "Medium":
+        confidence_class = "medium-score"
+    else:
+        confidence_class = "low-score"
+
+    maturity_tiers = {}
+    for section in structure.sections:
+        tier, css_class = get_maturity_tier(scores[section.id]["percentage"])
+        maturity_tiers[section.id] = {"tier": tier, "css_class": css_class}
+
+    remediation_items = generate_prioritized_remediation(scores, structure)
+    section_summaries = generate_section_summaries(scores, structure, responses)
+
+    response_dict = {r.question_id: r for r in responses}
+    question_answers = {}
+    question_comments = {}
+
+    for section in structure.sections:
+        for question in section.questions:
+            response = response_dict.get(question.id)
+            if response:
+                question_answers[question.id] = normalize_answer_display(
+                    response.answer_value, question
+                )
+                question_comments[question.id] = (
+                    response.comment if response.comment else "—"
+                )
+            else:
+                question_answers[question.id] = "Not answered"
+                question_comments[question.id] = "—"
+
+    all_comments = []
+    section_comments: dict[str, list] = {}
+    comments_count = 0
+
+    for section in structure.sections:
+        section_comments[section.id] = []
+        for question in section.questions:
+            response = response_dict.get(question.id)
+            if response and response.comment:
+                comments_count += 1
+                all_comments.append(
+                    {
+                        "section": section.title,
+                        "question": question.text,
+                        "comment": response.comment,
+                    }
+                )
+                section_comments[section.id].append(
+                    {"question": question.text, "comment": response.comment}
+                )
 
     return template.render(
         assessment=assessment,
         scores=scores,
         structure=structure,
+        responses=responses,
         report_date=datetime.now().strftime("%Y-%m-%d %H:%M"),
         overall_score_class=overall_score_class,
         overall_assessment=overall_assessment,
         recommendations=recommendations,
-        get_score_status=get_score_status,
+        confidence_level=confidence_level,
+        confidence_description=confidence_description,
+        confidence_class=confidence_class,
+        maturity_tiers=maturity_tiers,
+        remediation_items=remediation_items,
+        section_summaries=section_summaries,
+        question_answers=question_answers,
+        question_comments=question_comments,
+        all_comments=all_comments,
+        section_comments=section_comments,
+        comments_count=comments_count,
     )
 
 
@@ -596,3 +921,185 @@ def generate_recommendations(scores, structure) -> list[str]:
         )
 
     return recommendations
+
+
+def normalize_answer_display(answer_value: Any, question: Question) -> str:
+    """Convert answer value to human-readable display format"""
+
+    if answer_value is None:
+        return "Not answered"
+
+    if question.type == "yes_no":
+        if isinstance(answer_value, bool):
+            return "Yes" if answer_value else "No"
+        if isinstance(answer_value, str):
+            return "Yes" if answer_value.lower() in ["yes", "true", "1"] else "No"
+        return "Yes" if answer_value else "No"
+
+    elif question.type == "multiple_choice":
+        if isinstance(answer_value, str):
+            for option in question.options:
+                if option.value == answer_value:
+                    return option.label
+        return str(answer_value) if answer_value else "Not answered"
+
+    elif question.type == "multiple_select":
+        if isinstance(answer_value, list) and answer_value:
+            labels = []
+            for val in answer_value:
+                for option in question.options:
+                    if option.value == val:
+                        labels.append(option.label)
+                        break
+                else:
+                    labels.append(str(val))
+            return ", ".join(labels) if labels else "Not answered"
+        return "Not answered"
+
+    elif question.type == "text":
+        if isinstance(answer_value, str) and answer_value.strip():
+            return answer_value.replace("\n", "<br>")
+        return "Not answered"
+
+    return str(answer_value) if answer_value else "Not answered"
+
+
+def get_maturity_tier(percentage: float) -> tuple[str, str]:
+    """Get maturity tier and CSS class for a score percentage"""
+    if percentage >= 80:
+        return ("Strong", "high-score")
+    elif percentage >= 60:
+        return ("Moderate", "medium-score")
+    else:
+        return ("Needs Improvement", "low-score")
+
+
+def calculate_confidence_level(scores: dict) -> tuple[str, str]:
+    """Calculate overall confidence level based on completion rates"""
+
+    total_completion = 0
+    section_count = 0
+
+    for key, value in scores.items():
+        if key != "overall" and "completion_rate" in value:
+            total_completion += value["completion_rate"]
+            section_count += 1
+
+    avg_completion = total_completion / section_count if section_count > 0 else 0
+
+    if avg_completion >= 80:
+        return ("High", "All sections substantially completed with reliable results")
+    elif avg_completion >= 60:
+        return ("Medium", "Most sections completed, results generally reliable")
+    else:
+        return ("Low", "Significant gaps in completion may affect result reliability")
+
+
+def generate_prioritized_remediation(scores: dict, structure: Any) -> list[dict]:
+    """Generate prioritized remediation plan with effort and timeframe"""
+
+    remediation_items = []
+
+    section_scores = [
+        (section, scores[section.id]["percentage"]) for section in structure.sections
+    ]
+    section_scores.sort(key=lambda x: x[1])
+
+    for section, percentage in section_scores[:5]:
+        if percentage < 70:
+            priority = "P1" if percentage < 50 else "P2"
+            effort = "High" if percentage < 40 else "Medium"
+            timeframe = "90-180 days" if percentage < 40 else "30-90 days"
+
+            remediation_items.append(
+                {
+                    "domain": section.title,
+                    "priority": priority,
+                    "effort": effort,
+                    "timeframe": timeframe,
+                    "current_score": f"{percentage:.1f}%",
+                }
+            )
+
+    for section, percentage in section_scores:
+        if 60 <= percentage < 80:
+            remediation_items.append(
+                {
+                    "domain": section.title,
+                    "priority": "P3",
+                    "effort": "Low",
+                    "timeframe": "0-30 days",
+                    "current_score": f"{percentage:.1f}%",
+                }
+            )
+            if len(remediation_items) >= 10:
+                break
+
+    return remediation_items
+
+
+def generate_section_summaries(
+    scores: dict, structure: Any, responses: list
+) -> list[dict]:
+    """Generate summary for each section with strengths and gaps"""
+
+    response_dict = {r.question_id: r for r in responses}
+    summaries = []
+
+    for section in structure.sections:
+        section_score = scores[section.id]
+
+        answered_questions = []
+        for question in section.questions:
+            response = response_dict.get(question.id)
+            if response:
+                answered_questions.append((question, response))
+
+        strengths = []
+        gaps = []
+
+        for question, response in answered_questions:
+            if question.type == "yes_no":
+                answer_str = str(response.answer_value).lower()
+                if answer_str in ["yes", "true", "1"]:
+                    if question.weight >= 4:
+                        strengths.append(
+                            question.text[:80] + "..."
+                            if len(question.text) > 80
+                            else question.text
+                        )
+                else:
+                    if question.weight >= 4:
+                        gaps.append(
+                            question.text[:80] + "..."
+                            if len(question.text) > 80
+                            else question.text
+                        )
+
+        # Generate recommendations
+        recommendations = []
+        if section_score["percentage"] < 70:
+            recommendations.append(
+                f"Focus on improving {section.title} - current score below target"
+            )
+        if section_score["completion_rate"] < 100:
+            recommendations.append(
+                f"Complete remaining {section_score['total_questions'] - section_score['responses_count']} questions"
+            )
+        if section_score["percentage"] >= 80:
+            recommendations.append(
+                "Maintain current strong practices and review periodically"
+            )
+
+        summaries.append(
+            {
+                "section": section,
+                "score": section_score["percentage"],
+                "completion": section_score["completion_rate"],
+                "strengths": strengths[:3],  # Top 3
+                "gaps": gaps[:3],  # Top 3
+                "recommendations": recommendations[:3],  # Top 3
+            }
+        )
+
+    return summaries
