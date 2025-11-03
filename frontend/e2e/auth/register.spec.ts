@@ -15,8 +15,8 @@ test.describe('User Registration', () => {
 
     await page.click('button[type="submit"]');
 
-    await page.waitForURL(/\/assessment\/overview/, { timeout: 10000 });
-    await expect(page).toHaveURL(/\/assessment\/overview/);
+    await page.waitForURL(/\/dashboard/, { timeout: 10000 });
+    await expect(page).toHaveURL(/\/dashboard/);
   });
 
   test('should display registration form', async ({ page }) => {

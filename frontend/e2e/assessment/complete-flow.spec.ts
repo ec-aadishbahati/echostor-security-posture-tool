@@ -1,13 +1,13 @@
 import { test, expect } from '../fixtures/auth';
 
 test.describe('Assessment Flow', () => {
-  test('should display assessment overview page', async ({
+  test('should display dashboard page', async ({
     authenticatedPage,
   }) => {
-    await authenticatedPage.goto('/assessment/overview');
+    await authenticatedPage.goto('/dashboard');
 
     await expect(authenticatedPage.locator('h1, h2')).toContainText([
-      /Welcome|Security Assessment/,
+      /Welcome|Dashboard/,
     ]);
   });
 
