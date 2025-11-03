@@ -1,4 +1,5 @@
-from unittest.mock import patch
+import io
+from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
@@ -605,3 +606,207 @@ def test_reports_user_health_flow(
 
     readiness_response = client.get("/health/ready")
     assert readiness_response.status_code in (200, 503)
+
+
+def test_download_report_serves_existing_file(
+    client: TestClient, auth_token, db_session, completed_assessment, monkeypatch
+):
+    from app.models.assessment import Report
+
+    report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="standard",
+        status="completed",
+        file_path="reports/test_report.pdf",
+    )
+    db_session.add(report)
+    db_session.commit()
+    db_session.refresh(report)
+
+    fake_pdf_bytes = b"%PDF-1.4 FAKE PDF CONTENT"
+
+    mock_storage = MagicMock()
+    mock_storage.exists.return_value = True
+    mock_storage.open.return_value = io.BytesIO(fake_pdf_bytes)
+
+    monkeypatch.setattr("app.api.reports.get_storage_service", lambda: mock_storage)
+
+    response = client.get(
+        f"/api/reports/{report.id}/download",
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert "attachment" in response.headers.get("content-disposition", "").lower()
+    assert len(response.content) > 0
+
+
+def test_download_report_regenerates_when_file_missing(
+    client: TestClient, auth_token, db_session, completed_assessment, monkeypatch
+):
+    from app.models.assessment import AssessmentResponse, Report
+
+    assessment_response = AssessmentResponse(
+        assessment_id=completed_assessment.id,
+        section_id="access-control",
+        question_id="ac-1",
+        answer_value="yes",
+    )
+    db_session.add(assessment_response)
+    db_session.commit()
+
+    report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="standard",
+        status="completed",
+        file_path=None,
+    )
+    db_session.add(report)
+    db_session.commit()
+    db_session.refresh(report)
+
+    fake_pdf_bytes = b"%PDF-1.4 REGENERATED PDF"
+    saved_path = None
+
+    def mock_save(pdf_bytes, filename):
+        nonlocal saved_path
+        saved_path = f"reports/{filename}"
+        return saved_path
+
+    mock_storage = MagicMock()
+    mock_storage.exists.return_value = False
+    mock_storage.save.side_effect = mock_save
+
+    monkeypatch.setattr("app.api.reports.get_storage_service", lambda: mock_storage)
+    monkeypatch.setattr(
+        "app.api.reports.HTML",
+        lambda string: MagicMock(write_pdf=lambda: fake_pdf_bytes),
+    )
+    monkeypatch.setattr(
+        "app.api.reports.generate_report_html", lambda *args, **kwargs: "<html></html>"
+    )
+    monkeypatch.setattr(
+        "app.api.reports.calculate_assessment_scores", lambda *args, **kwargs: {}
+    )
+    monkeypatch.setattr(
+        "app.api.reports.load_assessment_structure", lambda: {"sections": []}
+    )
+
+    response = client.get(
+        f"/api/reports/{report.id}/download",
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert len(response.content) > 0
+
+    db_session.refresh(report)
+    assert report.file_path is not None
+    assert report.file_path == saved_path
+
+
+def test_download_report_ai_report_fails_when_file_missing(
+    client: TestClient, auth_token, db_session, completed_assessment, monkeypatch
+):
+    from app.models.assessment import Report
+
+    report = Report(
+        assessment_id=completed_assessment.id,
+        report_type="ai_enhanced",
+        status="completed",
+        file_path=None,
+    )
+    db_session.add(report)
+    db_session.commit()
+    db_session.refresh(report)
+
+    mock_storage = MagicMock()
+    mock_storage.exists.return_value = False
+
+    monkeypatch.setattr("app.api.reports.get_storage_service", lambda: mock_storage)
+
+    response = client.get(
+        f"/api/reports/{report.id}/download",
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+
+    assert response.status_code == 404
+    assert "cannot be regenerated" in response.json()["detail"].lower()
+
+
+def test_download_report_uses_filtered_structure_for_customized_assessment(
+    client: TestClient, auth_token, db_session, test_user, monkeypatch
+):
+    from datetime import UTC, datetime, timedelta
+
+    from app.models.assessment import Assessment, AssessmentResponse, Report
+
+    customized_assessment = Assessment(
+        user_id=test_user.id,
+        status="completed",
+        started_at=datetime.now(UTC) - timedelta(days=1),
+        completed_at=datetime.now(UTC),
+        expires_at=datetime.now(UTC) + timedelta(days=14),
+        progress_percentage=100.0,
+        selected_section_ids=["access-control", "data-protection"],
+    )
+    db_session.add(customized_assessment)
+    db_session.commit()
+    db_session.refresh(customized_assessment)
+
+    assessment_response = AssessmentResponse(
+        assessment_id=customized_assessment.id,
+        section_id="access-control",
+        question_id="ac-1",
+        answer_value="yes",
+    )
+    db_session.add(assessment_response)
+    db_session.commit()
+
+    report = Report(
+        assessment_id=customized_assessment.id,
+        report_type="standard",
+        status="completed",
+        file_path=None,
+    )
+    db_session.add(report)
+    db_session.commit()
+    db_session.refresh(report)
+
+    fake_pdf_bytes = b"%PDF-1.4 FILTERED PDF"
+    filter_called_with = None
+
+    def mock_filter(structure, selected_ids):
+        nonlocal filter_called_with
+        filter_called_with = selected_ids
+        return structure
+
+    mock_storage = MagicMock()
+    mock_storage.exists.return_value = False
+    mock_storage.save.return_value = "reports/filtered.pdf"
+
+    monkeypatch.setattr("app.api.reports.get_storage_service", lambda: mock_storage)
+    monkeypatch.setattr(
+        "app.api.reports.HTML",
+        lambda string: MagicMock(write_pdf=lambda: fake_pdf_bytes),
+    )
+    monkeypatch.setattr(
+        "app.api.reports.generate_report_html", lambda *args, **kwargs: "<html></html>"
+    )
+    monkeypatch.setattr(
+        "app.api.reports.calculate_assessment_scores", lambda *args, **kwargs: {}
+    )
+    monkeypatch.setattr(
+        "app.api.reports.load_assessment_structure", lambda: {"sections": []}
+    )
+    monkeypatch.setattr("app.api.reports.filter_structure_by_sections", mock_filter)
+
+    response = client.get(
+        f"/api/reports/{report.id}/download",
+        headers={"Authorization": f"Bearer {auth_token}"},
+    )
+
+    assert response.status_code == 200
+    assert filter_called_with == ["access-control", "data-protection"]
