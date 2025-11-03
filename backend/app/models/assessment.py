@@ -31,6 +31,9 @@ class Assessment(Base):
     expires_at = Column(DateTime(timezone=True))
     last_saved_at = Column(DateTime(timezone=True), server_default=func.now())
     progress_percentage = Column(DECIMAL(5, 2), default=0.00)
+    selected_section_ids = Column(
+        JSON, nullable=True
+    )  # NULL = all sections (backward compatible)
     consultation_interest = Column(Boolean, default=False)
     consultation_details = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

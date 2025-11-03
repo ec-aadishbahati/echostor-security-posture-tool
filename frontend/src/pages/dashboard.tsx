@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -11,10 +11,14 @@ import {
   ClockIcon,
   ArrowRightIcon,
   CheckCircleIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  InformationCircleIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const [showGuide, setShowGuide] = useState(false);
 
   const {
     data: assessment,
@@ -55,9 +59,95 @@ export default function Dashboard() {
             </p>
           </div>
 
+          {!hasActiveAssessment && (
+            <div className="card mb-8 bg-blue-50 border border-blue-200">
+              <button
+                onClick={() => setShowGuide(!showGuide)}
+                className="w-full flex items-center justify-between text-left"
+              >
+                <div className="flex items-center">
+                  <InformationCircleIcon className="h-6 w-6 text-blue-600 mr-3" />
+                  <h3 className="text-lg font-semibold text-blue-900">How to Use This Tool</h3>
+                </div>
+                {showGuide ? (
+                  <ChevronUpIcon className="h-5 w-5 text-blue-600" />
+                ) : (
+                  <ChevronDownIcon className="h-5 w-5 text-blue-600" />
+                )}
+              </button>
+
+              {showGuide && (
+                <div className="mt-4 pt-4 border-t border-blue-200 text-blue-900">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-semibold mb-2">Overview</h4>
+                      <p className="text-sm text-blue-800">
+                        The EchoStor Security Posture Assessment Tool helps you evaluate your
+                        organization&apos;s cybersecurity maturity across 19 comprehensive security
+                        domains. You can customize your assessment to focus on the areas most
+                        relevant to your organization.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold mb-2">Step-by-Step Process</h4>
+                      <ol className="list-decimal list-inside space-y-2 text-sm text-blue-800">
+                        <li>
+                          <strong>Select Sections:</strong> Choose which security domains you want
+                          to assess (minimum 1 section required)
+                        </li>
+                        <li>
+                          <strong>Answer Questions:</strong> Complete the assessment questions for
+                          your selected sections
+                        </li>
+                        <li>
+                          <strong>Auto-Save:</strong> Your progress is automatically saved every 10
+                          minutes
+                        </li>
+                        <li>
+                          <strong>Complete Assessment:</strong> Submit your assessment when finished
+                        </li>
+                        <li>
+                          <strong>Get Reports:</strong> Receive your standard report immediately,
+                          with optional AI-enhanced analysis available
+                        </li>
+                      </ol>
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold mb-2">Tips for Success</h4>
+                      <ul className="list-disc list-inside space-y-1 text-sm text-blue-800">
+                        <li>You have 15 days to complete your assessment</li>
+                        <li>Select only the sections relevant to your organization&apos;s needs</li>
+                        <li>
+                          Provide detailed comments where applicable for better recommendations
+                        </li>
+                        <li>You can save progress and return anytime within the 15-day window</li>
+                        <li>Consider requesting the AI-enhanced report for deeper insights</li>
+                      </ul>
+                    </div>
+
+                    <div className="bg-white rounded p-3 mt-4">
+                      <p className="text-sm text-blue-900">
+                        <strong>Ready to begin?</strong> Click &quot;Start Assessment&quot; below to
+                        select your security domains and begin your evaluation.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <Link
-              href={isCompleted ? '/reports' : '/assessment/questions'}
+              href={
+                isCompleted
+                  ? '/reports'
+                  : hasActiveAssessment
+                    ? '/assessment/questions'
+                    : '/assessment/select-sections'
+              }
               className="card hover:shadow-lg transition-shadow cursor-pointer"
             >
               <div className="flex items-center">
@@ -154,7 +244,13 @@ export default function Dashboard() {
                   : 'Complete your comprehensive security posture assessment to receive personalized recommendations and an AI-enhanced report for your organization.'}
             </p>
             <Link
-              href={isCompleted ? '/reports' : '/assessment/questions'}
+              href={
+                isCompleted
+                  ? '/reports'
+                  : hasActiveAssessment
+                    ? '/assessment/questions'
+                    : '/assessment/select-sections'
+              }
               className="btn-primary inline-flex items-center"
             >
               {isCompleted

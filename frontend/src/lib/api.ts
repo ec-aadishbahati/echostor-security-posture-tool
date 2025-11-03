@@ -89,7 +89,13 @@ export const authAPI = {
 export const assessmentAPI = {
   getStructure: () => api.get('/api/assessment/structure'),
 
+  getFilteredStructure: (assessmentId: string) =>
+    api.get(`/api/assessment/${assessmentId}/filtered-structure`),
+
   startAssessment: () => api.post('/api/assessment/start'),
+
+  startAssessmentWithSections: (selectedSectionIds: string[]) =>
+    api.post('/api/assessment/start', { selected_section_ids: selectedSectionIds }),
 
   getCurrentAssessment: () => api.get('/api/assessment/current'),
 
