@@ -1595,19 +1595,22 @@
 **Explanation:** Multiple treatment strategies provide flexibility in addressing different types of risks.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: Avoid**
+*Basic Description:* Eliminate the risk entirely by discontinuing the activity or changing approach
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: Mitigate**
+*Basic Description:* Reduce likelihood or impact through security controls and safeguards
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: Transfer**
+*Basic Description:* Shift risk to third parties via insurance, contracts, or outsourcing
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: Accept**
+*Basic Description:* Acknowledge and monitor risk within organizational tolerance levels
 
-**Option 5: Not applicable**
+**Option 5: Monitor**
+*Basic Description:* Track risk over time for future action or reassessment
+
+**Option 6: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -1902,19 +1905,37 @@
 **Explanation:** Comprehensive asset tracking covers all technology components that could pose security risks.
 
 **Answer Options:**
-**Option 1: Type A**
-*Basic Description:* Primary implementation type
+**Option 1: Endpoints**
+*Basic Description:* Laptops, desktops, and workstations
 
-**Option 2: Type B**
-*Basic Description:* Secondary implementation type
+**Option 2: Servers**
+*Basic Description:* Physical and virtual servers
 
-**Option 3: Type C**
-*Basic Description:* Alternative implementation type
+**Option 3: Mobile devices**
+*Basic Description:* Smartphones, tablets, and mobile endpoints
 
-**Option 4: Hybrid**
-*Basic Description:* Combination of multiple types
+**Option 4: Network devices**
+*Basic Description:* Switches, routers, firewalls, and network infrastructure
 
-**Option 5: Not applicable**
+**Option 5: Applications and services**
+*Basic Description:* Software applications and business services
+
+**Option 6: Databases and storage**
+*Basic Description:* Database systems and storage infrastructure
+
+**Option 7: Cloud resources**
+*Basic Description:* IaaS, PaaS, and SaaS cloud assets
+
+**Option 8: OT/ICS/IoT devices**
+*Basic Description:* Operational technology, industrial control systems, and IoT devices
+
+**Option 9: Backup media**
+*Basic Description:* Backup tapes, drives, and archive storage
+
+**Option 10: Third-party/SaaS applications**
+*Basic Description:* External SaaS applications and third-party services
+
+**Option 11: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -2642,20 +2663,23 @@
 **Explanation:** Modern VPN protocols provide better security and performance than legacy options.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: IPsec/IKEv2**
+*Basic Description:* Industry-standard IPsec with IKEv2 key exchange
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: SSL/TLS VPN (e.g., OpenVPN)**
+*Basic Description:* SSL/TLS-based VPN protocols like OpenVPN
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: WireGuard**
+*Basic Description:* Modern, lightweight VPN protocol with strong cryptography
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: L2TP/IPsec**
+*Basic Description:* Layer 2 Tunneling Protocol with IPsec encryption
 
-**Option 5: Not applicable**
-*Basic Description:* Not applicable to our organization
+**Option 5: SSTP**
+*Basic Description:* Secure Socket Tunneling Protocol (Microsoft)
+
+**Option 6: None/Not applicable**
+*Basic Description:* No VPN or not applicable to our organization
 
 
 
@@ -2880,19 +2904,31 @@
 **Explanation:** Mobile policies protect corporate data on personal and company devices.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: Screen lock/passcode enforcement**
+*Basic Description:* Require device passcode or biometric authentication
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: Full-device encryption**
+*Basic Description:* Mandate encryption for all mobile devices
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: MDM enrollment**
+*Basic Description:* Require Mobile Device Management enrollment
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: OS version enforcement**
+*Basic Description:* Enforce minimum operating system versions
 
-**Option 5: Not applicable**
+**Option 5: App allow/deny lists**
+*Basic Description:* Control which applications can be installed
+
+**Option 6: Jailbreak/root detection**
+*Basic Description:* Detect and block compromised devices
+
+**Option 7: Remote wipe capability**
+*Basic Description:* Ability to remotely erase device data
+
+**Option 8: Conditional access policies**
+*Basic Description:* Context-based access controls for mobile devices
+
+**Option 9: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -3206,20 +3242,32 @@
 **Explanation:** Understanding applicable regulations is essential for compliance planning.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: GDPR**
+*Basic Description:* General Data Protection Regulation (European Union)
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: CCPA/CPRA**
+*Basic Description:* California Consumer Privacy Act / California Privacy Rights Act
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: HIPAA**
+*Basic Description:* Health Insurance Portability and Accountability Act
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: GLBA**
+*Basic Description:* Gramm-Leach-Bliley Act (financial services)
 
-**Option 5: Option 5**
-*Basic Description:* Fifth option
+**Option 5: SOX**
+*Basic Description:* Sarbanes-Oxley Act (financial reporting)
+
+**Option 6: PCI DSS**
+*Basic Description:* Payment Card Industry Data Security Standard
+
+**Option 7: PIPEDA**
+*Basic Description:* Personal Information Protection and Electronic Documents Act (Canada)
+
+**Option 8: LGPD**
+*Basic Description:* Lei Geral de Proteção de Dados (Brazil)
+
+**Option 9: None/Not applicable**
+*Basic Description:* No specific privacy regulations apply
 
 **Option 6: Not applicable**
 *Basic Description:* Not applicable to our organization
@@ -4121,20 +4169,23 @@
 **Explanation:** Different service models require different security approaches and responsibilities.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: IaaS**
+*Basic Description:* Infrastructure as a Service (virtual machines, storage, networks)
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: PaaS**
+*Basic Description:* Platform as a Service (application platforms, databases)
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: SaaS**
+*Basic Description:* Software as a Service (cloud applications)
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: FaaS/Serverless**
+*Basic Description:* Function as a Service or serverless computing
 
-**Option 5: Option 5**
-*Basic Description:* Fifth option
+**Option 5: Private cloud**
+*Basic Description:* Dedicated private cloud infrastructure
+
+**Option 6: Hybrid/Multi-cloud**
+*Basic Description:* Combination of multiple cloud environments
 
 **Option 6: Not applicable**
 *Basic Description:* Not applicable to our organization
@@ -4599,19 +4650,37 @@
 **Explanation:** Clear roles ensure effective coordination and decision-making during incidents.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: Incident Commander/Lead**
+*Basic Description:* Overall incident response coordinator and decision maker
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: Communications Lead**
+*Basic Description:* Internal and external communications coordinator
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: Forensics/Investigation Lead**
+*Basic Description:* Digital forensics and investigation specialist
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: IT Operations**
+*Basic Description:* Technical operations and system recovery
 
-**Option 5: Not applicable**
+**Option 5: Security Engineering**
+*Basic Description:* Security tools and threat analysis
+
+**Option 6: Legal/Privacy Officer**
+*Basic Description:* Legal compliance and privacy considerations
+
+**Option 7: Human Resources**
+*Basic Description:* Employee-related incident handling
+
+**Option 8: Public Relations/Communications**
+*Basic Description:* External media and stakeholder communications
+
+**Option 9: External IR Provider/Consultant**
+*Basic Description:* Third-party incident response support
+
+**Option 10: Business Unit Representatives**
+*Basic Description:* Business stakeholders and process owners
+
+**Option 11: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -5028,20 +5097,29 @@
 **Explanation:** Multiple recovery options provide flexibility and resilience against different disaster scenarios.
 
 **Answer Options:**
-**Option 1: Commercial SAST tool**
-*Basic Description:* Vendor SAST solution
+**Option 1: On-premises data center**
+*Basic Description:* Secondary on-premises facility
 
-**Option 2: Open-source SAST tool**
-*Basic Description:* Open-source static analysis
+**Option 2: Co-location facility**
+*Basic Description:* Third-party colocation data center
 
-**Option 3: IDE-integrated analysis**
-*Basic Description:* Built into development environment
+**Option 3: Cloud provider (IaaS)**
+*Basic Description:* Cloud-based disaster recovery infrastructure
 
-**Option 4: Manual code review**
-*Basic Description:* Manual security code review
+**Option 4: Managed DR service**
+*Basic Description:* Third-party managed disaster recovery service
 
-**Option 5: Not performed**
-*Basic Description:* SAST not performed
+**Option 5: Hot site**
+*Basic Description:* Fully operational backup site ready for immediate use
+
+**Option 6: Warm site**
+*Basic Description:* Partially equipped site requiring some setup time
+
+**Option 7: Cold site**
+*Basic Description:* Basic facility requiring significant setup
+
+**Option 8: None/Not applicable**
+*Basic Description:* No dedicated DR capabilities
 
 
 
@@ -5094,20 +5172,29 @@
 **Explanation:** Effective communication keeps stakeholders informed during recovery operations.
 
 **Answer Options:**
-**Option 1: Commercial SAST tool**
-*Basic Description:* Vendor SAST solution
+**Option 1: Out-of-band messaging**
+*Basic Description:* SMS, phone tree, or alternate communication channels
 
-**Option 2: Open-source SAST tool**
-*Basic Description:* Open-source static analysis
+**Option 2: Emergency notification system**
+*Basic Description:* Dedicated mass notification platform
 
-**Option 3: IDE-integrated analysis**
-*Basic Description:* Built into development environment
+**Option 3: Dedicated DR communication platform**
+*Basic Description:* Separate Slack/Teams tenant or communication tool
 
-**Option 4: Manual code review**
-*Basic Description:* Manual security code review
+**Option 4: Satellite/backup phone system**
+*Basic Description:* Backup telephony infrastructure
 
-**Option 5: Not performed**
-*Basic Description:* SAST not performed
+**Option 5: Alternate email system**
+*Basic Description:* Secondary email system independent of primary
+
+**Option 6: Predefined conference bridges**
+*Basic Description:* Pre-configured conference call lines
+
+**Option 7: Physical rally points**
+*Basic Description:* Designated physical meeting locations
+
+**Option 8: Not implemented**
+*Basic Description:* No dedicated DR communication plan
 
 
 
@@ -5364,19 +5451,31 @@
 **Explanation:** Multiple evaluation criteria provide comprehensive vendor risk assessment.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: Security questionnaire/assessment**
+*Basic Description:* Standardized security questionnaire or assessment
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: SOC 2 Type II or ISO 27001 certification**
+*Basic Description:* Third-party security certifications and attestations
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: Penetration test reports**
+*Basic Description:* Recent penetration testing results
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: Data Processing Agreement (DPA)**
+*Basic Description:* Data processing and privacy agreements
 
-**Option 5: Not applicable**
+**Option 5: Breach notification history**
+*Basic Description:* Historical security incident and breach record
+
+**Option 6: Subprocessor management**
+*Basic Description:* Vendor's third-party and subprocessor controls
+
+**Option 7: Regulatory compliance attestations**
+*Basic Description:* Compliance with relevant regulations (HIPAA, PCI DSS, etc.)
+
+**Option 8: Contractual SLAs and guarantees**
+*Basic Description:* Service level agreements and security guarantees
+
+**Option 9: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -5936,19 +6035,34 @@
 **Explanation:** Comprehensive topics ensure broad security awareness coverage.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: Phishing and social engineering**
+*Basic Description:* Recognizing and responding to phishing attacks
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: Password security and MFA**
+*Basic Description:* Strong passwords and multi-factor authentication
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: Data handling and classification**
+*Basic Description:* Proper handling of sensitive data
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: Device and endpoint security**
+*Basic Description:* Securing laptops, mobile devices, and endpoints
 
-**Option 5: Not applicable**
+**Option 5: Incident reporting procedures**
+*Basic Description:* How to report security incidents
+
+**Option 6: Acceptable use policies**
+*Basic Description:* Acceptable use of company resources
+
+**Option 7: Remote work security**
+*Basic Description:* Security practices for remote work
+
+**Option 8: Third-party and supply chain risk**
+*Basic Description:* Vendor and third-party security awareness
+
+**Option 9: Secure coding practices**
+*Basic Description:* Security best practices for developers
+
+**Option 10: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -6224,19 +6338,25 @@
 **Explanation:** Different roles face different security risks and require tailored training.
 
 **Answer Options:**
-**Option 1: Option 1**
-*Basic Description:* First option
+**Option 1: All employees**
+*Basic Description:* General security awareness for all staff
 
-**Option 2: Option 2**
-*Basic Description:* Second option
+**Option 2: Privileged IT administrators**
+*Basic Description:* System and network administrators with elevated access
 
-**Option 3: Option 3**
-*Basic Description:* Third option
+**Option 3: Developers and engineers**
+*Basic Description:* Software developers and engineering teams
 
-**Option 4: Option 4**
-*Basic Description:* Fourth option
+**Option 4: Executive leadership**
+*Basic Description:* C-level executives and senior management
 
-**Option 5: Not applicable**
+**Option 5: Contractors and temporary staff**
+*Basic Description:* Non-employee workers with system access
+
+**Option 6: Third-party vendors**
+*Basic Description:* External vendors with access to systems or data
+
+**Option 7: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
