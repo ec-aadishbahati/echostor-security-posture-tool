@@ -16,25 +16,44 @@ interface Section {
 }
 
 const SECTION_DESCRIPTIONS: Record<string, string> = {
-  section_1: 'Evaluate your cybersecurity governance framework, strategic planning, policies, budget allocation, and board-level reporting mechanisms.',
-  section_2: 'Assess risk identification, analysis, treatment strategies, and business impact analysis processes.',
-  section_3: 'Review asset inventory management, classification schemes, lifecycle tracking, and data handling procedures.',
-  section_4: 'Examine directory services, access controls, user lifecycle management, and multi-factor authentication implementation.',
-  section_5: 'Analyze network architecture, segmentation, firewall configurations, monitoring capabilities, and remote access security.',
-  section_6: 'Evaluate endpoint protection platforms, mobile device management, and configuration management practices.',
-  section_7: 'Review data encryption standards, privacy compliance, backup strategies, and data governance frameworks.',
-  section_8: 'Assess secure development practices, web application security, API protection, and DevSecOps integration.',
-  section_9: 'Examine cloud infrastructure security, cloud IAM, container security, and serverless architecture protection.',
-  section_10: 'Evaluate incident response planning, detection capabilities, recovery procedures, and lessons learned processes.',
-  section_11: 'Review business continuity planning, disaster recovery capabilities, crisis management, and recovery operations.',
-  section_12: 'Assess vendor risk assessment processes, contract management, ongoing monitoring, and supply chain security.',
-  section_13: 'Evaluate security awareness programs, phishing defenses, role-based training, and compliance tracking.',
-  section_14: 'Review facility security controls, environmental protections, and equipment security measures.',
-  section_15: 'Assess security monitoring infrastructure, threat detection capabilities, and log management practices.',
-  section_16: 'Evaluate vulnerability assessment processes, management workflows, and patch management procedures.',
-  section_17: 'Review regulatory compliance status, internal audit processes, and external certification programs.',
-  section_18: 'Assess operational technology security, industrial control systems, and IoT device protection.',
-  section_19: 'Evaluate AI/ML model security, governance frameworks, and machine learning pipeline protection.',
+  section_1:
+    'Evaluate your cybersecurity governance framework, strategic planning, policies, budget allocation, and board-level reporting mechanisms.',
+  section_2:
+    'Assess risk identification, analysis, treatment strategies, and business impact analysis processes.',
+  section_3:
+    'Review asset inventory management, classification schemes, lifecycle tracking, and data handling procedures.',
+  section_4:
+    'Examine directory services, access controls, user lifecycle management, and multi-factor authentication implementation.',
+  section_5:
+    'Analyze network architecture, segmentation, firewall configurations, monitoring capabilities, and remote access security.',
+  section_6:
+    'Evaluate endpoint protection platforms, mobile device management, and configuration management practices.',
+  section_7:
+    'Review data encryption standards, privacy compliance, backup strategies, and data governance frameworks.',
+  section_8:
+    'Assess secure development practices, web application security, API protection, and DevSecOps integration.',
+  section_9:
+    'Examine cloud infrastructure security, cloud IAM, container security, and serverless architecture protection.',
+  section_10:
+    'Evaluate incident response planning, detection capabilities, recovery procedures, and lessons learned processes.',
+  section_11:
+    'Review business continuity planning, disaster recovery capabilities, crisis management, and recovery operations.',
+  section_12:
+    'Assess vendor risk assessment processes, contract management, ongoing monitoring, and supply chain security.',
+  section_13:
+    'Evaluate security awareness programs, phishing defenses, role-based training, and compliance tracking.',
+  section_14:
+    'Review facility security controls, environmental protections, and equipment security measures.',
+  section_15:
+    'Assess security monitoring infrastructure, threat detection capabilities, and log management practices.',
+  section_16:
+    'Evaluate vulnerability assessment processes, management workflows, and patch management procedures.',
+  section_17:
+    'Review regulatory compliance status, internal audit processes, and external certification programs.',
+  section_18:
+    'Assess operational technology security, industrial control systems, and IoT device protection.',
+  section_19:
+    'Evaluate AI/ML model security, governance frameworks, and machine learning pipeline protection.',
 };
 
 export default function SelectSections() {
@@ -48,8 +67,7 @@ export default function SelectSections() {
   );
 
   const startAssessmentMutation = useMutation(
-    (selectedSectionIds: string[]) =>
-      assessmentAPI.startAssessmentWithSections(selectedSectionIds),
+    (selectedSectionIds: string[]) => assessmentAPI.startAssessmentWithSections(selectedSectionIds),
     {
       onSuccess: () => {
         toast.success('Assessment started!');
@@ -119,9 +137,7 @@ export default function SelectSections() {
       <Layout title="Select Assessment Sections">
         <div className="max-w-5xl mx-auto py-8 px-4">
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Customize Your Assessment
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Customize Your Assessment</h1>
             <p className="text-gray-600 mb-6">
               Select the security domains you want to assess. You can choose as many or as few
               sections as needed for your evaluation.
@@ -133,9 +149,7 @@ export default function SelectSections() {
                   <p className="text-lg font-semibold text-blue-900">
                     {selectedSections.size} sections selected
                   </p>
-                  <p className="text-sm text-blue-700">
-                    {totalQuestions} total questions
-                  </p>
+                  <p className="text-sm text-blue-700">{totalQuestions} total questions</p>
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -181,9 +195,7 @@ export default function SelectSections() {
                     </div>
                     <div className="ml-3 flex-1">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {section.title}
-                        </h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>
                         <span className="text-sm text-gray-500 ml-2">
                           {section.questions.length} questions
                         </span>

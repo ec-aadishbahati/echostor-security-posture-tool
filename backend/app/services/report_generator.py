@@ -55,10 +55,14 @@ def generate_standard_report(report_id: str):
 
         logger.info("Loading assessment structure")
         structure = load_assessment_structure()
-        
+
         if assessment.selected_section_ids:
-            logger.info(f"Filtering structure to {len(assessment.selected_section_ids)} selected sections")
-            structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
+            logger.info(
+                f"Filtering structure to {len(assessment.selected_section_ids)} selected sections"
+            )
+            structure = filter_structure_by_sections(
+                structure, assessment.selected_section_ids
+            )
 
         logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
@@ -144,10 +148,14 @@ def generate_ai_report(report_id: str):
 
         logger.info("Loading assessment structure")
         structure = load_assessment_structure()
-        
+
         if assessment.selected_section_ids:
-            logger.info(f"Filtering structure to {len(assessment.selected_section_ids)} selected sections")
-            structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
+            logger.info(
+                f"Filtering structure to {len(assessment.selected_section_ids)} selected sections"
+            )
+            structure = filter_structure_by_sections(
+                structure, assessment.selected_section_ids
+            )
 
         logger.info("Generating AI insights")
         ai_insights = generate_ai_insights(responses, structure, key_manager)

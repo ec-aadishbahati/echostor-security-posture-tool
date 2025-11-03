@@ -58,10 +58,12 @@ async def get_filtered_assessment_structure(
         )
 
     structure = load_assessment_structure_cached()
-    
+
     if assessment.selected_section_ids:
-        structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
-    
+        structure = filter_structure_by_sections(
+            structure, assessment.selected_section_ids
+        )
+
     return structure
 
 
@@ -340,10 +342,12 @@ async def save_assessment_progress(
         total_responses = len(existing_responses)
 
     structure = load_assessment_structure_cached()
-    
+
     if assessment.selected_section_ids:
-        structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
-    
+        structure = filter_structure_by_sections(
+            structure, assessment.selected_section_ids
+        )
+
     total_questions = structure.total_questions
 
     if total_questions > 0:

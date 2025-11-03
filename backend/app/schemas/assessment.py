@@ -22,7 +22,9 @@ class AssessmentBase(BaseModel):
 
 
 class AssessmentCreate(AssessmentBase):
-    selected_section_ids: list[Annotated[str, Field(min_length=1, max_length=100)]] | None = None
+    selected_section_ids: (
+        list[Annotated[str, Field(min_length=1, max_length=100)]] | None
+    ) = None
 
     @field_validator("selected_section_ids")
     @classmethod

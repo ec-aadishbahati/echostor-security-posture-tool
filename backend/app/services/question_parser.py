@@ -226,13 +226,13 @@ def filter_structure_by_sections(
     """Filter assessment structure to only include specified sections"""
     if not section_ids:
         return structure
-    
+
     filtered_sections = [
         section for section in structure.sections if section.id in section_ids
     ]
-    
+
     total_questions = sum(len(section.questions) for section in filtered_sections)
-    
+
     return AssessmentStructure(
         sections=filtered_sections, total_questions=total_questions
     )
