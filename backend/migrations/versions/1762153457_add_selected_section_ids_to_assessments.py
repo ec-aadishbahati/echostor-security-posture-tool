@@ -1,7 +1,7 @@
 """add selected_section_ids to assessments
 
 Revision ID: 1762153457
-Revises: 0c55c907445b
+Revises: d5f251975256
 Create Date: 2025-11-03 07:05:00.000000
 
 """
@@ -11,7 +11,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "1762153457"
-down_revision = "0c55c907445b"
+down_revision = "d5f251975256"
 branch_labels = None
 depends_on = None
 
