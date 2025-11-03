@@ -37,7 +37,7 @@ export default function Register() {
         password: data.password,
       });
       toast.success('Registration successful!');
-      router.push('/assessment/overview');
+      router.push('/dashboard');
     } catch (error: any) {
       toast.error(error.response?.data?.detail || 'Registration failed');
     } finally {

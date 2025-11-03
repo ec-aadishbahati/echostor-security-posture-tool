@@ -62,7 +62,7 @@ export default function AssessmentOverview() {
 
           <div className="text-center">
             <Link
-              href="/assessment/questions"
+              href="/assessment/select-sections"
               className="btn-primary inline-flex items-center text-lg px-8 py-3"
             >
               Start Your Assessment
