@@ -12,7 +12,10 @@ from app.core.database import SessionLocal
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.schemas.assessment import Question
 from app.services.openai_key_manager import OpenAIKeyManager
-from app.services.question_parser import load_assessment_structure
+from app.services.question_parser import (
+    filter_structure_by_sections,
+    load_assessment_structure,
+)
 from app.services.storage import get_storage_service
 
 logger = logging.getLogger(__name__)
@@ -54,7 +57,6 @@ def generate_standard_report(report_id: str):
         structure = load_assessment_structure()
         
         if assessment.selected_section_ids:
-            from app.services.question_parser import filter_structure_by_sections
             logger.info(f"Filtering structure to {len(assessment.selected_section_ids)} selected sections")
             structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
 
@@ -144,7 +146,6 @@ def generate_ai_report(report_id: str):
         structure = load_assessment_structure()
         
         if assessment.selected_section_ids:
-            from app.services.question_parser import filter_structure_by_sections
             logger.info(f"Filtering structure to {len(assessment.selected_section_ids)} selected sections")
             structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
 

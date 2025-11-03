@@ -13,6 +13,7 @@ from app.models.assessment import Assessment, Report
 from app.models.assessment import AssessmentResponse as AssessmentResponseModel
 from app.models.user import User
 from app.schemas.assessment import (
+    AssessmentCreate,
     AssessmentResponse,
     AssessmentResponseResponse,
     AssessmentStructure,
@@ -20,7 +21,10 @@ from app.schemas.assessment import (
     SaveProgressRequest,
 )
 from app.schemas.user import CurrentUserResponse
-from app.services.question_parser import load_assessment_structure_cached
+from app.services.question_parser import (
+    filter_structure_by_sections,
+    load_assessment_structure_cached,
+)
 from app.services.report_generator import generate_standard_report
 
 router = APIRouter()
@@ -56,7 +60,6 @@ async def get_filtered_assessment_structure(
     structure = load_assessment_structure_cached()
     
     if assessment.selected_section_ids:
-        from app.services.question_parser import filter_structure_by_sections
         structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
     
     return structure
@@ -339,7 +342,6 @@ async def save_assessment_progress(
     structure = load_assessment_structure_cached()
     
     if assessment.selected_section_ids:
-        from app.services.question_parser import filter_structure_by_sections
         structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
     
     total_questions = structure.total_questions
