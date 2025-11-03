@@ -416,7 +416,9 @@ async def download_report(
 
         try:
             assessment = (
-                db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
+                db.query(Assessment)
+                .filter(Assessment.id == report.assessment_id)
+                .first()
             )
             if not assessment:
                 raise HTTPException(
@@ -437,7 +439,9 @@ async def download_report(
                 )
 
             scores = calculate_assessment_scores(responses, structure)
-            html_content = generate_report_html(assessment, responses, scores, structure)
+            html_content = generate_report_html(
+                assessment, responses, scores, structure
+            )
 
             pdf_bytes = HTML(string=html_content).write_pdf()
 
