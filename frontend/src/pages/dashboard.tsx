@@ -84,7 +84,7 @@ export default function Dashboard() {
                     <div>
                       <h4 className="font-semibold mb-2">Overview</h4>
                       <p className="text-sm text-blue-800">
-                        The EchoStor Security Posture Assessment Tool helps you evaluate your organization's cybersecurity maturity across 19 comprehensive security domains. You can customize your assessment to focus on the areas most relevant to your organization.
+                        The EchoStor Security Posture Assessment Tool helps you evaluate your organization&apos;s cybersecurity maturity across 19 comprehensive security domains. You can customize your assessment to focus on the areas most relevant to your organization.
                       </p>
                     </div>
                     
@@ -103,7 +103,7 @@ export default function Dashboard() {
                       <h4 className="font-semibold mb-2">Tips for Success</h4>
                       <ul className="list-disc list-inside space-y-1 text-sm text-blue-800">
                         <li>You have 15 days to complete your assessment</li>
-                        <li>Select only the sections relevant to your organization's needs</li>
+                        <li>Select only the sections relevant to your organization&apos;s needs</li>
                         <li>Provide detailed comments where applicable for better recommendations</li>
                         <li>You can save progress and return anytime within the 15-day window</li>
                         <li>Consider requesting the AI-enhanced report for deeper insights</li>
@@ -112,7 +112,7 @@ export default function Dashboard() {
                     
                     <div className="bg-white rounded p-3 mt-4">
                       <p className="text-sm text-blue-900">
-                        <strong>Ready to begin?</strong> Click "Start Assessment" below to select your security domains and begin your evaluation.
+                        <strong>Ready to begin?</strong> Click &quot;Start Assessment&quot; below to select your security domains and begin your evaluation.
                       </p>
                     </div>
                   </div>
