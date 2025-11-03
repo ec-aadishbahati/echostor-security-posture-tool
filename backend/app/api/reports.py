@@ -1,4 +1,7 @@
+import io
+import logging
 import os
+import uuid
 
 from fastapi import (
     APIRouter,
@@ -14,18 +17,30 @@ from sqlalchemy import and_, desc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, joinedload
 from starlette.background import BackgroundTask
+from weasyprint import HTML
 
 from app.api.auth import get_current_admin_user, get_current_user
 from app.core.database import get_db
-from app.models.assessment import Assessment, Report
+from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.schemas.report import (
     AdminReportResponse,
     AIReportRequest,
     UserReportResponse,
 )
 from app.schemas.user import CurrentUserResponse
-from app.services.report_generator import generate_ai_report, generate_standard_report
+from app.services.question_parser import (
+    filter_structure_by_sections,
+    load_assessment_structure,
+)
+from app.services.report_generator import (
+    calculate_assessment_scores,
+    generate_ai_report,
+    generate_report_html,
+    generate_standard_report,
+)
 from app.services.storage import get_storage_service
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -377,7 +392,7 @@ async def download_report(
             status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
         )
 
-    if (report.status not in ["completed", "released"]) or not report.file_path:
+    if report.status not in ["completed", "released"]:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Report not ready for download",
@@ -386,10 +401,79 @@ async def download_report(
     filename = f"security_assessment_report_{report.report_type}_{report_id}.pdf"
     storage_service = get_storage_service()
 
-    if not storage_service.exists(report.file_path):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Report file not found"
+    file_exists = report.file_path and storage_service.exists(report.file_path)
+
+    if not file_exists:
+        logger.warning(
+            f"Report file not found for report_id {report_id}, regenerating on-demand"
         )
+
+        if report.report_type != "standard":
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Report file not found and cannot be regenerated",
+            )
+
+        try:
+            assessment = (
+                db.query(Assessment)
+                .filter(Assessment.id == report.assessment_id)
+                .first()
+            )
+            if not assessment:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Assessment not found",
+                )
+
+            responses = (
+                db.query(AssessmentResponse)
+                .filter(AssessmentResponse.assessment_id == assessment.id)
+                .all()
+            )
+
+            structure = load_assessment_structure()
+            if assessment.selected_section_ids:
+                structure = filter_structure_by_sections(
+                    structure, assessment.selected_section_ids
+                )
+
+            scores = calculate_assessment_scores(responses, structure)
+            html_content = generate_report_html(
+                assessment, responses, scores, structure
+            )
+
+            pdf_bytes = HTML(string=html_content).write_pdf()
+
+            new_filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
+            storage_location = storage_service.save(pdf_bytes, new_filename)
+            report.file_path = storage_location
+            db.commit()
+
+            logger.info(
+                f"Successfully regenerated report file for report_id {report_id}"
+            )
+
+            pdf_stream = io.BytesIO(pdf_bytes)
+            headers = {
+                "Content-Disposition": f'attachment; filename="{filename}"',
+                "Content-Type": "application/pdf",
+            }
+            return StreamingResponse(
+                pdf_stream,
+                media_type="application/pdf",
+                headers=headers,
+            )
+
+        except Exception as e:
+            logger.error(
+                f"Failed to regenerate report for report_id {report_id}: {str(e)}",
+                exc_info=True,
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to regenerate report file",
+            )
 
     try:
         file_handle = storage_service.open(report.file_path)
