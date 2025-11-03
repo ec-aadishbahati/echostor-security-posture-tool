@@ -20,7 +20,7 @@ export const test = base.extend<AuthFixtures>({
     await page.click('button[type="submit"]');
 
     await page.waitForURL(
-      (url) => url.pathname.replace(/\/$/, '') === '/assessment/overview',
+      (url) => url.pathname.replace(/\/$/, '') === '/dashboard',
       { timeout: 10000 },
     );
 

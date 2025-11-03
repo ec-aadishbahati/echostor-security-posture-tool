@@ -7,7 +7,7 @@ export default function Assessment() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/assessment/overview');
+    router.push('/dashboard');
   }, [router]);
 
   return (
@@ -16,7 +16,7 @@ export default function Assessment() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-            <p className="text-gray-600 mt-2">Redirecting to assessment overview...</p>
+            <p className="text-gray-600 mt-2">Redirecting to dashboard...</p>
           </div>
         </div>
       </Layout>
