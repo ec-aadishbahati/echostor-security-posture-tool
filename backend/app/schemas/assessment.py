@@ -22,7 +22,17 @@ class AssessmentBase(BaseModel):
 
 
 class AssessmentCreate(AssessmentBase):
-    pass
+    selected_section_ids: list[Annotated[str, Field(min_length=1, max_length=100)]] | None = None
+
+    @field_validator("selected_section_ids")
+    @classmethod
+    def validate_selected_section_ids(cls, v: list[str] | None) -> list[str] | None:
+        if v is not None:
+            if len(v) == 0:
+                raise ValueError("At least one section must be selected")
+            if len(v) != len(set(v)):
+                raise ValueError("Duplicate section IDs are not allowed")
+        return v
 
 
 class AssessmentUpdate(BaseModel):
@@ -42,6 +52,7 @@ class AssessmentResponse(BaseModel):
     expires_at: datetime | None
     last_saved_at: datetime
     progress_percentage: float
+    selected_section_ids: list[str] | None = None
     consultation_interest: bool = False
     consultation_details: Annotated[str, Field(max_length=5000)] | None = None
     user: UserSummary | None = None

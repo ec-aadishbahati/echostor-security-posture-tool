@@ -32,9 +32,40 @@ async def get_assessment_structure(request: Request):
     return load_assessment_structure_cached()
 
 
+@router.get("/{assessment_id}/filtered-structure", response_model=AssessmentStructure)
+async def get_filtered_assessment_structure(
+    request: Request,
+    assessment_id: str,
+    current_user: CurrentUserResponse = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Get the assessment structure filtered by selected sections for this assessment"""
+    assessment = (
+        db.query(Assessment)
+        .filter(
+            and_(Assessment.id == assessment_id, Assessment.user_id == current_user.id)
+        )
+        .first()
+    )
+
+    if not assessment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Assessment not found"
+        )
+
+    structure = load_assessment_structure_cached()
+    
+    if assessment.selected_section_ids:
+        from app.services.question_parser import filter_structure_by_sections
+        structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
+    
+    return structure
+
+
 @router.post("/start", response_model=AssessmentResponse)
 async def start_assessment(
     request: Request,
+    assessment_data: AssessmentCreate | None = None,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -72,6 +103,18 @@ async def start_assessment(
     if existing_assessment:
         return AssessmentResponse.model_validate(existing_assessment)
 
+    selected_section_ids = None
+    if assessment_data and assessment_data.selected_section_ids:
+        selected_section_ids = assessment_data.selected_section_ids
+        structure = load_assessment_structure_cached()
+        valid_section_ids = {section.id for section in structure.sections}
+        invalid_ids = set(selected_section_ids) - valid_section_ids
+        if invalid_ids:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid section IDs: {', '.join(invalid_ids)}",
+            )
+
     expires_at = datetime.now(UTC) + timedelta(days=settings.ASSESSMENT_EXPIRY_DAYS)
 
     assessment = Assessment(
@@ -81,6 +124,7 @@ async def start_assessment(
         expires_at=expires_at,
         last_saved_at=datetime.now(UTC),
         progress_percentage=0.0,
+        selected_section_ids=selected_section_ids,
     )
 
     db.add(assessment)
@@ -283,8 +327,6 @@ async def save_assessment_progress(
 
     assessment.last_saved_at = datetime.now(UTC)
 
-    # Optimize progress calculation: only count if we added new responses
-    # Otherwise, use the existing count + new responses
     if new_responses_count > 0:
         total_responses = (
             db.query(AssessmentResponseModel)
@@ -295,6 +337,11 @@ async def save_assessment_progress(
         total_responses = len(existing_responses)
 
     structure = load_assessment_structure_cached()
+    
+    if assessment.selected_section_ids:
+        from app.services.question_parser import filter_structure_by_sections
+        structure = filter_structure_by_sections(structure, assessment.selected_section_ids)
+    
     total_questions = structure.total_questions
 
     if total_questions > 0:

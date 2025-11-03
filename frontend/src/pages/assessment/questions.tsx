@@ -64,8 +64,11 @@ export default function AssessmentQuestions() {
   const responsesRef = useRef(responses);
 
   const { data: structure, isLoading: structureLoading } = useQuery(
-    'assessmentStructure',
-    assessmentAPI.getStructure
+    ['assessmentStructure', assessmentId],
+    () => assessmentId ? assessmentAPI.getFilteredStructure(assessmentId) : assessmentAPI.getStructure(),
+    {
+      enabled: !!assessmentId,
+    }
   );
 
   const {
