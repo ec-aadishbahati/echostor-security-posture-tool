@@ -19,7 +19,7 @@ export function formatApiError(error: any, fallbackMessage = 'An error occurred'
         return JSON.stringify(err);
       })
       .filter(Boolean);
-    
+
     return messages.length > 0 ? messages.join(', ') : fallbackMessage;
   }
 
