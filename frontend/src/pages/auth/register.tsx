@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { formatApiError } from '@/lib/formatApiError';
 
 interface RegisterForm {
   full_name: string;
@@ -39,7 +40,7 @@ export default function Register() {
       toast.success('Registration successful!');
       router.push('/dashboard');
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Registration failed');
+      toast.error(formatApiError(error, 'Registration failed'));
     } finally {
       setIsLoading(false);
     }
@@ -138,6 +139,10 @@ export default function Register() {
                   minLength: {
                     value: 8,
                     message: 'Password must be at least 8 characters',
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/,
+                    message: 'Must include uppercase, lowercase, number, and special character',
                   },
                 })}
                 type="password"

@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { formatApiError } from '@/lib/formatApiError';
 
 interface LoginForm {
   email: string;
@@ -34,7 +35,7 @@ export default function Login() {
         router.push('/dashboard');
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'Login failed');
+      toast.error(formatApiError(error, 'Login failed'));
     } finally {
       setIsLoading(false);
     }
