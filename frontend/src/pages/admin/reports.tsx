@@ -5,6 +5,7 @@ import ProtectedRoute from '../../components/ProtectedRoute';
 import ErrorBoundary from '../../components/ErrorBoundary';
 import { adminAPI } from '../../lib/api';
 import toast from 'react-hot-toast';
+import { formatApiError } from '../../lib/formatApiError';
 import {
   ChartBarIcon,
   ChevronLeftIcon,
@@ -31,7 +32,7 @@ export default function AdminReports() {
       queryClient.invalidateQueries('adminReports');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to generate AI report');
+      toast.error(formatApiError(error, 'Failed to generate AI report'));
     },
   });
 
@@ -41,7 +42,7 @@ export default function AdminReports() {
       queryClient.invalidateQueries('adminReports');
     },
     onError: (error: any) => {
-      toast.error(error.response?.data?.detail || 'Failed to release AI report');
+      toast.error(formatApiError(error, 'Failed to release AI report'));
     },
   });
 
@@ -53,7 +54,7 @@ export default function AdminReports() {
         queryClient.invalidateQueries('adminReports');
       },
       onError: (error: any) => {
-        toast.error(error.response?.data?.detail || 'Failed to retry standard report');
+        toast.error(formatApiError(error, 'Failed to retry standard report'));
       },
     }
   );
