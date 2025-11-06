@@ -13,6 +13,7 @@ export interface SyncEvent {
   type: SyncEventType;
   assessmentId: string;
   timestamp: number;
+  originTabId?: string;
   data?: any;
 }
 
@@ -25,8 +26,11 @@ class CrossTabSync {
   private channel: BroadcastChannel | null = null;
   private listeners: Set<SyncEventHandler> = new Set();
   private useLocalStorage = false;
+  private tabId: string;
 
   constructor() {
+    this.tabId = `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
     if (typeof window === 'undefined') return;
 
     if (typeof BroadcastChannel !== 'undefined') {
@@ -66,6 +70,7 @@ class CrossTabSync {
       type,
       assessmentId,
       timestamp: Date.now(),
+      originTabId: this.tabId,
       data,
     };
 
@@ -77,6 +82,10 @@ class CrossTabSync {
         localStorage.removeItem(STORAGE_KEY);
       }, 100);
     }
+  }
+
+  public getTabId(): string {
+    return this.tabId;
   }
 
   public subscribe(handler: SyncEventHandler): () => void {
