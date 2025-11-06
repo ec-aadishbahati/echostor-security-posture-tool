@@ -86,8 +86,8 @@ export default function AssessmentQuestions() {
             existingComments[response.question_id] = response.comment;
           }
         });
-        setResponses(existingResponses);
-        setComments(existingComments);
+        setResponses((prev) => ({ ...prev, ...existingResponses }));
+        setComments((prev) => ({ ...prev, ...existingComments }));
       });
     },
     onError: (_error: any) => {
@@ -176,11 +176,14 @@ export default function AssessmentQuestions() {
     if (!structure || !responses || hasNavigatedToResumePoint.current) return;
     if (Object.keys(responses).length === 0) return;
     if (hasManuallyNavigated) return;
-    if (savedProgress <= 0) return; // Only resume if there's existing progress from server
+    if (savedProgress <= 0) return;
 
-    const { sectionIndex, questionIndex } = findFirstUnansweredQuestion();
+    const { sectionIndex, questionIndex, allAnswered } = findFirstUnansweredQuestion();
     setCurrentSectionIndex(sectionIndex);
     setCurrentQuestionIndex(questionIndex);
+    if (allAnswered) {
+      setShowConsultationQuestion(true);
+    }
     hasNavigatedToResumePoint.current = true;
   }, [structure, responses, hasManuallyNavigated, savedProgress]);
 
@@ -190,8 +193,11 @@ export default function AssessmentQuestions() {
   }, [assessmentId]);
 
   useEffect(() => {
+    const currentTabId = crossTabSync.getTabId();
     const unsubscribe = crossTabSync.subscribe((event) => {
       if (event.assessmentId !== assessmentId && assessmentId) return;
+
+      if (event.originTabId === currentTabId) return;
 
       switch (event.type) {
         case SyncEventType.ASSESSMENT_STARTED:
@@ -251,19 +257,26 @@ export default function AssessmentQuestions() {
     return undefined;
   };
 
-  const findFirstUnansweredQuestion = (): { sectionIndex: number; questionIndex: number } => {
-    if (!structure) return { sectionIndex: 0, questionIndex: 0 };
+  const findFirstUnansweredQuestion = (): {
+    sectionIndex: number;
+    questionIndex: number;
+    allAnswered: boolean;
+  } => {
+    if (!structure) return { sectionIndex: 0, questionIndex: 0, allAnswered: false };
 
     for (let sectionIndex = 0; sectionIndex < structure.data.sections.length; sectionIndex++) {
       const section = structure.data.sections[sectionIndex];
       for (let questionIndex = 0; questionIndex < section.questions.length; questionIndex++) {
         const question = section.questions[questionIndex];
         if (!responses[question.id]) {
-          return { sectionIndex, questionIndex };
+          return { sectionIndex, questionIndex, allAnswered: false };
         }
       }
     }
-    return { sectionIndex: 0, questionIndex: 0 };
+    const lastSectionIndex = structure.data.sections.length - 1;
+    const lastSection = structure.data.sections[lastSectionIndex];
+    const lastQuestionIndex = lastSection.questions.length - 1;
+    return { sectionIndex: lastSectionIndex, questionIndex: lastQuestionIndex, allAnswered: true };
   };
 
   const handleAnswerChange = useCallback((questionId: string, value: any) => {
@@ -296,16 +309,32 @@ export default function AssessmentQuestions() {
     return structure.data.sections[currentSectionIndex];
   };
 
-  const goToNextQuestion = () => {
+  const goToNextQuestion = async () => {
     const section = getCurrentSection();
     if (!section) return;
 
     if (currentQuestionIndex < section.questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     } else if (currentSectionIndex < (structure?.data?.sections?.length || 0) - 1) {
-      saveProgress();
-      setCurrentSectionIndex((prev) => prev + 1);
-      setCurrentQuestionIndex(0);
+      if (!assessmentId || !structure) return;
+
+      const responseArray = Object.entries(responses).map(([questionId, value]) => {
+        const question = findQuestionById(questionId);
+        return {
+          section_id: question?.section_id || '',
+          question_id: questionId,
+          answer_value: value,
+          comment: comments[questionId] || null,
+        };
+      });
+
+      try {
+        await saveProgressMutation.mutateAsync({ assessmentId, responses: responseArray });
+        setCurrentSectionIndex((prev) => prev + 1);
+        setCurrentQuestionIndex(0);
+      } catch {
+        toast.error('Failed to save progress. Please try again.');
+      }
     } else if (!showConsultationQuestion) {
       saveProgress();
       setShowConsultationQuestion(true);
