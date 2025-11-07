@@ -254,7 +254,7 @@ class OpenAIKeyManager:
             client = OpenAI(api_key=api_key, timeout=10.0)
 
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=settings.OPENAI_MODEL,
                 messages=[{"role": "user", "content": "test"}],
                 max_tokens=5,
             )
@@ -268,6 +268,8 @@ class OpenAIKeyManager:
             error_msg = str(e)
             if "401" in error_msg or "invalid" in error_msg.lower():
                 return (False, "API key is invalid or unauthorized")
+            elif "403" in error_msg or "model_not_found" in error_msg.lower():
+                return (False, f"API key is valid but does not have access to model '{settings.OPENAI_MODEL}'")
             elif "429" in error_msg:
                 return (False, "API key is valid but rate limited")
             else:
