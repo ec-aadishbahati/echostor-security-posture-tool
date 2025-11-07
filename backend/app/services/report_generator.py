@@ -182,14 +182,24 @@ def generate_ai_report(report_id: str):
                 f"AI PDF file was not persisted at storage location {storage_location}"
             )
 
-        logger.info(f"AI PDF generated successfully: {storage_location}")
+        import os
+
+        fly_region = os.getenv("FLY_REGION", "unknown")
+        fly_primary = os.getenv("FLY_PRIMARY_REGION", "unknown")
+        storage_backend = getattr(settings, "STORAGE_BACKEND", "local")
+
+        logger.info(
+            f"AI PDF generated successfully: {storage_location} "
+            f"(region={fly_region}, primary={fly_primary}, backend={storage_backend})"
+        )
         report.file_path = storage_location
         report.status = "completed"
         report.completed_at = datetime.now(UTC)
         db.commit()
 
         logger.info(
-            f"AI report generation completed successfully for report_id: {report_id}"
+            f"AI report generation completed successfully for report_id: {report_id} "
+            f"with file_path: {storage_location}"
         )
 
     except Exception as e:
