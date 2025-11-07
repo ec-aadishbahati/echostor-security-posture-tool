@@ -20,6 +20,7 @@ from starlette.background import BackgroundTask
 from weasyprint import HTML
 
 from app.api.auth import get_current_admin_user, get_current_user
+from app.core.config import settings
 from app.core.database import get_db
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.schemas.report import (
@@ -208,6 +209,11 @@ async def admin_generate_ai_report(
     db: Session = Depends(get_db),
 ):
     """Admin endpoint to generate AI-enhanced reports"""
+
+    region = os.getenv("FLY_REGION")
+    primary = os.getenv("FLY_PRIMARY_REGION", "iad")
+    if region and primary and region != primary:
+        return Response(status_code=409, headers={"fly-replay": f"region={primary}"})
 
     report = (
         db.query(Report)
@@ -404,11 +410,20 @@ async def download_report(
     file_exists = report.file_path and storage_service.exists(report.file_path)
 
     if not file_exists:
+        fly_region = os.getenv("FLY_REGION", "unknown")
+        fly_primary = os.getenv("FLY_PRIMARY_REGION", "unknown")
+        storage_backend = getattr(settings, "STORAGE_BACKEND", "local")
+
         logger.warning(
-            f"Report file not found for report_id {report_id}, regenerating on-demand"
+            f"Report file not found for report_id {report_id} "
+            f"(type={report.report_type}, file_path={report.file_path}, "
+            f"region={fly_region}, primary={fly_primary}, backend={storage_backend})"
         )
 
         if report.report_type != "standard":
+            logger.error(
+                f"Cannot regenerate {report.report_type} report on-demand for report_id {report_id}"
+            )
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Report file not found and cannot be regenerated",
