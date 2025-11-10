@@ -31,7 +31,13 @@ def create_access_token(
         )
         expire = datetime.now(UTC) + timedelta(hours=hours)
 
-    to_encode.update({"exp": expire, "is_admin": is_admin})
+    to_encode.update({
+        "exp": expire,
+        "is_admin": is_admin,
+        "aud": "echostor-security-tool",
+        "iss": "echostor-api",
+        "iat": datetime.now(UTC),
+    })
     encoded_jwt = jwt.encode(
         to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
     )
@@ -41,7 +47,11 @@ def create_access_token(
 def verify_token(token: str) -> dict:
     try:
         payload = jwt.decode(
-            token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
+            token,
+            settings.JWT_SECRET_KEY,
+            algorithms=[settings.JWT_ALGORITHM],
+            audience="echostor-security-tool",
+            issuer="echostor-api",
         )
         return payload
     except JWTError:
