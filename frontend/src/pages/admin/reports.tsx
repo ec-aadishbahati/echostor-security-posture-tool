@@ -66,7 +66,7 @@ export default function AdminReports() {
     setDownloadingReportId(reportId);
     try {
       const response = await adminAPI.downloadReport(reportId);
-      
+
       const contentDisposition = response.headers['content-disposition'];
       let filename = `security_assessment_report_${reportType}_${reportId}.pdf`;
       if (contentDisposition) {
@@ -98,8 +98,8 @@ export default function AdminReports() {
     return status === 'completed' || status === 'released';
   };
 
-  const effectiveStatusFilter = downloadableOnly 
-    ? (statusFilter || 'completed,released') 
+  const effectiveStatusFilter = downloadableOnly
+    ? statusFilter || 'completed,released'
     : statusFilter;
 
   const {
@@ -322,9 +322,7 @@ export default function AdminReports() {
                         <th className="text-left py-3 px-4 font-semibold text-gray-900">
                           Completed
                         </th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                          Actions
-                        </th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -375,13 +373,17 @@ export default function AdminReports() {
                             <div className="flex items-center gap-2 flex-wrap">
                               {isDownloadable(report.status) ? (
                                 <button
-                                  onClick={() => handleDownloadReport(report.id, report.report_type)}
+                                  onClick={() =>
+                                    handleDownloadReport(report.id, report.report_type)
+                                  }
                                   disabled={downloadingReportId === report.id}
                                   className="btn-primary text-xs flex items-center"
                                   title="Download report"
                                 >
                                   <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
-                                  {downloadingReportId === report.id ? 'Downloading...' : 'Download'}
+                                  {downloadingReportId === report.id
+                                    ? 'Downloading...'
+                                    : 'Download'}
                                 </button>
                               ) : (
                                 <button
@@ -393,7 +395,7 @@ export default function AdminReports() {
                                   Download
                                 </button>
                               )}
-                              
+
                               {report.report_type === 'standard' && report.status === 'failed' && (
                                 <button
                                   onClick={() => retryStandardReportMutation.mutate(report.id)}
