@@ -152,6 +152,8 @@ export const adminAPI = {
   releaseAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/release`),
   retryStandardReport: (reportId: string) =>
     api.post(`/api/reports/admin/${reportId}/retry-standard`),
+  downloadReport: (reportId: string) =>
+    api.get(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
   deleteUser: (userId: string) => api.delete(`/api/admin/users/${userId}`),
   resetUserPassword: (userId: string, newPassword: string) =>
     api.post(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),

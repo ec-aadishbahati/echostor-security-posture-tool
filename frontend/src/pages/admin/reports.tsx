@@ -16,12 +16,15 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   PaperAirplaneIcon,
+  ArrowDownTrayIcon,
 } from '@heroicons/react/24/outline';
 
 export default function AdminReports() {
   const [typeFilter, setTypeFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [downloadableOnly, setDownloadableOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [downloadingReportId, setDownloadingReportId] = useState<string | null>(null);
   const limit = 20;
   const skip = (currentPage - 1) * limit;
   const queryClient = useQueryClient();
@@ -59,18 +62,58 @@ export default function AdminReports() {
     }
   );
 
+  const handleDownloadReport = async (reportId: string, reportType: string) => {
+    setDownloadingReportId(reportId);
+    try {
+      const response = await adminAPI.downloadReport(reportId);
+      
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = `security_assessment_report_${reportType}_${reportId}.pdf`;
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
+        if (filenameMatch) {
+          filename = filenameMatch[1];
+        }
+      }
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Report downloaded successfully');
+    } catch (error: any) {
+      toast.error(formatApiError(error, 'Failed to download report'));
+    } finally {
+      setDownloadingReportId(null);
+    }
+  };
+
+  const isDownloadable = (status: string) => {
+    return status === 'completed' || status === 'released';
+  };
+
+  const effectiveStatusFilter = downloadableOnly 
+    ? (statusFilter || 'completed,released') 
+    : statusFilter;
+
   const {
     data: reportsData,
     isLoading,
     error,
   } = useQuery(
-    ['adminReports', { skip, limit, report_type: typeFilter, status: statusFilter }],
+    ['adminReports', { skip, limit, report_type: typeFilter, status: effectiveStatusFilter }],
     () =>
       adminAPI.getReports({
         skip,
         limit,
         report_type: typeFilter || undefined,
-        status: statusFilter || undefined,
+        status: effectiveStatusFilter || undefined,
       }),
     {
       keepPreviousData: true,
@@ -152,7 +195,7 @@ export default function AdminReports() {
             </div>
 
             <div className="card mb-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <label
                     htmlFor="type-filter"
@@ -186,9 +229,11 @@ export default function AdminReports() {
                     value={statusFilter}
                     onChange={(e) => {
                       setStatusFilter(e.target.value);
+                      setDownloadableOnly(false);
                       setCurrentPage(1);
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    disabled={downloadableOnly}
                   >
                     <option value="">All Statuses</option>
                     <option value="pending">Pending</option>
@@ -197,6 +242,26 @@ export default function AdminReports() {
                     <option value="released">Released</option>
                     <option value="failed">Failed</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Quick Filters
+                  </label>
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={downloadableOnly}
+                      onChange={(e) => {
+                        setDownloadableOnly(e.target.checked);
+                        if (e.target.checked) {
+                          setStatusFilter('');
+                        }
+                        setCurrentPage(1);
+                      }}
+                      className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-gray-700">Downloadable only</span>
+                  </label>
                 </div>
               </div>
             </div>
@@ -257,6 +322,9 @@ export default function AdminReports() {
                         <th className="text-left py-3 px-4 font-semibold text-gray-900">
                           Completed
                         </th>
+                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -269,6 +337,9 @@ export default function AdminReports() {
                               </div>
                               <div className="text-sm text-gray-600">
                                 {report.assessment?.user?.email || 'No email'}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {report.assessment?.user?.company_name || 'No company'}
                               </div>
                             </div>
                           </td>
@@ -296,10 +367,33 @@ export default function AdminReports() {
                             <span className="text-gray-600">{formatDate(report.requested_at)}</span>
                           </td>
                           <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              <span className="text-gray-600">
-                                {report.completed_at ? formatDate(report.completed_at) : '-'}
-                              </span>
+                            <span className="text-gray-600">
+                              {report.completed_at ? formatDate(report.completed_at) : '-'}
+                            </span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              {isDownloadable(report.status) ? (
+                                <button
+                                  onClick={() => handleDownloadReport(report.id, report.report_type)}
+                                  disabled={downloadingReportId === report.id}
+                                  className="btn-primary text-xs flex items-center"
+                                  title="Download report"
+                                >
+                                  <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
+                                  {downloadingReportId === report.id ? 'Downloading...' : 'Download'}
+                                </button>
+                              ) : (
+                                <button
+                                  disabled
+                                  className="btn-secondary text-xs flex items-center opacity-50 cursor-not-allowed"
+                                  title={`Report must be completed or released to download (current: ${report.status})`}
+                                >
+                                  <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
+                                  Download
+                                </button>
+                              )}
+                              
                               {report.report_type === 'standard' && report.status === 'failed' && (
                                 <button
                                   onClick={() => retryStandardReportMutation.mutate(report.id)}
