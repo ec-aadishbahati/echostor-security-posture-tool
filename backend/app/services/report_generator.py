@@ -5,6 +5,7 @@ from typing import Any
 
 from jinja2 import Environment
 from openai import OpenAI
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from weasyprint import HTML
 
 from app.core.config import settings
@@ -23,6 +24,12 @@ logger = logging.getLogger(__name__)
 jinja_env = Environment(autoescape=True)
 
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=60),
+    retry=retry_if_exception_type((Exception,)),
+    reraise=True
+)
 def generate_standard_report(report_id: str):
     """Generate a standard PDF report"""
 
@@ -113,6 +120,12 @@ def generate_standard_report(report_id: str):
         db.close()
 
 
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=4, max=60),
+    retry=retry_if_exception_type((Exception,)),
+    reraise=True
+)
 def generate_ai_report(report_id: str):
     """Generate an AI-enhanced report using ChatGPT"""
 
