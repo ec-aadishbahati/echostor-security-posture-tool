@@ -27,6 +27,7 @@ httpx = "^0.25.2"
 slowapi = "^0.1.9"
 redis = "^5.0.1"
 sentry-sdk = {extras = ["fastapi", "sqlalchemy"], version = "^1.39.0"}
+tenacity = "^9.1.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
