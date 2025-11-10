@@ -31,13 +31,15 @@ def create_access_token(
         )
         expire = datetime.now(UTC) + timedelta(hours=hours)
 
-    to_encode.update({
-        "exp": expire,
-        "is_admin": is_admin,
-        "aud": "echostor-security-tool",
-        "iss": "echostor-api",
-        "iat": datetime.now(UTC),
-    })
+    to_encode.update(
+        {
+            "exp": expire,
+            "is_admin": is_admin,
+            "aud": "echostor-security-tool",
+            "iss": "echostor-api",
+            "iat": datetime.now(UTC),
+        }
+    )
     encoded_jwt = jwt.encode(
         to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
     )
