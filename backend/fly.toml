@@ -5,6 +5,7 @@ primary_region = "iad"
 # US East Coast (primary), US West Coast, and Australia (Sydney)
 [deploy]
   strategy = "rolling"
+  release_command = "poetry run alembic upgrade head"
 
 [[regions]]
   name = "iad"  # US East Coast (primary)

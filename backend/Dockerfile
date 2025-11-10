@@ -35,5 +35,5 @@ COPY . .
 # Expose port
 EXPOSE 8000
 
-# Run database migrations and then start the application
-CMD ["sh", "-c", "poetry run alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# Start the application (migrations run via Fly.io release_command)
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
