@@ -3,6 +3,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any
 
+import markdown2
 from jinja2 import Environment
 from openai import OpenAI
 from tenacity import (
@@ -27,6 +28,13 @@ from app.services.storage import get_storage_service
 logger = logging.getLogger(__name__)
 
 jinja_env = Environment(autoescape=True)
+
+
+def markdown_filter(text):
+    """Convert markdown to HTML"""
+    if not text:
+        return ""
+    return markdown2.markdown(text, extras=["fenced-code-blocks", "tables"])
 
 
 @retry(
@@ -337,7 +345,7 @@ def generate_ai_insights(
         if section_responses:
             try:
                 prompt = f"""
-                Analyze this cybersecurity assessment section and provide insights:
+                Analyze this cybersecurity assessment section and provide insights in markdown format:
                 
                 Section: {section.title}
                 Description: {section.description}
@@ -345,14 +353,29 @@ def generate_ai_insights(
                 Responses:
                 {format_responses_for_ai(section_responses)}
                 
-                Please provide:
-                1. Risk Assessment (High/Medium/Low with explanation)
-                2. Key Strengths identified
-                3. Critical Gaps or Weaknesses
-                4. Top 3 Priority Recommendations
-                5. Industry Benchmark Comparison
+                Please provide your analysis in the following structured format using markdown:
                 
-                Keep the response professional and actionable, around 300-400 words.
+                **1. Risk Assessment:** [Provide risk level (High/Medium/Low) with detailed explanation]
+                
+                **2. Key Strengths Identified:**
+                - [Strength 1]
+                - [Strength 2]
+                - [Strength 3]
+                
+                **3. Critical Gaps or Weaknesses:**
+                - [Gap 1]
+                - [Gap 2]
+                - [Gap 3]
+                
+                **4. Top 3 Priority Recommendations:**
+                1. [Priority 1 with specific action]
+                2. [Priority 2 with specific action]
+                3. [Priority 3 with specific action]
+                
+                **5. Industry Benchmark Comparison:**
+                [Compare to industry best practices and maturity levels]
+                
+                Keep the response professional and actionable, around 300-400 words total.
                 """
 
                 response = client.chat.completions.create(
@@ -841,6 +864,8 @@ def generate_ai_report_html(
 ) -> str:
     """Generate HTML content for AI-enhanced report"""
 
+    jinja_env.filters["markdown"] = markdown_filter
+
     template = jinja_env.from_string(
         """
     <!DOCTYPE html>
@@ -849,44 +874,162 @@ def generate_ai_report_html(
         <meta charset="utf-8">
         <title>AI-Enhanced Security Posture Assessment Report</title>
         <style>
-            body { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 12px; margin: 0; padding: 40px; line-height: 1.6; color: #333; }
-            .container { max-width: 85%; margin: 0 auto; }
-            .header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #2c3e50; padding-bottom: 20px; }
-            .section { margin-bottom: 30px; page-break-inside: avoid; }
+            @page {
+                margin: 2cm;
+                @top-right {
+                    content: "Page " counter(page) " of " counter(pages);
+                    font-size: 10px;
+                    color: #666;
+                }
+                @top-left {
+                    content: "AI-Enhanced Security Assessment";
+                    font-size: 10px;
+                    color: #666;
+                }
+                @bottom-center {
+                    content: "Confidential - {{ report_date }}";
+                    font-size: 10px;
+                    color: #666;
+                }
+            }
+            body { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 11px; margin: 0; padding: 0; line-height: 1.6; color: #333; }
+            .container { max-width: 100%; margin: 0 auto; }
+            .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2c3e50; padding-bottom: 20px; }
+            .section { margin-bottom: 25px; page-break-inside: avoid; }
             .score-box { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; }
-            .ai-insight { background: #e3f2fd; padding: 15px; border-left: 4px solid #2196f3; margin: 15px 0; }
+            .ai-insight { background: #e3f2fd; padding: 15px; border-left: 4px solid #2196f3; margin: 15px 0; font-size: 10px; }
+            .ai-insight h4 { margin-top: 0; color: #2196f3; }
+            .ai-insight strong { color: #1976d2; }
+            .ai-insight ul, .ai-insight ol { margin: 8px 0; padding-left: 20px; }
+            .ai-insight li { margin: 4px 0; }
             .high-score { background: #d4edda; border-left: 4px solid #28a745; }
             .medium-score { background: #fff3cd; border-left: 4px solid #ffc107; }
             .low-score { background: #f8d7da; border-left: 4px solid #dc3545; }
-            table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9em; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 10px; page-break-inside: avoid; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top; }
             th { background-color: #2c3e50; color: white; font-weight: bold; }
             tr:nth-child(even) { background-color: #f9f9f9; }
-            h1 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 16px; color: #2c3e50; }
-            h2 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 16px; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; margin-top: 30px; }
-            h3 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 14px; color: #495057; margin-top: 20px; }
-            h4 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 12px; color: #2196f3; font-weight: bold; }
+            .toc { background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0; page-break-after: always; }
+            .toc h2 { margin-top: 0; }
+            .toc ul { list-style-type: none; padding-left: 0; }
+            .toc li { margin: 8px 0; padding-left: 20px; }
+            .toc a { color: #2c3e50; text-decoration: none; }
+            .scorecard-table { margin: 20px 0; }
+            .scorecard-table th { background-color: #2c3e50; }
+            .methodology-box { background: #f8f9fa; padding: 15px; border-left: 4px solid #6c757d; margin: 15px 0; }
+            .priority-p1 { color: #dc3545; font-weight: bold; }
+            .priority-p2 { color: #fd7e14; font-weight: bold; }
+            .priority-p3 { color: #ffc107; font-weight: bold; }
+            .roadmap-table td { vertical-align: top; }
+            h1 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 18px; color: #2c3e50; margin: 0; }
+            h2 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 15px; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 8px; margin-top: 25px; page-break-after: avoid; }
+            h3 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 13px; color: #495057; margin-top: 15px; page-break-after: avoid; }
+            h4 { font-family: 'Aptos (Body)', Arial, sans-serif; font-size: 11px; color: #2196f3; font-weight: bold; margin: 10px 0 5px 0; }
+            .page-break { page-break-before: always; }
         </style>
     </head>
     <body>
         <div class="container">
+        <!-- Title Page -->
         <div class="header">
             <h1>AI-Enhanced Security Posture Assessment Report</h1>
-            <p>Generated on: {{ report_date }}</p>
+            <p style="font-size: 12px; margin: 10px 0;">Generated on: {{ report_date }}</p>
             <p>Assessment Period: {{ assessment.started_at.strftime('%Y-%m-%d') }} to {{ assessment.completed_at.strftime('%Y-%m-%d') }}</p>
             <p><em>Enhanced with AI-powered analysis and recommendations</em></p>
         </div>
         
+        <!-- Executive Summary -->
         <div class="section">
-            <h2>Executive Summary</h2>
+            <h2 id="executive-summary">Executive Summary</h2>
             <div class="score-box {{ overall_score_class }}">
                 <h3>Overall Security Score: {{ "%.1f"|format(scores.overall.percentage) }}%</h3>
                 <p>{{ overall_assessment }}</p>
             </div>
         </div>
         
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li>1. <a href="#executive-summary">Executive Summary</a></li>
+                <li>2. <a href="#scorecard">Security Scorecard</a></li>
+                <li>3. <a href="#methodology">Methodology & Scoring</a></li>
+                <li>4. <a href="#section-analysis">Section Analysis with AI Insights</a></li>
+                <li>5. <a href="#recommendations">Prioritized Recommendations Roadmap</a></li>
+                <li>6. <a href="#disclaimer">Disclaimer & AI Transparency</a></li>
+            </ul>
+        </div>
+        
+        <!-- Security Scorecard -->
+        <div class="section page-break">
+            <h2 id="scorecard">Security Scorecard</h2>
+            <p>This scorecard provides an at-a-glance view of your organization's security posture across all assessed domains.</p>
+            <table class="scorecard-table">
+                <thead>
+                    <tr>
+                        <th>Domain</th>
+                        <th>Score</th>
+                        <th>Completion</th>
+                        <th>Maturity Level</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for section in structure.sections %}
+                    <tr>
+                        <td><strong>{{ section.title }}</strong></td>
+                        <td>{{ "%.1f"|format(scores[section.id].percentage) }}%</td>
+                        <td>{{ scores[section.id].responses_count }}/{{ scores[section.id].total_questions }} questions</td>
+                        <td>{{ get_maturity_level(scores[section.id].percentage) }}</td>
+                        <td>
+                            {% if scores[section.id].percentage >= 80 %}
+                            <span style="color: #28a745;">●</span> Strong
+                            {% elif scores[section.id].percentage >= 60 %}
+                            <span style="color: #ffc107;">●</span> Moderate
+                            {% else %}
+                            <span style="color: #dc3545;">●</span> Needs Improvement
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr style="background-color: #e9ecef; font-weight: bold;">
+                        <td>OVERALL</td>
+                        <td>{{ "%.1f"|format(scores.overall.percentage) }}%</td>
+                        <td colspan="3">{{ overall_assessment }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Methodology -->
         <div class="section">
-            <h2>Section Analysis with AI Insights</h2>
+            <h2 id="methodology">Methodology & Scoring</h2>
+            <div class="methodology-box">
+                <h3>Assessment Approach</h3>
+                <p>This security posture assessment evaluates your organization across multiple cybersecurity domains using a comprehensive questionnaire. Each question is weighted based on its importance to overall security posture.</p>
+                
+                <h3>Scoring Formula</h3>
+                <p><strong>Section Score</strong> = (Sum of weighted correct answers) / (Total possible weighted score) × 100%</p>
+                <p><strong>Overall Score</strong> = Average of all section scores weighted by section importance</p>
+                
+                <h3>Maturity Levels</h3>
+                <ul>
+                    <li><strong>Strong (80-100%):</strong> Best-in-class security practices with comprehensive controls</li>
+                    <li><strong>Moderate (60-79%):</strong> Foundational security in place with room for improvement</li>
+                    <li><strong>Developing (40-59%):</strong> Basic security measures with significant gaps</li>
+                    <li><strong>Needs Improvement (&lt;40%):</strong> Critical security gaps requiring immediate attention</li>
+                </ul>
+                
+                <h3>AI Analysis</h3>
+                <p><strong>AI Model:</strong> {{ ai_model }}</p>
+                <p><strong>Analysis Approach:</strong> AI-powered insights are generated by analyzing your responses against industry best practices, security frameworks (NIST, ISO/IEC, OWASP), and peer benchmarks. Each section receives structured analysis covering risk assessment, strengths, gaps, and prioritized recommendations.</p>
+                <p><strong>Human Review:</strong> AI analysis is provided for informational purposes and should be validated by qualified security professionals for comprehensive security planning.</p>
+            </div>
+        </div>
+        
+        <!-- Section Analysis with AI Insights -->
+        <div class="section page-break">
+            <h2 id="section-analysis">Section Analysis with AI Insights</h2>
             {% for section in structure.sections %}
             <div class="section">
                 <h3>{{ section.title }}</h3>
@@ -894,31 +1037,119 @@ def generate_ai_report_html(
                     <strong>Score: {{ "%.1f"|format(scores[section.id].percentage) }}%</strong>
                     ({{ scores[section.id].responses_count }}/{{ scores[section.id].total_questions }} questions completed)
                 </div>
-                {% if ai_insights[section.id] %}
+                {% if ai_insights.get(section.id) %}
                 <div class="ai-insight">
                     <h4>🤖 AI Analysis</h4>
-                    <p>{{ ai_insights[section.id] | replace('\n', '<br>') }}</p>
+                    {{ ai_insights[section.id] | markdown | safe }}
                 </div>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
         
-        <div class="section">
-            <h2>Overall Recommendations</h2>
-            <ul>
-                {% for recommendation in recommendations %}
-                <li>{{ recommendation }}</li>
-                {% endfor %}
-            </ul>
+        <!-- Prioritized Recommendations Roadmap -->
+        <div class="section page-break">
+            <h2 id="recommendations">Prioritized Recommendations Roadmap</h2>
+            <p>Based on the assessment results and AI analysis, here is a prioritized action plan organized by timeline and impact.</p>
+            
+            <h3>30-Day Quick Wins (High Impact, Low Effort)</h3>
+            <table class="roadmap-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Priority</th>
+                        <th style="width: 40%;">Action</th>
+                        <th style="width: 15%;">Effort</th>
+                        <th style="width: 15%;">Impact</th>
+                        <th style="width: 20%;">Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in roadmap_30_day %}
+                    <tr>
+                        <td class="priority-{{ rec.priority }}">{{ rec.priority }}</td>
+                        <td>{{ rec.action }}</td>
+                        <td>{{ rec.effort }}</td>
+                        <td>{{ rec.impact }}</td>
+                        <td>{{ rec.owner }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <h3>60-Day Strategic Improvements</h3>
+            <table class="roadmap-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Priority</th>
+                        <th style="width: 40%;">Action</th>
+                        <th style="width: 15%;">Effort</th>
+                        <th style="width: 15%;">Impact</th>
+                        <th style="width: 20%;">Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in roadmap_60_day %}
+                    <tr>
+                        <td class="priority-{{ rec.priority }}">{{ rec.priority }}</td>
+                        <td>{{ rec.action }}</td>
+                        <td>{{ rec.effort }}</td>
+                        <td>{{ rec.impact }}</td>
+                        <td>{{ rec.owner }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <h3>90-Day Long-Term Initiatives</h3>
+            <table class="roadmap-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Priority</th>
+                        <th style="width: 40%;">Action</th>
+                        <th style="width: 15%;">Effort</th>
+                        <th style="width: 15%;">Impact</th>
+                        <th style="width: 20%;">Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in roadmap_90_day %}
+                    <tr>
+                        <td class="priority-{{ rec.priority }}">{{ rec.priority }}</td>
+                        <td>{{ rec.action }}</td>
+                        <td>{{ rec.effort }}</td>
+                        <td>{{ rec.impact }}</td>
+                        <td>{{ rec.owner }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         
-        <div class="section">
-            <h2>Disclaimer</h2>
-            <p>This AI-enhanced assessment provides advanced analysis based on industry best practices and AI-powered insights. 
-            The AI analysis is provided for informational purposes and should be validated by security professionals. 
-            For comprehensive security architecture planning, please contact EchoStor's security team 
-            for a detailed professional assessment.</p>
+        <!-- Disclaimer & AI Transparency -->
+        <div class="section page-break">
+            <h2 id="disclaimer">Disclaimer & AI Transparency</h2>
+            
+            <h3>AI Analysis Transparency</h3>
+            <div class="methodology-box">
+                <p><strong>AI Model Used:</strong> {{ ai_model }}</p>
+                <p><strong>Data Sources:</strong> Your questionnaire responses, industry security frameworks (NIST Cybersecurity Framework, ISO/IEC 27001, OWASP), and security best practices</p>
+                <p><strong>Analysis Confidence:</strong> AI-generated insights are based on pattern recognition and industry benchmarks. Confidence levels vary by domain based on response completeness and clarity.</p>
+                <p><strong>Limitations:</strong> AI analysis provides general guidance and may not account for organization-specific context, regulatory requirements, or unique business constraints. Professional security review is recommended for comprehensive planning.</p>
+            </div>
+            
+            <h3>Report Disclaimer</h3>
+            <p>This AI-enhanced security posture assessment provides advanced analysis based on industry best practices and AI-powered insights. The assessment and AI analysis are provided for informational purposes and should be validated by qualified security professionals.</p>
+            
+            <p>This report represents a point-in-time assessment based on the responses provided. Security posture is dynamic and should be reassessed regularly (recommended: quarterly) to account for evolving threats, technology changes, and business growth.</p>
+            
+            <p><strong>For comprehensive security architecture planning, incident response preparation, or detailed professional assessment, please contact EchoStor's security team.</strong></p>
+            
+            <p style="margin-top: 20px; font-size: 10px; color: #666;">
+                <strong>Report ID:</strong> {{ report_id }}<br>
+                <strong>Generated:</strong> {{ report_date }}<br>
+                <strong>Assessment Period:</strong> {{ assessment.started_at.strftime('%Y-%m-%d') }} to {{ assessment.completed_at.strftime('%Y-%m-%d') }}<br>
+                <strong>Classification:</strong> Confidential
+            </p>
         </div>
         </div>
     </body>
@@ -943,7 +1174,8 @@ def generate_ai_report_html(
             "Security posture needs significant improvement across multiple areas."
         )
 
-    recommendations = generate_recommendations(scores, structure)
+    # Generate prioritized roadmap
+    roadmap = generate_prioritized_roadmap(scores, structure)
 
     return template.render(
         assessment=assessment,
@@ -951,9 +1183,14 @@ def generate_ai_report_html(
         structure=structure,
         ai_insights=ai_insights,
         report_date=datetime.now().strftime("%Y-%m-%d %H:%M"),
+        report_id=assessment.id,
         overall_score_class=overall_score_class,
         overall_assessment=overall_assessment,
-        recommendations=recommendations,
+        roadmap_30_day=roadmap["30_day"],
+        roadmap_60_day=roadmap["60_day"],
+        roadmap_90_day=roadmap["90_day"],
+        ai_model=settings.OPENAI_MODEL,
+        get_maturity_level=get_maturity_level,
     )
 
 
@@ -1032,6 +1269,18 @@ def normalize_answer_display(answer_value: Any, question: Question) -> str:
     return str(answer_value) if answer_value else "Not answered"
 
 
+def get_maturity_level(percentage: float) -> str:
+    """Get maturity level description for a score percentage"""
+    if percentage >= 80:
+        return "Strong"
+    elif percentage >= 60:
+        return "Moderate"
+    elif percentage >= 40:
+        return "Developing"
+    else:
+        return "Needs Improvement"
+
+
 def get_maturity_tier(percentage: float) -> tuple[str, str]:
     """Get maturity tier and CSS class for a score percentage"""
     if percentage >= 80:
@@ -1040,6 +1289,133 @@ def get_maturity_tier(percentage: float) -> tuple[str, str]:
         return ("Moderate", "medium-score")
     else:
         return ("Needs Improvement", "low-score")
+
+
+def generate_prioritized_roadmap(scores, structure) -> dict:
+    """Generate prioritized roadmap organized by 30/60/90 day timelines"""
+
+    roadmap_30_day = []
+    roadmap_60_day = []
+    roadmap_90_day = []
+
+    section_scores = [
+        (section.title, section.id, scores[section.id]["percentage"])
+        for section in structure.sections
+    ]
+    section_scores.sort(key=lambda x: x[2])
+
+    for title, _section_id, percentage in section_scores:
+        if percentage < 40:
+            roadmap_30_day.append(
+                {
+                    "priority": "p1",
+                    "action": f"Implement foundational security controls in {title}",
+                    "effort": "High",
+                    "impact": "Critical",
+                    "owner": "Security Team",
+                }
+            )
+        elif percentage < 60:
+            roadmap_30_day.append(
+                {
+                    "priority": "p2",
+                    "action": f"Address critical gaps in {title}",
+                    "effort": "Medium",
+                    "impact": "High",
+                    "owner": "Security Team",
+                }
+            )
+        elif percentage < 70:
+            roadmap_60_day.append(
+                {
+                    "priority": "p2",
+                    "action": f"Strengthen controls in {title}",
+                    "effort": "Medium",
+                    "impact": "Medium",
+                    "owner": "IT Team",
+                }
+            )
+        elif percentage < 80:
+            roadmap_90_day.append(
+                {
+                    "priority": "p3",
+                    "action": f"Optimize and mature {title} practices",
+                    "effort": "Low",
+                    "impact": "Medium",
+                    "owner": "IT Team",
+                }
+            )
+
+    overall_percentage = scores["overall"]["percentage"]
+    if overall_percentage < 60:
+        roadmap_30_day.insert(
+            0,
+            {
+                "priority": "p1",
+                "action": "Engage cybersecurity consultant for comprehensive security program development",
+                "effort": "Medium",
+                "impact": "Critical",
+                "owner": "Executive Team",
+            },
+        )
+
+    if overall_percentage < 80:
+        roadmap_60_day.append(
+            {
+                "priority": "p2",
+                "action": "Implement regular security awareness training for all employees",
+                "effort": "Medium",
+                "impact": "High",
+                "owner": "HR/Security Team",
+            }
+        )
+        roadmap_60_day.append(
+            {
+                "priority": "p2",
+                "action": "Establish and test formal incident response plan",
+                "effort": "High",
+                "impact": "High",
+                "owner": "Security Team",
+            }
+        )
+
+    roadmap_90_day.append(
+        {
+            "priority": "p3",
+            "action": "Conduct quarterly security posture reassessment",
+            "effort": "Low",
+            "impact": "Medium",
+            "owner": "Security Team",
+        }
+    )
+
+    if not roadmap_30_day:
+        roadmap_30_day.append(
+            {
+                "priority": "p3",
+                "action": "Maintain current security controls and monitor for emerging threats",
+                "effort": "Low",
+                "impact": "Medium",
+                "owner": "Security Team",
+            }
+        )
+
+    if not roadmap_60_day:
+        roadmap_60_day.append(
+            {
+                "priority": "p3",
+                "action": "Review and update security policies and procedures",
+                "effort": "Medium",
+                "impact": "Medium",
+                "owner": "Security Team",
+            }
+        )
+
+    return {
+        "30_day": roadmap_30_day[:5],
+        "60_day": roadmap_60_day[:5],
+        "90_day": roadmap_90_day[:5],
+    }
 
 
 def calculate_confidence_level(scores: dict) -> tuple[str, str]:
