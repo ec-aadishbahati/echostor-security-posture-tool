@@ -1,5 +1,8 @@
 from sqlalchemy.orm import relationship
 
+from app.models.ai_artifacts import AISectionArtifact
+from app.models.ai_cache import AISectionCache
+from app.models.ai_metadata import AIGenerationMetadata
 from app.models.assessment import AdminAuditLog, Assessment, AssessmentResponse, Report
 from app.models.openai_key import OpenAIAPIKey
 from app.models.user import User
@@ -15,4 +18,7 @@ __all__ = [
     "Report",
     "AdminAuditLog",
     "OpenAIAPIKey",
+    "AIGenerationMetadata",
+    "AISectionArtifact",
+    "AISectionCache",
 ]

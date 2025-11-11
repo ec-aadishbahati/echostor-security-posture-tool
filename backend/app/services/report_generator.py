@@ -16,9 +16,15 @@ from weasyprint import HTML
 
 from app.core.config import settings
 from app.core.database import SessionLocal
+from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
+from app.models.ai_metadata import AIGenerationMetadata
 from app.models.assessment import Assessment, AssessmentResponse, Report
+from app.schemas.ai_artifacts import SectionAIArtifact
 from app.schemas.assessment import Question
+from app.services.ai_cache import AICacheService
+from app.services.benchmark_context import benchmark_context_service
 from app.services.openai_key_manager import OpenAIKeyManager
+from app.services.prompt_builder import build_section_prompt_v2
 from app.services.question_parser import (
     filter_structure_by_sections,
     load_assessment_structure,
@@ -184,7 +190,9 @@ def generate_ai_report(report_id: str):
             )
 
         logger.info("Generating AI insights")
-        ai_insights = generate_ai_insights(responses, structure, key_manager)
+        ai_insights = generate_ai_insights(
+            responses, structure, key_manager, report.id, db
+        )
 
         logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
@@ -314,12 +322,17 @@ def calculate_question_score(response: AssessmentResponse, question) -> int:
 
 
 def generate_ai_insights(
-    responses: list[AssessmentResponse], structure, key_manager: OpenAIKeyManager
-) -> dict[str, str]:
-    """Generate AI insights for each section using round-robin key rotation"""
+    responses: list[AssessmentResponse],
+    structure,
+    key_manager: OpenAIKeyManager,
+    report_id: str,
+    db,
+) -> dict[str, SectionAIArtifact]:
+    """Generate AI insights for each section using JSON mode with structured output"""
 
     insights = {}
     response_dict = {r.question_id: r for r in responses}
+    cache_service = AICacheService()
 
     try:
         key_id, api_key = key_manager.get_next_key()
@@ -344,48 +357,94 @@ def generate_ai_insights(
 
         if section_responses:
             try:
-                prompt = f"""
-                Analyze this cybersecurity assessment section and provide insights in markdown format:
-                
-                Section: {section.title}
-                Description: {section.description}
-                
-                Responses:
-                {format_responses_for_ai(section_responses)}
-                
-                Please provide your analysis in the following structured format using markdown:
-                
-                **1. Risk Assessment:** [Provide risk level (High/Medium/Low) with detailed explanation]
-                
-                **2. Key Strengths Identified:**
-                - [Strength 1]
-                - [Strength 2]
-                - [Strength 3]
-                
-                **3. Critical Gaps or Weaknesses:**
-                - [Gap 1]
-                - [Gap 2]
-                - [Gap 3]
-                
-                **4. Top 3 Priority Recommendations:**
-                1. [Priority 1 with specific action]
-                2. [Priority 2 with specific action]
-                3. [Priority 3 with specific action]
-                
-                **5. Industry Benchmark Comparison:**
-                [Compare to industry best practices and maturity levels]
-                
-                Keep the response professional and actionable, around 300-400 words total.
-                """
+                answers_hash = cache_service.compute_answers_hash(section_responses)
 
+                cached_artifact = cache_service.get_cached_artifact(
+                    db,
+                    section.id,
+                    answers_hash,
+                    settings.AI_PROMPT_VERSION,
+                    settings.OPENAI_MODEL,
+                )
+
+                if cached_artifact:
+                    db_artifact = AISectionArtifactModel(
+                        report_id=report_id,
+                        section_id=section.id,
+                        artifact_json=cached_artifact.model_dump(),
+                    )
+                    db.add(db_artifact)
+                    db.commit()
+
+                    insights[section.id] = cached_artifact
+                    continue
+
+                curated_context = benchmark_context_service.get_relevant_context(
+                    section.title, section.description, max_controls=5
+                )
+                prompt = build_section_prompt_v2(
+                    section, section_responses, curated_context
+                )
+
+                start_time = datetime.now()
                 response = client.chat.completions.create(
                     model=settings.OPENAI_MODEL,
                     messages=[{"role": "user", "content": prompt}],
+                    response_format={"type": "json_object"},
                     max_tokens=settings.OPENAI_MAX_TOKENS,
                     temperature=settings.OPENAI_TEMPERATURE,
                 )
+                end_time = datetime.now()
 
-                insights[section.id] = response.choices[0].message.content
+                json_str = response.choices[0].message.content
+                artifact = SectionAIArtifact.model_validate_json(json_str)
+
+                db_artifact = AISectionArtifactModel(
+                    report_id=report_id,
+                    section_id=section.id,
+                    artifact_json=artifact.model_dump(),
+                )
+                db.add(db_artifact)
+
+                tokens_prompt = response.usage.prompt_tokens if response.usage else 0
+                tokens_completion = (
+                    response.usage.completion_tokens if response.usage else 0
+                )
+                cost_usd = (
+                    (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
+                    if response.usage
+                    else 0.0
+                )
+
+                metadata = AIGenerationMetadata(
+                    report_id=report_id,
+                    section_id=section.id,
+                    prompt_version=settings.AI_PROMPT_VERSION,
+                    schema_version=settings.AI_SCHEMA_VERSION,
+                    model=settings.OPENAI_MODEL,
+                    temperature=settings.OPENAI_TEMPERATURE,
+                    max_tokens=settings.OPENAI_MAX_TOKENS,
+                    tokens_prompt=tokens_prompt,
+                    tokens_completion=tokens_completion,
+                    total_cost_usd=cost_usd,
+                    latency_ms=int((end_time - start_time).total_seconds() * 1000),
+                )
+                db.add(metadata)
+
+                cache_service.store_artifact(
+                    db,
+                    section.id,
+                    answers_hash,
+                    settings.AI_PROMPT_VERSION,
+                    settings.AI_SCHEMA_VERSION,
+                    settings.OPENAI_MODEL,
+                    artifact,
+                    tokens_prompt,
+                    tokens_completion,
+                    cost_usd,
+                )
+
+                insights[section.id] = artifact
 
                 if len(insights) == 1:
                     key_manager.record_success(key_id)
@@ -395,11 +454,46 @@ def generate_ai_insights(
                     f"Error generating AI insight for section {section.id}: {e}"
                 )
                 key_manager.record_failure(key_id, e)
-                insights[section.id] = (
-                    "AI analysis temporarily unavailable for this section."
-                )
+                insights[section.id] = create_degraded_artifact(section.id)
 
     return insights
+
+
+def create_degraded_artifact(section_id: str) -> SectionAIArtifact:
+    """Create a degraded artifact when AI generation fails"""
+    return SectionAIArtifact(
+        schema_version="1.0",
+        risk_level="Medium",
+        risk_explanation="AI analysis temporarily unavailable for this section. Please contact support for manual analysis.",
+        strengths=["Assessment data collected successfully"],
+        gaps=[
+            {
+                "gap": "AI analysis unavailable",
+                "linked_signals": ["Q1"],
+                "severity": "Low",
+            }
+        ],
+        recommendations=[
+            {
+                "action": "Retry AI analysis or request manual review",
+                "rationale": "Automated analysis encountered an error",
+                "linked_signals": ["Q1"],
+                "effort": "Low",
+                "impact": "Low",
+                "timeline": "30-day",
+                "references": [],
+            }
+        ],
+        benchmarks=[
+            {
+                "control": "Assessment Completion",
+                "status": "Implemented",
+                "framework": "Internal",
+                "reference": "",
+            }
+        ],
+        confidence_score=0.0,
+    )
 
 
 def format_responses_for_ai(responses: list[dict]) -> str:
@@ -1040,7 +1134,49 @@ def generate_ai_report_html(
                 {% if ai_insights.get(section.id) %}
                 <div class="ai-insight">
                     <h4>🤖 AI Analysis</h4>
-                    {{ ai_insights[section.id] | markdown | safe }}
+                    {% set artifact = ai_insights[section.id] %}
+                    
+                    <p><strong>Risk Level: {{ artifact.risk_level }}</strong></p>
+                    <p>{{ artifact.risk_explanation }}</p>
+                    
+                    <h4>Key Strengths:</h4>
+                    <ul>
+                    {% for strength in artifact.strengths %}
+                        <li>{{ strength }}</li>
+                    {% endfor %}
+                    </ul>
+                    
+                    <h4>Critical Gaps:</h4>
+                    <ul>
+                    {% for gap in artifact.gaps %}
+                        <li><strong>{{ gap.severity }}:</strong> {{ gap.gap }} <em>(Signals: {{ gap.linked_signals | join(', ') }})</em></li>
+                    {% endfor %}
+                    </ul>
+                    
+                    <h4>Priority Recommendations:</h4>
+                    <ol>
+                    {% for rec in artifact.recommendations %}
+                        <li>
+                            <strong>{{ rec.action }}</strong> ({{ rec.timeline }})
+                            <br><em>{{ rec.rationale }}</em>
+                            <br>Effort: {{ rec.effort }} | Impact: {{ rec.impact }} | Signals: {{ rec.linked_signals | join(', ') }}
+                            {% if rec.references %}
+                            <br>References: {{ rec.references | join(', ') }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ol>
+                    
+                    <h4>Industry Benchmarks:</h4>
+                    <ul>
+                    {% for benchmark in artifact.benchmarks %}
+                        <li><strong>{{ benchmark.control }}</strong> ({{ benchmark.framework }}): {{ benchmark.status }}
+                        {% if benchmark.reference %} - {{ benchmark.reference }}{% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    
+                    <p><em>Confidence Score: {{ "%.0f"|format(artifact.confidence_score * 100) }}%</em></p>
                 </div>
                 {% endif %}
             </div>

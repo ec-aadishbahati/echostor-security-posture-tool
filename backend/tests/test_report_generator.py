@@ -121,10 +121,17 @@ def test_generate_ai_insights(encryption_key, mocker):
 
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = "Test insight"
+        mock_response.choices[
+            0
+        ].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight", "strengths": ["Good"], "gaps": [], "recommendations": [], "benchmarks": [], "confidence_score": 0.8}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
         mock_client.chat.completions.create.return_value = mock_response
 
-        insights = generate_ai_insights(responses, structure, key_manager)
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
 
         assert insights is not None
         assert isinstance(insights, dict)
@@ -294,6 +301,12 @@ def test_generate_report_html(completed_assessment, test_assessment_response):
 
 
 def test_generate_ai_report_html(completed_assessment, test_assessment_response):
+    from app.schemas.ai_artifacts import (
+        Benchmark,
+        Gap,
+        Recommendation,
+        SectionAIArtifact,
+    )
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_ai_report_html
 
@@ -319,8 +332,66 @@ def test_generate_ai_report_html(completed_assessment, test_assessment_response)
         },
     }
     ai_insights = {
-        "section_1": "Good progress in this area",
-        "section_2": "Excellent security practices",
+        "section_1": SectionAIArtifact(
+            schema_version="1.0",
+            risk_level="Medium",
+            risk_explanation="Good progress in this area but some gaps remain that need attention",
+            strengths=["Strong authentication", "Regular updates"],
+            gaps=[Gap(gap="Missing MFA", linked_signals=["Q1"], severity="High")],
+            recommendations=[
+                Recommendation(
+                    action="Implement MFA",
+                    rationale="Multi-factor authentication will significantly improve account security and prevent unauthorized access",
+                    linked_signals=["Q1"],
+                    effort="Medium",
+                    impact="High",
+                    timeline="30-day",
+                    references=["NIST CSF PR.AC-7"],
+                )
+            ],
+            benchmarks=[
+                Benchmark(
+                    control="Multi-Factor Authentication",
+                    status="Partial",
+                    framework="NIST",
+                    reference="PR.AC-7",
+                )
+            ],
+            confidence_score=0.85,
+        ),
+        "section_2": SectionAIArtifact(
+            schema_version="1.0",
+            risk_level="Low",
+            risk_explanation="Excellent security practices are in place with comprehensive coverage",
+            strengths=["Comprehensive policies", "Regular audits"],
+            gaps=[
+                Gap(
+                    gap="Minor documentation gaps in incident response procedures",
+                    linked_signals=["Q2"],
+                    severity="Low",
+                )
+            ],
+            recommendations=[
+                Recommendation(
+                    action="Update incident response documentation",
+                    rationale="Keeping documentation current ensures team readiness and compliance with best practices",
+                    linked_signals=["Q2"],
+                    effort="Low",
+                    impact="Low",
+                    timeline="90-day",
+                    references=["ISO 27001 A.16.1.5"],
+                )
+            ],
+            benchmarks=[
+                Benchmark(
+                    control="Security Policies",
+                    status="Implemented",
+                    framework="ISO",
+                    reference="A.5.1.1",
+                )
+            ],
+            confidence_score=0.9,
+        ),
     }
 
     html = generate_ai_report_html(
