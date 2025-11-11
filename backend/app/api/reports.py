@@ -404,6 +404,28 @@ async def download_report(
             detail="Report not ready for download",
         )
 
+    if current_user.is_admin:
+        from app.api.admin import log_admin_action
+        from app.models.user import User
+
+        user = (
+            db.query(User)
+            .join(Assessment)
+            .filter(Assessment.id == report.assessment_id)
+            .first()
+        )
+        await log_admin_action(
+            admin_email=current_user.email,
+            action="download_report",
+            target_user_id=user.id if user else None,
+            details={
+                "report_id": str(report_id),
+                "report_type": report.report_type,
+                "user_email": user.email if user else "unknown",
+            },
+            db=db,
+        )
+
     filename = f"security_assessment_report_{report.report_type}_{report_id}.pdf"
     storage_service = get_storage_service()
 
