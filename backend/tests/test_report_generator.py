@@ -121,13 +121,17 @@ def test_generate_ai_insights(encryption_key, mocker):
 
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight", "strengths": ["Good"], "gaps": [], "recommendations": [], "benchmarks": [], "confidence_score": 0.8}'
+        mock_response.choices[
+            0
+        ].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight", "strengths": ["Good"], "gaps": [], "recommendations": [], "benchmarks": [], "confidence_score": 0.8}'
         mock_response.usage = MagicMock()
         mock_response.usage.prompt_tokens = 100
         mock_response.usage.completion_tokens = 50
         mock_client.chat.completions.create.return_value = mock_response
 
-        insights = generate_ai_insights(responses, structure, key_manager, "test-report-id", mock_db)
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
 
         assert insights is not None
         assert isinstance(insights, dict)
@@ -342,20 +346,31 @@ def test_generate_ai_report_html(completed_assessment, test_assessment_response)
                     effort="Medium",
                     impact="High",
                     timeline="30-day",
-                    references=["NIST CSF PR.AC-7"]
+                    references=["NIST CSF PR.AC-7"],
                 )
             ],
             benchmarks=[
-                Benchmark(control="Multi-Factor Authentication", status="Partial", framework="NIST", reference="PR.AC-7")
+                Benchmark(
+                    control="Multi-Factor Authentication",
+                    status="Partial",
+                    framework="NIST",
+                    reference="PR.AC-7",
+                )
             ],
-            confidence_score=0.85
+            confidence_score=0.85,
         ),
         "section_2": SectionAIArtifact(
             schema_version="1.0",
             risk_level="Low",
             risk_explanation="Excellent security practices are in place with comprehensive coverage",
             strengths=["Comprehensive policies", "Regular audits"],
-            gaps=[Gap(gap="Minor documentation gaps in incident response procedures", linked_signals=["Q2"], severity="Low")],
+            gaps=[
+                Gap(
+                    gap="Minor documentation gaps in incident response procedures",
+                    linked_signals=["Q2"],
+                    severity="Low",
+                )
+            ],
             recommendations=[
                 Recommendation(
                     action="Update incident response documentation",
@@ -364,13 +379,18 @@ def test_generate_ai_report_html(completed_assessment, test_assessment_response)
                     effort="Low",
                     impact="Low",
                     timeline="90-day",
-                    references=["ISO 27001 A.16.1.5"]
+                    references=["ISO 27001 A.16.1.5"],
                 )
             ],
             benchmarks=[
-                Benchmark(control="Security Policies", status="Implemented", framework="ISO", reference="A.5.1.1")
+                Benchmark(
+                    control="Security Policies",
+                    status="Implemented",
+                    framework="ISO",
+                    reference="A.5.1.1",
+                )
             ],
-            confidence_score=0.9
+            confidence_score=0.9,
         ),
     }
 
