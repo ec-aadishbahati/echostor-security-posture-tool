@@ -190,7 +190,9 @@ def generate_ai_report(report_id: str):
             )
 
         logger.info("Generating AI insights")
-        ai_insights = generate_ai_insights(responses, structure, key_manager, report.id, db)
+        ai_insights = generate_ai_insights(
+            responses, structure, key_manager, report.id, db
+        )
 
         logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
@@ -320,11 +322,11 @@ def calculate_question_score(response: AssessmentResponse, question) -> int:
 
 
 def generate_ai_insights(
-    responses: list[AssessmentResponse], 
-    structure, 
+    responses: list[AssessmentResponse],
+    structure,
     key_manager: OpenAIKeyManager,
     report_id: str,
-    db
+    db,
 ) -> dict[str, SectionAIArtifact]:
     """Generate AI insights for each section using JSON mode with structured output"""
 
@@ -356,30 +358,33 @@ def generate_ai_insights(
         if section_responses:
             try:
                 answers_hash = cache_service.compute_answers_hash(section_responses)
-                
+
                 cached_artifact = cache_service.get_cached_artifact(
-                    db, section.id, answers_hash, 
-                    settings.AI_PROMPT_VERSION, settings.OPENAI_MODEL
+                    db,
+                    section.id,
+                    answers_hash,
+                    settings.AI_PROMPT_VERSION,
+                    settings.OPENAI_MODEL,
                 )
-                
+
                 if cached_artifact:
                     db_artifact = AISectionArtifactModel(
                         report_id=report_id,
                         section_id=section.id,
-                        artifact_json=cached_artifact.model_dump()
+                        artifact_json=cached_artifact.model_dump(),
                     )
                     db.add(db_artifact)
                     db.commit()
-                    
+
                     insights[section.id] = cached_artifact
                     continue
-                
+
                 curated_context = benchmark_context_service.get_relevant_context(
-                    section.title,
-                    section.description,
-                    max_controls=5
+                    section.title, section.description, max_controls=5
                 )
-                prompt = build_section_prompt_v2(section, section_responses, curated_context)
+                prompt = build_section_prompt_v2(
+                    section, section_responses, curated_context
+                )
 
                 start_time = datetime.now()
                 response = client.chat.completions.create(
@@ -393,17 +398,23 @@ def generate_ai_insights(
 
                 json_str = response.choices[0].message.content
                 artifact = SectionAIArtifact.model_validate_json(json_str)
-                
+
                 db_artifact = AISectionArtifactModel(
                     report_id=report_id,
                     section_id=section.id,
-                    artifact_json=artifact.model_dump()
+                    artifact_json=artifact.model_dump(),
                 )
                 db.add(db_artifact)
 
                 tokens_prompt = response.usage.prompt_tokens if response.usage else 0
-                tokens_completion = response.usage.completion_tokens if response.usage else 0
-                cost_usd = (tokens_prompt * 0.00001 + tokens_completion * 0.00003) if response.usage else 0.0
+                tokens_completion = (
+                    response.usage.completion_tokens if response.usage else 0
+                )
+                cost_usd = (
+                    (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
+                    if response.usage
+                    else 0.0
+                )
 
                 metadata = AIGenerationMetadata(
                     report_id=report_id,
@@ -416,19 +427,21 @@ def generate_ai_insights(
                     tokens_prompt=tokens_prompt,
                     tokens_completion=tokens_completion,
                     total_cost_usd=cost_usd,
-                    latency_ms=int((end_time - start_time).total_seconds() * 1000)
+                    latency_ms=int((end_time - start_time).total_seconds() * 1000),
                 )
                 db.add(metadata)
-                
+
                 cache_service.store_artifact(
-                    db, section.id, answers_hash,
+                    db,
+                    section.id,
+                    answers_hash,
                     settings.AI_PROMPT_VERSION,
                     settings.AI_SCHEMA_VERSION,
                     settings.OPENAI_MODEL,
                     artifact,
                     tokens_prompt,
                     tokens_completion,
-                    cost_usd
+                    cost_usd,
                 )
 
                 insights[section.id] = artifact
@@ -453,27 +466,33 @@ def create_degraded_artifact(section_id: str) -> SectionAIArtifact:
         risk_level="Medium",
         risk_explanation="AI analysis temporarily unavailable for this section. Please contact support for manual analysis.",
         strengths=["Assessment data collected successfully"],
-        gaps=[{
-            "gap": "AI analysis unavailable",
-            "linked_signals": ["Q1"],
-            "severity": "Low"
-        }],
-        recommendations=[{
-            "action": "Retry AI analysis or request manual review",
-            "rationale": "Automated analysis encountered an error",
-            "linked_signals": ["Q1"],
-            "effort": "Low",
-            "impact": "Low",
-            "timeline": "30-day",
-            "references": []
-        }],
-        benchmarks=[{
-            "control": "Assessment Completion",
-            "status": "Implemented",
-            "framework": "Internal",
-            "reference": ""
-        }],
-        confidence_score=0.0
+        gaps=[
+            {
+                "gap": "AI analysis unavailable",
+                "linked_signals": ["Q1"],
+                "severity": "Low",
+            }
+        ],
+        recommendations=[
+            {
+                "action": "Retry AI analysis or request manual review",
+                "rationale": "Automated analysis encountered an error",
+                "linked_signals": ["Q1"],
+                "effort": "Low",
+                "impact": "Low",
+                "timeline": "30-day",
+                "references": [],
+            }
+        ],
+        benchmarks=[
+            {
+                "control": "Assessment Completion",
+                "status": "Implemented",
+                "framework": "Internal",
+                "reference": "",
+            }
+        ],
+        confidence_score=0.0,
     )
 
 

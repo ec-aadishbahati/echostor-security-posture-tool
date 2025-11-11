@@ -17,9 +17,9 @@ from app.core.database import Base
 
 class AIGenerationMetadata(Base):
     """Tracks AI generation metadata for versioning and cost tracking"""
-    
+
     __tablename__ = "ai_generation_metadata"
-    
+
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     report_id = Column(
         String(36), ForeignKey("reports.id", ondelete="CASCADE"), nullable=False
@@ -35,7 +35,7 @@ class AIGenerationMetadata(Base):
     total_cost_usd = Column(DECIMAL(10, 6), nullable=True)
     latency_ms = Column(Integer, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     __table_args__ = (
-        Index('idx_ai_metadata_report_section', 'report_id', 'section_id'),
+        Index("idx_ai_metadata_report_section", "report_id", "section_id"),
     )

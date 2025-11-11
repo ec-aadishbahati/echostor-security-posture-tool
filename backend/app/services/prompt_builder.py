@@ -1,14 +1,16 @@
 """Prompt builder service for AI report generation"""
 
 
-def build_section_prompt_v2(section, section_responses: list[dict], curated_context: str = "") -> str:
+def build_section_prompt_v2(
+    section, section_responses: list[dict], curated_context: str = ""
+) -> str:
     """Build JSON-mode prompt for section analysis"""
-    
+
     signals = []
     for i, resp in enumerate(section_responses, 1):
-        answer_str = str(resp['answer'])
+        answer_str = str(resp["answer"])
         signals.append(f"Q{i}: {answer_str} (weight:{resp['weight']})")
-    
+
     prompt = f"""Analyze this cybersecurity assessment section and provide structured insights.
 
 Section: {section.title}

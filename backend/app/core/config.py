@@ -20,9 +20,9 @@ class Settings(BaseSettings):
     OPENAI_TEMPERATURE: float = 0.7
     OPENAI_TIMEOUT: int = 60
     OPENAI_KEYS_ENCRYPTION_KEY: str | None = None
-    
+
     AI_PROMPT_VERSION: str = "v2.0"  # JSON-based prompts
-    AI_SCHEMA_VERSION: str = "1.0"   # Initial JSON schema
+    AI_SCHEMA_VERSION: str = "1.0"  # Initial JSON schema
 
     ADMIN_EMAIL: str = "aadish.bahati@echostor.com"
     ADMIN_PASSWORD_HASH: str | None = None
