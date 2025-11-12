@@ -5,7 +5,16 @@ from typing import Any
 
 import markdown2
 from jinja2 import Environment
-from openai import OpenAI
+from openai import (
+    APIConnectionError,
+    APIError,
+    AuthenticationError,
+    OpenAI,
+    OpenAIError,
+    RateLimitError,
+)
+from pydantic import ValidationError
+from sqlalchemy.exc import SQLAlchemyError
 from tenacity import (
     retry,
     retry_if_exception_type,
@@ -356,105 +365,217 @@ def generate_ai_insights(
                 )
 
         if section_responses:
-            try:
-                answers_hash = cache_service.compute_answers_hash(section_responses)
+            retry_attempted = False
+            max_retries = 1  # Single retry for transient errors
 
-                cached_artifact = cache_service.get_cached_artifact(
-                    db,
-                    section.id,
-                    answers_hash,
-                    settings.AI_PROMPT_VERSION,
-                    settings.OPENAI_MODEL,
-                )
+            for attempt in range(max_retries + 1):
+                try:
+                    answers_hash = cache_service.compute_answers_hash(section_responses)
 
-                if cached_artifact:
+                    cached_artifact = cache_service.get_cached_artifact(
+                        db,
+                        section.id,
+                        answers_hash,
+                        settings.AI_PROMPT_VERSION,
+                        settings.OPENAI_MODEL,
+                    )
+
+                    if cached_artifact:
+                        db_artifact = AISectionArtifactModel(
+                            report_id=report_id,
+                            section_id=section.id,
+                            artifact_json=cached_artifact.model_dump(),
+                        )
+                        db.add(db_artifact)
+                        db.commit()
+
+                        insights[section.id] = cached_artifact
+                        break  # Success, exit retry loop
+
+                    curated_context = benchmark_context_service.get_relevant_context(
+                        section.title, section.description, max_controls=5
+                    )
+                    prompt = build_section_prompt_v2(
+                        section, section_responses, curated_context
+                    )
+
+                    start_time = datetime.now()
+                    response = client.chat.completions.create(
+                        model=settings.OPENAI_MODEL,
+                        messages=[{"role": "user", "content": prompt}],
+                        response_format={"type": "json_object"},
+                        max_tokens=settings.OPENAI_MAX_TOKENS,
+                        temperature=settings.OPENAI_TEMPERATURE,
+                    )
+                    end_time = datetime.now()
+
+                    json_str = response.choices[0].message.content
+                    artifact = SectionAIArtifact.model_validate_json(json_str)
+
                     db_artifact = AISectionArtifactModel(
                         report_id=report_id,
                         section_id=section.id,
-                        artifact_json=cached_artifact.model_dump(),
+                        artifact_json=artifact.model_dump(),
                     )
                     db.add(db_artifact)
-                    db.commit()
 
-                    insights[section.id] = cached_artifact
-                    continue
+                    tokens_prompt = (
+                        response.usage.prompt_tokens if response.usage else 0
+                    )
+                    tokens_completion = (
+                        response.usage.completion_tokens if response.usage else 0
+                    )
+                    cost_usd = (
+                        (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
+                        if response.usage
+                        else 0.0
+                    )
 
-                curated_context = benchmark_context_service.get_relevant_context(
-                    section.title, section.description, max_controls=5
-                )
-                prompt = build_section_prompt_v2(
-                    section, section_responses, curated_context
-                )
+                    metadata = AIGenerationMetadata(
+                        report_id=report_id,
+                        section_id=section.id,
+                        prompt_version=settings.AI_PROMPT_VERSION,
+                        schema_version=settings.AI_SCHEMA_VERSION,
+                        model=settings.OPENAI_MODEL,
+                        temperature=settings.OPENAI_TEMPERATURE,
+                        max_tokens=settings.OPENAI_MAX_TOKENS,
+                        tokens_prompt=tokens_prompt,
+                        tokens_completion=tokens_completion,
+                        total_cost_usd=cost_usd,
+                        latency_ms=int((end_time - start_time).total_seconds() * 1000),
+                    )
+                    db.add(metadata)
 
-                start_time = datetime.now()
-                response = client.chat.completions.create(
-                    model=settings.OPENAI_MODEL,
-                    messages=[{"role": "user", "content": prompt}],
-                    response_format={"type": "json_object"},
-                    max_tokens=settings.OPENAI_MAX_TOKENS,
-                    temperature=settings.OPENAI_TEMPERATURE,
-                )
-                end_time = datetime.now()
+                    cache_service.store_artifact(
+                        db,
+                        section.id,
+                        answers_hash,
+                        settings.AI_PROMPT_VERSION,
+                        settings.AI_SCHEMA_VERSION,
+                        settings.OPENAI_MODEL,
+                        artifact,
+                        tokens_prompt,
+                        tokens_completion,
+                        cost_usd,
+                    )
 
-                json_str = response.choices[0].message.content
-                artifact = SectionAIArtifact.model_validate_json(json_str)
+                    insights[section.id] = artifact
 
-                db_artifact = AISectionArtifactModel(
-                    report_id=report_id,
-                    section_id=section.id,
-                    artifact_json=artifact.model_dump(),
-                )
-                db.add(db_artifact)
+                    if len(insights) == 1:
+                        key_manager.record_success(key_id)
 
-                tokens_prompt = response.usage.prompt_tokens if response.usage else 0
-                tokens_completion = (
-                    response.usage.completion_tokens if response.usage else 0
-                )
-                cost_usd = (
-                    (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
-                    if response.usage
-                    else 0.0
-                )
+                    break  # Success, exit retry loop
 
-                metadata = AIGenerationMetadata(
-                    report_id=report_id,
-                    section_id=section.id,
-                    prompt_version=settings.AI_PROMPT_VERSION,
-                    schema_version=settings.AI_SCHEMA_VERSION,
-                    model=settings.OPENAI_MODEL,
-                    temperature=settings.OPENAI_TEMPERATURE,
-                    max_tokens=settings.OPENAI_MAX_TOKENS,
-                    tokens_prompt=tokens_prompt,
-                    tokens_completion=tokens_completion,
-                    total_cost_usd=cost_usd,
-                    latency_ms=int((end_time - start_time).total_seconds() * 1000),
-                )
-                db.add(metadata)
+                except ValidationError as e:
+                    # Pydantic validation failed - AI returned invalid JSON structure
+                    logger.error(
+                        f"JSON validation failed for section {section.id}: {e.errors()}"
+                    )
+                    logger.error(
+                        f"AI response snippet (first 300 chars): {json_str[:300] if 'json_str' in locals() else 'N/A'}"
+                    )
+                    key_manager.record_failure(key_id, e)
+                    insights[section.id] = create_degraded_artifact(section.id)
+                    break  # Don't retry validation errors
 
-                cache_service.store_artifact(
-                    db,
-                    section.id,
-                    answers_hash,
-                    settings.AI_PROMPT_VERSION,
-                    settings.AI_SCHEMA_VERSION,
-                    settings.OPENAI_MODEL,
-                    artifact,
-                    tokens_prompt,
-                    tokens_completion,
-                    cost_usd,
-                )
+                except AuthenticationError as e:
+                    logger.error(
+                        f"Authentication failed for section {section.id} with key {key_id}: {e}"
+                    )
+                    key_manager.record_failure(key_id, e)
 
-                insights[section.id] = artifact
+                    if attempt < max_retries and not retry_attempted:
+                        try:
+                            key_id, api_key = key_manager.get_next_key()
+                            client = OpenAI(
+                                api_key=api_key, timeout=settings.OPENAI_TIMEOUT
+                            )
+                            logger.info(
+                                f"Retrying section {section.id} with next API key {key_id}"
+                            )
+                            retry_attempted = True
+                            continue  # Retry with new key
+                        except ValueError:
+                            logger.error("No more API keys available for retry")
+                            insights[section.id] = create_degraded_artifact(section.id)
+                            break
+                    else:
+                        insights[section.id] = create_degraded_artifact(section.id)
+                        break
 
-                if len(insights) == 1:
-                    key_manager.record_success(key_id)
+                except RateLimitError as e:
+                    logger.error(
+                        f"Rate limit exceeded for section {section.id} with key {key_id}: {e}"
+                    )
+                    key_manager.record_failure(key_id, e)
 
-            except Exception as e:
-                logger.error(
-                    f"Error generating AI insight for section {section.id}: {e}"
-                )
-                key_manager.record_failure(key_id, e)
-                insights[section.id] = create_degraded_artifact(section.id)
+                    if attempt < max_retries and not retry_attempted:
+                        try:
+                            key_id, api_key = key_manager.get_next_key()
+                            client = OpenAI(
+                                api_key=api_key, timeout=settings.OPENAI_TIMEOUT
+                            )
+                            logger.info(
+                                f"Retrying section {section.id} with next API key {key_id} after rate limit"
+                            )
+                            retry_attempted = True
+                            continue  # Retry with new key
+                        except ValueError:
+                            logger.error("No more API keys available for retry")
+                            insights[section.id] = create_degraded_artifact(section.id)
+                            break
+                    else:
+                        insights[section.id] = create_degraded_artifact(section.id)
+                        break
+
+                except (APIConnectionError, APIError) as e:
+                    logger.error(
+                        f"API connection/error for section {section.id} with key {key_id}: {type(e).__name__}: {e}"
+                    )
+                    key_manager.record_failure(key_id, e)
+
+                    if attempt < max_retries and not retry_attempted:
+                        try:
+                            key_id, api_key = key_manager.get_next_key()
+                            client = OpenAI(
+                                api_key=api_key, timeout=settings.OPENAI_TIMEOUT
+                            )
+                            logger.info(
+                                f"Retrying section {section.id} with next API key {key_id} after API error"
+                            )
+                            retry_attempted = True
+                            continue  # Retry with new key
+                        except ValueError:
+                            logger.error("No more API keys available for retry")
+                            insights[section.id] = create_degraded_artifact(section.id)
+                            break
+                    else:
+                        insights[section.id] = create_degraded_artifact(section.id)
+                        break
+
+                except SQLAlchemyError as e:
+                    logger.error(
+                        f"Database error for section {section.id}: {type(e).__name__}: {e}"
+                    )
+                    key_manager.record_failure(key_id, e)
+                    insights[section.id] = create_degraded_artifact(section.id)
+                    break  # Don't retry DB errors
+
+                except OpenAIError as e:
+                    logger.error(
+                        f"OpenAI error for section {section.id} with key {key_id}: {type(e).__name__}: {e}"
+                    )
+                    key_manager.record_failure(key_id, e)
+                    insights[section.id] = create_degraded_artifact(section.id)
+                    break  # Don't retry other OpenAI errors
+
+                except Exception as e:
+                    logger.exception(
+                        f"Unexpected error generating AI insight for section {section.id} with key {key_id}: {e}"
+                    )
+                    key_manager.record_failure(key_id, e)
+                    insights[section.id] = create_degraded_artifact(section.id)
+                    break  # Don't retry unexpected errors
 
     return insights
 
