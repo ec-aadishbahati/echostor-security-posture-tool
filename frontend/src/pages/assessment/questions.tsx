@@ -397,6 +397,35 @@ export default function AssessmentQuestions() {
     }
   };
 
+  useEffect(() => {
+    if (!user) {
+      router.push('/auth/login');
+    }
+  }, [user, router]);
+
+  const {
+    percentage: progress,
+    answeredCount,
+    totalQuestions,
+  } = useMemo(() => {
+    if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
+
+    let answered = 0;
+    let total = 0;
+
+    structure.data.sections.forEach((section: Section) => {
+      total += section.questions.length;
+      section.questions.forEach((question: Question) => {
+        if (isQuestionAnswered(question)) {
+          answered++;
+        }
+      });
+    });
+
+    const percentage = total > 0 ? (answered / total) * 100 : 0;
+    return { percentage, answeredCount: answered, totalQuestions: total };
+  }, [structure, responses]);
+
   if (structureLoading || (assessmentLoading && !assessmentError)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -417,7 +446,6 @@ export default function AssessmentQuestions() {
   }
 
   if (!user) {
-    router.push('/auth/login');
     return null;
   }
 
@@ -483,29 +511,6 @@ export default function AssessmentQuestions() {
 
   const currentQuestion = getCurrentQuestion();
   const currentSection = getCurrentSection();
-
-  const {
-    percentage: progress,
-    answeredCount,
-    totalQuestions,
-  } = useMemo(() => {
-    if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
-
-    let answered = 0;
-    let total = 0;
-
-    structure.data.sections.forEach((section: Section) => {
-      total += section.questions.length;
-      section.questions.forEach((question: Question) => {
-        if (isQuestionAnswered(question)) {
-          answered++;
-        }
-      });
-    });
-
-    const percentage = total > 0 ? (answered / total) * 100 : 0;
-    return { percentage, answeredCount: answered, totalQuestions: total };
-  }, [structure, responses]);
 
   const calculateSectionProgress = (sectionIndex: number) => {
     if (!structure) return 0;
