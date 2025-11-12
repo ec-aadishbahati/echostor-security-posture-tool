@@ -29,12 +29,18 @@ from weasyprint import HTML
 
 from app.core.config import settings
 from app.core.database import SessionLocal
-from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
+from app.models.ai_artifacts import (
+    AISectionArtifact as AISectionArtifactModel,
+)
+from app.models.ai_artifacts import (
+    AISynthesisArtifact as AISynthesisArtifactModel,
+)
 from app.models.ai_metadata import AIGenerationMetadata
 from app.models.assessment import Assessment, AssessmentResponse, Report
-from app.schemas.ai_artifacts import SectionAIArtifact
+from app.schemas.ai_artifacts import SectionAIArtifact, SynthesisArtifact
 from app.schemas.assessment import Question
 from app.services.ai_cache import AICacheService
+from app.services.ai_synthesis import generate_synthesis_artifact
 from app.services.benchmark_context import benchmark_context_service
 from app.services.openai_key_manager import OpenAIKeyManager
 from app.services.prompt_builder import build_section_prompt_v2
@@ -210,9 +216,25 @@ def generate_ai_report(report_id: str):
         logger.info("Calculating scores")
         scores = calculate_assessment_scores(responses, structure)
 
-        logger.info("Generating AI report HTML")
+        logger.info("Generating cross-section synthesis")
+        synthesis_artifact = asyncio.run(
+            generate_synthesis_artifact(ai_insights, structure, scores, key_manager, db)
+        )
+
+        logger.info("Storing synthesis artifact")
+        db_synthesis = AISynthesisArtifactModel(
+            report_id=report.id,
+            artifact_json=synthesis_artifact.model_dump(),
+            prompt_version=settings.AI_PROMPT_VERSION,
+            schema_version=settings.AI_SCHEMA_VERSION,
+            model=settings.OPENAI_MODEL,
+        )
+        db.add(db_synthesis)
+        db.commit()
+
+        logger.info("Generating AI report HTML with synthesis")
         html_content = generate_ai_report_html(
-            assessment, responses, scores, structure, ai_insights
+            assessment, responses, scores, structure, ai_insights, synthesis_artifact
         )
 
         filename = f"ai_report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
@@ -1306,9 +1328,14 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
 
 
 def generate_ai_report_html(
-    assessment, responses, scores, structure, ai_insights
+    assessment,
+    responses,
+    scores,
+    structure,
+    ai_insights,
+    synthesis: SynthesisArtifact = None,
 ) -> str:
-    """Generate HTML content for AI-enhanced report"""
+    """Generate HTML content for AI-enhanced report with synthesis"""
 
     jinja_env.filters["markdown"] = markdown_filter
 
@@ -1391,6 +1418,98 @@ def generate_ai_report_html(
                 <h3>Overall Security Score: {{ "%.1f"|format(scores.overall.percentage) }}%</h3>
                 <p>{{ overall_assessment }}</p>
             </div>
+            
+            {% if synthesis %}
+            <div class="ai-insight" style="margin-top: 20px;">
+                <h4>🎯 Strategic Overview</h4>
+                <p><strong>Overall Risk Level: {{ synthesis.overall_risk_level }}</strong></p>
+                <p>{{ synthesis.overall_risk_explanation }}</p>
+                
+                <div style="margin-top: 15px;">
+                    {{ synthesis.executive_summary }}
+                </div>
+            </div>
+            
+            {% if synthesis.cross_cutting_themes %}
+            <div class="section" style="margin-top: 20px;">
+                <h3>Cross-Cutting Themes</h3>
+                <p>The following themes span multiple security domains and require coordinated attention:</p>
+                {% for theme in synthesis.cross_cutting_themes %}
+                <div class="ai-insight" style="margin: 10px 0;">
+                    <h4>{{ theme.theme }} <span style="color: {% if theme.severity == 'Critical' %}#dc3545{% elif theme.severity == 'High' %}#fd7e14{% elif theme.severity == 'Medium' %}#ffc107{% else %}#28a745{% endif %};">({{ theme.severity }})</span></h4>
+                    <p>{{ theme.description }}</p>
+                    <p><em>Affected domains: {{ theme.affected_domains|join(', ') }}</em></p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if synthesis.top_10_initiatives %}
+            <div class="section" style="margin-top: 20px;">
+                <h3>Top Priority Initiatives</h3>
+                <p>The following initiatives are prioritized by impact, urgency, and effort. Dependencies are mapped to ensure proper sequencing.</p>
+                <table style="font-size: 9px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Priority</th>
+                            <th style="width: 25%;">Initiative</th>
+                            <th style="width: 15%;">Domains</th>
+                            <th style="width: 10%;">Effort</th>
+                            <th style="width: 10%;">Impact</th>
+                            <th style="width: 10%;">Timeline</th>
+                            <th style="width: 25%;">Success Metrics</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for initiative in synthesis.top_10_initiatives[:10] %}
+                        <tr>
+                            <td class="priority-p{{ (initiative.priority - 1) // 3 + 1 }}" style="text-align: center; font-weight: bold;">{{ initiative.priority }}</td>
+                            <td>
+                                <strong>{{ initiative.title }}</strong><br>
+                                <span style="font-size: 8px;">{{ initiative.description }}</span>
+                                {% if initiative.dependencies %}
+                                <br><em style="font-size: 8px; color: #666;">Depends on: #{{ initiative.dependencies|join(', #') }}</em>
+                                {% endif %}
+                            </td>
+                            <td style="font-size: 8px;">{{ initiative.affected_domains|join(', ') }}</td>
+                            <td>{{ initiative.effort }}</td>
+                            <td style="color: {% if initiative.impact == 'Critical' %}#dc3545{% elif initiative.impact == 'High' %}#fd7e14{% else %}#ffc107{% endif %}; font-weight: bold;">{{ initiative.impact }}</td>
+                            <td>{{ initiative.timeline }}</td>
+                            <td style="font-size: 8px;">
+                                <ul style="margin: 0; padding-left: 15px;">
+                                    {% for metric in initiative.success_metrics %}
+                                    <li>{{ metric }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+            
+            {% if synthesis.quick_wins %}
+            <div class="section" style="margin-top: 20px;">
+                <h3>Quick Wins (30-Day Actions)</h3>
+                <p>These low-effort, high-impact actions can be completed quickly to demonstrate progress:</p>
+                <ul>
+                    {% for win in synthesis.quick_wins %}
+                    <li>{{ win }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            {% if synthesis.long_term_strategy %}
+            <div class="section" style="margin-top: 20px;">
+                <h3>Long-Term Strategy (6-12 Months)</h3>
+                <div class="methodology-box">
+                    <p>{{ synthesis.long_term_strategy }}</p>
+                </div>
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
         
         <!-- Table of Contents -->
