@@ -514,10 +514,18 @@ def generate_ai_insights(
                     tokens_completion = (
                         response.usage.completion_tokens if response.usage else 0
                     )
+                    finish_reason = (
+                        response.choices[0].finish_reason if response.choices else None
+                    )
                     cost_usd = (
                         (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
                         if response.usage
                         else 0.0
+                    )
+
+                    logger.info(
+                        f"Section {section.id}: finish_reason={finish_reason}, "
+                        f"tokens={tokens_prompt}+{tokens_completion}={tokens_prompt + tokens_completion}"
                     )
 
                     metadata = AIGenerationMetadata(
@@ -530,6 +538,7 @@ def generate_ai_insights(
                         max_tokens=settings.OPENAI_MAX_TOKENS,
                         tokens_prompt=tokens_prompt,
                         tokens_completion=tokens_completion,
+                        finish_reason=finish_reason,
                         total_cost_usd=cost_usd,
                         latency_ms=int((end_time - start_time).total_seconds() * 1000),
                     )
@@ -770,10 +779,18 @@ async def generate_ai_insights_async(
                     tokens_completion = (
                         response.usage.completion_tokens if response.usage else 0
                     )
+                    finish_reason = (
+                        response.choices[0].finish_reason if response.choices else None
+                    )
                     cost_usd = (
                         (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
                         if response.usage
                         else 0.0
+                    )
+
+                    logger.info(
+                        f"Section {section.id}: finish_reason={finish_reason}, "
+                        f"tokens={tokens_prompt}+{tokens_completion}={tokens_prompt + tokens_completion}"
                     )
 
                     metadata = AIGenerationMetadata(
@@ -786,6 +803,7 @@ async def generate_ai_insights_async(
                         max_tokens=settings.OPENAI_MAX_TOKENS,
                         tokens_prompt=tokens_prompt,
                         tokens_completion=tokens_completion,
+                        finish_reason=finish_reason,
                         total_cost_usd=cost_usd,
                         latency_ms=latency_ms,
                     )
