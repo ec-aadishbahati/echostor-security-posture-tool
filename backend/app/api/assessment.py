@@ -332,14 +332,11 @@ async def save_assessment_progress(
 
     assessment.last_saved_at = datetime.now(UTC)
 
-    if new_responses_count > 0:
-        total_responses = (
-            db.query(AssessmentResponseModel)
-            .filter(AssessmentResponseModel.assessment_id == assessment_id)
-            .count()
-        )
-    else:
-        total_responses = len(existing_responses)
+    total_responses = (
+        db.query(AssessmentResponseModel)
+        .filter(AssessmentResponseModel.assessment_id == assessment_id)
+        .count()
+    )
 
     structure = load_assessment_structure_cached()
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useAuth } from '@/lib/auth';
@@ -286,16 +286,19 @@ export default function AssessmentQuestions() {
     }));
   }, []);
 
-  const isCurrentQuestionAnswered = (): boolean => {
-    if (!currentQuestion) return false;
+  const isQuestionAnswered = (question: Question): boolean => {
+    const answer = responses[question.id];
 
-    const answer = responses[currentQuestion.id];
-
-    if (currentQuestion.type === 'multiple_select') {
+    if (question.type === 'multiple_select') {
       return Array.isArray(answer) && answer.length > 0;
     }
 
     return answer !== undefined && answer !== null && answer !== '';
+  };
+
+  const isCurrentQuestionAnswered = (): boolean => {
+    if (!currentQuestion) return false;
+    return isQuestionAnswered(currentQuestion);
   };
 
   const getCurrentQuestion = (): Question | null => {
@@ -480,12 +483,36 @@ export default function AssessmentQuestions() {
 
   const currentQuestion = getCurrentQuestion();
   const currentSection = getCurrentSection();
-  const progress = savedProgress;
+
+  const {
+    percentage: progress,
+    answeredCount,
+    totalQuestions,
+  } = useMemo(() => {
+    if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
+
+    let answered = 0;
+    let total = 0;
+
+    structure.data.sections.forEach((section: Section) => {
+      total += section.questions.length;
+      section.questions.forEach((question: Question) => {
+        if (isQuestionAnswered(question)) {
+          answered++;
+        }
+      });
+    });
+
+    const percentage = total > 0 ? (answered / total) * 100 : 0;
+    return { percentage, answeredCount: answered, totalQuestions: total };
+  }, [structure, responses]);
 
   const calculateSectionProgress = (sectionIndex: number) => {
     if (!structure) return 0;
     const section = structure.data.sections[sectionIndex];
-    const answeredInSection = section.questions.filter((q: Question) => responses[q.id]).length;
+    const answeredInSection = section.questions.filter((q: Question) =>
+      isQuestionAnswered(q)
+    ).length;
     return (answeredInSection / section.questions.length) * 100;
   };
 
@@ -562,7 +589,7 @@ export default function AssessmentQuestions() {
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>
-                  <div className="text-xs text-gray-600">{progress.toFixed(0)}% Complete</div>
+                  <div className="text-xs text-gray-600">{Math.round(progress)}% Complete</div>
                 </div>
 
                 {/* Section List */}
@@ -570,8 +597,8 @@ export default function AssessmentQuestions() {
                   {structure?.data?.sections.map((section: Section, index: number) => {
                     const sectionProgress = calculateSectionProgress(index);
                     const isCurrentSection = index === currentSectionIndex;
-                    const answeredCount = section.questions.filter(
-                      (q: Question) => responses[q.id]
+                    const answeredCount = section.questions.filter((q: Question) =>
+                      isQuestionAnswered(q)
                     ).length;
 
                     return (
@@ -632,8 +659,8 @@ export default function AssessmentQuestions() {
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-gray-700">
-                    Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of{' '}
-                    {structure?.data?.total_questions || 0} questions)
+                    Assessment Progress: {progress.toFixed(0)}% ({answeredCount} of {totalQuestions}{' '}
+                    questions)
                   </span>
                   <div className="flex items-center text-sm text-gray-600">
                     <ClockIcon className="h-4 w-4 mr-1" />
