@@ -108,6 +108,18 @@ async def start_assessment(
     if existing_assessment:
         return AssessmentResponse.model_validate(existing_assessment)
 
+    total_assessments = (
+        db.query(Assessment).filter(Assessment.user_id == current_user.id).count()
+    )
+
+    if total_assessments >= 3:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You have reached the maximum limit of 3 assessments. No more assessments can be taken.",
+        )
+
+    next_attempt_number = total_assessments + 1
+
     selected_section_ids = None
     if assessment_data and assessment_data.selected_section_ids:
         selected_section_ids = assessment_data.selected_section_ids
@@ -124,6 +136,7 @@ async def start_assessment(
 
     assessment = Assessment(
         user_id=current_user.id,
+        attempt_number=next_attempt_number,
         status="in_progress",
         started_at=datetime.now(UTC),
         expires_at=expires_at,
@@ -221,6 +234,58 @@ async def get_latest_assessment(
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="No assessment found"
     )
+
+
+@router.get("/history", response_model=list[AssessmentResponse])
+async def get_assessment_history(
+    request: Request,
+    current_user: CurrentUserResponse = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Get all assessments for the current user, ordered by attempt number"""
+
+    assessments = (
+        db.query(Assessment)
+        .filter(Assessment.user_id == current_user.id)
+        .order_by(Assessment.attempt_number.asc())
+        .all()
+    )
+
+    return [AssessmentResponse.model_validate(assessment) for assessment in assessments]
+
+
+@router.get("/can-retake")
+async def can_retake_assessment(
+    request: Request,
+    current_user: CurrentUserResponse = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Check if the user can retake the assessment"""
+
+    total_assessments = (
+        db.query(Assessment).filter(Assessment.user_id == current_user.id).count()
+    )
+
+    in_progress_assessment = (
+        db.query(Assessment)
+        .filter(
+            and_(
+                Assessment.user_id == current_user.id,
+                Assessment.status == "in_progress",
+            )
+        )
+        .first()
+    )
+
+    can_retake = total_assessments < 3 and not in_progress_assessment
+    attempts_remaining = max(0, 3 - total_assessments)
+
+    return {
+        "can_retake": can_retake,
+        "total_attempts": total_assessments,
+        "attempts_remaining": attempts_remaining,
+        "has_in_progress": in_progress_assessment is not None,
+    }
 
 
 @router.get(

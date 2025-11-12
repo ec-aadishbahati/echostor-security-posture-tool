@@ -101,6 +101,10 @@ export const assessmentAPI = {
 
   getLatestAssessment: () => api.get('/api/assessment/latest'),
 
+  getAssessmentHistory: () => api.get('/api/assessment/history'),
+
+  canRetakeAssessment: () => api.get('/api/assessment/can-retake'),
+
   getResponses: (assessmentId: string) => api.get(`/api/assessment/${assessmentId}/responses`),
 
   saveProgress: (assessmentId: string, responses: Record<string, any>[]) =>

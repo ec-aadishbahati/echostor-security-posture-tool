@@ -29,6 +29,10 @@ export default function Dashboard() {
     refetchOnWindowFocus: false,
   });
 
+  const { data: retakeData } = useQuery('canRetake', assessmentAPI.canRetakeAssessment, {
+    refetchOnWindowFocus: false,
+  });
+
   const calculateTimeRemaining = (expiresAt: string) => {
     const now = new Date();
     const expiry = new Date(expiresAt);
@@ -45,6 +49,10 @@ export default function Dashboard() {
   const progressPercentage = hasActiveAssessment ? assessment.data.progress_percentage || 0 : 0;
   const timeRemaining =
     hasActiveAssessment && !isCompleted ? calculateTimeRemaining(assessment.data.expires_at) : null;
+
+  const canRetake = retakeData?.data?.can_retake || false;
+  const attemptsRemaining = retakeData?.data?.attempts_remaining || 0;
+  const totalAttempts = retakeData?.data?.total_attempts || 0;
 
   return (
     <ProtectedRoute>
@@ -261,6 +269,36 @@ export default function Dashboard() {
               <ArrowRightIcon className="ml-2 h-4 w-4" />
             </Link>
           </div>
+
+          {isCompleted && canRetake && (
+            <div className="card bg-blue-50 border border-blue-200 mt-6">
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Retake Assessment</h3>
+              <p className="text-blue-800 mb-4">
+                You have completed {totalAttempts} of 3 possible assessments. You can retake the
+                assessment {attemptsRemaining} more {attemptsRemaining === 1 ? 'time' : 'times'} to
+                track your security posture improvements over time.
+              </p>
+              <Link
+                href="/assessment/select-sections"
+                className="btn-primary inline-flex items-center"
+              >
+                Retake Assessment
+                <ArrowRightIcon className="ml-2 h-4 w-4" />
+              </Link>
+            </div>
+          )}
+
+          {isCompleted && !canRetake && totalAttempts >= 3 && (
+            <div className="card bg-yellow-50 border border-yellow-200 mt-6">
+              <h3 className="text-lg font-semibold text-yellow-900 mb-2">
+                Assessment Limit Reached
+              </h3>
+              <p className="text-yellow-800">
+                You have completed the maximum of 3 assessments. You can view all your previous
+                reports in the Reports section.
+              </p>
+            </div>
+          )}
         </div>
       </Layout>
     </ProtectedRoute>

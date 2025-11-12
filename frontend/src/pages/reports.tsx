@@ -231,6 +231,14 @@ export default function Reports() {
                           </div>
 
                           <div className="text-sm text-gray-600 space-y-1">
+                            <p className="font-semibold text-gray-900">
+                              Assessment #{report.assessment?.attempt_number || 1} -{' '}
+                              {
+                                formatDate(
+                                  report.assessment?.completed_at || report.requested_at
+                                ).split(',')[0]
+                              }
+                            </p>
                             <p>
                               Assessment completed:{' '}
                               {formatDate(report.assessment?.completed_at || report.requested_at)}
