@@ -651,8 +651,6 @@ def test_generate_report_html_enhanced(completed_assessment, test_assessment_res
 
 
 def test_generate_ai_insights_validation_error(encryption_key, mocker):
-    from openai import OpenAI
-    from pydantic import ValidationError
 
     from app.services.openai_key_manager import OpenAIKeyManager
     from app.services.question_parser import create_sample_assessment_structure
@@ -693,7 +691,7 @@ def test_generate_ai_insights_validation_error(encryption_key, mocker):
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Medium"
             assert "temporarily unavailable" in artifact.risk_explanation
 
@@ -736,7 +734,7 @@ def test_generate_ai_insights_authentication_error(encryption_key, mocker):
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Medium"
             assert "temporarily unavailable" in artifact.risk_explanation
 
@@ -779,7 +777,7 @@ def test_generate_ai_insights_rate_limit_error(encryption_key, mocker):
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Medium"
             assert "temporarily unavailable" in artifact.risk_explanation
 
@@ -823,7 +821,7 @@ def test_generate_ai_insights_api_connection_error(encryption_key, mocker):
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Medium"
             assert "temporarily unavailable" in artifact.risk_explanation
 
@@ -874,7 +872,7 @@ def test_generate_ai_insights_sqlalchemy_error(encryption_key, mocker):
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Medium"
             assert "temporarily unavailable" in artifact.risk_explanation
 
@@ -948,7 +946,7 @@ def test_generate_ai_insights_authentication_error_with_retry(encryption_key, mo
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Low"
             assert "Test insight" in artifact.risk_explanation
 
@@ -1022,7 +1020,7 @@ def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key, mocker
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Low"
             assert "Test insight" in artifact.risk_explanation
 
@@ -1097,7 +1095,7 @@ def test_generate_ai_insights_api_error_with_retry(encryption_key, mocker):
 
         assert insights is not None
         assert isinstance(insights, dict)
-        for section_id, artifact in insights.items():
+        for _section_id, artifact in insights.items():
             assert artifact.risk_level == "Low"
             assert "Test insight" in artifact.risk_explanation
 
