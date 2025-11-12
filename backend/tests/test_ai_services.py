@@ -37,7 +37,7 @@ class TestPromptBuilder:
             {"answer": "No", "weight": 0.8, "question": "Do you have RBAC?"},
         ]
 
-        prompt = build_section_prompt_v2(section, section_responses)
+        prompt, redaction_count = build_section_prompt_v2(section, section_responses)
 
         assert "Access Control" in prompt
         assert "Test access control policies" in prompt
@@ -45,6 +45,7 @@ class TestPromptBuilder:
         assert "Q2: No (weight:0.8)" in prompt
         assert "risk_level" in prompt
         assert "STRICT REQUIREMENTS" in prompt
+        assert redaction_count == 0
 
     def test_build_section_prompt_with_curated_context(self):
         """Test prompt building with curated benchmark context"""
@@ -57,24 +58,26 @@ class TestPromptBuilder:
         ]
         curated_context = "\n\nRELEVANT INDUSTRY CONTROLS:\nNIST CSF PR.AC-7: Multi-factor authentication\n"
 
-        prompt = build_section_prompt_v2(
+        prompt, redaction_count = build_section_prompt_v2(
             section, section_responses, curated_context=curated_context
         )
 
         assert "RELEVANT INDUSTRY CONTROLS" in prompt
         assert "NIST CSF PR.AC-7" in prompt
         assert "Multi-factor authentication" in prompt
+        assert redaction_count == 0
 
     def test_build_section_prompt_empty_responses(self):
         """Test prompt building with empty responses list"""
         section = MockSection(title="Test", description="Test description")
         section_responses = []
 
-        prompt = build_section_prompt_v2(section, section_responses)
+        prompt, redaction_count = build_section_prompt_v2(section, section_responses)
 
         assert "Test" in prompt
         assert "Signals:" in prompt
         assert "risk_level" in prompt
+        assert redaction_count == 0
 
 
 class TestBenchmarkContextService:
