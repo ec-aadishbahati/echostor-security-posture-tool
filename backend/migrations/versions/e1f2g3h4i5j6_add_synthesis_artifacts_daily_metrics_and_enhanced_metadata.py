@@ -90,38 +90,71 @@ def upgrade() -> None:
     )
     op.create_index("idx_daily_metrics_date", "ai_daily_metrics", ["date"], unique=True)
 
-    op.add_column(
-        "ai_generation_metadata",
-        sa.Column("attempt_count", sa.Integer(), nullable=False, server_default="1"),
-    )
-    op.add_column(
-        "ai_generation_metadata",
-        sa.Column("error_code", sa.String(length=50), nullable=True),
-    )
-    op.add_column(
-        "ai_generation_metadata", sa.Column("error_message", sa.String(), nullable=True)
-    )
-    op.add_column(
-        "ai_generation_metadata",
-        sa.Column("fallback_model", sa.String(length=50), nullable=True),
-    )
-    op.add_column(
-        "ai_generation_metadata",
-        sa.Column("is_degraded", sa.Integer(), nullable=False, server_default="0"),
-    )
-    op.add_column(
-        "ai_generation_metadata",
-        sa.Column("last_retry_at", sa.DateTime(timezone=True), nullable=True),
-    )
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+
+    if "ai_generation_metadata" in inspector.get_table_names():
+        existing_columns = {
+            col["name"] for col in inspector.get_columns("ai_generation_metadata")
+        }
+
+        if "attempt_count" not in existing_columns:
+            op.add_column(
+                "ai_generation_metadata",
+                sa.Column(
+                    "attempt_count", sa.Integer(), nullable=False, server_default="1"
+                ),
+            )
+        if "error_code" not in existing_columns:
+            op.add_column(
+                "ai_generation_metadata",
+                sa.Column("error_code", sa.String(length=50), nullable=True),
+            )
+        if "error_message" not in existing_columns:
+            op.add_column(
+                "ai_generation_metadata",
+                sa.Column("error_message", sa.String(), nullable=True),
+            )
+        if "fallback_model" not in existing_columns:
+            op.add_column(
+                "ai_generation_metadata",
+                sa.Column("fallback_model", sa.String(length=50), nullable=True),
+            )
+        if "is_degraded" not in existing_columns:
+            op.add_column(
+                "ai_generation_metadata",
+                sa.Column(
+                    "is_degraded", sa.Integer(), nullable=False, server_default="0"
+                ),
+            )
+        if "last_retry_at" not in existing_columns:
+            op.add_column(
+                "ai_generation_metadata",
+                sa.Column("last_retry_at", sa.DateTime(timezone=True), nullable=True),
+            )
 
 
 def downgrade() -> None:
-    op.drop_column("ai_generation_metadata", "last_retry_at")
-    op.drop_column("ai_generation_metadata", "is_degraded")
-    op.drop_column("ai_generation_metadata", "fallback_model")
-    op.drop_column("ai_generation_metadata", "error_message")
-    op.drop_column("ai_generation_metadata", "error_code")
-    op.drop_column("ai_generation_metadata", "attempt_count")
+    bind = op.get_bind()
+    inspector = sa.inspect(bind)
+
+    if "ai_generation_metadata" in inspector.get_table_names():
+        existing_columns = {
+            col["name"] for col in inspector.get_columns("ai_generation_metadata")
+        }
+
+        if "last_retry_at" in existing_columns:
+            op.drop_column("ai_generation_metadata", "last_retry_at")
+        if "is_degraded" in existing_columns:
+            op.drop_column("ai_generation_metadata", "is_degraded")
+        if "fallback_model" in existing_columns:
+            op.drop_column("ai_generation_metadata", "fallback_model")
+        if "error_message" in existing_columns:
+            op.drop_column("ai_generation_metadata", "error_message")
+        if "error_code" in existing_columns:
+            op.drop_column("ai_generation_metadata", "error_code")
+        if "attempt_count" in existing_columns:
+            op.drop_column("ai_generation_metadata", "attempt_count")
 
     op.drop_index("idx_daily_metrics_date", table_name="ai_daily_metrics")
     op.drop_table("ai_daily_metrics")
