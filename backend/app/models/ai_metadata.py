@@ -34,6 +34,14 @@ class AIGenerationMetadata(Base):
     tokens_completion = Column(Integer, nullable=True)
     total_cost_usd = Column(DECIMAL(10, 6), nullable=True)
     latency_ms = Column(Integer, nullable=True)
+    attempt_count = Column(Integer, default=1, nullable=False)
+    error_code = Column(String(50), nullable=True)
+    error_message = Column(String, nullable=True)
+    fallback_model = Column(String(50), nullable=True)
+    is_degraded = Column(
+        Integer, default=0, nullable=False
+    )  # SQLite compatible boolean
+    last_retry_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (

@@ -1,10 +1,29 @@
 """Prompt builder service for AI report generation"""
 
+from app.core.config import settings
+from app.services.pii_redactor import PIIRedactor
+
 
 def build_section_prompt_v2(
-    section, section_responses: list[dict], curated_context: str = ""
-) -> str:
-    """Build JSON-mode prompt for section analysis"""
+    section,
+    section_responses: list[dict],
+    curated_context: str = "",
+    redact_pii: bool = None,
+) -> tuple[str, int]:
+    """Build JSON-mode prompt for section analysis with optional PII redaction
+
+    Returns:
+        tuple[str, int]: (prompt, redaction_count)
+    """
+    if redact_pii is None:
+        redact_pii = settings.PII_REDACTION_ENABLED
+
+    redaction_count = 0
+    if redact_pii:
+        redactor = PIIRedactor(enabled=True)
+        section_responses, redaction_count = redactor.redact_responses(
+            section_responses
+        )
 
     signals = []
     for i, resp in enumerate(section_responses, 1):
@@ -151,4 +170,4 @@ COMPREHENSIVE EXAMPLE:
 
 Provide detailed, actionable insights that help the organization understand their security posture and prioritize improvements. Be specific and reference industry standards.
 """
-    return prompt
+    return prompt, redaction_count
