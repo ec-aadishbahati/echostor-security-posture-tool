@@ -92,16 +92,18 @@ def upgrade() -> None:
 
     bind = op.get_bind()
     inspector = sa.inspect(bind)
-    
+
     if "ai_generation_metadata" in inspector.get_table_names():
         existing_columns = {
             col["name"] for col in inspector.get_columns("ai_generation_metadata")
         }
-        
+
         if "attempt_count" not in existing_columns:
             op.add_column(
                 "ai_generation_metadata",
-                sa.Column("attempt_count", sa.Integer(), nullable=False, server_default="1"),
+                sa.Column(
+                    "attempt_count", sa.Integer(), nullable=False, server_default="1"
+                ),
             )
         if "error_code" not in existing_columns:
             op.add_column(
@@ -121,7 +123,9 @@ def upgrade() -> None:
         if "is_degraded" not in existing_columns:
             op.add_column(
                 "ai_generation_metadata",
-                sa.Column("is_degraded", sa.Integer(), nullable=False, server_default="0"),
+                sa.Column(
+                    "is_degraded", sa.Integer(), nullable=False, server_default="0"
+                ),
             )
         if "last_retry_at" not in existing_columns:
             op.add_column(
@@ -133,12 +137,12 @@ def upgrade() -> None:
 def downgrade() -> None:
     bind = op.get_bind()
     inspector = sa.inspect(bind)
-    
+
     if "ai_generation_metadata" in inspector.get_table_names():
         existing_columns = {
             col["name"] for col in inspector.get_columns("ai_generation_metadata")
         }
-        
+
         if "last_retry_at" in existing_columns:
             op.drop_column("ai_generation_metadata", "last_retry_at")
         if "is_degraded" in existing_columns:
