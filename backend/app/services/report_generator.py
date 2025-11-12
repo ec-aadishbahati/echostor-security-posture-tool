@@ -419,7 +419,9 @@ def generate_ai_insights(
                     )
                     db.add(db_artifact)
 
-                    tokens_prompt = response.usage.prompt_tokens if response.usage else 0
+                    tokens_prompt = (
+                        response.usage.prompt_tokens if response.usage else 0
+                    )
                     tokens_completion = (
                         response.usage.completion_tokens if response.usage else 0
                     )
