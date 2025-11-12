@@ -29,12 +29,8 @@ from weasyprint import HTML
 
 from app.core.config import settings
 from app.core.database import SessionLocal
-from app.models.ai_artifacts import (
-    AISectionArtifact as AISectionArtifactModel,
-)
-from app.models.ai_artifacts import (
-    AISynthesisArtifact as AISynthesisArtifactModel,
-)
+from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
+from app.models.ai_artifacts import AISynthesisArtifact as AISynthesisArtifactModel
 from app.models.ai_metadata import AIGenerationMetadata
 from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.schemas.ai_artifacts import SectionAIArtifact, SynthesisArtifact

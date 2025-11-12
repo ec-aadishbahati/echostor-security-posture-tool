@@ -7,6 +7,7 @@ from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
+    Integer,
     String,
     Text,
 )
@@ -23,6 +24,9 @@ class Assessment(Base):
     user_id = Column(
         String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
+    attempt_number = Column(
+        Integer, default=1, nullable=False
+    )  # Track assessment attempt (1-3)
     status = Column(
         String(50), default="in_progress"
     )  # in_progress, completed, expired

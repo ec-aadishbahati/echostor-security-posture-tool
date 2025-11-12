@@ -1,14 +1,6 @@
 import uuid
 
-from sqlalchemy import (
-    DECIMAL,
-    Column,
-    DateTime,
-    Index,
-    Integer,
-    String,
-    Text,
-)
+from sqlalchemy import DECIMAL, Column, DateTime, Index, Integer, String, Text
 from sqlalchemy.sql import func
 
 from app.core.database import Base

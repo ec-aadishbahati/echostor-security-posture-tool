@@ -24,11 +24,7 @@ from app.api.auth import get_current_admin_user, get_current_user
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.assessment import Assessment, AssessmentResponse, Report
-from app.schemas.report import (
-    AdminReportResponse,
-    AIReportRequest,
-    UserReportResponse,
-)
+from app.schemas.report import AdminReportResponse, AIReportRequest, UserReportResponse
 from app.schemas.user import CurrentUserResponse
 from app.services.question_parser import (
     filter_structure_by_sections,

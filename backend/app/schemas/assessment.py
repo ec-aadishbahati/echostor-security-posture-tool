@@ -48,6 +48,7 @@ class AssessmentUpdate(BaseModel):
 class AssessmentResponse(BaseModel):
     id: uuid.UUID
     user_id: uuid.UUID
+    attempt_number: int = 1
     status: str
     started_at: datetime
     completed_at: datetime | None
