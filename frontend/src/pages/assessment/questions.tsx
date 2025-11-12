@@ -286,16 +286,19 @@ export default function AssessmentQuestions() {
     }));
   }, []);
 
-  const isCurrentQuestionAnswered = (): boolean => {
-    if (!currentQuestion) return false;
+  const isQuestionAnswered = (question: Question): boolean => {
+    const answer = responses[question.id];
 
-    const answer = responses[currentQuestion.id];
-
-    if (currentQuestion.type === 'multiple_select') {
+    if (question.type === 'multiple_select') {
       return Array.isArray(answer) && answer.length > 0;
     }
 
     return answer !== undefined && answer !== null && answer !== '';
+  };
+
+  const isCurrentQuestionAnswered = (): boolean => {
+    if (!currentQuestion) return false;
+    return isQuestionAnswered(currentQuestion);
   };
 
   const getCurrentQuestion = (): Question | null => {
@@ -480,13 +483,32 @@ export default function AssessmentQuestions() {
 
   const currentQuestion = getCurrentQuestion();
   const currentSection = getCurrentSection();
-  const progress = savedProgress;
+  const { percentage: progress, answeredCount, totalQuestions } = calculateOverallProgress();
 
   const calculateSectionProgress = (sectionIndex: number) => {
     if (!structure) return 0;
     const section = structure.data.sections[sectionIndex];
-    const answeredInSection = section.questions.filter((q: Question) => responses[q.id]).length;
+    const answeredInSection = section.questions.filter((q: Question) => isQuestionAnswered(q)).length;
     return (answeredInSection / section.questions.length) * 100;
+  };
+
+  const calculateOverallProgress = (): { percentage: number; answeredCount: number; totalQuestions: number } => {
+    if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
+    
+    let answeredCount = 0;
+    let totalQuestions = 0;
+    
+    structure.data.sections.forEach((section: Section) => {
+      totalQuestions += section.questions.length;
+      section.questions.forEach((question: Question) => {
+        if (isQuestionAnswered(question)) {
+          answeredCount++;
+        }
+      });
+    });
+    
+    const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
+    return { percentage, answeredCount, totalQuestions };
   };
 
   const goToSection = (sectionIndex: number) => {
@@ -562,7 +584,7 @@ export default function AssessmentQuestions() {
                       style={{ width: `${progress}%` }}
                     ></div>
                   </div>
-                  <div className="text-xs text-gray-600">{progress.toFixed(0)}% Complete</div>
+                  <div className="text-xs text-gray-600">{Math.round(progress)}% Complete</div>
                 </div>
 
                 {/* Section List */}
@@ -571,7 +593,7 @@ export default function AssessmentQuestions() {
                     const sectionProgress = calculateSectionProgress(index);
                     const isCurrentSection = index === currentSectionIndex;
                     const answeredCount = section.questions.filter(
-                      (q: Question) => responses[q.id]
+                      (q: Question) => isQuestionAnswered(q)
                     ).length;
 
                     return (
@@ -632,8 +654,8 @@ export default function AssessmentQuestions() {
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-gray-700">
-                    Assessment Progress: {progress.toFixed(1)}% ({Object.keys(responses).length} of{' '}
-                    {structure?.data?.total_questions || 0} questions)
+                    Assessment Progress: {progress.toFixed(0)}% ({answeredCount} of{' '}
+                    {totalQuestions} questions)
                   </span>
                   <div className="flex items-center text-sm text-gray-600">
                     <ClockIcon className="h-4 w-4 mr-1" />
