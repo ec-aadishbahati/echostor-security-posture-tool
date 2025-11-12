@@ -2,6 +2,7 @@ import io
 import logging
 import os
 import uuid
+from datetime import UTC, datetime
 
 from fastapi import (
     APIRouter,
@@ -36,6 +37,7 @@ from app.services.question_parser import (
 from app.services.report_generator import (
     calculate_assessment_scores,
     generate_ai_report,
+    generate_ai_report_html,
     generate_report_html,
     generate_standard_report,
 )
@@ -369,6 +371,156 @@ async def admin_bulk_release_ai_reports(
         "released_count": released_count,
         "released_ids": released_ids,
         "skipped_ids": skipped_ids,
+    }
+
+
+@router.post("/admin/{report_id}/retry-ai", response_model=AdminReportResponse)
+async def admin_retry_ai_report(
+    request: Request,
+    report_id: str,
+    background_tasks: BackgroundTasks,
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    """Admin endpoint to retry generating a failed AI-enhanced report"""
+
+    region = os.getenv("FLY_REGION")
+    primary = os.getenv("FLY_PRIMARY_REGION", "iad")
+    if region and primary and region != primary:
+        return Response(status_code=409, headers={"fly-replay": f"region={primary}"})
+
+    report = (
+        db.query(Report)
+        .filter(
+            and_(
+                Report.id == report_id,
+                Report.report_type == "ai_enhanced",
+                Report.status == "failed",
+            )
+        )
+        .first()
+    )
+
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Report not found or not in failed status",
+        )
+
+    report.status = "generating"
+    report.file_path = None
+    report.completed_at = None
+    db.commit()
+
+    background_tasks.add_task(generate_ai_report, str(report.id))
+
+    return AdminReportResponse.model_validate(report)
+
+
+@router.post("/admin/{report_id}/regenerate-pdf")
+async def admin_regenerate_pdf_from_artifacts(
+    request: Request,
+    report_id: str,
+    current_admin=Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    """Admin endpoint to regenerate PDF from existing AI artifacts without re-calling OpenAI"""
+
+    region = os.getenv("FLY_REGION")
+    primary = os.getenv("FLY_PRIMARY_REGION", "iad")
+    if region and primary and region != primary:
+        return Response(status_code=409, headers={"fly-replay": f"region={primary}"})
+
+    report = (
+        db.query(Report)
+        .filter(
+            and_(
+                Report.id == report_id,
+                Report.report_type == "ai_enhanced",
+            )
+        )
+        .first()
+    )
+
+    if not report:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Report not found",
+        )
+
+    from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
+    from app.schemas.ai_artifacts import SectionAIArtifact
+
+    section_artifacts_db = (
+        db.query(AISectionArtifactModel)
+        .filter(AISectionArtifactModel.report_id == report_id)
+        .all()
+    )
+
+    if not section_artifacts_db:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No AI artifacts found for this report. Cannot regenerate PDF without artifacts.",
+        )
+
+    assessment = (
+        db.query(Assessment).filter(Assessment.id == report.assessment_id).first()
+    )
+
+    if not assessment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assessment not found",
+        )
+
+    responses = (
+        db.query(AssessmentResponse)
+        .filter(AssessmentResponse.assessment_id == assessment.id)
+        .all()
+    )
+
+    structure = load_assessment_structure()
+    if assessment.selected_section_ids:
+        structure = filter_structure_by_sections(
+            structure, assessment.selected_section_ids
+        )
+
+    scores = calculate_assessment_scores(responses, structure)
+
+    ai_insights = {}
+    for artifact_db in section_artifacts_db:
+        ai_insights[artifact_db.section_id] = SectionAIArtifact.model_validate(
+            artifact_db.artifact_json
+        )
+
+    html_content = generate_ai_report_html(
+        assessment, responses, scores, structure, ai_insights
+    )
+
+    filename = f"ai_report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
+    storage_service = get_storage_service()
+
+    pdf_bytes = HTML(string=html_content).write_pdf()
+
+    storage_location = storage_service.save(pdf_bytes, filename)
+
+    if not storage_service.exists(storage_location):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to save regenerated PDF",
+        )
+
+    report.file_path = storage_location
+    report.completed_at = datetime.now(UTC)
+    if report.status == "failed":
+        report.status = "completed"
+    db.commit()
+
+    return {
+        "status": "success",
+        "message": "PDF regenerated from existing AI artifacts",
+        "report_id": report_id,
+        "file_path": storage_location,
     }
 
 
