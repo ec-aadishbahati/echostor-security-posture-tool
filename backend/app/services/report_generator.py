@@ -680,14 +680,14 @@ def generate_ai_insights(
 
 def safe_validate_section_artifact(json_str: str, section_id: str) -> SectionAIArtifact:
     """Validate and clamp fields to prevent validation errors
-    
+
     This ensures a single overlong field doesn't degrade the entire section.
     """
     import json
-    
+
     try:
         data = json.loads(json_str)
-        
+
         if "gaps" in data and isinstance(data["gaps"], list):
             for gap in data["gaps"]:
                 if "gap" in gap and isinstance(gap["gap"], str):
@@ -698,7 +698,7 @@ def safe_validate_section_artifact(json_str: str, section_id: str) -> SectionAIA
                             f"Section {section_id}: Clamped gap description from "
                             f"{original_length} to 900 chars"
                         )
-        
+
         if "recommendations" in data and isinstance(data["recommendations"], list):
             for rec in data["recommendations"]:
                 if "action" in rec and isinstance(rec["action"], str):
@@ -709,9 +709,9 @@ def safe_validate_section_artifact(json_str: str, section_id: str) -> SectionAIA
                             f"Section {section_id}: Clamped recommendation action from "
                             f"{original_length} to 450 chars"
                         )
-        
+
         return SectionAIArtifact.model_validate(data)
-        
+
     except json.JSONDecodeError as e:
         logger.error(f"Section {section_id}: Invalid JSON from OpenAI: {e}")
         raise ValidationError(f"Invalid JSON: {e}")
@@ -788,8 +788,10 @@ async def generate_ai_insights_async(
                             api_key=api_key, timeout=settings.OPENAI_TIMEOUT
                         )
 
-                        curated_context = benchmark_context_service.get_relevant_context(
-                            section.title, section.description, max_controls=5
+                        curated_context = (
+                            benchmark_context_service.get_relevant_context(
+                                section.title, section.description, max_controls=5
+                            )
                         )
                         prompt, redaction_count = build_section_prompt_v2(
                             section, section_responses, curated_context
@@ -822,7 +824,9 @@ async def generate_ai_insights_async(
                             response.usage.completion_tokens if response.usage else 0
                         )
                         finish_reason = (
-                            response.choices[0].finish_reason if response.choices else None
+                            response.choices[0].finish_reason
+                            if response.choices
+                            else None
                         )
                         cost_usd = (
                             (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
@@ -896,14 +900,18 @@ async def generate_ai_insights_async(
                                     fallback_response = (
                                         await client.chat.completions.create(
                                             model=settings.AI_FALLBACK_MODEL,
-                                            messages=[{"role": "user", "content": prompt}],
+                                            messages=[
+                                                {"role": "user", "content": prompt}
+                                            ],
                                             response_format={"type": "json_object"},
                                             max_tokens=800,  # Shorter for fallback
                                             temperature=0.5,
                                         )
                                     )
 
-                                    json_str = fallback_response.choices[0].message.content
+                                    json_str = fallback_response.choices[
+                                        0
+                                    ].message.content
                                     artifact = safe_validate_section_artifact(
                                         json_str, section.id
                                     )
@@ -925,7 +933,9 @@ async def generate_ai_insights_async(
                                         f"Fallback also failed for section {section.id}: {fallback_error}"
                                     )
 
-                            logger.error(f"All retries exhausted for section {section.id}")
+                            logger.error(
+                                f"All retries exhausted for section {section.id}"
+                            )
                             db.rollback()
                             degraded_artifact = create_degraded_artifact(section.id)
                             return (section.id, degraded_artifact, True)
@@ -940,7 +950,9 @@ async def generate_ai_insights_async(
                         return (section.id, degraded_artifact, True)
 
                     except Exception as e:
-                        logger.exception(f"Unexpected error for section {section.id}: {e}")
+                        logger.exception(
+                            f"Unexpected error for section {section.id}: {e}"
+                        )
                         key_manager.record_failure(key_id, e)
                         db.rollback()
                         degraded_artifact = create_degraded_artifact(section.id)
