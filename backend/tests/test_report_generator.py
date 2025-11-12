@@ -648,3 +648,477 @@ def test_generate_report_html_enhanced(completed_assessment, test_assessment_res
     assert "We need help with security improvements" in html
     assert "Not answered" in html
     assert "Disclaimer" in html
+
+
+def test_generate_ai_insights_validation_error(encryption_key, mocker):
+    from openai import OpenAI
+    from pydantic import ValidationError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key = mocker.MagicMock()
+    mock_key.id = "test-key-id"
+    mock_key.encrypted_key = encrypt_api_key("test-api-key")
+    mock_key.is_active = True
+    mock_key.cooldown_until = None
+    mock_key.last_used_at = None
+    mock_key.usage_count = 0
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.return_value = (
+        mock_key
+    )
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client = MagicMock()
+        mock_openai_class.return_value = mock_client
+
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = '{"invalid": "json"}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
+        mock_client.chat.completions.create.return_value = mock_response
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Medium"
+            assert "temporarily unavailable" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_authentication_error(encryption_key, mocker):
+    from openai import AuthenticationError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key = mocker.MagicMock()
+    mock_key.id = "test-key-id"
+    mock_key.encrypted_key = encrypt_api_key("test-api-key")
+    mock_key.is_active = True
+    mock_key.cooldown_until = None
+    mock_key.last_used_at = None
+    mock_key.usage_count = 0
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.return_value = (
+        mock_key
+    )
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client = MagicMock()
+        mock_openai_class.return_value = mock_client
+
+        mock_client.chat.completions.create.side_effect = AuthenticationError(
+            "Invalid API key", response=MagicMock(), body=None
+        )
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Medium"
+            assert "temporarily unavailable" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_rate_limit_error(encryption_key, mocker):
+    from openai import RateLimitError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key = mocker.MagicMock()
+    mock_key.id = "test-key-id"
+    mock_key.encrypted_key = encrypt_api_key("test-api-key")
+    mock_key.is_active = True
+    mock_key.cooldown_until = None
+    mock_key.last_used_at = None
+    mock_key.usage_count = 0
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.return_value = (
+        mock_key
+    )
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client = MagicMock()
+        mock_openai_class.return_value = mock_client
+
+        mock_client.chat.completions.create.side_effect = RateLimitError(
+            "Rate limit exceeded", response=MagicMock(), body=None
+        )
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Medium"
+            assert "temporarily unavailable" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_api_connection_error(encryption_key, mocker):
+    from openai import APIConnectionError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key = mocker.MagicMock()
+    mock_key.id = "test-key-id"
+    mock_key.encrypted_key = encrypt_api_key("test-api-key")
+    mock_key.is_active = True
+    mock_key.cooldown_until = None
+    mock_key.last_used_at = None
+    mock_key.usage_count = 0
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.return_value = (
+        mock_key
+    )
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client = MagicMock()
+        mock_openai_class.return_value = mock_client
+
+        mock_request = MagicMock()
+        mock_client.chat.completions.create.side_effect = APIConnectionError(
+            message="Connection failed", request=mock_request
+        )
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Medium"
+            assert "temporarily unavailable" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_sqlalchemy_error(encryption_key, mocker):
+    from sqlalchemy.exc import SQLAlchemyError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key = mocker.MagicMock()
+    mock_key.id = "test-key-id"
+    mock_key.encrypted_key = encrypt_api_key("test-api-key")
+    mock_key.is_active = True
+    mock_key.cooldown_until = None
+    mock_key.last_used_at = None
+    mock_key.usage_count = 0
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.return_value = (
+        mock_key
+    )
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client = MagicMock()
+        mock_openai_class.return_value = mock_client
+
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[
+            0
+        ].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight with sufficient length for validation", "strengths": ["Good security practices"], "gaps": [{"gap": "Minor gap found", "linked_signals": ["Q1"], "severity": "Low"}], "recommendations": [{"action": "Implement security controls", "rationale": "This is a detailed rationale explaining why this action is important", "linked_signals": ["Q1"], "effort": "Low", "impact": "Medium", "timeline": "30-day", "references": []}], "benchmarks": [{"control": "Test Control", "status": "Implemented", "framework": "NIST", "reference": ""}], "confidence_score": 0.8}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
+        mock_client.chat.completions.create.return_value = mock_response
+
+        mock_db.add.side_effect = SQLAlchemyError("Database error")
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Medium"
+            assert "temporarily unavailable" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_authentication_error_with_retry(encryption_key, mocker):
+    from openai import AuthenticationError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key1 = mocker.MagicMock()
+    mock_key1.id = "test-key-1"
+    mock_key1.encrypted_key = encrypt_api_key("test-api-key-1")
+    mock_key1.is_active = True
+    mock_key1.cooldown_until = None
+    mock_key1.last_used_at = None
+    mock_key1.usage_count = 0
+
+    mock_key2 = mocker.MagicMock()
+    mock_key2.id = "test-key-2"
+    mock_key2.encrypted_key = encrypt_api_key("test-api-key-2")
+    mock_key2.is_active = True
+    mock_key2.cooldown_until = None
+    mock_key2.last_used_at = None
+    mock_key2.usage_count = 0
+
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.side_effect = [
+        mock_key1,
+        mock_key2,
+    ]
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client1 = MagicMock()
+        mock_client2 = MagicMock()
+
+        call_count = [0]
+
+        def create_client_side_effect(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1:
+                return mock_client1
+            else:
+                return mock_client2
+
+        mock_openai_class.side_effect = create_client_side_effect
+
+        mock_client1.chat.completions.create.side_effect = AuthenticationError(
+            "Invalid API key", response=MagicMock(), body=None
+        )
+
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[
+            0
+        ].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight with sufficient length for validation", "strengths": ["Good security practices"], "gaps": [{"gap": "Minor gap found", "linked_signals": ["Q1"], "severity": "Low"}], "recommendations": [{"action": "Implement security controls", "rationale": "This is a detailed rationale explaining why this action is important", "linked_signals": ["Q1"], "effort": "Low", "impact": "Medium", "timeline": "30-day", "references": []}], "benchmarks": [{"control": "Test Control", "status": "Implemented", "framework": "NIST", "reference": ""}], "confidence_score": 0.8}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
+        mock_client2.chat.completions.create.return_value = mock_response
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Low"
+            assert "Test insight" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key, mocker):
+    from openai import RateLimitError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key1 = mocker.MagicMock()
+    mock_key1.id = "test-key-1"
+    mock_key1.encrypted_key = encrypt_api_key("test-api-key-1")
+    mock_key1.is_active = True
+    mock_key1.cooldown_until = None
+    mock_key1.last_used_at = None
+    mock_key1.usage_count = 0
+
+    mock_key2 = mocker.MagicMock()
+    mock_key2.id = "test-key-2"
+    mock_key2.encrypted_key = encrypt_api_key("test-api-key-2")
+    mock_key2.is_active = True
+    mock_key2.cooldown_until = None
+    mock_key2.last_used_at = None
+    mock_key2.usage_count = 0
+
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.side_effect = [
+        mock_key1,
+        mock_key2,
+    ]
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client1 = MagicMock()
+        mock_client2 = MagicMock()
+
+        call_count = [0]
+
+        def create_client_side_effect(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1:
+                return mock_client1
+            else:
+                return mock_client2
+
+        mock_openai_class.side_effect = create_client_side_effect
+
+        mock_client1.chat.completions.create.side_effect = RateLimitError(
+            "Rate limit exceeded", response=MagicMock(), body=None
+        )
+
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[
+            0
+        ].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight with sufficient length for validation", "strengths": ["Good security practices"], "gaps": [{"gap": "Minor gap found", "linked_signals": ["Q1"], "severity": "Low"}], "recommendations": [{"action": "Implement security controls", "rationale": "This is a detailed rationale explaining why this action is important", "linked_signals": ["Q1"], "effort": "Low", "impact": "Medium", "timeline": "30-day", "references": []}], "benchmarks": [{"control": "Test Control", "status": "Implemented", "framework": "NIST", "reference": ""}], "confidence_score": 0.8}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
+        mock_client2.chat.completions.create.return_value = mock_response
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Low"
+            assert "Test insight" in artifact.risk_explanation
+
+
+def test_generate_ai_insights_api_error_with_retry(encryption_key, mocker):
+    from openai import APIConnectionError
+
+    from app.services.openai_key_manager import OpenAIKeyManager
+    from app.services.question_parser import create_sample_assessment_structure
+    from app.utils.encryption import encrypt_api_key
+
+    structure = create_sample_assessment_structure()
+    responses = []
+
+    mock_db = mocker.MagicMock()
+    key_manager = OpenAIKeyManager(mock_db)
+
+    mock_key1 = mocker.MagicMock()
+    mock_key1.id = "test-key-1"
+    mock_key1.encrypted_key = encrypt_api_key("test-api-key-1")
+    mock_key1.is_active = True
+    mock_key1.cooldown_until = None
+    mock_key1.last_used_at = None
+    mock_key1.usage_count = 0
+
+    mock_key2 = mocker.MagicMock()
+    mock_key2.id = "test-key-2"
+    mock_key2.encrypted_key = encrypt_api_key("test-api-key-2")
+    mock_key2.is_active = True
+    mock_key2.cooldown_until = None
+    mock_key2.last_used_at = None
+    mock_key2.usage_count = 0
+
+    mock_db.query.return_value.filter.return_value.order_by.return_value.first.side_effect = [
+        mock_key1,
+        mock_key2,
+    ]
+
+    with patch("app.services.report_generator.OpenAI") as mock_openai_class:
+        mock_client1 = MagicMock()
+        mock_client2 = MagicMock()
+
+        call_count = [0]
+
+        def create_client_side_effect(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1:
+                return mock_client1
+            else:
+                return mock_client2
+
+        mock_openai_class.side_effect = create_client_side_effect
+
+        mock_request = MagicMock()
+        mock_client1.chat.completions.create.side_effect = APIConnectionError(
+            message="Connection failed", request=mock_request
+        )
+
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[
+            0
+        ].message.content = '{"schema_version": "1.0", "risk_level": "Low", "risk_explanation": "Test insight with sufficient length for validation", "strengths": ["Good security practices"], "gaps": [{"gap": "Minor gap found", "linked_signals": ["Q1"], "severity": "Low"}], "recommendations": [{"action": "Implement security controls", "rationale": "This is a detailed rationale explaining why this action is important", "linked_signals": ["Q1"], "effort": "Low", "impact": "Medium", "timeline": "30-day", "references": []}], "benchmarks": [{"control": "Test Control", "status": "Implemented", "framework": "NIST", "reference": ""}], "confidence_score": 0.8}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.prompt_tokens = 100
+        mock_response.usage.completion_tokens = 50
+        mock_client2.chat.completions.create.return_value = mock_response
+
+        insights = generate_ai_insights(
+            responses, structure, key_manager, "test-report-id", mock_db
+        )
+
+        assert insights is not None
+        assert isinstance(insights, dict)
+        for section_id, artifact in insights.items():
+            assert artifact.risk_level == "Low"
+            assert "Test insight" in artifact.risk_explanation
+
+
+
+
+def test_create_degraded_artifact():
+    from app.services.report_generator import create_degraded_artifact
+
+    artifact = create_degraded_artifact("test-section-id")
+
+    assert artifact is not None
+    assert artifact.risk_level == "Medium"
+    assert "temporarily unavailable" in artifact.risk_explanation
+    assert len(artifact.strengths) == 1
+    assert "Assessment data collected successfully" in artifact.strengths[0]
+    assert len(artifact.gaps) == 1
+    assert artifact.gaps[0].gap == "AI analysis unavailable"
+    assert artifact.gaps[0].severity == "Low"
+    assert len(artifact.recommendations) == 1
+    assert "Retry" in artifact.recommendations[0].action
+    assert len(artifact.benchmarks) == 1
+    assert artifact.benchmarks[0].status == "Implemented"
+    assert artifact.confidence_score == 0.0
