@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { useAuth } from '@/lib/auth';
@@ -483,7 +483,29 @@ export default function AssessmentQuestions() {
 
   const currentQuestion = getCurrentQuestion();
   const currentSection = getCurrentSection();
-  const { percentage: progress, answeredCount, totalQuestions } = calculateOverallProgress();
+
+  const {
+    percentage: progress,
+    answeredCount,
+    totalQuestions,
+  } = useMemo(() => {
+    if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
+
+    let answered = 0;
+    let total = 0;
+
+    structure.data.sections.forEach((section: Section) => {
+      total += section.questions.length;
+      section.questions.forEach((question: Question) => {
+        if (isQuestionAnswered(question)) {
+          answered++;
+        }
+      });
+    });
+
+    const percentage = total > 0 ? (answered / total) * 100 : 0;
+    return { percentage, answeredCount: answered, totalQuestions: total };
+  }, [structure, responses]);
 
   const calculateSectionProgress = (sectionIndex: number) => {
     if (!structure) return 0;
@@ -492,29 +514,6 @@ export default function AssessmentQuestions() {
       isQuestionAnswered(q)
     ).length;
     return (answeredInSection / section.questions.length) * 100;
-  };
-
-  const calculateOverallProgress = (): {
-    percentage: number;
-    answeredCount: number;
-    totalQuestions: number;
-  } => {
-    if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
-
-    let answeredCount = 0;
-    let totalQuestions = 0;
-
-    structure.data.sections.forEach((section: Section) => {
-      totalQuestions += section.questions.length;
-      section.questions.forEach((question: Question) => {
-        if (isQuestionAnswered(question)) {
-          answeredCount++;
-        }
-      });
-    });
-
-    const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
-    return { percentage, answeredCount, totalQuestions };
   };
 
   const goToSection = (sectionIndex: number) => {
