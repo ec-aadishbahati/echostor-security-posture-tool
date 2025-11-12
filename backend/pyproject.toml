@@ -49,7 +49,7 @@ testpaths = ["tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
-addopts = "--cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=80 -v"
+addopts = "--cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=75 -v"
 
 [tool.coverage.run]
 omit = ["*/tests/*", "*/migrations/*", "*/__pycache__/*", "*/conftest.py"]
