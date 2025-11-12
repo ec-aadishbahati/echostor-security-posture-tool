@@ -44,9 +44,9 @@ class PaginatedResponse[T](BaseModel):
     has_prev: bool
 
 
-def paginate[
-    T
-](items: list[T], total: int, skip: int, limit: int) -> PaginatedResponse[T]:
+def paginate[T](
+    items: list[T], total: int, skip: int, limit: int
+) -> PaginatedResponse[T]:
     """Create paginated response with metadata"""
     page = (skip // limit) + 1 if limit > 0 else 1
     pages = ceil(total / limit) if limit > 0 else 0

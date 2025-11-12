@@ -29,9 +29,7 @@ export default function Dashboard() {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: retakeData,
-  } = useQuery('canRetake', assessmentAPI.canRetakeAssessment, {
+  const { data: retakeData } = useQuery('canRetake', assessmentAPI.canRetakeAssessment, {
     refetchOnWindowFocus: false,
   });
 
@@ -51,7 +49,7 @@ export default function Dashboard() {
   const progressPercentage = hasActiveAssessment ? assessment.data.progress_percentage || 0 : 0;
   const timeRemaining =
     hasActiveAssessment && !isCompleted ? calculateTimeRemaining(assessment.data.expires_at) : null;
-  
+
   const canRetake = retakeData?.data?.can_retake || false;
   const attemptsRemaining = retakeData?.data?.attempts_remaining || 0;
   const totalAttempts = retakeData?.data?.total_attempts || 0;
@@ -274,9 +272,7 @@ export default function Dashboard() {
 
           {isCompleted && canRetake && (
             <div className="card bg-blue-50 border border-blue-200 mt-6">
-              <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                Retake Assessment
-              </h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-2">Retake Assessment</h3>
               <p className="text-blue-800 mb-4">
                 You have completed {totalAttempts} of 3 possible assessments. You can retake the
                 assessment {attemptsRemaining} more {attemptsRemaining === 1 ? 'time' : 'times'} to
