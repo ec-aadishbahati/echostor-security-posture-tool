@@ -1,4 +1,5 @@
 """AI Synthesis Service for cross-section analysis and executive summary"""
+
 import logging
 import time
 from typing import Any
@@ -25,10 +26,10 @@ def build_synthesis_prompt(
     for summary in section_summaries:
         summaries_text.append(
             f"""
-Section: {summary['title']} (Score: {summary['score']}%)
-Risk Level: {summary['risk_level']}
-Top Gaps: {', '.join(summary['top_gaps'][:3])}
-Top Recommendations: {', '.join(summary['top_recommendations'][:3])}
+Section: {summary["title"]} (Score: {summary["score"]}%)
+Risk Level: {summary["risk_level"]}
+Top Gaps: {", ".join(summary["top_gaps"][:3])}
+Top Recommendations: {", ".join(summary["top_recommendations"][:3])}
 """
         )
 
@@ -37,7 +38,7 @@ Top Recommendations: {', '.join(summary['top_recommendations'][:3])}
 OVERALL SECURITY SCORE: {overall_score}%
 
 SECTION SUMMARIES:
-{''.join(summaries_text)}
+{"".join(summaries_text)}
 
 {curated_context}
 
@@ -117,7 +118,9 @@ async def generate_synthesis_artifact(
                     "score": scores[section.id]["percentage"],
                     "risk_level": artifact.risk_level,
                     "top_gaps": [g.gap for g in artifact.gaps[:3]],
-                    "top_recommendations": [r.action for r in artifact.recommendations[:3]],
+                    "top_recommendations": [
+                        r.action for r in artifact.recommendations[:3]
+                    ],
                 }
             )
 

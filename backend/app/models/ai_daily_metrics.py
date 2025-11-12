@@ -1,5 +1,4 @@
 import uuid
-from datetime import date
 
 from sqlalchemy import DECIMAL, Column, Date, Index, Integer, String
 from sqlalchemy.sql import func

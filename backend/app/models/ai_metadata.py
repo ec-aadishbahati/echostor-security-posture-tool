@@ -38,7 +38,9 @@ class AIGenerationMetadata(Base):
     error_code = Column(String(50), nullable=True)
     error_message = Column(String, nullable=True)
     fallback_model = Column(String(50), nullable=True)
-    is_degraded = Column(Integer, default=0, nullable=False)  # SQLite compatible boolean
+    is_degraded = Column(
+        Integer, default=0, nullable=False
+    )  # SQLite compatible boolean
     last_retry_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

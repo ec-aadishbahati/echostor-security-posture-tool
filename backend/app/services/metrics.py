@@ -1,4 +1,5 @@
 """AI Metrics Service for tracking costs, tokens, latency, and success rates"""
+
 import logging
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -32,13 +33,16 @@ class AIMetricsService:
     }
 
     @staticmethod
-    def calculate_cost(model: str, tokens_prompt: int, tokens_completion: int) -> Decimal:
+    def calculate_cost(
+        model: str, tokens_prompt: int, tokens_completion: int
+    ) -> Decimal:
         """Calculate cost for API call"""
-        pricing = AIMetricsService.PRICING.get(
-            model, AIMetricsService.PRICING["gpt-4"]
-        )
+        pricing = AIMetricsService.PRICING.get(model, AIMetricsService.PRICING["gpt-4"])
 
-        cost = tokens_prompt * pricing["prompt"] + tokens_completion * pricing["completion"]
+        cost = (
+            tokens_prompt * pricing["prompt"]
+            + tokens_completion * pricing["completion"]
+        )
         return Decimal(str(round(cost, 6)))
 
     @staticmethod
@@ -85,7 +89,9 @@ class AIMetricsService:
                     "total_reports"
                 ),
                 func.count(AIGenerationMetadata.id).label("total_sections"),
-                func.sum(AIGenerationMetadata.tokens_prompt).label("total_tokens_prompt"),
+                func.sum(AIGenerationMetadata.tokens_prompt).label(
+                    "total_tokens_prompt"
+                ),
                 func.sum(AIGenerationMetadata.tokens_completion).label(
                     "total_tokens_completion"
                 ),
@@ -141,7 +147,9 @@ class AIMetricsService:
             degraded_rate=degraded_rate,
         )
 
-        existing = db.query(AIDailyMetrics).filter(AIDailyMetrics.date == target_date).first()
+        existing = (
+            db.query(AIDailyMetrics).filter(AIDailyMetrics.date == target_date).first()
+        )
         if existing:
             for key, value in daily_metric.__dict__.items():
                 if not key.startswith("_"):

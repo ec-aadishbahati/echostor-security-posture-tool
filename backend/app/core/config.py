@@ -23,12 +23,12 @@ class Settings(BaseSettings):
 
     AI_PROMPT_VERSION: str = "v2.1"  # Enhanced prompts with explicit word counts
     AI_SCHEMA_VERSION: str = "1.0"  # Initial JSON schema
-    
+
     PII_REDACTION_ENABLED: bool = True
-    
+
     AI_MAX_CONCURRENT_SECTIONS: int = 5
     AI_PER_KEY_QPS_LIMIT: float = 10.0  # 10 QPS per key
-    
+
     AI_MAX_RETRIES: int = 3
     AI_RETRY_DELAY_SECONDS: int = 2
     AI_FALLBACK_MODEL: str = "gpt-3.5-turbo"
