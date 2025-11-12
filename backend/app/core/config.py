@@ -16,12 +16,12 @@ class Settings(BaseSettings):
 
     OPENAI_API_KEY: str | None = None
     OPENAI_MODEL: str = "gpt-4"
-    OPENAI_MAX_TOKENS: int = 1000
-    OPENAI_TEMPERATURE: float = 0.7
+    OPENAI_MAX_TOKENS: int = 2000
+    OPENAI_TEMPERATURE: float = 0.5
     OPENAI_TIMEOUT: int = 60
     OPENAI_KEYS_ENCRYPTION_KEY: str | None = None
 
-    AI_PROMPT_VERSION: str = "v2.0"  # JSON-based prompts
+    AI_PROMPT_VERSION: str = "v2.1"  # Enhanced prompts with explicit word counts
     AI_SCHEMA_VERSION: str = "1.0"  # Initial JSON schema
 
     ADMIN_EMAIL: str = "aadish.bahati@echostor.com"
