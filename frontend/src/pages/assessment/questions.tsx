@@ -488,16 +488,22 @@ export default function AssessmentQuestions() {
   const calculateSectionProgress = (sectionIndex: number) => {
     if (!structure) return 0;
     const section = structure.data.sections[sectionIndex];
-    const answeredInSection = section.questions.filter((q: Question) => isQuestionAnswered(q)).length;
+    const answeredInSection = section.questions.filter((q: Question) =>
+      isQuestionAnswered(q)
+    ).length;
     return (answeredInSection / section.questions.length) * 100;
   };
 
-  const calculateOverallProgress = (): { percentage: number; answeredCount: number; totalQuestions: number } => {
+  const calculateOverallProgress = (): {
+    percentage: number;
+    answeredCount: number;
+    totalQuestions: number;
+  } => {
     if (!structure) return { percentage: 0, answeredCount: 0, totalQuestions: 0 };
-    
+
     let answeredCount = 0;
     let totalQuestions = 0;
-    
+
     structure.data.sections.forEach((section: Section) => {
       totalQuestions += section.questions.length;
       section.questions.forEach((question: Question) => {
@@ -506,7 +512,7 @@ export default function AssessmentQuestions() {
         }
       });
     });
-    
+
     const percentage = totalQuestions > 0 ? (answeredCount / totalQuestions) * 100 : 0;
     return { percentage, answeredCount, totalQuestions };
   };
@@ -592,8 +598,8 @@ export default function AssessmentQuestions() {
                   {structure?.data?.sections.map((section: Section, index: number) => {
                     const sectionProgress = calculateSectionProgress(index);
                     const isCurrentSection = index === currentSectionIndex;
-                    const answeredCount = section.questions.filter(
-                      (q: Question) => isQuestionAnswered(q)
+                    const answeredCount = section.questions.filter((q: Question) =>
+                      isQuestionAnswered(q)
                     ).length;
 
                     return (
@@ -654,8 +660,8 @@ export default function AssessmentQuestions() {
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-gray-700">
-                    Assessment Progress: {progress.toFixed(0)}% ({answeredCount} of{' '}
-                    {totalQuestions} questions)
+                    Assessment Progress: {progress.toFixed(0)}% ({answeredCount} of {totalQuestions}{' '}
+                    questions)
                   </span>
                   <div className="flex items-center text-sm text-gray-600">
                     <ClockIcon className="h-4 w-4 mr-1" />
