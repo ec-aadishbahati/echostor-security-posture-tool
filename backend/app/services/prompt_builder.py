@@ -77,8 +77,10 @@ Provide your analysis as JSON matching this schema:
 WORD COUNT REQUIREMENTS (TOTAL: 600-1000 WORDS):
 - risk_explanation: 80-100 words - Provide a comprehensive analysis of the current security posture, specific risks identified, and their potential business impact
 - strengths: 3-5 items, each 20-30 words - Highlight specific positive security practices with context
-- gaps: 3-5 items, each gap description 60-70 words - Identify specific security weaknesses with detailed explanations and context
+- gaps: 3-5 items, each gap description 60-70 words (max 900 characters) - Identify specific security weaknesses with detailed explanations and context
 - recommendations: 3-5 items, each rationale 80 words - Provide actionable guidance with detailed justification, impact analysis, and implementation considerations
+
+IMPORTANT: Each gap description must not exceed 900 characters to ensure proper validation. Keep descriptions comprehensive but concise.
 
 NOTE: The example below demonstrates the expected level of detail and word counts. Follow this example closely for structure and comprehensiveness.
 

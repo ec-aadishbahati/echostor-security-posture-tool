@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     AI_PROMPT_VERSION: str = (
         "v2.2"  # Fixed word count requirements (600-1000 words total)
     )
-    AI_SCHEMA_VERSION: str = "1.0"  # Initial JSON schema
+    AI_SCHEMA_VERSION: str = "1.1"  # Increased gap field max_length to 1000 chars
 
     PII_REDACTION_ENABLED: bool = True
 
