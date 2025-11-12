@@ -40,7 +40,10 @@ from app.models.assessment import Assessment, AssessmentResponse, Report
 from app.schemas.ai_artifacts import SectionAIArtifact, SynthesisArtifact
 from app.schemas.assessment import Question
 from app.services.ai_cache import AICacheService
-from app.services.ai_synthesis import generate_synthesis_artifact
+from app.services.ai_synthesis import (
+    create_minimal_synthesis,
+    generate_synthesis_artifact,
+)
 from app.services.benchmark_context import benchmark_context_service
 from app.services.openai_key_manager import OpenAIKeyManager
 from app.services.prompt_builder import build_section_prompt_v2
@@ -217,20 +220,84 @@ def generate_ai_report(report_id: str):
         scores = calculate_assessment_scores(responses, structure)
 
         logger.info("Generating cross-section synthesis")
-        synthesis_artifact = asyncio.run(
-            generate_synthesis_artifact(ai_insights, structure, scores, key_manager, db)
-        )
+        try:
+            synthesis_artifact = asyncio.run(
+                generate_synthesis_artifact(
+                    ai_insights, structure, scores, key_manager, db
+                )
+            )
+        except Exception as e:
+            logger.error(
+                f"Cross-section synthesis failed; using minimal fallback: {e}",
+                exc_info=True,
+            )
+            try:
+                synthesis_artifact = create_minimal_synthesis(
+                    scores["overall"]["percentage"]
+                )
+            except ValidationError:
+                logger.warning(
+                    "create_minimal_synthesis did not meet schema; generating compliant placeholder"
+                )
+                overall_score = scores["overall"]["percentage"]
+                if overall_score >= 80:
+                    risk_level = "Low"
+                elif overall_score >= 60:
+                    risk_level = "Medium"
+                elif overall_score >= 40:
+                    risk_level = "Medium-High"
+                else:
+                    risk_level = "High"
+
+                synthesis_artifact = SynthesisArtifact(
+                    executive_summary=(
+                        f"Based on an overall security score of {overall_score:.1f}%, "
+                        "this automated fallback executive summary provides a conservative synthesis "
+                        "of the organization's security posture. The assessment highlights the need for "
+                        "targeted improvements across core security domains including identity and access "
+                        "management, data protection, incident response, and infrastructure security. "
+                        "Key recommendations prioritize foundational controls while planning for strategic "
+                        "enhancements in detection capabilities, response procedures, and governance frameworks. "
+                        "This placeholder text ensures report deliverability when AI synthesis services are "
+                        "temporarily unavailable and should be supplemented with detailed manual review."
+                    ),
+                    overall_risk_level=risk_level,
+                    overall_risk_explanation=(
+                        "Automated fallback synthesis is being used due to temporary unavailability of AI services. "
+                        "While section-level analyses provide valuable insights into specific security domains, "
+                        "detailed cross-domain relationship analysis, initiative sequencing, and strategic roadmap "
+                        "development would benefit from full AI synthesis capabilities and expert security review."
+                    ),
+                    cross_cutting_themes=[],
+                    top_10_initiatives=[],
+                    quick_wins=[],
+                    long_term_strategy=(
+                        "Adopt a phased, risk-based security roadmap aligned with industry best practices. "
+                        "Phase 1 (0-3 months): Stabilize foundational controls including identity and access "
+                        "management, patch management, configuration baselines, and backup resilience. "
+                        "Phase 2 (3-6 months): Mature detection and response capabilities with improved visibility, "
+                        "alert triage automation, incident playbooks, and regular tabletop exercises. "
+                        "Phase 3 (6-12 months): Elevate data protection and cloud governance while integrating "
+                        "continuous improvement loops, security metrics tracking, and executive KPI dashboards "
+                        "for sustained security posture gains and regulatory compliance."
+                    ),
+                    confidence_score=0.5,
+                )
 
         logger.info("Storing synthesis artifact")
-        db_synthesis = AISynthesisArtifactModel(
-            report_id=report.id,
-            artifact_json=synthesis_artifact.model_dump(),
-            prompt_version=settings.AI_PROMPT_VERSION,
-            schema_version=settings.AI_SCHEMA_VERSION,
-            model=settings.OPENAI_MODEL,
-        )
-        db.add(db_synthesis)
-        db.commit()
+        try:
+            db_synthesis = AISynthesisArtifactModel(
+                report_id=report.id,
+                artifact_json=synthesis_artifact.model_dump(),
+                prompt_version=settings.AI_PROMPT_VERSION,
+                schema_version=settings.AI_SCHEMA_VERSION,
+                model=settings.OPENAI_MODEL,
+            )
+            db.add(db_synthesis)
+            db.commit()
+        except SQLAlchemyError as e:
+            logger.warning(f"Failed to persist synthesis artifact: {e}")
+            db.rollback()
 
         logger.info("Generating AI report HTML with synthesis")
         html_content = generate_ai_report_html(
