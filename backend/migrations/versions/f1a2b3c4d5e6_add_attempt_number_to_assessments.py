@@ -1,7 +1,7 @@
 """add attempt_number to assessments table
 
 Revision ID: f1a2b3c4d5e6
-Revises: 0c55c907445b
+Revises: ea99a564b1f9
 Create Date: 2025-11-12 09:14:00.000000
 
 """
@@ -11,7 +11,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "f1a2b3c4d5e6"
-down_revision = "0c55c907445b"
+down_revision = "ea99a564b1f9"
 branch_labels = None
 depends_on = None
 

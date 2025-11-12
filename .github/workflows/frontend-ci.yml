@@ -97,7 +97,7 @@ jobs:
           echo "Backend is ready!"
 
       - name: Debug backend on failure
-        if: failure() && steps.wait_backend.outcome == 'failure'
+        if: ${{ failure() && steps.wait_backend.outcome == 'failure' }}
         run: |
           echo "=== Docker Compose Status ==="
           docker compose ps
