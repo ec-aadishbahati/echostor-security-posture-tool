@@ -16,7 +16,8 @@ depends_on = None
 
 
 def upgrade() -> None:
-    op.execute("""
+    op.execute(
+        """
         DELETE FROM reports
         WHERE id IN (
             SELECT id FROM (
@@ -29,7 +30,8 @@ def upgrade() -> None:
             ) t
             WHERE t.rn > 1
         )
-    """)
+    """
+    )
 
     op.create_unique_constraint(
         "uq_reports_assessment_type",

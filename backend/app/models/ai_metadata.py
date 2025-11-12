@@ -32,6 +32,9 @@ class AIGenerationMetadata(Base):
     max_tokens = Column(Integer, nullable=False)
     tokens_prompt = Column(Integer, nullable=True)
     tokens_completion = Column(Integer, nullable=True)
+    finish_reason = Column(
+        String(50), nullable=True
+    )  # stop, length, content_filter, etc.
     total_cost_usd = Column(DECIMAL(10, 6), nullable=True)
     latency_ms = Column(Integer, nullable=True)
     attempt_count = Column(Integer, default=1, nullable=False)
