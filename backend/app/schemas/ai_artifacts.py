@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class Recommendation(BaseModel):
@@ -90,3 +90,48 @@ class SectionAIArtifact(BaseModel):
                     "Risk level must be High/Critical when critical gaps exist"
                 )
         return risk_level
+
+
+class Initiative(BaseModel):
+    """Cross-cutting security initiative for synthesis"""
+
+    priority: Annotated[int, Field(ge=1, le=10, description="1=highest priority")]
+    title: Annotated[str, Field(min_length=10, max_length=200)]
+    description: Annotated[str, Field(min_length=50, max_length=1000)]
+    affected_domains: Annotated[list[str], Field(min_length=1, description="Section IDs this impacts")]
+    effort: Literal["Low", "Medium", "High", "Very High"]
+    impact: Literal["Medium", "High", "Critical"]
+    timeline: Literal["30-day", "60-day", "90-day", "90+ day"]
+    dependencies: Annotated[list[int], Field(default_factory=list, description="Initiative IDs that must complete first")]
+    success_metrics: Annotated[list[str], Field(min_length=1, max_length=3)]
+    owner: str = "Security Team"
+
+
+class Theme(BaseModel):
+    """Cross-cutting security theme for synthesis"""
+
+    theme: Annotated[str, Field(min_length=10, max_length=200)]
+    description: Annotated[str, Field(min_length=50, max_length=1000)]
+    affected_domains: Annotated[list[str], Field(min_length=1)]
+    severity: Literal["Low", "Medium", "High", "Critical"]
+
+
+class SynthesisArtifact(BaseModel):
+    """Schema for cross-section synthesis and executive summary"""
+
+    schema_version: str = "1.0"
+    
+    executive_summary: Annotated[str, Field(min_length=200, max_length=2000, description="High-level overview for executives")]
+    
+    overall_risk_level: Literal["Low", "Medium", "Medium-High", "High", "Critical"]
+    overall_risk_explanation: Annotated[str, Field(min_length=100, max_length=1000)]
+    
+    cross_cutting_themes: Annotated[list[Theme], Field(min_length=0, max_length=5, description="Themes that span multiple domains")]
+    
+    top_10_initiatives: Annotated[list[Initiative], Field(min_length=0, max_length=10, description="Prioritized initiatives with dependencies")]
+    
+    quick_wins: Annotated[list[str], Field(min_length=0, max_length=5, description="Low-effort, high-impact actions")]
+    
+    long_term_strategy: Annotated[str, Field(min_length=200, max_length=1000, description="6-12 month strategic direction")]
+    
+    confidence_score: Annotated[float, Field(default=0.8, ge=0.0, le=1.0)]

@@ -395,7 +395,7 @@ def generate_ai_insights(
                     curated_context = benchmark_context_service.get_relevant_context(
                         section.title, section.description, max_controls=5
                     )
-                    prompt = build_section_prompt_v2(
+                    prompt, redaction_count = build_section_prompt_v2(
                         section, section_responses, curated_context
                     )
 
