@@ -209,7 +209,7 @@ def generate_ai_report(report_id: str):
 
         logger.info("Generating AI insights with parallel processing")
         ai_insights = asyncio.run(
-            generate_ai_insights_async(responses, structure, key_manager, report.id, db)
+            generate_ai_insights_async(responses, structure, key_manager, report.id)
         )
 
         logger.info("Calculating scores")
@@ -499,7 +499,7 @@ def generate_ai_insights(
                     end_time = datetime.now()
 
                     json_str = response.choices[0].message.content
-                    artifact = SectionAIArtifact.model_validate_json(json_str)
+                    artifact = safe_validate_section_artifact(json_str, section.id)
 
                     db_artifact = AISectionArtifactModel(
                         report_id=report_id,
@@ -678,12 +678,52 @@ def generate_ai_insights(
     return insights
 
 
+def safe_validate_section_artifact(json_str: str, section_id: str) -> SectionAIArtifact:
+    """Validate and clamp fields to prevent validation errors
+    
+    This ensures a single overlong field doesn't degrade the entire section.
+    """
+    import json
+    
+    try:
+        data = json.loads(json_str)
+        
+        if "gaps" in data and isinstance(data["gaps"], list):
+            for gap in data["gaps"]:
+                if "gap" in gap and isinstance(gap["gap"], str):
+                    if len(gap["gap"]) > 900:
+                        original_length = len(gap["gap"])
+                        gap["gap"] = gap["gap"][:897] + "..."
+                        logger.warning(
+                            f"Section {section_id}: Clamped gap description from "
+                            f"{original_length} to 900 chars"
+                        )
+        
+        if "recommendations" in data and isinstance(data["recommendations"], list):
+            for rec in data["recommendations"]:
+                if "action" in rec and isinstance(rec["action"], str):
+                    if len(rec["action"]) > 450:
+                        original_length = len(rec["action"])
+                        rec["action"] = rec["action"][:447] + "..."
+                        logger.warning(
+                            f"Section {section_id}: Clamped recommendation action from "
+                            f"{original_length} to 450 chars"
+                        )
+        
+        return SectionAIArtifact.model_validate(data)
+        
+    except json.JSONDecodeError as e:
+        logger.error(f"Section {section_id}: Invalid JSON from OpenAI: {e}")
+        raise ValidationError(f"Invalid JSON: {e}")
+    except ValidationError:
+        raise
+
+
 async def generate_ai_insights_async(
     responses: list[AssessmentResponse],
     structure,
     key_manager: OpenAIKeyManager,
     report_id: str,
-    db,
     max_concurrent: int = None,
 ) -> dict[str, SectionAIArtifact]:
     """Generate AI insights for each section with parallel processing"""
@@ -698,208 +738,215 @@ async def generate_ai_insights_async(
 
     async def process_section(section):
         """Process a single section with rate limiting"""
-        async with semaphore:
-            section_responses = []
-            for question in section.questions:
-                response = response_dict.get(question.id)
-                if response:
-                    section_responses.append(
-                        {
-                            "question": question.text,
-                            "answer": response.answer_value,
-                            "weight": question.weight,
-                        }
-                    )
+        db = SessionLocal()
+        try:
+            async with semaphore:
+                section_responses = []
+                for question in section.questions:
+                    response = response_dict.get(question.id)
+                    if response:
+                        section_responses.append(
+                            {
+                                "question": question.text,
+                                "answer": response.answer_value,
+                                "weight": question.weight,
+                            }
+                        )
 
-            if not section_responses:
-                return None
+                if not section_responses:
+                    return None
 
-            answers_hash = cache_service.compute_answers_hash(section_responses)
-            cached_artifact = cache_service.get_cached_artifact(
-                db,
-                section.id,
-                answers_hash,
-                settings.AI_PROMPT_VERSION,
-                settings.OPENAI_MODEL,
-            )
-
-            if cached_artifact:
-                logger.info(f"Cache HIT for section {section.id}")
-                db_artifact = AISectionArtifactModel(
-                    report_id=report_id,
-                    section_id=section.id,
-                    artifact_json=cached_artifact.model_dump(),
+                answers_hash = cache_service.compute_answers_hash(section_responses)
+                cached_artifact = cache_service.get_cached_artifact(
+                    db,
+                    section.id,
+                    answers_hash,
+                    settings.AI_PROMPT_VERSION,
+                    settings.OPENAI_MODEL,
                 )
-                db.add(db_artifact)
-                db.commit()
-                return (section.id, cached_artifact, False)
 
-            logger.info(f"Cache MISS for section {section.id} - calling OpenAI")
-
-            await asyncio.sleep(random.uniform(0, 0.5))
-
-            for attempt in range(settings.AI_MAX_RETRIES):
-                try:
-                    key_id, api_key = key_manager.get_next_key()
-
-                    client = AsyncOpenAI(
-                        api_key=api_key, timeout=settings.OPENAI_TIMEOUT
-                    )
-
-                    curated_context = benchmark_context_service.get_relevant_context(
-                        section.title, section.description, max_controls=5
-                    )
-                    prompt, redaction_count = build_section_prompt_v2(
-                        section, section_responses, curated_context
-                    )
-
-                    start_time = time.time()
-                    response = await client.chat.completions.create(
-                        model=settings.OPENAI_MODEL,
-                        messages=[{"role": "user", "content": prompt}],
-                        response_format={"type": "json_object"},
-                        max_tokens=settings.OPENAI_MAX_TOKENS,
-                        temperature=settings.OPENAI_TEMPERATURE,
-                    )
-                    latency_ms = int((time.time() - start_time) * 1000)
-
-                    json_str = response.choices[0].message.content
-                    artifact = SectionAIArtifact.model_validate_json(json_str)
-
+                if cached_artifact:
+                    logger.info(f"Cache HIT for section {section.id}")
                     db_artifact = AISectionArtifactModel(
                         report_id=report_id,
                         section_id=section.id,
-                        artifact_json=artifact.model_dump(),
+                        artifact_json=cached_artifact.model_dump(),
                     )
                     db.add(db_artifact)
-
-                    tokens_prompt = (
-                        response.usage.prompt_tokens if response.usage else 0
-                    )
-                    tokens_completion = (
-                        response.usage.completion_tokens if response.usage else 0
-                    )
-                    finish_reason = (
-                        response.choices[0].finish_reason if response.choices else None
-                    )
-                    cost_usd = (
-                        (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
-                        if response.usage
-                        else 0.0
-                    )
-
-                    logger.info(
-                        f"Section {section.id}: finish_reason={finish_reason}, "
-                        f"tokens={tokens_prompt}+{tokens_completion}={tokens_prompt + tokens_completion}"
-                    )
-
-                    metadata = AIGenerationMetadata(
-                        report_id=report_id,
-                        section_id=section.id,
-                        prompt_version=settings.AI_PROMPT_VERSION,
-                        schema_version=settings.AI_SCHEMA_VERSION,
-                        model=settings.OPENAI_MODEL,
-                        temperature=settings.OPENAI_TEMPERATURE,
-                        max_tokens=settings.OPENAI_MAX_TOKENS,
-                        tokens_prompt=tokens_prompt,
-                        tokens_completion=tokens_completion,
-                        finish_reason=finish_reason,
-                        total_cost_usd=cost_usd,
-                        latency_ms=latency_ms,
-                    )
-                    db.add(metadata)
-
-                    cache_service.store_artifact(
-                        db,
-                        section.id,
-                        answers_hash,
-                        settings.AI_PROMPT_VERSION,
-                        settings.AI_SCHEMA_VERSION,
-                        settings.OPENAI_MODEL,
-                        artifact,
-                        tokens_prompt,
-                        tokens_completion,
-                        cost_usd,
-                    )
-
                     db.commit()
+                    return (section.id, cached_artifact, False)
 
-                    key_manager.record_success(key_id)
+                logger.info(f"Cache MISS for section {section.id} - calling OpenAI")
 
-                    logger.info(
-                        f"Generated AI insight for section {section.id} ({latency_ms}ms)"
-                    )
-                    return (section.id, artifact, False)
+                await asyncio.sleep(random.uniform(0, 0.5))
 
-                except (RateLimitError, APIConnectionError, APIError) as e:
-                    logger.warning(
-                        f"Retryable error for section {section.id} (attempt {attempt + 1}/{settings.AI_MAX_RETRIES}): {e}"
-                    )
-                    key_manager.record_failure(key_id, e)
+                for attempt in range(settings.AI_MAX_RETRIES):
+                    try:
+                        key_id, api_key = key_manager.get_next_key()
 
-                    if attempt < settings.AI_MAX_RETRIES - 1:
-                        await asyncio.sleep(
-                            settings.AI_RETRY_DELAY_SECONDS * (2**attempt)
+                        client = AsyncOpenAI(
+                            api_key=api_key, timeout=settings.OPENAI_TIMEOUT
                         )
-                        continue
-                    else:
-                        if (
-                            settings.AI_FALLBACK_MODEL
-                            and settings.AI_FALLBACK_MODEL != settings.OPENAI_MODEL
-                        ):
-                            logger.info(
-                                f"Falling back to {settings.AI_FALLBACK_MODEL} for section {section.id}"
+
+                        curated_context = benchmark_context_service.get_relevant_context(
+                            section.title, section.description, max_controls=5
+                        )
+                        prompt, redaction_count = build_section_prompt_v2(
+                            section, section_responses, curated_context
+                        )
+
+                        start_time = time.time()
+                        response = await client.chat.completions.create(
+                            model=settings.OPENAI_MODEL,
+                            messages=[{"role": "user", "content": prompt}],
+                            response_format={"type": "json_object"},
+                            max_tokens=settings.OPENAI_MAX_TOKENS,
+                            temperature=settings.OPENAI_TEMPERATURE,
+                        )
+                        latency_ms = int((time.time() - start_time) * 1000)
+
+                        json_str = response.choices[0].message.content
+                        artifact = safe_validate_section_artifact(json_str, section.id)
+
+                        db_artifact = AISectionArtifactModel(
+                            report_id=report_id,
+                            section_id=section.id,
+                            artifact_json=artifact.model_dump(),
+                        )
+                        db.add(db_artifact)
+
+                        tokens_prompt = (
+                            response.usage.prompt_tokens if response.usage else 0
+                        )
+                        tokens_completion = (
+                            response.usage.completion_tokens if response.usage else 0
+                        )
+                        finish_reason = (
+                            response.choices[0].finish_reason if response.choices else None
+                        )
+                        cost_usd = (
+                            (tokens_prompt * 0.00001 + tokens_completion * 0.00003)
+                            if response.usage
+                            else 0.0
+                        )
+
+                        logger.info(
+                            f"Section {section.id}: finish_reason={finish_reason}, "
+                            f"tokens={tokens_prompt}+{tokens_completion}={tokens_prompt + tokens_completion}"
+                        )
+
+                        metadata = AIGenerationMetadata(
+                            report_id=report_id,
+                            section_id=section.id,
+                            prompt_version=settings.AI_PROMPT_VERSION,
+                            schema_version=settings.AI_SCHEMA_VERSION,
+                            model=settings.OPENAI_MODEL,
+                            temperature=settings.OPENAI_TEMPERATURE,
+                            max_tokens=settings.OPENAI_MAX_TOKENS,
+                            tokens_prompt=tokens_prompt,
+                            tokens_completion=tokens_completion,
+                            finish_reason=finish_reason,
+                            total_cost_usd=cost_usd,
+                            latency_ms=latency_ms,
+                        )
+                        db.add(metadata)
+
+                        cache_service.store_artifact(
+                            db,
+                            section.id,
+                            answers_hash,
+                            settings.AI_PROMPT_VERSION,
+                            settings.AI_SCHEMA_VERSION,
+                            settings.OPENAI_MODEL,
+                            artifact,
+                            tokens_prompt,
+                            tokens_completion,
+                            cost_usd,
+                        )
+
+                        db.commit()
+
+                        key_manager.record_success(key_id)
+
+                        logger.info(
+                            f"Generated AI insight for section {section.id} ({latency_ms}ms)"
+                        )
+                        return (section.id, artifact, False)
+
+                    except (RateLimitError, APIConnectionError, APIError) as e:
+                        logger.warning(
+                            f"Retryable error for section {section.id} (attempt {attempt + 1}/{settings.AI_MAX_RETRIES}): {e}"
+                        )
+                        key_manager.record_failure(key_id, e)
+
+                        if attempt < settings.AI_MAX_RETRIES - 1:
+                            await asyncio.sleep(
+                                settings.AI_RETRY_DELAY_SECONDS * (2**attempt)
                             )
-                            try:
-                                fallback_response = (
-                                    await client.chat.completions.create(
-                                        model=settings.AI_FALLBACK_MODEL,
-                                        messages=[{"role": "user", "content": prompt}],
-                                        response_format={"type": "json_object"},
-                                        max_tokens=800,  # Shorter for fallback
-                                        temperature=0.5,
-                                    )
-                                )
-
-                                json_str = fallback_response.choices[0].message.content
-                                artifact = SectionAIArtifact.model_validate_json(
-                                    json_str
-                                )
-
-                                db_artifact = AISectionArtifactModel(
-                                    report_id=report_id,
-                                    section_id=section.id,
-                                    artifact_json=artifact.model_dump(),
-                                )
-                                db.add(db_artifact)
-                                db.commit()
-
+                            continue
+                        else:
+                            if (
+                                settings.AI_FALLBACK_MODEL
+                                and settings.AI_FALLBACK_MODEL != settings.OPENAI_MODEL
+                            ):
                                 logger.info(
-                                    f"Fallback successful for section {section.id}"
+                                    f"Falling back to {settings.AI_FALLBACK_MODEL} for section {section.id}"
                                 )
-                                return (section.id, artifact, True)  # Degraded
-                            except Exception as fallback_error:
-                                logger.error(
-                                    f"Fallback also failed for section {section.id}: {fallback_error}"
-                                )
+                                try:
+                                    fallback_response = (
+                                        await client.chat.completions.create(
+                                            model=settings.AI_FALLBACK_MODEL,
+                                            messages=[{"role": "user", "content": prompt}],
+                                            response_format={"type": "json_object"},
+                                            max_tokens=800,  # Shorter for fallback
+                                            temperature=0.5,
+                                        )
+                                    )
 
-                        logger.error(f"All retries exhausted for section {section.id}")
+                                    json_str = fallback_response.choices[0].message.content
+                                    artifact = safe_validate_section_artifact(
+                                        json_str, section.id
+                                    )
+
+                                    db_artifact = AISectionArtifactModel(
+                                        report_id=report_id,
+                                        section_id=section.id,
+                                        artifact_json=artifact.model_dump(),
+                                    )
+                                    db.add(db_artifact)
+                                    db.commit()
+
+                                    logger.info(
+                                        f"Fallback successful for section {section.id}"
+                                    )
+                                    return (section.id, artifact, True)  # Degraded
+                                except Exception as fallback_error:
+                                    logger.error(
+                                        f"Fallback also failed for section {section.id}: {fallback_error}"
+                                    )
+
+                            logger.error(f"All retries exhausted for section {section.id}")
+                            db.rollback()
+                            degraded_artifact = create_degraded_artifact(section.id)
+                            return (section.id, degraded_artifact, True)
+
+                    except ValidationError as e:
+                        logger.error(
+                            f"JSON validation failed for section {section.id}: {e.errors()}"
+                        )
+                        key_manager.record_failure(key_id, e)
+                        db.rollback()
                         degraded_artifact = create_degraded_artifact(section.id)
                         return (section.id, degraded_artifact, True)
 
-                except ValidationError as e:
-                    logger.error(
-                        f"JSON validation failed for section {section.id}: {e.errors()}"
-                    )
-                    key_manager.record_failure(key_id, e)
-                    degraded_artifact = create_degraded_artifact(section.id)
-                    return (section.id, degraded_artifact, True)
-
-                except Exception as e:
-                    logger.exception(f"Unexpected error for section {section.id}: {e}")
-                    key_manager.record_failure(key_id, e)
-                    degraded_artifact = create_degraded_artifact(section.id)
-                    return (section.id, degraded_artifact, True)
+                    except Exception as e:
+                        logger.exception(f"Unexpected error for section {section.id}: {e}")
+                        key_manager.record_failure(key_id, e)
+                        db.rollback()
+                        degraded_artifact = create_degraded_artifact(section.id)
+                        return (section.id, degraded_artifact, True)
+        finally:
+            db.close()
 
     tasks = [process_section(section) for section in structure.sections]
     results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -917,7 +964,7 @@ async def generate_ai_insights_async(
 def create_degraded_artifact(section_id: str) -> SectionAIArtifact:
     """Create a degraded artifact when AI generation fails"""
     return SectionAIArtifact(
-        schema_version="1.0",
+        schema_version=settings.AI_SCHEMA_VERSION,
         risk_level="Medium",
         risk_explanation="AI analysis temporarily unavailable for this section. Please contact support for manual analysis.",
         strengths=["Assessment data collected successfully"],
