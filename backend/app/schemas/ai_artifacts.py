@@ -26,7 +26,7 @@ class Recommendation(BaseModel):
 class Gap(BaseModel):
     """Identified security gap with severity"""
 
-    gap: Annotated[str, Field(min_length=10, max_length=500)]
+    gap: Annotated[str, Field(min_length=10, max_length=1000)]
     linked_signals: Annotated[list[str], Field(min_length=1)]
     severity: Literal["Low", "Medium", "High", "Critical"]
 
@@ -49,9 +49,9 @@ class Benchmark(BaseModel):
 
 
 class SectionAIArtifact(BaseModel):
-    """Schema version 1.0 for AI section analysis"""
+    """Schema version 1.1 for AI section analysis"""
 
-    schema_version: str = "1.0"
+    schema_version: str = "1.1"
     risk_level: Literal["Low", "Medium", "Medium-High", "High", "Critical"]
     risk_explanation: Annotated[str, Field(min_length=50, max_length=1000)]
     strengths: Annotated[list[str], Field(min_length=1, max_length=5)]
