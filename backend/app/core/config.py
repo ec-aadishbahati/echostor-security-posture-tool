@@ -71,6 +71,9 @@ class Settings(BaseSettings):
     SENTRY_TRACES_SAMPLE_RATE: float = 1.0
     SENTRY_PROFILES_SAMPLE_RATE: float = 1.0
 
+    SCORING_V2_ENABLED: bool = False
+    QUESTION_LIBRARY_VERSION: str = "v1.0"
+
     @model_validator(mode="after")
     def validate_required_settings(self):
         if not self.JWT_SECRET_KEY:

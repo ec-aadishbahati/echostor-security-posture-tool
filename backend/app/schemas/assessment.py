@@ -170,6 +170,12 @@ class Question(BaseModel):
     weight: Annotated[int, Field(ge=0, le=100)]
     explanation: Annotated[str, Field(max_length=5000)]
     options: list[QuestionOption]
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+    @property
+    def scale_type(self) -> str | None:
+        """Get scale type from metadata"""
+        return self.metadata.get("scale_type")
 
 
 class Section(BaseModel):

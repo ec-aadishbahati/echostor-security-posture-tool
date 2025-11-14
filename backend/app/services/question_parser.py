@@ -56,6 +56,7 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                     "weight": 1,
                     "explanation": "",
                     "options": [],
+                    "metadata": {},
                 }
 
         elif line.startswith("**Question:**") and current_question:
@@ -76,6 +77,10 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
             current_question["explanation"] = line.replace(
                 "**Explanation:**", ""
             ).strip()
+
+        elif line.startswith("**Scale:**") and current_question:
+            scale_type = line.replace("**Scale:**", "").strip()
+            current_question["metadata"]["scale_type"] = scale_type
 
         elif line.startswith("**Option") and current_question:
             option_match = re.match(r"\*\*Option (\d+): (.+?)\*\*", line)
@@ -146,6 +151,7 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                 weight=q_data["weight"],
                 explanation=q_data["explanation"],
                 options=options,
+                metadata=q_data.get("metadata", {}),
             )
             questions.append(question)
             total_questions += 1
