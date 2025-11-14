@@ -41,6 +41,7 @@ from app.services.ai_synthesis import (
     generate_synthesis_artifact,
 )
 from app.services.benchmark_context import benchmark_context_service
+from app.services.enhanced_context_extractor import get_enhanced_context_extractor
 from app.services.openai_key_manager import OpenAIKeyManager
 from app.services.prompt_builder import build_section_prompt_v2
 from app.services.question_parser import (
@@ -440,18 +441,33 @@ def generate_ai_insights(
         logger.error(f"Failed to get OpenAI API key: {e}")
         raise
 
+    extractor = get_enhanced_context_extractor()
+    
     for section in structure.sections:
         section_responses = []
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
-                section_responses.append(
-                    {
-                        "question": question.text,
-                        "answer": response.answer_value,
-                        "weight": question.weight,
-                    }
-                )
+                resp_dict = {
+                    "question": question.text,
+                    "answer": response.answer_value,
+                    "weight": question.weight,
+                }
+                
+                if settings.INCLUDE_COMMENTS_IN_AI and response.comment:
+                    resp_dict["comment"] = response.comment
+                
+                if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI:
+                    context = extractor.get_compact_context(
+                        question.id, 
+                        str(response.answer_value),
+                        max_chars=settings.MAX_CONTEXT_CHARS,
+                        question_options=question.options
+                    )
+                    if context:
+                        resp_dict["context"] = context
+                
+                section_responses.append(resp_dict)
 
         if section_responses:
             retry_attempted = False
@@ -736,6 +752,8 @@ async def generate_ai_insights_async(
     cache_service = AICacheService()
     semaphore = asyncio.Semaphore(max_concurrent)
 
+    extractor = get_enhanced_context_extractor()
+    
     async def process_section(section):
         """Process a single section with rate limiting"""
         db = SessionLocal()
@@ -745,13 +763,26 @@ async def generate_ai_insights_async(
                 for question in section.questions:
                     response = response_dict.get(question.id)
                     if response:
-                        section_responses.append(
-                            {
-                                "question": question.text,
-                                "answer": response.answer_value,
-                                "weight": question.weight,
-                            }
-                        )
+                        resp_dict = {
+                            "question": question.text,
+                            "answer": response.answer_value,
+                            "weight": question.weight,
+                        }
+                        
+                        if settings.INCLUDE_COMMENTS_IN_AI and response.comment:
+                            resp_dict["comment"] = response.comment
+                        
+                        if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI:
+                            context = extractor.get_compact_context(
+                                question.id, 
+                                str(response.answer_value),
+                                max_chars=settings.MAX_CONTEXT_CHARS,
+                                question_options=question.options
+                            )
+                            if context:
+                                resp_dict["context"] = context
+                        
+                        section_responses.append(resp_dict)
 
                 if not section_responses:
                     return None

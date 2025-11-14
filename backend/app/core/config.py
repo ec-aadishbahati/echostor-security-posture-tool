@@ -22,11 +22,16 @@ class Settings(BaseSettings):
     OPENAI_KEYS_ENCRYPTION_KEY: str | None = None
 
     AI_PROMPT_VERSION: str = (
-        "v2.2"  # Fixed word count requirements (600-1000 words total)
+        "v2.3"  # Added support for user comments and enhanced option context
     )
     AI_SCHEMA_VERSION: str = "1.1"  # Increased gap field max_length to 1000 chars
 
     PII_REDACTION_ENABLED: bool = True
+    
+    INCLUDE_COMMENTS_IN_AI: bool = False
+    INCLUDE_ENHANCED_CONTEXT_IN_AI: bool = False
+    MAX_COMMENT_CHARS: int = 500
+    MAX_CONTEXT_CHARS: int = 400
 
     AI_MAX_CONCURRENT_SECTIONS: int = 5
     AI_PER_KEY_QPS_LIMIT: float = 10.0  # 10 QPS per key

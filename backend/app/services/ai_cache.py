@@ -18,13 +18,15 @@ class AICacheService:
 
     @staticmethod
     def compute_answers_hash(section_responses: list[dict]) -> str:
-        """Compute deterministic hash of normalized answers"""
+        """Compute deterministic hash of normalized answers, comments, and context"""
         normalized = sorted(
             [
                 {
                     "q": resp["question"][:100],
                     "a": str(resp["answer"]).strip().lower(),
                     "w": resp["weight"],
+                    "c": str(resp.get("comment", "")).strip().lower() if resp.get("comment") else "",
+                    "ctx": str(resp.get("context", "")).strip().lower() if resp.get("context") else "",
                 }
                 for resp in section_responses
             ],
