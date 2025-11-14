@@ -29,6 +29,7 @@ from weasyprint import HTML
 
 from app.core.config import settings
 from app.core.database import SessionLocal
+from app.core.scoring_scales import get_option_weight, normalize_option_value
 from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
 from app.models.ai_artifacts import AISynthesisArtifact as AISynthesisArtifactModel
 from app.models.ai_metadata import AIGenerationMetadata
@@ -349,22 +350,39 @@ def calculate_assessment_scores(
 ) -> dict[str, Any]:
     """Calculate assessment scores by section"""
 
-    scores = {}
+    scores = {
+        "scoring_version": "v2" if settings.SCORING_V2_ENABLED else "v1",
+        "question_library_version": settings.QUESTION_LIBRARY_VERSION,
+    }
     response_dict = {r.question_id: r for r in responses}
 
     for section in structure.sections:
         section_score = 0
         section_max_score = 0
         section_responses = 0
+        section_unknown_count = 0
+        section_na_count = 0
 
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
                 section_responses += 1
-                question_score = calculate_question_score(response, question)
-                section_score += question_score
-
-            section_max_score += question.weight
+                
+                if settings.SCORING_V2_ENABLED:
+                    result = calculate_question_score_v2(response, question)
+                    section_score += result["score"]
+                    section_max_score += result["max_score"]
+                    
+                    if "unknown" in result["flags"]:
+                        section_unknown_count += 1
+                    if "not_applicable" in result["flags"]:
+                        section_na_count += 1
+                else:
+                    question_score = calculate_question_score(response, question)
+                    section_score += question_score
+                    section_max_score += question.weight
+            else:
+                section_max_score += question.weight
 
         completion_rate = (
             (section_responses / len(section.questions)) * 100
@@ -382,10 +400,15 @@ def calculate_assessment_scores(
             "completion_rate": completion_rate,
             "responses_count": section_responses,
             "total_questions": len(section.questions),
+            "unknown_count": section_unknown_count,
+            "not_applicable_count": section_na_count,
         }
 
-    total_score = sum(s["score"] for s in scores.values())
-    total_max_score = sum(s["max_score"] for s in scores.values())
+    total_score = sum(s["score"] for s in scores.values() if isinstance(s, dict))
+    total_max_score = sum(s["max_score"] for s in scores.values() if isinstance(s, dict))
+    total_unknown = sum(s.get("unknown_count", 0) for s in scores.values() if isinstance(s, dict))
+    total_na = sum(s.get("not_applicable_count", 0) for s in scores.values() if isinstance(s, dict))
+    
     overall_percentage = (
         (total_score / total_max_score) * 100 if total_max_score > 0 else 0
     )
@@ -394,6 +417,8 @@ def calculate_assessment_scores(
         "score": total_score,
         "max_score": total_max_score,
         "percentage": overall_percentage,
+        "unknown_count": total_unknown,
+        "not_applicable_count": total_na,
     }
 
     return scores
@@ -417,6 +442,66 @@ def calculate_question_score(response: AssessmentResponse, question) -> int:
         return question.weight if response.answer_value else 0
 
     return 0
+
+
+def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
+    """Calculate score with v2 weighted logic"""
+    
+    answer = response.answer_value
+    flags = []
+    
+    if question.type == "yes_no":
+        score = question.weight if answer == "yes" else 0
+        return {
+            "score": score,
+            "max_score": question.weight,
+            "flags": flags
+        }
+    
+    elif question.type == "multiple_choice":
+        scale_type = question.scale_type
+        if scale_type:
+            normalized_answer = normalize_option_value(str(answer))
+            weight_multiplier, answer_flags = get_option_weight(scale_type, normalized_answer)
+            flags.extend(answer_flags)
+            
+            if "not_applicable" in flags:
+                return {"score": 0, "max_score": 0, "flags": flags}
+            
+            score = int(question.weight * weight_multiplier)
+            return {"score": score, "max_score": question.weight, "flags": flags}
+        else:
+            score = question.weight if answer else 0
+            return {"score": score, "max_score": question.weight, "flags": flags}
+    
+    elif question.type == "multiple_select":
+        if not isinstance(answer, list):
+            answer = [answer] if answer else []
+        
+        if not answer:
+            return {"score": 0, "max_score": question.weight, "flags": flags}
+        
+        scale_type = question.scale_type
+        if scale_type:
+            best_weight = 0
+            all_flags = []
+            
+            for selected_value in answer:
+                normalized = normalize_option_value(str(selected_value))
+                weight, value_flags = get_option_weight(scale_type, normalized)
+                all_flags.extend(value_flags)
+                best_weight = max(best_weight, weight)
+            
+            if "not_applicable" in all_flags:
+                return {"score": 0, "max_score": 0, "flags": all_flags}
+            
+            score = int(question.weight * best_weight)
+            return {"score": score, "max_score": question.weight, "flags": all_flags}
+        else:
+            score = question.weight
+            return {"score": score, "max_score": question.weight, "flags": flags}
+    
+    return {"score": 0, "max_score": question.weight, "flags": flags}
 
 
 def generate_ai_insights(
