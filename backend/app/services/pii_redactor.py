@@ -64,16 +64,32 @@ class PIIRedactor:
     def redact_responses(
         self, responses: list[dict[str, Any]]
     ) -> tuple[list[dict[str, Any]], int]:
-        """Redact PII from list of question/answer responses"""
+        """Redact PII from list of question/answer responses
+
+        Redacts PII from answer, comment, and context fields if present
+        """
         redacted_responses = []
         total_count = 0
 
         for resp in responses:
+            redacted_resp = {**resp}
+
             answer_value = resp.get("answer", "")
             redacted_answer, count = self.redact(str(answer_value))
             total_count += count
+            redacted_resp["answer"] = redacted_answer
 
-            redacted_responses.append({**resp, "answer": redacted_answer})
+            if "comment" in resp and resp["comment"]:
+                redacted_comment, count = self.redact(str(resp["comment"]))
+                total_count += count
+                redacted_resp["comment"] = redacted_comment
+
+            if "context" in resp and resp["context"]:
+                redacted_context, count = self.redact(str(resp["context"]))
+                total_count += count
+                redacted_resp["context"] = redacted_context
+
+            redacted_responses.append(redacted_resp)
 
         return (redacted_responses, total_count)
 

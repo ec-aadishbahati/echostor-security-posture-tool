@@ -3585,7 +3585,7 @@
 
 **Question:** Do you maintain consent management capabilities?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -3959,7 +3959,7 @@
 
 **Question:** Do you integrate security testing in your CI/CD pipeline?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 5
 
@@ -3987,7 +3987,7 @@
 
 **Question:** Do you implement merge gate policies for security?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -4040,7 +4040,7 @@
 
 **Question:** Do you perform Infrastructure as Code (IaC) security scanning?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -4099,7 +4099,7 @@
 
 **Question:** Do you enforce SBOM generation and attestation in your release pipeline?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 5
 
@@ -4127,7 +4127,7 @@
 
 **Question:** Do you implement mandatory Infrastructure as Code (IaC) policy enforcement?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 5
 
@@ -4239,7 +4239,7 @@
 
 **Question:** Do you implement network security in the cloud?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** Cloud network security controls protect against unauthorized access and attacks.
 
@@ -4497,7 +4497,7 @@
 
 **Question:** Do you implement container runtime security?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** Runtime security protects containers during execution from various threats.
 
@@ -5503,7 +5503,7 @@
 
 **Question:** Do you require security certifications from vendors?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** Security certifications provide assurance of vendor security practices.
 
@@ -5894,7 +5894,7 @@
 
 **Question:** Do you assess open source component risks?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -5953,7 +5953,7 @@
 
 **Question:** Do you monitor supply chain security threats?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -6533,7 +6533,7 @@
 
 **Question:** Do you use external training providers?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** External providers can offer specialized expertise and current threat intelligence.
 
@@ -6764,7 +6764,7 @@
 
 **Question:** Do you have environmental monitoring systems?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** Environmental monitoring protects equipment and data from environmental threats.
 
@@ -7542,7 +7542,7 @@
 
 **Question:** Do you protect log integrity?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** Log integrity protection ensures logs cannot be tampered with by attackers.
 
@@ -8459,7 +8459,7 @@
 
 **Question:** Do you maintain security certifications?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Explanation:** Security certifications demonstrate commitment to security best practices.
 
@@ -8833,7 +8833,7 @@
 
 **Question:** Do you maintain a model registry with security controls?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -8938,7 +8938,7 @@
 
 **Question:** Do you implement model explainability and bias detection?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 3
 
@@ -9000,7 +9000,7 @@
 
 **Question:** Do you protect feature stores and data privacy?
 
-**Type:** multiple_select
+**Type:** multiple_choice
 
 **Weight:** 5
 
