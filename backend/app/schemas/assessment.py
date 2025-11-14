@@ -171,7 +171,7 @@ class Question(BaseModel):
     explanation: Annotated[str, Field(max_length=5000)]
     options: list[QuestionOption]
     metadata: dict[str, Any] = Field(default_factory=dict)
-    
+
     @property
     def scale_type(self) -> str | None:
         """Get scale type from metadata"""
