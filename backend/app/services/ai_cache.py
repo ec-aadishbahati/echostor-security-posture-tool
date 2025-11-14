@@ -25,8 +25,12 @@ class AICacheService:
                     "q": resp["question"][:100],
                     "a": str(resp["answer"]).strip().lower(),
                     "w": resp["weight"],
-                    "c": str(resp.get("comment", "")).strip().lower() if resp.get("comment") else "",
-                    "ctx": str(resp.get("context", "")).strip().lower() if resp.get("context") else "",
+                    "c": str(resp.get("comment", "")).strip().lower()
+                    if resp.get("comment")
+                    else "",
+                    "ctx": str(resp.get("context", "")).strip().lower()
+                    if resp.get("context")
+                    else "",
                 }
                 for resp in section_responses
             ],

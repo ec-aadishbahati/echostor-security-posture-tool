@@ -29,19 +29,19 @@ def build_section_prompt_v2(
     for i, resp in enumerate(section_responses, 1):
         answer_str = str(resp["answer"])
         signal_parts = [f"Q{i}: {answer_str} (weight:{resp['weight']})"]
-        
+
         if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI and resp.get("context"):
             context_str = str(resp["context"])
             if len(context_str) > settings.MAX_CONTEXT_CHARS:
-                context_str = context_str[:settings.MAX_CONTEXT_CHARS - 3] + "..."
+                context_str = context_str[: settings.MAX_CONTEXT_CHARS - 3] + "..."
             signal_parts.append(f"  Context: {context_str}")
-        
+
         if settings.INCLUDE_COMMENTS_IN_AI and resp.get("comment"):
             comment_str = str(resp["comment"])
             if len(comment_str) > settings.MAX_COMMENT_CHARS:
-                comment_str = comment_str[:settings.MAX_COMMENT_CHARS - 3] + "..."
+                comment_str = comment_str[: settings.MAX_COMMENT_CHARS - 3] + "..."
             signal_parts.append(f"  User comment: {comment_str}")
-        
+
         signals.append("\n".join(signal_parts))
 
     prompt = f"""Analyze this cybersecurity assessment section and provide comprehensive, structured insights.

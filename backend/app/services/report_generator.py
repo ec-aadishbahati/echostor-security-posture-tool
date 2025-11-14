@@ -442,7 +442,7 @@ def generate_ai_insights(
         raise
 
     extractor = get_enhanced_context_extractor()
-    
+
     for section in structure.sections:
         section_responses = []
         for question in section.questions:
@@ -453,20 +453,20 @@ def generate_ai_insights(
                     "answer": response.answer_value,
                     "weight": question.weight,
                 }
-                
+
                 if settings.INCLUDE_COMMENTS_IN_AI and response.comment:
                     resp_dict["comment"] = response.comment
-                
+
                 if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI:
                     context = extractor.get_compact_context(
-                        question.id, 
+                        question.id,
                         str(response.answer_value),
                         max_chars=settings.MAX_CONTEXT_CHARS,
-                        question_options=question.options
+                        question_options=question.options,
                     )
                     if context:
                         resp_dict["context"] = context
-                
+
                 section_responses.append(resp_dict)
 
         if section_responses:
@@ -753,7 +753,7 @@ async def generate_ai_insights_async(
     semaphore = asyncio.Semaphore(max_concurrent)
 
     extractor = get_enhanced_context_extractor()
-    
+
     async def process_section(section):
         """Process a single section with rate limiting"""
         db = SessionLocal()
@@ -768,20 +768,20 @@ async def generate_ai_insights_async(
                             "answer": response.answer_value,
                             "weight": question.weight,
                         }
-                        
+
                         if settings.INCLUDE_COMMENTS_IN_AI and response.comment:
                             resp_dict["comment"] = response.comment
-                        
+
                         if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI:
                             context = extractor.get_compact_context(
-                                question.id, 
+                                question.id,
                                 str(response.answer_value),
                                 max_chars=settings.MAX_CONTEXT_CHARS,
-                                question_options=question.options
+                                question_options=question.options,
                             )
                             if context:
                                 resp_dict["context"] = context
-                        
+
                         section_responses.append(resp_dict)
 
                 if not section_responses:

@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     AI_SCHEMA_VERSION: str = "1.1"  # Increased gap field max_length to 1000 chars
 
     PII_REDACTION_ENABLED: bool = True
-    
+
     INCLUDE_COMMENTS_IN_AI: bool = False
     INCLUDE_ENHANCED_CONTEXT_IN_AI: bool = False
     MAX_COMMENT_CHARS: int = 500
