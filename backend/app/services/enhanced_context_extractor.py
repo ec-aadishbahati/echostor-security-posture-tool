@@ -130,7 +130,7 @@ class EnhancedContextExtractor:
     def _extract_section(self, content: str, heading_pattern: str) -> str:
         """Extract content under a specific heading"""
         heading_match = re.search(
-            f"^\\s*(?:\\*\\*)?{heading_pattern}(?:\\*\\*)?\\s*$",
+            f"^\\s*\\*\\*{heading_pattern}:?\\*\\*\\s*$",
             content,
             re.MULTILINE | re.IGNORECASE,
         )
