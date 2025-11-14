@@ -2,7 +2,6 @@
 Scoring scales for weighted assessment scoring
 """
 
-
 SCALE_WEIGHTS: dict[str, dict[str, float]] = {
     "maturity": {
         "optimized": 1.0,
