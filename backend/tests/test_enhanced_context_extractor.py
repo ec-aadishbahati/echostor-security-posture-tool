@@ -153,11 +153,11 @@ class TestEnhancedContextExtractor:
 **📊 Market Context & Benchmarks:**
 - **Industry Adoption Rate:** 50% of organizations
 """
-        
+
         result = extractor._extract_section(
             content, r"(?:📋\s*)?What This Option Means"
         )
-        
+
         assert "Definition" in result
         assert "Why It Matters" in result
         assert "Market Context" not in result  # Should stop at next section
@@ -165,11 +165,11 @@ class TestEnhancedContextExtractor:
     def test_extract_section_not_found(self, extractor):
         """Test extracting section that doesn't exist"""
         content = "Some basic content without sections."
-        
+
         result = extractor._extract_section(
             content, r"(?:📋\s*)?What This Option Means"
         )
-        
+
         assert result == ""
 
 
