@@ -1150,9 +1150,17 @@ def compute_blind_spots(structure, responses) -> dict:
     response_dict = {r.question_id: r for r in responses}
     blind_spots_by_section = {}
     all_blind_spots = []
-    
-    unknown_values = ["unknown", "not_sure", "not sure", "don't_know", "dont_know", "don't know", "dont know"]
-    
+
+    unknown_values = [
+        "unknown",
+        "not_sure",
+        "not sure",
+        "don't_know",
+        "dont_know",
+        "don't know",
+        "dont know",
+    ]
+
     for section in structure.sections:
         section_blind_spots = []
         for question in section.questions:
@@ -1168,13 +1176,13 @@ def compute_blind_spots(structure, responses) -> dict:
                     }
                     section_blind_spots.append(blind_spot_item)
                     all_blind_spots.append(blind_spot_item)
-        
+
         if section_blind_spots:
             blind_spots_by_section[section.id] = {
                 "count": len(section_blind_spots),
                 "items": section_blind_spots[:3],
             }
-    
+
     return {
         "by_section": blind_spots_by_section,
         "total_count": len(all_blind_spots),
@@ -1189,7 +1197,7 @@ def get_selected_option_explanation(question: Question, answer_value: str):
     """
     if not settings.ENHANCED_REPORT_EXPLANATIONS:
         return None
-    
+
     for option in question.options:
         if str(option.value) == str(answer_value):
             if option.detailed_explanation:
@@ -1624,7 +1632,7 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
 
     remediation_items = generate_prioritized_remediation(scores, structure)
     section_summaries = generate_section_summaries(scores, structure, responses)
-    
+
     blind_spots = compute_blind_spots(structure, responses)
 
     response_dict = {r.question_id: r for r in responses}

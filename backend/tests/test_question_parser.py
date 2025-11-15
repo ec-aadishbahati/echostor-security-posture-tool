@@ -71,9 +71,9 @@ def test_parse_option_explanation_with_full_details():
         "",
         "**Option 2: Another option**",
     ]
-    
+
     result = _parse_option_explanation(lines, 0)
-    
+
     assert result is not None
     assert result["definition"] == "This is the definition of the option."
     assert "75% of organizations" in result["industry_adoption_rate"]
@@ -90,9 +90,9 @@ def test_parse_option_explanation_with_minimal_details():
         "",
         "**Option 2: Another option**",
     ]
-    
+
     result = _parse_option_explanation(lines, 0)
-    
+
     assert result is not None
     assert result["definition"] == "Just a definition."
     assert result["industry_adoption_rate"] is None
@@ -106,9 +106,9 @@ def test_parse_option_explanation_no_detailed_explanation():
         "",
         "**Option 2: Another option**",
     ]
-    
+
     result = _parse_option_explanation(lines, 0)
-    
+
     assert result is None
 
 
@@ -123,9 +123,9 @@ def test_parse_option_explanation_case_insensitive():
         "",
         "**Option 2: Another option**",
     ]
-    
+
     result = _parse_option_explanation(lines, 0)
-    
+
     assert result is not None
     assert result["definition"] == "Definition text."
     assert result["recommendation"] == "Recommendation text."
@@ -145,9 +145,9 @@ def test_parse_option_explanation_emoji_agnostic():
         "",
         "**Option 2: Another option**",
     ]
-    
+
     result = _parse_option_explanation(lines, 0)
-    
+
     assert result is not None
     assert result["definition"] == "Definition without emoji."
     assert "50%" in result["industry_adoption_rate"]
@@ -157,16 +157,16 @@ def test_parse_option_explanation_emoji_agnostic():
 def test_loaded_structure_has_explanations():
     """Test that loaded structure includes detailed explanations for some options"""
     structure = load_assessment_structure()
-    
+
     options_with_explanations = 0
     total_options = 0
-    
+
     for section in structure.sections:
         for question in section.questions:
             for option in question.options:
                 total_options += 1
                 if option.detailed_explanation is not None:
                     options_with_explanations += 1
-    
+
     assert total_options > 0
     assert options_with_explanations >= 0
