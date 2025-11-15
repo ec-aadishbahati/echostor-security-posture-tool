@@ -2,10 +2,146 @@ import re
 
 from app.schemas.assessment import (
     AssessmentStructure,
+    OptionExplanation,
     Question,
     QuestionOption,
     Section,
 )
+
+
+def _parse_option_explanation(lines: list[str], start_idx: int) -> dict | None:
+    """
+    Parse detailed explanation for an option from markdown.
+
+    Handles various heading formats:
+    - **📋 What This Option Means:**
+    - **📊 Market Context & Benchmarks:**
+    - **🎯 Recommendations & Next Steps:**
+
+    Returns dict with explanation fields or None if no detailed explanation found.
+    """
+    explanation = {
+        "definition": None,
+        "why_matters": None,
+        "industry_adoption_rate": None,
+        "industry_benchmark": None,
+        "compliance_frameworks": None,
+        "recommendation": None,
+        "path_to_improvement": None,
+    }
+
+    has_detailed_explanation = False
+    current_section = None
+    current_content = []
+
+    i = start_idx
+    while i < len(lines):
+        line = lines[i].strip()
+
+        if line.startswith("**Option") or line.startswith("####"):
+            break
+
+        line_lower = (
+            line.lower().replace("📋", "").replace("📊", "").replace("🎯", "").strip()
+        )
+
+        if "what this option means" in line_lower or "what this means" in line_lower:
+            if current_section and current_content:
+                _store_explanation_content(
+                    explanation, current_section, current_content
+                )
+            current_section = "what_means"
+            current_content = []
+            has_detailed_explanation = True
+        elif "market context" in line_lower or "benchmarks" in line_lower:
+            if current_section and current_content:
+                _store_explanation_content(
+                    explanation, current_section, current_content
+                )
+            current_section = "market_context"
+            current_content = []
+            has_detailed_explanation = True
+        elif "recommendations" in line_lower or "next steps" in line_lower:
+            if current_section and current_content:
+                _store_explanation_content(
+                    explanation, current_section, current_content
+                )
+            current_section = "recommendations"
+            current_content = []
+            has_detailed_explanation = True
+        elif current_section and line and not line.startswith("*Basic Description:"):
+            current_content.append(line)
+
+        i += 1
+
+    if current_section and current_content:
+        _store_explanation_content(explanation, current_section, current_content)
+
+    return explanation if has_detailed_explanation else None
+
+
+def _store_explanation_content(explanation: dict, section: str, content: list[str]):
+    """Store parsed content into appropriate explanation fields"""
+    text = "\n".join(content).strip()
+
+    if section == "what_means":
+        has_structured_content = False
+        for line in content:
+            line_clean = line.strip()
+            if line_clean.startswith("- **Definition:**"):
+                explanation["definition"] = line_clean.replace(
+                    "- **Definition:**", ""
+                ).strip()
+                has_structured_content = True
+            elif line_clean.startswith("- **Why It Matters:**"):
+                explanation["why_matters"] = line_clean.replace(
+                    "- **Why It Matters:**", ""
+                ).strip()
+                has_structured_content = True
+
+        if not has_structured_content and text:
+            explanation["definition"] = text
+
+    elif section == "market_context":
+        has_structured_content = False
+        for line in content:
+            line_clean = line.strip()
+            if "**Industry Adoption Rate:**" in line_clean:
+                explanation["industry_adoption_rate"] = line_clean.split(
+                    "**Industry Adoption Rate:**"
+                )[1].strip()
+                has_structured_content = True
+            elif "**Industry Benchmark:**" in line_clean:
+                explanation["industry_benchmark"] = line_clean.split(
+                    "**Industry Benchmark:**"
+                )[1].strip()
+                has_structured_content = True
+            elif "**Compliance Frameworks:**" in line_clean:
+                explanation["compliance_frameworks"] = line_clean.split(
+                    "**Compliance Frameworks:**"
+                )[1].strip()
+                has_structured_content = True
+
+        if not has_structured_content and text:
+            explanation["industry_adoption_rate"] = text
+
+    elif section == "recommendations":
+        has_structured_content = False
+        for line in content:
+            line_clean = line.strip()
+            if "**If You Select This Option:**" in line_clean:
+                explanation["recommendation"] = line_clean.split(
+                    "**If You Select This Option:**"
+                )[1].strip()
+                has_structured_content = True
+            elif "**Path to Improvement:**" in line_clean:
+                explanation["path_to_improvement"] = line_clean.split(
+                    "**Path to Improvement:**"
+                )[1].strip()
+                has_structured_content = True
+
+        if not has_structured_content and text:
+            explanation["recommendation"] = text
 
 
 def parse_assessment_questions(md_content: str) -> AssessmentStructure:
@@ -92,10 +228,12 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                 option_label = option_match.group(2)
 
                 description = ""
+                detailed_explanation = _parse_option_explanation(lines, i + 1)
+
                 j = i + 1
                 while (
                     j < len(lines)
-                    and not lines[j].strip().startswith("**")
+                    and not lines[j].strip().startswith("**Option")
                     and not lines[j].strip().startswith("####")
                 ):
                     desc_line = lines[j].strip()
@@ -118,6 +256,7 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                         "value": option_value,
                         "label": option_label,
                         "description": description.strip(),
+                        "detailed_explanation": detailed_explanation,
                     }
                 )
 
@@ -134,14 +273,29 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
     for section_data in sections:
         questions = []
         for q_data in section_data["questions"]:
-            options = [
-                QuestionOption(
-                    value=opt["value"],
-                    label=opt["label"],
-                    description=opt["description"],
+            options = []
+            for opt in q_data["options"]:
+                detailed_explanation = None
+                if opt.get("detailed_explanation"):
+                    exp_data = opt["detailed_explanation"]
+                    detailed_explanation = OptionExplanation(
+                        definition=exp_data.get("definition"),
+                        why_matters=exp_data.get("why_matters"),
+                        industry_adoption_rate=exp_data.get("industry_adoption_rate"),
+                        industry_benchmark=exp_data.get("industry_benchmark"),
+                        compliance_frameworks=exp_data.get("compliance_frameworks"),
+                        recommendation=exp_data.get("recommendation"),
+                        path_to_improvement=exp_data.get("path_to_improvement"),
+                    )
+
+                options.append(
+                    QuestionOption(
+                        value=opt["value"],
+                        label=opt["label"],
+                        description=opt["description"],
+                        detailed_explanation=detailed_explanation,
+                    )
                 )
-                for opt in q_data["options"]
-            ]
 
             question = Question(
                 id=q_data["id"],

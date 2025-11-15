@@ -73,6 +73,7 @@ class Settings(BaseSettings):
 
     SCORING_V2_ENABLED: bool = False
     QUESTION_LIBRARY_VERSION: str = "v1.0"
+    ENHANCED_REPORT_EXPLANATIONS: bool = False
 
     @model_validator(mode="after")
     def validate_required_settings(self):
