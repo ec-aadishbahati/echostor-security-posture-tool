@@ -1004,6 +1004,9 @@
 
 ## Section 4: Identity & Access Management (IAM)
 
+
+**Option 9: Not sure**
+*Basic Description:* Unclear or unknown
 **Suggested Respondents:** Directory/IAM Architect
 
 ### Subsection 4.1: Directory Architecture (AD/AAD/IDaaS)
@@ -1036,6 +1039,9 @@
 **Option 6: Other**
 *Basic Description:* Different identity provider
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 4.1.2
 
@@ -1058,6 +1064,9 @@
 
 **Option 4: 6+**
 *Basic Description:* Many identity stores
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.1.3
@@ -1096,6 +1105,9 @@
 **Option 4: 76-100%**
 *Basic Description:* Nearly all applications centralized
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 4.1.5
 
@@ -1129,6 +1141,9 @@
 
 **Option 3: Not synchronized**
 *Basic Description:* No identity synchronization
+
+**Option 4: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.1.7
@@ -1171,6 +1186,9 @@
 
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 ### Subsection 4.2: Access Control & Authorization
 
@@ -1198,6 +1216,9 @@
 
 **Option 5: Mixed approach**
 *Basic Description:* Combination of access models
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.2.2
@@ -1242,6 +1263,9 @@
 *Basic Description:* Not currently managed
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 4.2.4
 
@@ -1284,6 +1308,9 @@
 **Option 6: Not currently managed**
 *Basic Description:* Not currently managed
 
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.2.6
@@ -1345,6 +1372,9 @@
 *Basic Description:* Not currently managed
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 4.3.3
 
@@ -1370,6 +1400,9 @@
 
 **Option 5: Never**
 *Basic Description:* No formal reviews
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.3.4
@@ -1399,6 +1432,9 @@
 **Option 6: Not currently managed**
 *Basic Description:* Not currently managed
 
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.3.5
@@ -1439,6 +1475,9 @@
 
 **Option 5: No defined timeframe**
 *Basic Description:* No specific timeline
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.3.7
@@ -1500,6 +1539,9 @@
 *Basic Description:* MFA not currently implemented
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 4.4.3
 
@@ -1522,6 +1564,9 @@
 
 **Option 4: 76-100%**
 *Basic Description:* Nearly all users have MFA
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 4.4.4
@@ -1581,6 +1626,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular risk assessments help identify and prioritize cybersecurity threats and vulnerabilities.
 
 **Answer Options:**
@@ -1698,6 +1745,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular updates ensure risk assessments reflect current threat landscape and business changes.
 
 **Answer Options:**
@@ -1921,6 +1970,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular updates ensure BIA reflects current business operations and dependencies.
 
 **Answer Options:**
@@ -2081,6 +2132,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Frequent updates ensure inventory accuracy in dynamic IT environments.
 
 **Answer Options:**
@@ -2528,6 +2581,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular rule reviews prevent rule creep and maintain security effectiveness.
 
 **Answer Options:**
@@ -2968,6 +3023,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Frequent signature updates ensure protection against the latest threats.
 
 **Answer Options:**
@@ -3207,6 +3264,8 @@
 
 **Weight:** 1
 
+
+**Scale:** frequency_review
 **Explanation:** Regular configuration reviews ensure ongoing security effectiveness.
 
 **Answer Options:**
@@ -3759,6 +3818,9 @@
 
 ## Section 8: Application Security
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 **Suggested Respondents:** DevSecOps Lead, Application Security Architect
 
 ### Subsection 8.1: Secure Development Lifecycle
@@ -3795,6 +3857,9 @@
 
 **Option 4:** Never
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 8.1.3
 
@@ -3820,6 +3885,9 @@
 **Option 5: Not performed**
 *Basic Description:* SAST not performed
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.1.4
@@ -3867,6 +3935,9 @@
 **Option 3:** Dependency management tools
 
 **Option 4:** No management
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.1.7
@@ -3992,6 +4063,9 @@
 **Option 4:** No protection
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 ### Subsection 8.3: API Security
 
@@ -4022,6 +4096,9 @@
 **Option 6: Not currently secured**
 *Basic Description:* No specific security measures
 
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.3.2
@@ -4069,6 +4146,9 @@
 **Option 3:** Parameter versioning
 
 **Option 4:** No versioning
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.3.5
@@ -4129,6 +4209,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 8.4.2
 
@@ -4157,6 +4240,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 8.4.3
 
@@ -4181,6 +4267,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.4.4
@@ -4209,6 +4298,9 @@
 **Option 5: Not applicable**
 *Basic Description:* Not applicable to our organization
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.4.5
@@ -4241,6 +4333,9 @@
 *Basic Description:* Not currently managed
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 8.4.6
 
@@ -4268,6 +4363,9 @@
 **Option 5: Not applicable**
 *Basic Description:* Not applicable to our organization
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 8.4.7
@@ -4303,6 +4401,9 @@
 
 ## Section 9: Cloud & Container Security
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 **Suggested Respondents:** Cloud Security Architect
 
 ### Subsection 9.1: Cloud Infrastructure Security
@@ -4337,6 +4438,9 @@
 **Option 7: Not applicable**
 *Basic Description:* Not applicable to our organization
 
+
+**Option 8: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 9.1.2
@@ -4381,6 +4485,9 @@
 *Basic Description:* No specific security measures
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 9.1.4
 
@@ -4407,6 +4514,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 9.1.5
 
@@ -4432,6 +4542,9 @@
 **Option 5: Not monitored**
 *Basic Description:* Not currently monitored
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 9.1.6
@@ -4467,6 +4580,9 @@
 **Option 4:** Cost-first approach
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 ### Subsection 9.2: Cloud Identity & Access Management
 
@@ -4497,6 +4613,9 @@
 **Option 6: Not currently managed**
 *Basic Description:* Not currently managed
 
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 9.2.2
@@ -4541,6 +4660,9 @@
 *Basic Description:* No specific security measures
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 9.2.4
 
@@ -4560,6 +4682,9 @@
 
 **Option 4:** Never
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 #### Question 9.2.5
 
@@ -4639,6 +4764,9 @@
 *Basic Description:* No specific security measures
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 9.3.3
 
@@ -4664,6 +4792,9 @@
 **Option 5: Not applicable**
 *Basic Description:* Not applicable to our organization
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 9.3.4
@@ -4693,6 +4824,9 @@
 **Option 6: Not currently secured**
 *Basic Description:* No specific security measures
 
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 9.3.5
@@ -4735,6 +4869,9 @@
 
 ## Section 10: Incident Response & Resilience
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 **Suggested Respondents:** CISO, Incident Response Manager
 
 ### Subsection 10.1: Incident Response Planning
@@ -4759,6 +4896,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular updates ensure the plan remains current with threats and organizational changes.
 
 **Answer Options:**
@@ -4772,6 +4911,9 @@
 **Option 4:** As needed
 
 **Option 5:** Never updated
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 10.1.3
@@ -4831,6 +4973,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 12: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 10.1.5
 
@@ -4850,6 +4995,9 @@
 
 **Option 4:** Never
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 #### Question 10.1.6
 
@@ -4909,6 +5057,9 @@
 *Basic Description:* Not currently implemented
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 10.2.2
 
@@ -4929,6 +5080,9 @@
 **Option 4:** > 24 hours
 
 **Option 5:** No target
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 10.2.3
@@ -4966,6 +5120,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 10.2.5
@@ -5005,6 +5162,9 @@
 
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 ### Subsection 10.3: Incident Recovery & Lessons Learned
 
@@ -5039,6 +5199,9 @@
 **Option 3:** Third-party assessment
 
 **Option 4:** No validation
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 10.3.3
@@ -5091,6 +5254,9 @@
 *Basic Description:* Not currently implemented
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 10.3.6
 
@@ -5135,6 +5301,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular updates ensure the plan remains current with business changes and lessons learned.
 
 **Answer Options:**
@@ -5678,6 +5846,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular reassessment ensures ongoing vendor security compliance.
 
 **Answer Options:**
@@ -6889,6 +7059,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular log reviews help detect unauthorized access attempts and security incidents.
 
 **Answer Options:**
@@ -7356,6 +7528,9 @@
 
 ## Section 15: Monitoring & Detection
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 **Suggested Respondents:** SOC Lead, Security Analyst
 
 ### Subsection 15.1: Security Monitoring
@@ -7399,6 +7574,9 @@
 *Basic Description:* Not currently deployed
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 15.1.3
 
@@ -7432,6 +7610,9 @@
 
 **Option 4:** No correlation
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 15.1.5
 
@@ -7452,6 +7633,9 @@
 **Option 4:** > 24 hours
 
 **Option 5:** Not measured
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 15.1.6
@@ -7497,6 +7681,9 @@
 
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 ### Subsection 15.2: Threat Detection
 
@@ -7539,6 +7726,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 15.2.3
 
@@ -7558,6 +7748,9 @@
 
 **Option 4:** Never
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 #### Question 15.2.4
 
@@ -7580,6 +7773,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 15.2.5
@@ -7618,6 +7814,9 @@
 *Basic Description:* Not currently implemented
 
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 ### Subsection 15.3: Log Management
@@ -7661,6 +7860,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 15.3.3
 
@@ -7683,6 +7885,9 @@
 **Option 5:** > 1 year
 
 **Option 6:** Varies by log type
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 15.3.4
@@ -7710,6 +7915,9 @@
 *Basic Description:* Not applicable to our organization
 
 
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 15.3.5
 
@@ -7732,6 +7940,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 15.3.6
@@ -7777,6 +7988,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_monitoring
 **Explanation:** Frequent scanning ensures vulnerabilities are identified quickly as they emerge.
 
 **Answer Options:**
@@ -7792,6 +8005,9 @@
 **Option 5:** Annually
 
 **Option 6:** Never
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.1.3
@@ -7818,6 +8034,9 @@
 **Option 5: Not applicable**
 *Basic Description:* Not applicable to our organization
 
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.1.4
@@ -7852,6 +8071,9 @@
 
 **Option 4:** Never
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 16.1.6
 
@@ -7874,6 +8096,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.1.7
@@ -7929,6 +8154,9 @@
 *Basic Description:* Not currently implemented
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 16.2.3
 
@@ -7948,6 +8176,9 @@
 
 **Option 4:** No defined timeframes
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 #### Question 16.2.4
 
@@ -7970,6 +8201,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.2.5
@@ -8015,6 +8249,9 @@
 
 
 
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 ### Subsection 16.3: Patch Management
 
@@ -8058,6 +8295,9 @@
 *Basic Description:* Not currently implemented
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 16.3.3
 
@@ -8080,6 +8320,9 @@
 **Option 4:** Within 1 month
 
 **Option 5:** No defined timeline
+
+**Option 6: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.3.4
@@ -8106,6 +8349,9 @@
 *Basic Description:* Not currently implemented
 
 
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
+
 
 #### Question 16.3.5
 
@@ -8126,6 +8372,9 @@
 **Option 3:** Manual only
 
 **Option 4:** Varies by system type
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.3.6
@@ -8151,6 +8400,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.3.7
@@ -8182,6 +8434,9 @@
 **Option 6: Not currently managed**
 *Basic Description:* Not currently managed
 
+
+**Option 7: Not sure**
+*Basic Description:* Unclear or unknown
 
 
 #### Question 16.3.8
@@ -8437,6 +8692,8 @@
 
 **Type:** multiple_choice
 
+
+**Scale:** frequency_review
 **Explanation:** Regular internal audits help identify issues before external audits or incidents occur.
 
 **Answer Options:**
@@ -8699,6 +8956,9 @@
 
 ## Section 18: OT/ICS & IoT Security
 
+
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
 **Suggested Respondents:** OT Security Lead, Industrial Control Systems Engineer
 
 ### Subsection 18.1: Operational Technology Security
@@ -8742,6 +9002,9 @@
 **Option 4: Not currently implemented**
 *Basic Description:* Not currently implemented
 
+
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
 
 
 #### Question 18.1.3
@@ -8790,6 +9053,9 @@
 *Basic Description:* Not currently managed
 
 
+**Option 7: Not applicable**
+*Basic Description:* Does not apply to our organization
+
 
 #### Question 18.1.5
 
@@ -8810,6 +9076,9 @@
 **Option 3:** Passive monitoring only
 
 **Option 4:** No monitoring
+
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
 
 
 #### Question 18.1.6
@@ -8877,6 +9146,9 @@
 *Basic Description:* No specific security measures
 
 
+**Option 7: Not applicable**
+*Basic Description:* Does not apply to our organization
+
 
 #### Question 18.2.3
 
@@ -8897,6 +9169,9 @@
 **Option 3:** Manual tracking
 
 **Option 4:** No inventory
+
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
 
 
 #### Question 18.2.4
@@ -8929,6 +9204,9 @@
 *Basic Description:* Not currently managed
 
 
+**Option 7: Not applicable**
+*Basic Description:* Does not apply to our organization
+
 
 #### Question 18.2.5
 
@@ -8956,6 +9234,9 @@
 
 ## Section 19: AI/ML & Machine Learning Security
 
+
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
 **Suggested Respondents:** AI/ML Security Lead, Data Science Lead
 
 ### Subsection 19.1: Model Security & Governance
@@ -9028,6 +9309,9 @@
 *Basic Description:* Not currently implemented
 
 
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
+
 
 #### Question 19.1.4
 
@@ -9048,6 +9332,9 @@
 **Option 3:** Only for critical models
 
 **Option 4:** No testing
+
+**Option 5: Not applicable**
+*Basic Description:* Does not apply to our organization
 
 
 #### Question 19.1.5
@@ -9079,6 +9366,9 @@
 **Option 6: Not currently secured**
 *Basic Description:* No specific security measures
 
+
+**Option 7: Not applicable**
+*Basic Description:* Does not apply to our organization
 
 
 #### Question 19.1.6
@@ -9142,6 +9432,9 @@
 *Basic Description:* No specific security measures
 
 
+**Option 7: Not applicable**
+*Basic Description:* Does not apply to our organization
+
 
 #### Question 19.2.2
 
@@ -9200,6 +9493,9 @@
 **Option 6: Not currently secured**
 *Basic Description:* No specific security measures
 
+
+**Option 7: Not applicable**
+*Basic Description:* Does not apply to our organization
 
 
 #### Question 19.2.4
