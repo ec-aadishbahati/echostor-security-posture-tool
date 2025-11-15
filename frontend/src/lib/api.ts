@@ -97,6 +97,10 @@ export const assessmentAPI = {
   startAssessmentWithSections: (selectedSectionIds: string[]) =>
     api.post('/api/assessment/start', { selected_section_ids: selectedSectionIds }),
 
+  getTiers: () => api.get('/api/assessment/tiers'),
+
+  startWithTier: (data: { tier: string }) => api.post('/api/assessment/start-with-tier', data),
+
   getCurrentAssessment: () => api.get('/api/assessment/current'),
 
   getLatestAssessment: () => api.get('/api/assessment/latest'),
