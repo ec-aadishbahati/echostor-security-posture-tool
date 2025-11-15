@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_user
+from app.core.assessment_tiers import ASSESSMENT_TIERS, get_tier_sections
 from app.core.config import settings
 from app.core.database import get_db
 from app.middleware.rate_limit import limiter
@@ -530,3 +531,50 @@ async def save_consultation_interest(
 
     db.commit()
     return {"message": "Consultation preferences saved"}
+
+
+@router.get("/tiers")
+async def get_assessment_tiers():
+    """Get available assessment tiers"""
+    return {
+        "tiers": {
+            tier_id: {
+                "name": tier_info["name"],
+                "description": tier_info["description"],
+                "duration": tier_info["duration"],
+                "total_questions": tier_info["total_questions"],
+            }
+            for tier_id, tier_info in ASSESSMENT_TIERS.items()
+        }
+    }
+
+
+@router.post("/start-with-tier")
+async def start_assessment_with_tier(
+    request: Request,
+    tier_request: dict,
+    current_user: CurrentUserResponse = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Start assessment with selected tier"""
+
+    tier = tier_request.get("tier")
+    if tier not in ASSESSMENT_TIERS:
+        raise HTTPException(status_code=400, detail="Invalid tier")
+
+    selected_sections = get_tier_sections(tier)
+
+    assessment = Assessment(
+        user_id=current_user.id,
+        status="in_progress",
+        started_at=datetime.now(UTC),
+        expires_at=datetime.now(UTC) + timedelta(days=30),
+        selected_section_ids=selected_sections,
+        metadata={"tier": tier},  # Track which tier was selected
+    )
+
+    db.add(assessment)
+    db.commit()
+    db.refresh(assessment)
+
+    return {"data": assessment}
