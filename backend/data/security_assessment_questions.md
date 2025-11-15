@@ -106,16 +106,95 @@
 
 **Question:** Does your organization have a formally documented cybersecurity strategy?
 
-**Type:** yes_no
+**Type:** multiple_choice
 
 **Weight:** 5
+
+**Scale:** governance
 
 **Explanation:** A documented cybersecurity strategy provides clear direction and alignment with business objectives.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
-*Note: If you select 'No', consider this an opportunity for security improvement.*
+
+**Option 1: Documented, approved, and maintained**
+*Basic Description:* Current, approved strategy with regular updates
+
+**📋 What This Option Means:**
+- **Definition:** Organization has a written cybersecurity strategy that has been formally approved by leadership and is actively maintained with regular updates.
+- **Why It Matters:** Demonstrates mature governance with clear strategic direction, leadership buy-in, and commitment to keeping strategy current with evolving threats and business needs.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 40% of organizations have fully documented and maintained strategies
+- **Industry Benchmark:** Best practice for enterprise organizations and regulated industries
+- **Compliance Frameworks:** Meets ISO 27001, NIST CSF, and SOC 2 requirements for strategic planning
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Ensure strategy is reviewed at least annually and communicated effectively across the organization.
+- **Path to Improvement:** Focus on measuring strategy effectiveness and demonstrating ROI to stakeholders.
+
+**Option 2: Documented but not approved or maintained**
+*Basic Description:* Written strategy but outdated or not formally approved
+
+**📋 What This Option Means:**
+- **Definition:** A cybersecurity strategy document exists but lacks formal leadership approval or has not been updated recently, making it potentially outdated or misaligned with current business objectives.
+- **Why It Matters:** Indicates strategy development effort but lack of governance maturity. Strategy may not reflect current priorities or have necessary leadership support for implementation.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 25% of organizations have documented but unmaintained strategies
+- **Industry Benchmark:** Common in growing organizations transitioning to mature security programs
+- **Compliance Frameworks:** Partially meets requirements but may not satisfy audit expectations for currency
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Prioritize getting formal leadership approval and establishing a regular review cycle (at least annually).
+- **Path to Improvement:** Update strategy to reflect current business objectives and threat landscape, then seek formal approval.
+
+**Option 3: Informal understanding (not documented)**
+*Basic Description:* Strategy exists in practice but not written down
+
+**📋 What This Option Means:**
+- **Definition:** Security direction and priorities are understood by the security team but not formally documented, relying on tribal knowledge and informal communication.
+- **Why It Matters:** Creates risk of inconsistent interpretation, lack of accountability, and difficulty onboarding new team members. Strategy cannot be effectively communicated to stakeholders or measured for effectiveness.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 20% of organizations operate with informal strategies
+- **Industry Benchmark:** Common in small organizations but considered immature for mid-size and enterprise
+- **Compliance Frameworks:** Does not meet most regulatory requirements for documented security programs
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Document current informal strategy as a first step. Engage leadership to formalize and approve the documented strategy.
+- **Path to Improvement:** Create a concise strategy document (5-10 pages) covering objectives, scope, governance, and key initiatives.
+
+**Option 4: No strategy in place**
+*Basic Description:* No cybersecurity strategy exists
+
+**📋 What This Option Means:**
+- **Definition:** Organization has no defined cybersecurity strategy, either formal or informal, resulting in reactive security posture without clear direction or priorities.
+- **Why It Matters:** Represents significant governance gap and risk. Security investments and activities lack strategic alignment, making it difficult to prioritize resources or demonstrate value to leadership.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 10% of organizations have no defined strategy
+- **Industry Benchmark:** Considered a critical security governance failure
+- **Compliance Frameworks:** Fails most regulatory requirements and industry standards
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Developing a cybersecurity strategy should be immediate priority. Start with a simple one-page strategic plan covering key objectives, scope, and governance.
+- **Path to Improvement:** Engage executive leadership to define security vision and objectives aligned with business goals.
+
+**Option 5: Not sure**
+*Basic Description:* Unclear if strategy exists or its status
+
+**📋 What This Option Means:**
+- **Definition:** Respondent is uncertain whether a cybersecurity strategy exists or what its current status is, indicating lack of visibility or communication about strategic security direction.
+- **Why It Matters:** Suggests communication gap or lack of engagement with security governance. Even if strategy exists, it's not effectively communicated to stakeholders.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 5% of respondents are unsure about strategy existence
+- **Industry Benchmark:** Indicates need for improved security governance communication
+- **Compliance Frameworks:** Uncertainty about strategy existence is a red flag for auditors
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Investigate with security leadership whether strategy exists. If it does, improve communication and accessibility. If not, prioritize strategy development.
+- **Path to Improvement:** Establish clear communication channels for security governance and strategic direction.
 
 
 #### Question 1.1.2
@@ -124,11 +203,29 @@
 
 **Type:** multiple_choice
 
+**Scale:** frequency_review
+
 **Explanation:** Regular strategy reviews ensure alignment with evolving threats and business changes.
 
 **Answer Options:**
 
-**Option 1: Annually**
+**Option 1: Quarterly**
+*Basic Description:* Every three months review cycle
+
+**📋 What This Option Means:**
+- **Definition:** Cybersecurity strategy is formally reviewed and updated every three months, providing frequent alignment checks with business objectives and rapid response to threat landscape changes.
+- **Why It Matters:** Quarterly reviews demonstrate mature governance and proactive risk management. Enables rapid adaptation to emerging threats and business changes.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 10% of organizations review quarterly
+- **Industry Benchmark:** Best practice for high-risk industries and rapidly evolving organizations
+- **Compliance Frameworks:** Exceeds most regulatory requirements, aligns with agile security governance models
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Ensure reviews remain substantive and don't become administrative overhead. Focus on actionable insights and strategic adjustments.
+- **Path to Improvement:** Maintain this cadence and focus on measuring strategy effectiveness through KPIs.
+
+**Option 2: Annually**
 *Basic Description:* Once per year review cycle
 
 **📋 What This Option Means:**
@@ -142,51 +239,35 @@
 
 **🎯 Recommendations & Next Steps:**
 - **If You Select This Option:** Consider supplementing with quarterly threat landscape reviews and ad-hoc reviews after major business changes or security incidents.
-- **Path to Improvement:** Move to bi-annual reviews for more dynamic threat response, especially in high-risk industries.
+- **Path to Improvement:** Move to bi-annual or quarterly reviews for more dynamic threat response, especially in high-risk industries.
 
-**Option 2: Bi-annually**
-*Basic Description:* Twice per year review cycle
-
-**📋 What This Option Means:**
-- **Definition:** Cybersecurity strategy is formally reviewed and updated twice per year, providing more frequent alignment checks with business objectives and threat landscape changes.
-- **Why It Matters:** Bi-annual reviews strike a balance between staying current with threats and avoiding review fatigue. Allows for mid-year course corrections based on emerging threats or business changes.
-
-**📊 Market Context & Benchmarks:**
-- **Industry Adoption Rate:** 25% of organizations review bi-annually
-- **Industry Benchmark:** Best practice for medium-risk industries and growing organizations
-- **Compliance Frameworks:** Exceeds most regulatory requirements, Aligns with NIST CSF continuous improvement principles
-
-**🎯 Recommendations & Next Steps:**
-- **If You Select This Option:** Ensure reviews are substantive and not just administrative exercises. Focus one review on strategic alignment and another on tactical effectiveness.
-- **Path to Improvement:** Consider quarterly reviews for high-risk industries or during periods of rapid business change.
-
-**Option 3: As needed**
-*Basic Description:* Reactive reviews based on events
+**Option 3: Only after major changes/incidents**
+*Basic Description:* Event-driven reviews only
 
 **📋 What This Option Means:**
-- **Definition:** Cybersecurity strategy reviews are triggered by specific events such as security incidents, major business changes, regulatory updates, or significant threat landscape shifts.
+- **Definition:** Cybersecurity strategy reviews are triggered only by specific events such as security incidents, major business changes, regulatory updates, or significant threat landscape shifts.
 - **Why It Matters:** Event-driven reviews can be highly relevant and timely, but may result in inconsistent review frequency and potential gaps during quiet periods. Risk of reactive rather than proactive strategy management.
 
 **📊 Market Context & Benchmarks:**
 - **Industry Adoption Rate:** 15% of organizations use purely event-driven reviews
 - **Industry Benchmark:** Common in resource-constrained organizations but not considered best practice
-- **Compliance Frameworks:** May not meet regulatory requirements for regular reviews, Could satisfy requirements if events trigger sufficient review frequency
+- **Compliance Frameworks:** May not meet regulatory requirements for regular reviews, could satisfy requirements if events trigger sufficient review frequency
 
 **🎯 Recommendations & Next Steps:**
 - **If You Select This Option:** Establish clear criteria for what events trigger reviews and ensure minimum annual review regardless of events. Document review triggers and maintain review schedule visibility.
 - **Path to Improvement:** Transition to scheduled reviews (at least annually) supplemented by event-driven reviews for major changes.
 
-**Option 4: Never**
-*Basic Description:* No formal review process
+**Option 4: No formal review schedule**
+*Basic Description:* No regular review process
 
 **📋 What This Option Means:**
-- **Definition:** The organization does not have a formal process for reviewing and updating its cybersecurity strategy, meaning the strategy remains static after initial creation.
+- **Definition:** The organization does not have a formal process for reviewing and updating its cybersecurity strategy, meaning the strategy remains static after initial creation or reviews happen inconsistently without defined triggers.
 - **Why It Matters:** Lack of strategy reviews creates significant risk of strategy becoming outdated, misaligned with business objectives, and ineffective against evolving threats. This is a critical governance gap.
 
 **📊 Market Context & Benchmarks:**
-- **Industry Adoption Rate:** Less than 5% of mature organizations have no review process
+- **Industry Adoption Rate:** Less than 10% of organizations have no review process
 - **Industry Benchmark:** Considered a significant security governance failure
-- **Compliance Frameworks:** Fails most regulatory requirements, Does not meet ISO 27001, SOX, or other major frameworks
+- **Compliance Frameworks:** Fails most regulatory requirements, does not meet ISO 27001, SOX, or other major frameworks
 
 **🎯 Recommendations & Next Steps:**
 - **If You Select This Option:** Immediately establish at minimum an annual strategy review process. Assign clear ownership, define review scope, and document review outcomes. This is a high-priority remediation item.
@@ -290,21 +371,53 @@
 - **If You Select This Option:** Establish clear delegation to executive leadership for day-to-day execution while maintaining board strategic oversight. Ensure board has adequate security expertise or advisory support.
 - **Path to Improvement:** Transition to executive accountability (CEO/CISO) with regular board reporting and oversight rather than direct board execution responsibility.
 
-**Option 5: Other**
-*Basic Description:* Different role or shared responsibility
+**Option 5: Shared between multiple executives**
+*Basic Description:* Distributed accountability across leadership team
 
 **📋 What This Option Means:**
-- **Definition:** Cybersecurity strategy execution accountability is assigned to a different role (such as COO, CRO) or distributed across multiple executives without clear primary accountability.
-- **Why It Matters:** Alternative accountability structures may work in specific contexts but risk unclear ownership, coordination challenges, and potential gaps in execution oversight.
+- **Definition:** Cybersecurity strategy execution accountability is formally distributed across multiple executives (e.g., CISO for technical execution, CFO for budget, CIO for IT integration), with defined roles and coordination mechanisms.
+- **Why It Matters:** Shared accountability can leverage diverse expertise and ensure cross-functional alignment, but requires strong coordination and clear role definition to avoid gaps or conflicts.
 
 **📊 Market Context & Benchmarks:**
-- **Industry Adoption Rate:** 15% of organizations use alternative accountability models
-- **Industry Benchmark:** Varies by industry and organizational structure
-- **Compliance Frameworks:** May meet requirements if clearly defined, Risk of regulatory questions about accountability clarity
+- **Industry Adoption Rate:** 18% of organizations use formal shared accountability models
+- **Industry Benchmark:** Increasingly common in matrix organizations and complex enterprises
+- **Compliance Frameworks:** Can meet requirements if clearly documented with defined roles and coordination
 
 **🎯 Recommendations & Next Steps:**
-- **If You Select This Option:** Clearly document accountability structure, define roles and responsibilities, and establish coordination mechanisms. Ensure primary accountability is clearly identified even in shared models.
-- **Path to Improvement:** Consider consolidating accountability under single executive (CISO/CIO/CEO) for clearer ownership and more effective execution.
+- **If You Select This Option:** Document accountability matrix clearly, establish coordination mechanisms (steering committee, regular sync meetings), and define escalation paths for conflicts. Ensure one executive has tie-breaking authority.
+- **Path to Improvement:** Formalize shared accountability with written RACI matrix and regular governance reviews to ensure effective coordination.
+
+**Option 6: No clear owner / Unclear**
+*Basic Description:* Accountability not clearly defined
+
+**📋 What This Option Means:**
+- **Definition:** There is no clearly defined executive accountability for cybersecurity strategy execution, or accountability is ambiguous with multiple potential owners but no formal assignment.
+- **Why It Matters:** Lack of clear accountability is a critical governance failure. Creates risk of strategy not being executed, resources not being allocated, and no one taking ownership of security outcomes.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 5% of organizations lack clear accountability (often after leadership transitions)
+- **Industry Benchmark:** Considered a critical security governance gap
+- **Compliance Frameworks:** Fails most regulatory requirements, major audit finding
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Immediately prioritize establishing clear accountability. Engage executive leadership to assign primary accountability (typically CISO, CIO, or CEO) with documented authority and responsibilities.
+- **Path to Improvement:** This is a high-priority remediation item. Establish clear accountability within 30 days and document in security governance charter.
+
+**Option 7: Other**
+*Basic Description:* Different role or structure
+
+**📋 What This Option Means:**
+- **Definition:** Cybersecurity strategy execution accountability is assigned to a different role not listed above (such as COO, CRO, General Counsel) or uses an alternative governance structure.
+- **Why It Matters:** Alternative accountability structures may work in specific organizational contexts but should be clearly defined and appropriate for the organization's risk profile.
+
+**📊 Market Context & Benchmarks:**
+- **Industry Adoption Rate:** 7% of organizations use alternative accountability models
+- **Industry Benchmark:** Varies by industry and organizational structure
+- **Compliance Frameworks:** May meet requirements if clearly defined and appropriate for risk profile
+
+**🎯 Recommendations & Next Steps:**
+- **If You Select This Option:** Clearly document accountability structure, define roles and responsibilities, and ensure the assigned executive has appropriate authority and expertise (or access to security expertise).
+- **Path to Improvement:** Evaluate whether alternative structure is optimal or if transitioning to standard CISO/CIO accountability would improve effectiveness.
 
 
 #### Question 1.1.5
@@ -402,6 +515,8 @@
 
 **Type:** multiple_choice
 
+**Scale:** frequency_review
+
 **Explanation:** Regular reviews ensure policies remain current with threats, regulations, and business changes.
 
 **Answer Options:**
@@ -412,14 +527,11 @@
 **Option 2: Annually**
 *Basic Description:* Once per year review
 
-**Option 3: Bi-annually**
-*Basic Description:* Twice per year review
-
-**Option 4: As needed**
+**Option 3: Only after major changes/incidents**
 *Basic Description:* Event-driven reviews only
 
-**Option 5: Never**
-*Basic Description:* No formal review process
+**Option 4: No formal review schedule**
+*Basic Description:* No regular review process
 
 
 #### Question 1.2.3
@@ -443,6 +555,9 @@
 
 **Option 4: 3+ years**
 *Basic Description:* Outdated policies requiring updates
+
+**Option 5: Unknown**
+*Basic Description:* Policy age not tracked or unclear
 
 
 #### Question 1.2.4
@@ -479,6 +594,8 @@
 
 **Type:** multiple_choice
 
+**Scale:** implementation
+
 **Explanation:** Compliance tracking ensures policies are being followed and identifies gaps.
 
 **Answer Options:**
@@ -489,8 +606,14 @@
 **Option 2: Manual tracking**
 *Basic Description:* Human-driven compliance checks
 
-**Option 3: No tracking**
+**Option 3: Combination of automated + manual**
+*Basic Description:* Hybrid approach using both methods
+
+**Option 4: No tracking**
 *Basic Description:* No compliance monitoring in place
+
+**Option 5: Not sure**
+*Basic Description:* Tracking method unclear
 
 
 #### Question 1.2.7
@@ -516,21 +639,26 @@
 
 **Type:** multiple_choice
 
+**Scale:** coverage
+
 **Explanation:** Industry benchmarks suggest 10-15% of IT budget should be allocated to cybersecurity.
 
 **Answer Options:**
 
-**Option 1: 0-4.9%**
-*Basic Description:* Below industry minimum
+**Option 1: 15.0%+**
+*Basic Description:* Above average investment
 
-**Option 2: 5.0-9.9%**
-*Basic Description:* Basic security investment
-
-**Option 3: 10.0-14.9%**
+**Option 2: 10.0-14.9%**
 *Basic Description:* Industry standard allocation
 
-**Option 4: 15.0%+**
-*Basic Description:* Above average investment
+**Option 3: 5.0-9.9%**
+*Basic Description:* Basic security investment
+
+**Option 4: 0-4.9%**
+*Basic Description:* Below industry minimum
+
+**Option 5: Not sure**
+*Basic Description:* Budget allocation not tracked or unclear
 
 
 #### Question 1.3.2
@@ -640,14 +768,22 @@
 
 **Question:** Do you have established cybersecurity KPIs?
 
-**Type:** yes_no
+**Type:** multiple_choice
+
+**Scale:** implementation
 
 **Explanation:** KPIs provide measurable indicators of cybersecurity program effectiveness.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
-*Note: If you select 'No', consider this an opportunity for security improvement.*
+
+**Option 1: Yes, formal KPIs with regular tracking**
+*Basic Description:* Documented KPIs with consistent measurement
+
+**Option 2: Yes, informal metrics tracked**
+*Basic Description:* Some metrics tracked but not formalized
+
+**Option 3: No KPIs established**
+*Basic Description:* No formal or informal KPI tracking
 
 
 #### Question 1.4.2
