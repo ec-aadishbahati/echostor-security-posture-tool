@@ -1142,6 +1142,67 @@ def format_responses_for_ai(responses: list[dict]) -> str:
     return "\n".join(formatted)
 
 
+def compute_blind_spots(structure, responses) -> dict:
+    """
+    Compute blind spots by scanning responses for unknown/not_sure answers.
+    Returns dict with summary counts per section and list of blind spot items.
+    """
+    response_dict = {r.question_id: r for r in responses}
+    blind_spots_by_section = {}
+    all_blind_spots = []
+    
+    unknown_values = ["unknown", "not_sure", "not sure", "don't_know", "dont_know", "don't know", "dont know"]
+    
+    for section in structure.sections:
+        section_blind_spots = []
+        for question in section.questions:
+            response = response_dict.get(question.id)
+            if response:
+                answer_normalized = normalize_option_value(str(response.answer_value))
+                if answer_normalized in unknown_values:
+                    blind_spot_item = {
+                        "section_id": section.id,
+                        "section_title": section.title,
+                        "question_id": question.id,
+                        "question_text": question.text,
+                    }
+                    section_blind_spots.append(blind_spot_item)
+                    all_blind_spots.append(blind_spot_item)
+        
+        if section_blind_spots:
+            blind_spots_by_section[section.id] = {
+                "count": len(section_blind_spots),
+                "items": section_blind_spots[:3],
+            }
+    
+    return {
+        "by_section": blind_spots_by_section,
+        "total_count": len(all_blind_spots),
+        "all_items": all_blind_spots,
+    }
+
+
+def get_selected_option_explanation(question: Question, answer_value: str):
+    """
+    Get detailed explanation for the selected option.
+    Returns dict with explanation fields or None if not available.
+    """
+    if not settings.ENHANCED_REPORT_EXPLANATIONS:
+        return None
+    
+    for option in question.options:
+        if str(option.value) == str(answer_value):
+            if option.detailed_explanation:
+                exp = option.detailed_explanation
+                return {
+                    "definition": exp.definition,
+                    "why_matters": exp.why_matters,
+                    "recommendation": exp.recommendation,
+                    "path_to_improvement": exp.path_to_improvement,
+                }
+    return None
+
+
 def generate_report_html(assessment, responses, scores, structure) -> str:
     """Generate HTML content for standard report"""
 
@@ -1299,7 +1360,33 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
                     <td>Comments Provided</td>
                     <td>{{ comments_count }}</td>
                 </tr>
+                {% if enhanced_explanations_enabled and blind_spots.total_count > 0 %}
+                <tr>
+                    <td>Blind Spots (Unknown/Not Sure)</td>
+                    <td>{{ blind_spots.total_count }}</td>
+                </tr>
+                {% endif %}
             </table>
+            
+            {% if enhanced_explanations_enabled and blind_spots.total_count > 0 %}
+            <div class="summary-box" style="border-left: 4px solid #ffc107; background: #fff3cd;">
+                <h3>⚠️ Knowledge Gaps Identified</h3>
+                <p>You indicated "Not sure" or "Unknown" for {{ blind_spots.total_count }} question(s). These represent blind spots in your security posture that warrant investigation:</p>
+                <table>
+                    <tr>
+                        <th>Section</th>
+                        <th>Unknown Count</th>
+                    </tr>
+                    {% for section_id, section_data in blind_spots.by_section.items() %}
+                    <tr>
+                        <td>{{ section_data.items[0].section_title }}</td>
+                        <td>{{ section_data.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <p><strong>Recommendation:</strong> These blind spots represent areas where you lack visibility or knowledge. Prioritize investigating these areas to understand your actual security posture and identify potential risks.</p>
+            </div>
+            {% endif %}
         </div>
         
         <div class="section" id="domain-heatmap">
@@ -1437,6 +1524,19 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
                         <td class="comment-text">{{ question_comments[question.id] }}</td>
                         <td><span class="weight-badge">{{ question.weight }}</span></td>
                     </tr>
+                    {% if enhanced_explanations_enabled and question_explanations[question.id] %}
+                    <tr class="question-row">
+                        <td colspan="4" style="background: #f8f9fa; padding: 10px; font-size: 0.9em;">
+                            {% set exp = question_explanations[question.id] %}
+                            {% if exp.definition %}
+                            <p><strong>What this means:</strong> {{ exp.definition[:500] }}{% if exp.definition|length > 500 %}...{% endif %}</p>
+                            {% endif %}
+                            {% if exp.recommendation %}
+                            <p><strong>Recommendation:</strong> {{ exp.recommendation[:500] }}{% if exp.recommendation|length > 500 %}...{% endif %}</p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
                     {% endfor %}
                 </table>
             </div>
@@ -1524,10 +1624,13 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
 
     remediation_items = generate_prioritized_remediation(scores, structure)
     section_summaries = generate_section_summaries(scores, structure, responses)
+    
+    blind_spots = compute_blind_spots(structure, responses)
 
     response_dict = {r.question_id: r for r in responses}
     question_answers = {}
     question_comments = {}
+    question_explanations = {}
 
     for section in structure.sections:
         for question in section.questions:
@@ -1539,9 +1642,13 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
                 question_comments[question.id] = (
                     response.comment if response.comment else "—"
                 )
+                question_explanations[question.id] = get_selected_option_explanation(
+                    question, response.answer_value
+                )
             else:
                 question_answers[question.id] = "Not answered"
                 question_comments[question.id] = "—"
+                question_explanations[question.id] = None
 
     all_comments = []
     section_comments: dict[str, list] = {}
@@ -1581,9 +1688,12 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
         section_summaries=section_summaries,
         question_answers=question_answers,
         question_comments=question_comments,
+        question_explanations=question_explanations,
         all_comments=all_comments,
         section_comments=section_comments,
         comments_count=comments_count,
+        blind_spots=blind_spots,
+        enhanced_explanations_enabled=settings.ENHANCED_REPORT_EXPLANATIONS,
     )
 
 

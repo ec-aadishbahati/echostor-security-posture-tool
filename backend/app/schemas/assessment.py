@@ -154,10 +154,23 @@ class ConsultationRequest(BaseModel):
         return v
 
 
+class OptionExplanation(BaseModel):
+    """Detailed explanation for a question option"""
+
+    definition: Annotated[str, Field(max_length=2000)] | None = None
+    why_matters: Annotated[str, Field(max_length=2000)] | None = None
+    industry_adoption_rate: Annotated[str, Field(max_length=500)] | None = None
+    industry_benchmark: Annotated[str, Field(max_length=1000)] | None = None
+    compliance_frameworks: Annotated[str, Field(max_length=1000)] | None = None
+    recommendation: Annotated[str, Field(max_length=2000)] | None = None
+    path_to_improvement: Annotated[str, Field(max_length=2000)] | None = None
+
+
 class QuestionOption(BaseModel):
     value: Annotated[str, Field(min_length=1, max_length=200)]
     label: Annotated[str, Field(min_length=1, max_length=500)]
     description: Annotated[str, Field(max_length=1000)] | None = None
+    detailed_explanation: OptionExplanation | None = None
 
 
 class Question(BaseModel):
