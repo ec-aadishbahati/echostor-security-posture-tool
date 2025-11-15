@@ -1406,28 +1406,27 @@
 
 **Question:** How do you handle MFA bypass requests?
 
-**Type:** multiple_select
+**Type:** multiple_choice
+
+**Scale:** governance
 
 **Explanation:** MFA bypass procedures should balance security with operational needs.
 
 **Answer Options:**
-**Option 1: SMS/Text message**
-*Basic Description:* One-time codes via SMS
+**Option 1: Formal documented approval process with logging**
+*Basic Description:* Documented procedure with audit trail
 
-**Option 2: Authenticator app**
-*Basic Description:* TOTP-based authenticator apps
+**Option 2: Temporary time-bound bypass with justification**
+*Basic Description:* Limited duration with business justification required
 
-**Option 3: Hardware token**
-*Basic Description:* Physical security keys like YubiKey
+**Option 3: Manual ad-hoc approval (no logging)**
+*Basic Description:* Case-by-case approval without formal tracking
 
-**Option 4: Biometric**
-*Basic Description:* Fingerprint or facial recognition
+**Option 4: Not allowed (no bypasses permitted)**
+*Basic Description:* MFA cannot be bypassed under any circumstances
 
-**Option 5: Push notification**
-*Basic Description:* Mobile app push approvals
-
-**Option 6: Not implemented**
-*Basic Description:* MFA not currently implemented
+**Option 5: Not currently managed**
+*Basic Description:* No formal process for handling bypass requests
 
 
 
@@ -2316,26 +2315,31 @@
 
 **Type:** multiple_select
 
+**Scale:** implementation
+
 **Explanation:** Wireless security prevents unauthorized network access and data interception.
 
 **Answer Options:**
-**Option 1: Encryption**
-*Basic Description:* Data encryption at rest and in transit
+**Option 1: WPA2-Enterprise or WPA3 encryption**
+*Basic Description:* Modern encryption standards with enterprise authentication
 
-**Option 2: Access controls**
-*Basic Description:* Role-based access control and authentication
+**Option 2: WPA2-Personal (pre-shared key)**
+*Basic Description:* Basic password-based encryption
 
-**Option 3: Network segmentation**
-*Basic Description:* Isolated network zones
+**Option 3: Guest network isolation (separate SSID)**
+*Basic Description:* Segregated network for visitors
 
-**Option 4: Monitoring and logging**
-*Basic Description:* Continuous monitoring and audit logs
+**Option 4: 802.1X authentication**
+*Basic Description:* Certificate or credential-based access control
 
-**Option 5: Security policies**
-*Basic Description:* Documented security policies and procedures
+**Option 5: Network access control (NAC)**
+*Basic Description:* Device posture checking before network access
 
-**Option 6: Not currently secured**
-*Basic Description:* No specific security measures
+**Option 6: Wireless intrusion detection/prevention**
+*Basic Description:* Monitoring for rogue access points and attacks
+
+**Option 7: No specific wireless security controls**
+*Basic Description:* Basic or no wireless security measures
 
 
 
@@ -3269,9 +3273,6 @@
 **Option 9: None/Not applicable**
 *Basic Description:* No specific privacy regulations apply
 
-**Option 6: Not applicable**
-*Basic Description:* Not applicable to our organization
-
 
 
 #### Question 7.2.2
@@ -3400,23 +3401,31 @@
 
 **Type:** multiple_select
 
+**Scale:** coverage
+
 **Explanation:** Multiple backup locations protect against site-specific disasters.
 
 **Answer Options:**
-**Option 1: Daily**
-*Basic Description:* Daily backup schedule
+**Option 1: Primary site only**
+*Basic Description:* Backups stored at main facility
 
-**Option 2: Weekly**
-*Basic Description:* Weekly backup schedule
+**Option 2: Secondary on-premises site**
+*Basic Description:* Separate physical location (same organization)
 
-**Option 3: Monthly**
-*Basic Description:* Monthly backup schedule
+**Option 3: Cloud storage (single region)**
+*Basic Description:* Cloud provider in one geographic region
 
-**Option 4: Real-time/Continuous**
-*Basic Description:* Continuous data protection
+**Option 4: Cloud storage (multi-region)**
+*Basic Description:* Replicated across multiple geographic regions
 
-**Option 5: No regular backups**
-*Basic Description:* Backups not performed regularly
+**Option 5: Offline / off-site media**
+*Basic Description:* Tape or removable media stored off-site
+
+**Option 6: Mix of the above**
+*Basic Description:* Combination of multiple storage locations
+
+**Option 7: Not sure / No defined strategy**
+*Basic Description:* Backup location not clearly defined
 
 
 
@@ -3775,26 +3784,28 @@
 
 **Type:** multiple_select
 
+**Scale:** implementation
+
 **Explanation:** Proper authentication mechanisms protect against unauthorized access.
 
 **Answer Options:**
-**Option 1: Formal documented process**
-*Basic Description:* Documented procedures and workflows
+**Option 1: Centralized SSO (SAML/OIDC/OAuth) for all apps**
+*Basic Description:* Single sign-on across all applications
 
-**Option 2: Automated system**
-*Basic Description:* Using automation tools or platforms
+**Option 2: Centralized SSO for some apps, local auth for others**
+*Basic Description:* Mixed authentication approach
 
-**Option 3: Manual process**
-*Basic Description:* Manual handling and tracking
+**Option 3: Local username/password per application**
+*Basic Description:* Each app manages its own authentication
 
-**Option 4: Third-party managed**
-*Basic Description:* Outsourced to service provider
+**Option 4: Social login (Google/Microsoft/etc.) only**
+*Basic Description:* Third-party identity providers
 
-**Option 5: Informal process**
-*Basic Description:* Ad-hoc handling without formal procedures
+**Option 5: Mixed approach / legacy systems**
+*Basic Description:* Combination of multiple authentication methods
 
-**Option 6: Not currently managed**
-*Basic Description:* Not currently managed
+**Option 6: Not sure / Not defined**
+*Basic Description:* Authentication approach unclear
 
 
 
@@ -4187,7 +4198,7 @@
 **Option 6: Hybrid/Multi-cloud**
 *Basic Description:* Combination of multiple cloud environments
 
-**Option 6: Not applicable**
+**Option 7: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
