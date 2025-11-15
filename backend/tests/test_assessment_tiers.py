@@ -1,10 +1,11 @@
 """Tests for assessment tier functionality"""
 
 import pytest
+
 from app.core.assessment_tiers import (
     ASSESSMENT_TIERS,
-    get_tier_sections,
     get_tier_info,
+    get_tier_sections,
 )
 
 

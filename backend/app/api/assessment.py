@@ -6,6 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.auth import get_current_user
+from app.core.assessment_tiers import ASSESSMENT_TIERS, get_tier_sections
 from app.core.config import settings
 from app.core.database import get_db
 from app.middleware.rate_limit import limiter
@@ -21,7 +22,6 @@ from app.schemas.assessment import (
     SaveProgressRequest,
 )
 from app.schemas.user import CurrentUserResponse
-from app.core.assessment_tiers import ASSESSMENT_TIERS, get_tier_sections
 from app.services.question_parser import (
     filter_structure_by_sections,
     load_assessment_structure_cached,
