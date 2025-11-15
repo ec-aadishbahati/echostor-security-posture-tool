@@ -66,9 +66,7 @@ export default function StartAssessment() {
       <Layout title="Start Assessment">
         <div className="max-w-6xl mx-auto py-8 px-4">
           <div className="bg-white rounded-lg shadow-md p-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Choose Your Assessment Type
-            </h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Choose Your Assessment Type</h1>
             <p className="text-gray-600 mb-8">
               Select the assessment level that best fits your needs. You can always customize
               sections later.
