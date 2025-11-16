@@ -715,7 +715,7 @@ async def get_user_reports(
         skip=skip,
         limit=limit,
     )
-    
+
     return paginated.model_dump()
 
 
