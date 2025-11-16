@@ -386,8 +386,8 @@ async def save_assessment_progress(
         existing_response = existing_by_question.get(str(response_data.question_id))
 
         if existing_response:
-            existing_response.answer_value = response_data.answer_value
-            existing_response.comment = response_data.comment
+            existing_response.answer_value = response_data.answer_value  # type: ignore[assignment]
+            existing_response.comment = response_data.comment  # type: ignore[assignment]
             existing_response.updated_at = datetime.now(UTC)
         else:
             new_response = AssessmentResponseModel(

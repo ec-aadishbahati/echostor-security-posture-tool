@@ -160,7 +160,7 @@ async def request_ai_report(
     if existing_report:
         return {
             "message": "AI report already requested",
-            "status": existing_report.status,
+            "status": str(existing_report.status),
             "estimated_delivery": "3-5 business days",
         }
 
@@ -186,7 +186,7 @@ async def request_ai_report(
         if existing_report:
             return {
                 "message": "AI report already requested",
-                "status": existing_report.status,
+                "status": str(existing_report.status),
                 "estimated_delivery": "3-5 business days",
             }
         raise

@@ -422,23 +422,16 @@ def calculate_assessment_scores(
             "not_applicable_count": section_na_count,
         }
 
-    total_score = sum(
-        s["score"] for s in scores.values() if isinstance(s, dict) and "score" in s
-    )
-    total_max_score = sum(
-        s["max_score"]
-        for s in scores.values()
-        if isinstance(s, dict) and "max_score" in s
-    )
+    dict_scores = [s for s in scores.values() if isinstance(s, dict)]
+    total_score = sum(s["score"] for s in dict_scores if "score" in s)
+    total_max_score = sum(s["max_score"] for s in dict_scores if "max_score" in s)
     total_unknown = sum(
-        s.get("unknown_count", 0)
-        for s in scores.values()
-        if isinstance(s, dict) and "unknown_count" in s
+        s.get("unknown_count", 0) for s in dict_scores if "unknown_count" in s
     )
     total_na = sum(
         s.get("not_applicable_count", 0)
-        for s in scores.values()
-        if isinstance(s, dict) and "not_applicable_count" in s
+        for s in dict_scores
+        if "not_applicable_count" in s
     )
 
     overall_percentage = (
@@ -1209,7 +1202,8 @@ async def generate_ai_insights_async(
             section_id, artifact, is_degraded = result
             insights[section_id] = artifact
         elif isinstance(result, Exception):
-            logger.error(f"Section processing raised exception: {str(result)}")
+            error_msg = str(result)
+            logger.error(f"Section processing raised exception: {error_msg}")
 
     return insights
 
