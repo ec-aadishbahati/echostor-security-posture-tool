@@ -10,6 +10,14 @@ const ENABLE_CSRF = process.env.NEXT_PUBLIC_ENABLE_CSRF === 'true';
 let csrfToken: string | null = null;
 let authToken: string | null = null;
 
+declare global {
+  interface Window {
+    __AUTH_TOKEN?: string;
+    __setAuthToken?: (t: string | null) => void;
+    __getAuthToken?: () => string | null;
+  }
+}
+
 export const setCSRFToken = (token: string | null) => {
   csrfToken = token;
 };
@@ -21,6 +29,17 @@ export const setAuthToken = (token: string | null) => {
 };
 
 export const getAuthToken = () => authToken;
+
+const E2E_MODE = process.env.NEXT_PUBLIC_E2E_MODE === 'true';
+if (typeof window !== 'undefined' && E2E_MODE) {
+  if (window.__AUTH_TOKEN && !authToken) {
+    authToken = window.__AUTH_TOKEN;
+  }
+  window.__setAuthToken = (t: string | null) => {
+    authToken = t;
+  };
+  window.__getAuthToken = () => authToken;
+}
 
 const pendingRequests = new Map<string, Promise<any>>();
 
