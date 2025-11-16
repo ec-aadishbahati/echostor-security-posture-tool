@@ -93,7 +93,7 @@ def generate_standard_report(report_id: str):
         )
         if not assessment:
             logger.error(f"Assessment not found for report: {report_id}")
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
             return
 
@@ -146,9 +146,9 @@ def generate_standard_report(report_id: str):
             )
 
         logger.info("PDF generated and stored successfully: %s", storage_location)
-        report.file_path = storage_location
-        report.status = "completed"
-        report.completed_at = datetime.now(UTC)
+        report.file_path = storage_location  # type: ignore[assignment]
+        report.status = "completed"  # type: ignore[assignment]
+        report.completed_at = datetime.now(UTC)  # type: ignore[assignment]
         db.commit()
 
         logger.info(
@@ -159,7 +159,7 @@ def generate_standard_report(report_id: str):
         error_msg = f"Error generating standard report {report_id}: {str(e)}"
         logger.error(error_msg, exc_info=True)
         if report:
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
     finally:
         db.close()
@@ -192,7 +192,7 @@ def generate_ai_report(report_id: str):
         )
         if not assessment:
             logger.error(f"Assessment not found for report: {report_id}")
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
             return
 
@@ -332,9 +332,9 @@ def generate_ai_report(report_id: str):
             f"AI PDF generated successfully: {storage_location} "
             f"(region={fly_region}, primary={fly_primary}, backend={storage_backend})"
         )
-        report.file_path = storage_location
-        report.status = "completed"
-        report.completed_at = datetime.now(UTC)
+        report.file_path = storage_location  # type: ignore[assignment]
+        report.status = "completed"  # type: ignore[assignment]
+        report.completed_at = datetime.now(UTC)  # type: ignore[assignment]
         db.commit()
 
         logger.info(
@@ -346,7 +346,7 @@ def generate_ai_report(report_id: str):
         error_msg = f"Error generating AI report {report_id}: {str(e)}"
         logger.error(error_msg, exc_info=True)
         if report:
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
     finally:
         db.close()

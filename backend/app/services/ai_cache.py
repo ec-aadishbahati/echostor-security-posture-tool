@@ -57,8 +57,8 @@ class AICacheService:
         )
 
         if cache_entry:
-            cache_entry.last_used_at = datetime.utcnow()
-            cache_entry.hit_count += 1
+            cache_entry.last_used_at = datetime.utcnow()  # type: ignore[assignment]
+            cache_entry.hit_count += 1  # type: ignore[assignment]
             db.commit()
 
             logger.info(

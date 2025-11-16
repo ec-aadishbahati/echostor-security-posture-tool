@@ -70,12 +70,12 @@ class AIMetricsService:
         )
 
         if metadata:
-            metadata.total_cost_usd = cost
-            metadata.is_degraded = 1 if is_degraded else 0
+            metadata.total_cost_usd = cost  # type: ignore[assignment]
+            metadata.is_degraded = 1 if is_degraded else 0  # type: ignore[assignment]
             db.commit()
 
     @staticmethod
-    def aggregate_daily_metrics(db: Session, target_date: date = None):
+    def aggregate_daily_metrics(db: Session, target_date: date | None = None):  # type: ignore[assignment]
         """Aggregate metrics for a specific date"""
         if not target_date:
             target_date = date.today() - timedelta(days=1)  # Yesterday
