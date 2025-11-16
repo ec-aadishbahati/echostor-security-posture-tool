@@ -84,6 +84,8 @@ jobs:
         run: poetry install
 
       - name: Start backend services with docker compose
+        env:
+          ENABLE_COOKIE_AUTH: 'true'
         run: |
           docker compose up -d postgres backend
           sleep 10
@@ -121,6 +123,8 @@ jobs:
 
       - name: Start frontend dev server
         working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_ENABLE_COOKIE_AUTH: 'true'
         run: pnpm run dev &
 
       - name: Wait for frontend to be ready
