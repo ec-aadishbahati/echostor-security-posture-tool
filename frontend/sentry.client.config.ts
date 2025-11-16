@@ -14,7 +14,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     ],
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
-    beforeSend(event, hint) {
+    beforeSend(event, _hint) {
       if (event.user) {
         delete event.user.email;
         delete event.user.ip_address;
