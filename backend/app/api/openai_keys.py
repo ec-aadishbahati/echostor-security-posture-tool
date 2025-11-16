@@ -29,7 +29,7 @@ async def list_openai_keys(
     try:
         with OpenAIKeyManager(db) as manager:
             keys = manager.list_keys(include_inactive=include_inactive)
-            return keys
+            return [OpenAIKeyResponse(**k) for k in keys]
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -56,7 +56,7 @@ async def create_openai_key(
             keys = manager.list_keys(include_inactive=True)
             for k in keys:
                 if k["id"] == key.id:
-                    return k
+                    return OpenAIKeyResponse(**k)
 
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -101,7 +101,7 @@ async def toggle_openai_key(
             keys = manager.list_keys(include_inactive=True)
             for k in keys:
                 if k["id"] == key_id:
-                    return k
+                    return OpenAIKeyResponse(**k)
 
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

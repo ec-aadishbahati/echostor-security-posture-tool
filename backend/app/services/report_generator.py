@@ -904,7 +904,9 @@ async def generate_ai_insights_async(
     extractor = get_enhanced_context_extractor()
     pii_redactor = PIIRedactor() if settings.ENABLE_PII_REDACTION_BEFORE_AI else None
 
-    async def process_section(section: Any) -> SectionAIArtifact:
+    async def process_section(
+        section: Any,
+    ) -> tuple[Any, SectionAIArtifact, bool] | None:
         """Process a single section with rate limiting"""
         db = SessionLocal()
         section_redactions = 0
