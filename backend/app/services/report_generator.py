@@ -1204,7 +1204,7 @@ async def generate_ai_insights_async(
 
     for result in results:
         if result and not isinstance(result, Exception):
-            section_id, artifact, is_degraded = result
+            section_id, artifact, is_degraded = result  # type: ignore[misc]
             insights[section_id] = artifact
         elif isinstance(result, Exception):
             error_msg = str(result)

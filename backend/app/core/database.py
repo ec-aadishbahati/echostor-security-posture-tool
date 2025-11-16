@@ -45,7 +45,7 @@ def after_cursor_execute(
     context: object,
     executemany: object,
 ) -> None:
-    total_time = time.time() - conn.info["query_start_time"].pop()  # type: ignore[index]
+    total_time = time.time() - conn.info["query_start_time"].pop()  # type: ignore[attr-defined]
     duration_ms = total_time * 1000
 
     if duration_ms > SLOW_QUERY_THRESHOLD:

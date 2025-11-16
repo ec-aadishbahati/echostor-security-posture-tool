@@ -1,6 +1,7 @@
 """Benchmark context service for providing curated security control snippets"""
 
 import os
+from typing import Any
 
 import yaml  # type: ignore[import-untyped]
 
@@ -17,7 +18,6 @@ class BenchmarkContextService:
             os.path.dirname(__file__), "..", "resources", "benchmarks.yaml"
         )
         with open(yaml_path) as f:
-            from typing import Any
             result: dict[str, Any] = yaml.safe_load(f)
             return result
 

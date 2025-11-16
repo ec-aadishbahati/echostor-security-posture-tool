@@ -1,5 +1,5 @@
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import Any, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import and_, desc, func
@@ -301,6 +301,13 @@ async def get_users_progress_summary(
                 assessment = max(user.assessments, key=lambda a: a.created_at)
 
             last_activity = assessment.last_saved_at if assessment else user.created_at
+            aware_activity = to_utc_aware(cast(datetime | None, last_activity))
+            days_since = (
+                (datetime.now(UTC) - aware_activity).days
+                if aware_activity is not None
+                else 0
+            )
+            
             user_data = {
                 "user_id": str(user.id),
                 "full_name": user.full_name,
@@ -311,11 +318,7 @@ async def get_users_progress_summary(
                 if assessment
                 else 0.0,
                 "last_activity": last_activity,
-                "days_since_activity": (
-                    datetime.now(UTC) - to_utc_aware(last_activity)  # type: ignore[arg-type]
-                ).days
-                if last_activity
-                else 0,
+                "days_since_activity": days_since,
             }
             summary.append(user_data)
 

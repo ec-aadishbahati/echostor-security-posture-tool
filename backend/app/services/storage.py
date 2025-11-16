@@ -88,7 +88,7 @@ class S3Storage(StorageService):
         endpoint_url: str | None = None,
     ):
         try:
-            import boto3
+            import boto3  # type: ignore[import-not-found]
         except ImportError:
             raise ImportError(
                 "boto3 is required for S3 storage. Install with: poetry add boto3"
