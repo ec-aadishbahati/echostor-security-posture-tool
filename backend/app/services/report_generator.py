@@ -642,7 +642,7 @@ def generate_ai_insights(
                     )
 
                     start_time = datetime.now()
-                    response = client.chat.completions.create(  # type: ignore[assignment]
+                    response = client.chat.completions.create(  # type: ignore[assignment]  # type: ignore[assignment]
                         model=settings.OPENAI_MODEL,
                         messages=[{"role": "user", "content": prompt}],
                         response_format={"type": "json_object"},
