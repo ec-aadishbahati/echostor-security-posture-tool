@@ -325,6 +325,10 @@ async def get_assessment_responses(
 
 
 @router.post("/{assessment_id}/save-progress")
+@limiter.limit(
+    "10/minute",
+    exempt_when=lambda *args, **kwargs: not settings.ENABLE_SAVE_PROGRESS_RATE_LIMIT,
+)
 async def save_assessment_progress(
     request: Request,
     assessment_id: str,
@@ -333,15 +337,6 @@ async def save_assessment_progress(
     db: Session = Depends(get_db),
 ):
     """Save assessment progress"""
-
-    if settings.ENABLE_SAVE_PROGRESS_RATE_LIMIT:
-        try:
-            await limiter.check_request_limit(request, "10/minute")
-        except Exception:
-            from app.services.security_metrics import security_metrics
-
-            security_metrics.increment_rate_limit_hits()
-            raise
 
     assessment = (
         db.query(Assessment)
