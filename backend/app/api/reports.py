@@ -478,14 +478,15 @@ async def admin_regenerate_pdf_from_artifacts(
     structure = load_assessment_structure()
     if assessment.selected_section_ids:
         structure = filter_structure_by_sections(
-            structure, assessment.selected_section_ids
+            structure,
+            list(assessment.selected_section_ids),  # type: ignore[arg-type]
         )
 
     scores = calculate_assessment_scores(responses, structure)
 
     ai_insights = {}
     for artifact_db in section_artifacts_db:
-        ai_insights[artifact_db.section_id] = SectionAIArtifact.model_validate(
+        ai_insights[str(artifact_db.section_id)] = SectionAIArtifact.model_validate(
             artifact_db.artifact_json
         )
 
@@ -565,7 +566,7 @@ async def download_report(
         await log_admin_action(
             admin_email=current_user.email,
             action="download_report",
-            target_user_id=user.id if user else None,
+            target_user_id=str(user.id) if user else None,
             details={
                 "report_id": str(report_id),
                 "report_type": report.report_type,
@@ -577,7 +578,7 @@ async def download_report(
     filename = f"security_assessment_report_{report.report_type}_{report_id}.pdf"
     storage_service = get_storage_service()
 
-    file_exists = report.file_path and storage_service.exists(report.file_path)
+    file_exists = report.file_path and storage_service.exists(str(report.file_path))
 
     if not file_exists:
         fly_region = os.getenv("FLY_REGION", "unknown")
@@ -620,7 +621,8 @@ async def download_report(
             structure = load_assessment_structure()
             if assessment.selected_section_ids:
                 structure = filter_structure_by_sections(
-                    structure, assessment.selected_section_ids
+                    structure,
+                    list(assessment.selected_section_ids),  # type: ignore[arg-type]
                 )
 
             scores = calculate_assessment_scores(responses, structure)
@@ -661,7 +663,7 @@ async def download_report(
             )
 
     try:
-        file_handle = storage_service.open(report.file_path)
+        file_handle = storage_service.open(str(report.file_path))
     except FileNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Report file not found"

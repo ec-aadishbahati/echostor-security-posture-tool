@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from typing import Literal
 
 from fastapi import HTTPException, Response, status
 from jose import JWTError, jwt
@@ -10,7 +11,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 AUTH_COOKIE_NAME = "access_token"
 COOKIE_PATH = "/api"
-COOKIE_SAMESITE = "none"  # Required for cross-site (Vercel + Fly.io)
+COOKIE_SAMESITE: Literal["lax", "strict", "none"] = (
+    "none"  # Required for cross-site (Vercel + Fly.io)
+)
 COOKIE_SECURE = True  # Required with SameSite=None
 
 

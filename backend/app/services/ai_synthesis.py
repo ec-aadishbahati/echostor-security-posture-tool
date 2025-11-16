@@ -149,7 +149,10 @@ async def generate_synthesis_artifact(
         latency_ms = int((time.time() - start_time) * 1000)
 
         json_str = response.choices[0].message.content
-        synthesis = SynthesisArtifact.model_validate_json(json_str)
+        if json_str:
+            synthesis = SynthesisArtifact.model_validate_json(json_str)
+        else:
+            raise ValueError("Empty response from OpenAI")
 
         key_manager.record_success(key_id)
 
