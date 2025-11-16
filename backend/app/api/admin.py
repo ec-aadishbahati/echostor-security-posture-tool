@@ -313,7 +313,9 @@ async def get_users_progress_summary(
                 "last_activity": last_activity,
                 "days_since_activity": (
                     datetime.now(UTC) - to_utc_aware(last_activity)  # type: ignore[arg-type]
-                ).days,
+                ).days
+                if last_activity
+                else 0,
             }
             summary.append(user_data)
 

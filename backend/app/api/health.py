@@ -1,5 +1,6 @@
 import time
 from datetime import UTC, datetime
+from typing import Any
 
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
@@ -56,7 +57,7 @@ async def health_check() -> JSONResponse:
     db_health = check_database()
     redis_health = check_redis()
 
-    response_data = {
+    response_data: dict[str, Any] = {
         "status": "healthy",
         "version": "1.0.0",
         "uptime_seconds": round(uptime, 2),
