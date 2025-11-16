@@ -29,13 +29,16 @@ class CSRFMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         if not settings.ENABLE_CSRF or not settings.ENABLE_COOKIE_AUTH:
-            return await call_next(request)
+            response: Response = await call_next(request)
+            return response
 
         if request.method in SAFE_METHODS:
-            return await call_next(request)
+            response: Response = await call_next(request)
+            return response
 
         if request.url.path in CSRF_EXEMPT_PATHS:
-            return await call_next(request)
+            response: Response = await call_next(request)
+            return response
 
         csrf_header = request.headers.get("X-CSRF-Token")
         if not csrf_header:
@@ -82,4 +85,5 @@ class CSRFMiddleware(BaseHTTPMiddleware):
                 detail="CSRF validation failed",
             )
 
-        return await call_next(request)
+        response: Response = await call_next(request)
+        return response

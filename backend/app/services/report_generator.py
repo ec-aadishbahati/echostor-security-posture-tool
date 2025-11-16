@@ -66,7 +66,8 @@ def markdown_filter(text: str | None) -> str:
     """Convert markdown to HTML"""
     if not text:
         return ""
-    return markdown2.markdown(text, extras=["fenced-code-blocks", "tables"])
+    result: str = markdown2.markdown(text, extras=["fenced-code-blocks", "tables"])
+    return result
 
 
 @retry(
@@ -446,7 +447,7 @@ def calculate_question_score(response: AssessmentResponse, question: Any) -> int
 
     if question.type == "yes_no":
         if response.answer_value == "yes":
-            return question.weight
+            return int(question.weight)
         else:
             return 0
 
