@@ -84,7 +84,7 @@ def set_auth_cookie(response: Response, token: str, max_age: int) -> None:
         path=COOKIE_PATH,
         httponly=True,
         secure=COOKIE_SECURE,
-        samesite=COOKIE_SAMESITE,
+        samesite=COOKIE_SAMESITE,  # type: ignore[arg-type]
     )
 
 
@@ -97,7 +97,7 @@ def clear_auth_cookie(response: Response) -> None:
         path=COOKIE_PATH,
         httponly=True,
         secure=COOKIE_SECURE,
-        samesite=COOKIE_SAMESITE,
+        samesite=COOKIE_SAMESITE,  # type: ignore[arg-type]
     )
 
 

@@ -92,7 +92,7 @@ class OpenAIKeyManager:
 
         result = []
         for key in keys:
-            decrypted_key = decrypt_api_key(key.encrypted_key)
+            decrypted_key = decrypt_api_key(str(key.encrypted_key))
             result.append(
                 {
                     "id": key.id,
@@ -151,7 +151,7 @@ class OpenAIKeyManager:
         key.usage_count += 1  # type: ignore[assignment]
         self.db.commit()
 
-        decrypted_key = decrypt_api_key(key.encrypted_key)
+        decrypted_key = decrypt_api_key(str(key.encrypted_key))
         logger.info(
             f"Selected API key: {key.key_name} (ID: {key.id}, usage: {key.usage_count})"
         )

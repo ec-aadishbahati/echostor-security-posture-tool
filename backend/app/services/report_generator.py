@@ -113,7 +113,7 @@ def generate_standard_report(report_id: str) -> None:
                 f"Filtering structure to {len(assessment.selected_section_ids)} selected sections"
             )
             structure = filter_structure_by_sections(
-                structure, assessment.selected_section_ids
+                structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
             )
 
         logger.info("Calculating scores")
@@ -212,12 +212,12 @@ def generate_ai_report(report_id: str) -> None:
                 f"Filtering structure to {len(assessment.selected_section_ids)} selected sections"
             )
             structure = filter_structure_by_sections(
-                structure, assessment.selected_section_ids
+                structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
             )
 
         logger.info("Generating AI insights with parallel processing")
         ai_insights = asyncio.run(
-            generate_ai_insights_async(responses, structure, key_manager, report.id)
+            generate_ai_insights_async(responses, structure, key_manager, str(report.id))
         )
 
         logger.info("Calculating scores")
@@ -265,7 +265,7 @@ def generate_ai_report(report_id: str) -> None:
                         "This placeholder text ensures report deliverability when AI synthesis services are "
                         "temporarily unavailable and should be supplemented with detailed manual review."
                     ),
-                    overall_risk_level=risk_level,
+                    overall_risk_level=risk_level,  # type: ignore[arg-type]
                     overall_risk_explanation=(
                         "Automated fallback synthesis is being used due to temporary unavailability of AI services. "
                         "While section-level analyses provide valuable insights into specific security domains, "
@@ -566,7 +566,7 @@ def generate_ai_insights(
 
                     if comment_value:
                         redacted_comment, comment_redaction_count = pii_redactor.redact(
-                            comment_value
+                            str(comment_value)
                         )
                         if comment_redaction_count > 0:
                             total_redactions += comment_redaction_count
@@ -926,7 +926,7 @@ async def generate_ai_insights_async(
 
                             if comment_value:
                                 redacted_comment, comment_redaction_count = (
-                                    pii_redactor.redact(comment_value)
+                                    pii_redactor.redact(str(comment_value))
                                 )
                                 if comment_redaction_count > 0:
                                     section_redactions += comment_redaction_count
@@ -1125,9 +1125,12 @@ async def generate_ai_insights_async(
                                     json_str = fallback_response.choices[
                                         0
                                     ].message.content
-                                    artifact = safe_validate_section_artifact(
-                                        json_str, section.id
-                                    )
+                                    if json_str:
+                                        artifact = safe_validate_section_artifact(
+                                            json_str, section.id
+                                        )
+                                    else:
+                                        raise ValueError("Empty fallback response")
 
                                     db_artifact = AISectionArtifactModel(
                                         report_id=report_id,
@@ -1758,7 +1761,7 @@ def generate_report_html(
                     response.comment if response.comment else "—"
                 )
                 question_explanations[question.id] = get_selected_option_explanation(
-                    question, response.answer_value
+                    question, str(response.answer_value)
                 )
             else:
                 question_answers[question.id] = "Not answered"
