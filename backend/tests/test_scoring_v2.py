@@ -4,8 +4,9 @@ Tests for scoring v2 with weighted scales
 
 from unittest.mock import Mock
 
+from app.core.scoring_scales import map_numeric_to_slug
 from app.models.assessment import AssessmentResponse
-from app.schemas.assessment import Question
+from app.schemas.assessment import Question, QuestionOption
 from app.services.report_generator import calculate_question_score_v2
 
 
@@ -382,3 +383,129 @@ class TestFallbackBehavior:
         assert result["score"] == 10
         assert result["max_score"] == 10
         assert result["flags"] == []
+
+
+class TestNumericToSlugMapper:
+    """Test runtime numeric→slug mapper for Phase 3a"""
+
+    def test_slug_value_returns_unchanged(self):
+        question = Question(
+            id="test_q",
+            section_id="test_s",
+            text="Test",
+            type="multiple_choice",
+            weight=10,
+            explanation="Test",
+            options=[
+                QuestionOption(value="quarterly", label="Quarterly", description=""),
+                QuestionOption(value="annually", label="Annually", description=""),
+            ],
+            metadata={},
+        )
+
+        result = map_numeric_to_slug(question, "quarterly")
+        assert result == "quarterly"
+
+    def test_numeric_value_maps_to_slug(self):
+        question = Question(
+            id="test_q",
+            section_id="test_s",
+            text="Test",
+            type="multiple_choice",
+            weight=10,
+            explanation="Test",
+            options=[
+                QuestionOption(value="quarterly", label="Quarterly", description=""),
+                QuestionOption(value="annually", label="Annually", description=""),
+                QuestionOption(value="never", label="Never", description=""),
+            ],
+            metadata={},
+        )
+
+        assert map_numeric_to_slug(question, "1") == "quarterly"
+        assert map_numeric_to_slug(question, "2") == "annually"
+        assert map_numeric_to_slug(question, "3") == "never"
+
+    def test_numeric_value_with_numeric_options(self):
+        question = Question(
+            id="test_q",
+            section_id="test_s",
+            text="Test",
+            type="multiple_choice",
+            weight=10,
+            explanation="Test",
+            options=[
+                QuestionOption(value="1", label="First", description=""),
+                QuestionOption(value="2", label="Second", description=""),
+            ],
+            metadata={},
+        )
+
+        assert map_numeric_to_slug(question, "1") == "1"
+        assert map_numeric_to_slug(question, "2") == "2"
+
+    def test_out_of_range_numeric_returns_unchanged(self):
+        question = Question(
+            id="test_q",
+            section_id="test_s",
+            text="Test",
+            type="multiple_choice",
+            weight=10,
+            explanation="Test",
+            options=[
+                QuestionOption(value="quarterly", label="Quarterly", description=""),
+            ],
+            metadata={},
+        )
+
+        result = map_numeric_to_slug(question, "99")
+        assert result == "99"
+
+    def test_empty_value_returns_unchanged(self):
+        question = Question(
+            id="test_q",
+            section_id="test_s",
+            text="Test",
+            type="multiple_choice",
+            weight=10,
+            explanation="Test",
+            options=[],
+            metadata={},
+        )
+
+        assert map_numeric_to_slug(question, "") == ""
+        assert map_numeric_to_slug(question, None) is None
+
+    def test_scoring_with_numeric_values_uses_mapper(self):
+        question = Question(
+            id="test_q",
+            section_id="test_s",
+            text="Test",
+            type="multiple_choice",
+            weight=10,
+            explanation="Test",
+            options=[
+                QuestionOption(value="optimized", label="Optimized", description=""),
+                QuestionOption(value="managed", label="Managed", description=""),
+                QuestionOption(value="ad_hoc", label="Ad-hoc", description=""),
+            ],
+            metadata={"scale_type": "maturity"},
+        )
+
+        response = create_test_response("1")
+        result = calculate_question_score_v2(response, question)
+
+        assert result["score"] == 10
+        assert result["max_score"] == 10
+
+        response = create_test_response("2")
+        result = calculate_question_score_v2(response, question)
+
+        assert result["score"] == 7
+        assert result["max_score"] == 10
+
+        response = create_test_response("3")
+        result = calculate_question_score_v2(response, question)
+
+        assert result["score"] == 2
+        assert result["max_score"] == 10

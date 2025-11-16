@@ -2,6 +2,7 @@ from app.services.question_parser import (
     _parse_option_explanation,
     create_sample_assessment_structure,
     load_assessment_structure,
+    parse_assessment_questions,
 )
 
 
@@ -170,3 +171,135 @@ def test_loaded_structure_has_explanations():
 
     assert total_options > 0
     assert options_with_explanations >= 0
+
+
+def test_parse_slug_format_options():
+    """Test parsing options with slug format (Phase 3a)"""
+    md_content = """
+## Section 1: Test Section
+
+### 1.1 Test Subsection
+
+#### Question 1.1.1
+
+**Question:** How often do you review your security strategy?
+
+**Type:** multiple_choice
+
+**Weight:** 3
+
+**Scale:** frequency_review
+
+**Explanation:** Regular reviews are important.
+
+**Answer Options:**
+
+**Option quarterly:** Quarterly
+
+**Option annually:** Annually
+
+**Option never:** Never
+"""
+
+    structure = parse_assessment_questions(md_content)
+
+    assert len(structure.sections) == 1
+    assert len(structure.sections[0].questions) == 1
+
+    question = structure.sections[0].questions[0]
+    assert len(question.options) == 3
+    assert question.options[0].value == "quarterly"
+    assert question.options[0].label == "Quarterly"
+    assert question.options[1].value == "annually"
+    assert question.options[1].label == "Annually"
+    assert question.options[2].value == "never"
+    assert question.options[2].label == "Never"
+
+
+def test_parse_numeric_format_options():
+    """Test parsing options with numeric format (backward compatibility)"""
+    md_content = """
+## Section 1: Test Section
+
+### 1.1 Test Subsection
+
+#### Question 1.1.1
+
+**Question:** Do you have a security policy?
+
+**Type:** multiple_choice
+
+**Weight:** 3
+
+**Explanation:** Policies are important.
+
+**Answer Options:**
+
+**Option 1:** Yes, documented and approved
+
+**Option 2:** Yes, but not approved
+
+**Option 3:** No
+"""
+
+    structure = parse_assessment_questions(md_content)
+
+    assert len(structure.sections) == 1
+    assert len(structure.sections[0].questions) == 1
+
+    question = structure.sections[0].questions[0]
+    assert len(question.options) == 3
+    assert question.options[0].value == "1"
+    assert question.options[0].label == "Yes, documented and approved"
+    assert question.options[1].value == "2"
+    assert question.options[1].label == "Yes, but not approved"
+    assert question.options[2].value == "3"
+    assert question.options[2].label == "No"
+
+
+def test_parse_mixed_format_options():
+    """Test parsing document with both slug and numeric formats"""
+    md_content = """
+## Section 1: Test Section
+
+### 1.1 Test Subsection
+
+#### Question 1.1.1
+
+**Question:** Question with slugs?
+
+**Type:** multiple_choice
+
+**Scale:** maturity
+
+**Answer Options:**
+
+**Option optimized:** Optimized
+
+**Option managed:** Managed
+
+#### Question 1.1.2
+
+**Question:** Question with numbers?
+
+**Type:** multiple_choice
+
+**Answer Options:**
+
+**Option 1:** First option
+
+**Option 2:** Second option
+"""
+
+    structure = parse_assessment_questions(md_content)
+
+    assert len(structure.sections) == 1
+    assert len(structure.sections[0].questions) == 2
+
+    q1 = structure.sections[0].questions[0]
+    assert q1.options[0].value == "optimized"
+    assert q1.options[1].value == "managed"
+
+    q2 = structure.sections[0].questions[1]
+    assert q2.options[0].value == "1"
+    assert q2.options[1].value == "2"

@@ -86,3 +86,34 @@ def normalize_option_value(value: str) -> str:
         return "not_applicable"
 
     return normalized
+
+
+def map_numeric_to_slug(question, answer_value: str) -> str:
+    """
+    Map numeric answer values to slugs based on question's current options.
+
+    This handles legacy numeric values and in-progress assessments during migration.
+    If answer_value is already a slug, returns it as-is.
+    If answer_value is numeric, maps to the corresponding option slug by ordinal.
+
+    Args:
+        question: Question object with options list
+        answer_value: The stored answer value (could be numeric "1" or slug "quarterly")
+
+    Returns:
+        Slug value for the answer
+    """
+    if not answer_value or not isinstance(answer_value, str):
+        return answer_value
+
+    if not answer_value.isdigit():
+        return answer_value
+
+    try:
+        index = int(answer_value) - 1
+        if 0 <= index < len(question.options):
+            return question.options[index].value
+    except (ValueError, IndexError):
+        pass
+
+    return answer_value
