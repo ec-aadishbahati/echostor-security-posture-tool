@@ -22,7 +22,7 @@ class AISectionCache(Base):
     storage_uri = Column(Text, nullable=True)
     tokens_prompt = Column(Integer, nullable=True)
     tokens_completion = Column(Integer, nullable=True)
-    total_cost_usd = Column(DECIMAL(10, 6), nullable=True)
+    total_cost_usd: Column[DECIMAL] = Column(DECIMAL(10, 6), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     last_used_at = Column(DateTime(timezone=True), server_default=func.now())
     hit_count = Column(Integer, default=1, nullable=False)

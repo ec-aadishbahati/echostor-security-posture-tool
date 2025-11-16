@@ -468,7 +468,7 @@ def calculate_question_score_v2(
     """Calculate score with v2 weighted logic"""
 
     answer = response.answer_value
-    flags = []
+    flags: list[str] = []
 
     if question.type == "yes_no":
         score = question.weight if answer == "yes" else 0
