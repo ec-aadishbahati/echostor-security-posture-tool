@@ -26,6 +26,7 @@ from app.services.security_metrics import security_metrics
 
 router = APIRouter()
 security = HTTPBearer()
+security_optional = HTTPBearer(auto_error=False)
 
 
 @limiter.limit("5/minute")
@@ -181,9 +182,7 @@ async def get_current_user_from_token(token: str, db: Session) -> CurrentUserRes
 
 async def get_current_user(
     request: Request,
-    credentials: HTTPAuthorizationCredentials | None = Depends(
-        lambda: HTTPBearer(auto_error=False)
-    ),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security_optional),
     db: Session = Depends(get_db),
 ) -> CurrentUserResponse:
     """Unified auth dependency: checks cookie first (if enabled), then Authorization header"""
@@ -199,9 +198,8 @@ async def get_current_user(
 
     if not token:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authenticated",
         )
 
     return await get_current_user_from_token(token, db)
