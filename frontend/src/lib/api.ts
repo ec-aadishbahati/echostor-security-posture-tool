@@ -59,7 +59,12 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  if (ENABLE_CSRF && csrfToken && config.method && !['get', 'head', 'options'].includes(config.method.toLowerCase())) {
+  if (
+    ENABLE_CSRF &&
+    csrfToken &&
+    config.method &&
+    !['get', 'head', 'options'].includes(config.method.toLowerCase())
+  ) {
     if (config.headers) {
       config.headers['X-CSRF-Token'] = csrfToken;
     }

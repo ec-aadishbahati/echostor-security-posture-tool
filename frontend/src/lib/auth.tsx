@@ -48,11 +48,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setIsLoading(false);
 
           if (ENABLE_CSRF) {
-            authAPI.getCSRFToken().then((csrfResponse) => {
-              setCSRFToken(csrfResponse.data.csrf_token);
-            }).catch(() => {
-              console.error('Failed to fetch CSRF token');
-            });
+            authAPI
+              .getCSRFToken()
+              .then((csrfResponse) => {
+                setCSRFToken(csrfResponse.data.csrf_token);
+              })
+              .catch(() => {
+                console.error('Failed to fetch CSRF token');
+              });
           }
         })
         .catch(() => {
