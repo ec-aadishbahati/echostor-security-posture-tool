@@ -35,7 +35,7 @@ def get_encryption_key() -> bytes:
         )
 
     if isinstance(key, str):
-        key = key.encode()  # type: ignore[assignment]
+        return key.encode()
 
     return key
 

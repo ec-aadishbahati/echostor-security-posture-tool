@@ -156,7 +156,7 @@ class OpenAIKeyManager:
             f"Selected API key: {key.key_name} (ID: {key.id}, usage: {key.usage_count})"
         )
 
-        return (key.id, decrypted_key)
+        return (str(key.id), decrypted_key)
 
     def record_success(self, key_id: str) -> None:
         """Record a successful API call for a key.
