@@ -24,26 +24,24 @@ export default function StartAssessment() {
   const router = useRouter();
   const [selectedTier, setSelectedTier] = useState<string>('standard');
 
-  const { data: tiersData, isLoading } = useQuery<{ data: TiersResponse }>(
-    'assessmentTiers',
-    assessmentAPI.getTiers
-  );
+  const { data: tiersData, isLoading } = useQuery<{ data: TiersResponse }>({
+    queryKey: ['assessmentTiers'],
+    queryFn: assessmentAPI.getTiers,
+  });
 
-  const startAssessmentMutation = useMutation(
-    (tier: string) => assessmentAPI.startWithTier({ tier }),
-    {
-      onSuccess: () => {
-        toast.success('Assessment started!');
-        router.push('/assessment/questions');
-      },
-      onError: (error: any) => {
-        console.error('Failed to start assessment:', error);
-        const errorMessage =
-          error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
-        toast.error(errorMessage);
-      },
-    }
-  );
+  const startAssessmentMutation = useMutation<any, Error, string>({
+    mutationFn: (tier: string) => assessmentAPI.startWithTier({ tier }),
+    onSuccess: () => {
+      toast.success('Assessment started!');
+      router.push('/assessment/questions');
+    },
+    onError: (error: any) => {
+      console.error('Failed to start assessment:', error);
+      const errorMessage =
+        error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+      toast.error(errorMessage);
+    },
+  });
 
   if (isLoading) {
     return (
@@ -178,10 +176,10 @@ export default function StartAssessment() {
               </button>
               <button
                 onClick={() => startAssessmentMutation.mutate(selectedTier)}
-                disabled={startAssessmentMutation.isLoading}
+                disabled={startAssessmentMutation.isPending}
                 className="px-8 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
               >
-                {startAssessmentMutation.isLoading
+                {startAssessmentMutation.isPending
                   ? 'Starting Assessment...'
                   : `Start ${tiers[selectedTier]?.name || 'Assessment'}`}
               </button>
