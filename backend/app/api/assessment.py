@@ -558,7 +558,7 @@ async def start_assessment_with_tier(
     tier_request: dict[str, str],
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> dict[str, Assessment]:
+) -> dict[str, object]:
     """Start assessment with selected tier"""
 
     tier = tier_request.get("tier")
