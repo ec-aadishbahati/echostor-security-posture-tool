@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/{assessment_id}/generate", response_model=UserReportResponse)
+@router.post("/{assessment_id}/generate", response_model=None)
 async def generate_report(
     request: Request,
     assessment_id: str,
@@ -198,7 +198,7 @@ async def request_ai_report(
     }
 
 
-@router.post("/admin/{report_id}/generate-ai", response_model=AdminReportResponse)
+@router.post("/admin/{report_id}/generate-ai", response_model=None)
 async def admin_generate_ai_report(
     request: Request,
     report_id: str,
@@ -239,7 +239,7 @@ async def admin_generate_ai_report(
     return AdminReportResponse.model_validate(report)
 
 
-@router.post("/admin/{report_id}/retry-standard", response_model=AdminReportResponse)
+@router.post("/admin/{report_id}/retry-standard", response_model=None)
 async def admin_retry_standard_report(
     request: Request,
     report_id: str,
@@ -370,7 +370,7 @@ async def admin_bulk_release_ai_reports(
     }
 
 
-@router.post("/admin/{report_id}/retry-ai", response_model=AdminReportResponse)
+@router.post("/admin/{report_id}/retry-ai", response_model=None)
 async def admin_retry_ai_report(
     request: Request,
     report_id: str,
@@ -413,7 +413,7 @@ async def admin_retry_ai_report(
     return AdminReportResponse.model_validate(report)
 
 
-@router.post("/admin/{report_id}/regenerate-pdf")
+@router.post("/admin/{report_id}/regenerate-pdf", response_model=None)
 async def admin_regenerate_pdf_from_artifacts(
     request: Request,
     report_id: str,
@@ -520,7 +520,7 @@ async def admin_regenerate_pdf_from_artifacts(
     }
 
 
-@router.get("/{report_id}/download")
+@router.get("/{report_id}/download", response_model=None)
 async def download_report(
     request: Request,
     report_id: str,

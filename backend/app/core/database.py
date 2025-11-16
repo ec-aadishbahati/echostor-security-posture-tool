@@ -25,12 +25,26 @@ Base = declarative_base()
 
 
 @event.listens_for(engine, "before_cursor_execute")
-def before_cursor_execute(conn: object, cursor: object, statement: object, parameters: object, context: object, executemany: object) -> None:
+def before_cursor_execute(
+    conn: object,
+    cursor: object,
+    statement: object,
+    parameters: object,
+    context: object,
+    executemany: object,
+) -> None:
     conn.info.setdefault("query_start_time", []).append(time.time())  # type: ignore[attr-defined]
 
 
 @event.listens_for(engine, "after_cursor_execute")
-def after_cursor_execute(conn: object, cursor: object, statement: object, parameters: object, context: object, executemany: object) -> None:
+def after_cursor_execute(
+    conn: object,
+    cursor: object,
+    statement: object,
+    parameters: object,
+    context: object,
+    executemany: object,
+) -> None:
     total_time = time.time() - conn.info["query_start_time"].pop()
     duration_ms = total_time * 1000
 
