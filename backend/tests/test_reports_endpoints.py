@@ -681,7 +681,7 @@ def test_download_report_regenerates_when_file_missing(
     monkeypatch.setattr("app.api.reports.get_storage_service", lambda: mock_storage)
     monkeypatch.setattr(
         "app.api.reports.HTML",
-        lambda string: MagicMock(write_pdf=lambda: fake_pdf_bytes),
+        lambda string, url_fetcher=None: MagicMock(write_pdf=lambda: fake_pdf_bytes),
     )
     monkeypatch.setattr(
         "app.api.reports.generate_report_html", lambda *args, **kwargs: "<html></html>"
@@ -790,7 +790,7 @@ def test_download_report_uses_filtered_structure_for_customized_assessment(
     monkeypatch.setattr("app.api.reports.get_storage_service", lambda: mock_storage)
     monkeypatch.setattr(
         "app.api.reports.HTML",
-        lambda string: MagicMock(write_pdf=lambda: fake_pdf_bytes),
+        lambda string, url_fetcher=None: MagicMock(write_pdf=lambda: fake_pdf_bytes),
     )
     monkeypatch.setattr(
         "app.api.reports.generate_report_html", lambda *args, **kwargs: "<html></html>"
