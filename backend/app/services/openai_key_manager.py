@@ -2,6 +2,8 @@
 
 import logging
 from datetime import UTC, datetime, timedelta
+from types import TracebackType
+from typing import Self
 
 from openai import OpenAI
 from sqlalchemy import and_
@@ -29,11 +31,16 @@ class OpenAIKeyManager:
         if self._owns_session:
             self.db = SessionLocal()
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         """Context manager entry."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Context manager exit - close session if we own it."""
         if self._owns_session and self.db:
             self.db.close()
@@ -148,7 +155,7 @@ class OpenAIKeyManager:
 
         return (key.id, decrypted_key)
 
-    def record_success(self, key_id: str):
+    def record_success(self, key_id: str) -> None:
         """Record a successful API call for a key.
 
         Args:
@@ -161,7 +168,7 @@ class OpenAIKeyManager:
             self.db.commit()
             logger.debug(f"Recorded success for key: {key.key_name}")
 
-    def record_failure(self, key_id: str, error: Exception):
+    def record_failure(self, key_id: str, error: Exception) -> None:
         """Record a failed API call for a key and apply cooldown if needed.
 
         Args:
@@ -222,7 +229,7 @@ class OpenAIKeyManager:
         )
         return key
 
-    def delete_key(self, key_id: str):
+    def delete_key(self, key_id: str) -> None:
         """Delete an API key.
 
         Args:

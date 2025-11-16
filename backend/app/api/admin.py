@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import and_, desc, func
@@ -19,6 +20,7 @@ from app.schemas.user import (
 )
 from app.services.cache import cache_service
 from app.utils.datetime_utils import to_utc_aware
+from app.utils.pagination import PaginatedResponse
 
 router = APIRouter()
 
@@ -31,7 +33,7 @@ async def get_all_users(
     search: str | None = Query(None),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> PaginatedResponse[UserResponse]:
     """Get all users with pagination and search"""
 
     query = db.query(User)
@@ -70,7 +72,7 @@ async def get_user(
     user_id: str,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> UserResponse:
     """Get a specific user by ID"""
 
     user = db.query(User).filter(User.id == user_id).first()
@@ -97,7 +99,7 @@ async def get_user_assessments(
     user_id: str,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> list[AssessmentResponseSchema]:
     """Get all assessments for a specific user"""
 
     try:
@@ -145,7 +147,7 @@ async def get_all_assessments(
     status: str | None = Query(None),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> PaginatedResponse[AssessmentResponseSchema]:
     """Get all assessments with filtering"""
 
     try:
@@ -191,7 +193,7 @@ async def get_dashboard_stats(
     request: Request,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, Any]:
     """Get dashboard statistics"""
 
     CACHE_KEY = "dashboard:stats"
@@ -286,7 +288,7 @@ async def get_users_progress_summary(
     request: Request,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, Any]:
     """Get detailed progress summary for all users"""
 
     try:
@@ -342,7 +344,7 @@ async def get_all_reports(
     search: str | None = Query(None),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> PaginatedResponse[AdminReportResponse]:
     """Get all reports with filtering and search"""
 
     try:
@@ -404,7 +406,7 @@ async def get_alerts(
     request: Request,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, Any]:
     """Get system alerts for admin dashboard"""
 
     try:
@@ -488,7 +490,7 @@ async def delete_user(
     user_id: str,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Delete a user and all associated data"""
 
     try:
@@ -533,10 +535,10 @@ async def delete_user(
 async def reset_user_password(
     request: Request,
     user_id: str,
-    request_data: dict,
+    request_data: dict[str, Any],
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Reset a user's password"""
 
     try:
@@ -583,7 +585,7 @@ async def get_consultation_requests(
     limit: int = Query(100, ge=1, le=1000),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> PaginatedResponse[dict[str, Any]]:
     """Get all consultation requests from users"""
 
     try:
@@ -629,7 +631,7 @@ async def bulk_update_user_status(
     request_data: BulkUpdateUserStatusRequest,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, Any]:
     """Bulk activate/deactivate users"""
 
     try:
@@ -673,7 +675,7 @@ async def bulk_delete_users(
     request_data: BulkDeleteUsersRequest,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, Any]:
     """Bulk delete users and all associated data"""
 
     try:
@@ -713,9 +715,9 @@ async def log_admin_action(
     admin_email: str,
     action: str,
     target_user_id: str | None = None,
-    details: dict | None = None,
-    db: Session = None,
-):
+    details: dict[str, Any] | None = None,
+    db: Session | None = None,
+) -> None:
     """Log admin actions for audit trail"""
 
     if not db:
