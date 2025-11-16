@@ -478,7 +478,8 @@ async def admin_regenerate_pdf_from_artifacts(
     structure = load_assessment_structure()
     if assessment.selected_section_ids:
         structure = filter_structure_by_sections(
-            structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
+            structure,
+            list(assessment.selected_section_ids),  # type: ignore[arg-type]
         )
 
     scores = calculate_assessment_scores(responses, structure)
@@ -620,7 +621,8 @@ async def download_report(
             structure = load_assessment_structure()
             if assessment.selected_section_ids:
                 structure = filter_structure_by_sections(
-                    structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
+                    structure,
+                    list(assessment.selected_section_ids),  # type: ignore[arg-type]
                 )
 
             scores = calculate_assessment_scores(responses, structure)

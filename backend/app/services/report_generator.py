@@ -113,7 +113,8 @@ def generate_standard_report(report_id: str) -> None:
                 f"Filtering structure to {len(assessment.selected_section_ids)} selected sections"
             )
             structure = filter_structure_by_sections(
-                structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
+                structure,
+                list(assessment.selected_section_ids),  # type: ignore[arg-type]
             )
 
         logger.info("Calculating scores")
@@ -212,12 +213,15 @@ def generate_ai_report(report_id: str) -> None:
                 f"Filtering structure to {len(assessment.selected_section_ids)} selected sections"
             )
             structure = filter_structure_by_sections(
-                structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
+                structure,
+                list(assessment.selected_section_ids),  # type: ignore[arg-type]
             )
 
         logger.info("Generating AI insights with parallel processing")
         ai_insights = asyncio.run(
-            generate_ai_insights_async(responses, structure, key_manager, str(report.id))
+            generate_ai_insights_async(
+                responses, structure, key_manager, str(report.id)
+            )
         )
 
         logger.info("Calculating scores")

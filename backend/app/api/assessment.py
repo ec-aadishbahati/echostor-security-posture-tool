@@ -62,7 +62,8 @@ async def get_filtered_assessment_structure(
 
     if assessment.selected_section_ids:
         structure = filter_structure_by_sections(
-            structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
+            structure,
+            list(assessment.selected_section_ids),  # type: ignore[arg-type]
         )
 
     return structure
@@ -411,7 +412,8 @@ async def save_assessment_progress(
 
     if assessment.selected_section_ids:
         structure = filter_structure_by_sections(
-            structure, list(assessment.selected_section_ids)  # type: ignore[arg-type]
+            structure,
+            list(assessment.selected_section_ids),  # type: ignore[arg-type]
         )
 
     total_questions = structure.total_questions

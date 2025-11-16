@@ -52,7 +52,9 @@ class CacheService:
             value = self._redis_client.get(key)
             if value:
                 logger.debug(f"Cache hit: {key}")
-                return json.loads(str(value))
+                if isinstance(value, bytes):
+                    return json.loads(value.decode("utf-8"))
+                return json.loads(value)
             logger.debug(f"Cache miss: {key}")
             return None
         except Exception as e:

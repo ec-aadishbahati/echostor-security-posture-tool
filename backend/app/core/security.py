@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from typing import Literal
 
 from fastapi import HTTPException, Response, status
 from jose import JWTError, jwt
@@ -10,7 +11,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 AUTH_COOKIE_NAME = "access_token"
 COOKIE_PATH = "/api"
-COOKIE_SAMESITE = "none"  # Required for cross-site (Vercel + Fly.io)
+COOKIE_SAMESITE: Literal["lax", "strict", "none"] = "none"  # Required for cross-site (Vercel + Fly.io)
 COOKIE_SECURE = True  # Required with SameSite=None
 
 
@@ -84,7 +85,7 @@ def set_auth_cookie(response: Response, token: str, max_age: int) -> None:
         path=COOKIE_PATH,
         httponly=True,
         secure=COOKIE_SECURE,
-        samesite=COOKIE_SAMESITE,  # type: ignore[arg-type]
+        samesite=COOKIE_SAMESITE,
     )
 
 
@@ -97,7 +98,7 @@ def clear_auth_cookie(response: Response) -> None:
         path=COOKIE_PATH,
         httponly=True,
         secure=COOKIE_SECURE,
-        samesite=COOKIE_SAMESITE,  # type: ignore[arg-type]
+        samesite=COOKIE_SAMESITE,
     )
 
 
