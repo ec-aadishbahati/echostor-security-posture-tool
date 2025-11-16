@@ -5,13 +5,10 @@ Revises: 1763254200, a1b2c3d4e5f6
 Create Date: 2025-11-16 01:57:24.561109
 
 """
-from alembic import op
-import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
-revision = '575105e0b6ed'
-down_revision = ('1763254200', 'a1b2c3d4e5f6')
+revision = "575105e0b6ed"
+down_revision = ("1763254200", "a1b2c3d4e5f6")
 branch_labels = None
 depends_on = None
 
