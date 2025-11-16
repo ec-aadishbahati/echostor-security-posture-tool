@@ -54,7 +54,7 @@ class CacheService:
                 logger.debug(f"Cache hit: {key}")
                 if isinstance(value, bytes):
                     return json.loads(value.decode("utf-8"))
-                return json.loads(value)
+                return json.loads(str(value))
             logger.debug(f"Cache miss: {key}")
             return None
         except Exception as e:

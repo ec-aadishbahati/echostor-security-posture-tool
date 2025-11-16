@@ -6,7 +6,7 @@ import uuid
 from datetime import UTC, datetime
 from typing import Any
 
-import markdown2
+import markdown2  # type: ignore[import-untyped]
 from jinja2 import Environment
 from openai import (
     APIConnectionError,
@@ -38,7 +38,13 @@ from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
 from app.models.ai_artifacts import AISynthesisArtifact as AISynthesisArtifactModel
 from app.models.ai_metadata import AIGenerationMetadata
 from app.models.assessment import Assessment, AssessmentResponse, Report
-from app.schemas.ai_artifacts import SectionAIArtifact, SynthesisArtifact
+from app.schemas.ai_artifacts import (
+    Benchmark,
+    Gap,
+    Recommendation,
+    SectionAIArtifact,
+    SynthesisArtifact,
+)
 from app.schemas.assessment import Question
 from app.services.ai_cache import AICacheService
 from app.services.ai_synthesis import (
@@ -362,7 +368,7 @@ def calculate_assessment_scores(
 ) -> dict[str, Any]:
     """Calculate assessment scores by section"""
 
-    scores = {
+    scores: dict[str, Any] = {
         "scoring_version": "v2" if settings.SCORING_V2_ENABLED else "v1",
         "question_library_version": settings.QUESTION_LIBRARY_VERSION,
     }
@@ -416,15 +422,21 @@ def calculate_assessment_scores(
             "not_applicable_count": section_na_count,
         }
 
-    total_score = sum(s["score"] for s in scores.values() if isinstance(s, dict))
-    total_max_score = sum(
-        s["max_score"] for s in scores.values() if isinstance(s, dict)
-    )
+    from collections.abc import Mapping
+    from typing import cast
+
+    dict_scores: list[Mapping[str, Any]] = [
+        cast(Mapping[str, Any], s) for s in scores.values() if isinstance(s, dict)
+    ]
+    total_score = sum(s["score"] for s in dict_scores if "score" in s)
+    total_max_score = sum(s["max_score"] for s in dict_scores if "max_score" in s)
     total_unknown = sum(
-        s.get("unknown_count", 0) for s in scores.values() if isinstance(s, dict)
+        s.get("unknown_count", 0) for s in dict_scores if "unknown_count" in s
     )
     total_na = sum(
-        s.get("not_applicable_count", 0) for s in scores.values() if isinstance(s, dict)
+        s.get("not_applicable_count", 0)
+        for s in dict_scores
+        if "not_applicable_count" in s
     )
 
     overall_percentage = (
@@ -505,7 +517,7 @@ def calculate_question_score_v2(
             best_weight = 0
             all_flags = []
 
-            for selected_value in answer:
+            for selected_value in list(answer):
                 mapped_value = map_numeric_to_slug(question, str(selected_value))
                 normalized = normalize_option_value(mapped_value)
                 weight, value_flags = get_option_weight(scale_type, normalized)
@@ -929,7 +941,7 @@ async def generate_ai_insights_async(
                                 logger.info(
                                     f"PII redacted in answer for question {question.id} (async, {answer_redaction_count} items)"
                                 )
-                            answer_value = redacted_answer_str
+                            answer_value = redacted_answer_str  # type: ignore[assignment]
 
                             if comment_value:
                                 redacted_comment, comment_redaction_count = (
@@ -1026,6 +1038,9 @@ async def generate_ai_insights_async(
                             temperature=settings.OPENAI_TEMPERATURE,
                         )
                         latency_ms = int((time.time() - start_time) * 1000)
+
+                        if not response or not response.choices:
+                            raise ValueError("Empty response from OpenAI")
 
                         json_str = response.choices[0].message.content
                         artifact = safe_validate_section_artifact(json_str, section.id)
@@ -1182,16 +1197,18 @@ async def generate_ai_insights_async(
                         return (section.id, degraded_artifact, True)
         finally:
             db.close()
+        return None
 
     tasks = [process_section(section) for section in structure.sections]
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
     for result in results:
         if result and not isinstance(result, Exception):
-            section_id, artifact, is_degraded = result
+            section_id, artifact, is_degraded = result  # type: ignore[misc]
             insights[section_id] = artifact
         elif isinstance(result, Exception):
-            logger.error(f"Section processing raised exception: {result}")
+            error_msg = str(result)
+            logger.error(f"Section processing raised exception: {error_msg}")
 
     return insights
 
@@ -1204,30 +1221,30 @@ def create_degraded_artifact(section_id: str) -> SectionAIArtifact:
         risk_explanation="AI analysis temporarily unavailable for this section. Please contact support for manual analysis.",
         strengths=["Assessment data collected successfully"],
         gaps=[
-            {
-                "gap": "AI analysis unavailable",
-                "linked_signals": ["Q1"],
-                "severity": "Low",
-            }
+            Gap(
+                gap="AI analysis unavailable",
+                linked_signals=["Q1"],
+                severity="Low",
+            )
         ],
         recommendations=[
-            {
-                "action": "Retry AI analysis or request manual review",
-                "rationale": "Automated analysis encountered an error",
-                "linked_signals": ["Q1"],
-                "effort": "Low",
-                "impact": "Low",
-                "timeline": "30-day",
-                "references": [],
-            }
+            Recommendation(
+                action="Retry AI analysis or request manual review",
+                rationale="Automated analysis encountered an error",
+                linked_signals=["Q1"],
+                effort="Low",
+                impact="Low",
+                timeline="30-day",
+                references=[],
+            )
         ],
         benchmarks=[
-            {
-                "control": "Assessment Completion",
-                "status": "Implemented",
-                "framework": "Internal",
-                "reference": "",
-            }
+            Benchmark(
+                control="Assessment Completion",
+                status="Implemented",
+                framework="Internal",
+                reference="",
+            )
         ],
         confidence_score=0.0,
     )

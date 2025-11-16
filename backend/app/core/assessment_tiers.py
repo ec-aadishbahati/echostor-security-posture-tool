@@ -2,7 +2,20 @@
 Assessment tier definitions for Quick/Standard/Deep assessment modes
 """
 
-ASSESSMENT_TIERS = {
+from typing import TypedDict
+
+
+class TierInfo(TypedDict, total=False):
+    """Type definition for assessment tier information"""
+
+    name: str
+    description: str
+    duration: str
+    total_questions: int
+    sections: list[str] | str  # Can be list of section IDs or "all"
+
+
+ASSESSMENT_TIERS: dict[str, TierInfo] = {
     "quick": {
         "name": "Quick Check",
         "description": "Essential security fundamentals (15-25 questions)",
@@ -59,7 +72,7 @@ def get_tier_sections(tier: str) -> list[str]:
         return sections  # type: ignore[return-value]
 
 
-def get_tier_info(tier: str) -> dict[str, object]:
+def get_tier_info(tier: str) -> TierInfo:
     """Get tier information for UI"""
     if tier not in ASSESSMENT_TIERS:
         raise ValueError(f"Unknown tier: {tier}")

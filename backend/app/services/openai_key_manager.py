@@ -190,7 +190,7 @@ class OpenAIKeyManager:
         is_rate_limit = "429" in error_str or "rate limit" in error_str
 
         if is_rate_limit:
-            cooldown_minutes = min(2**key.error_count, 60)  # Max 60 minutes
+            cooldown_minutes = min(2 ** int(key.error_count), 60)  # Max 60 minutes
             key.cooldown_until = datetime.now(UTC) + timedelta(minutes=cooldown_minutes)  # type: ignore[assignment]
             logger.warning(
                 f"Rate limit hit for key {key.key_name}. "

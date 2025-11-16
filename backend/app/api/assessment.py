@@ -378,17 +378,17 @@ async def save_assessment_progress(
         .all()
     )
 
-    existing_by_question = {r.question_id: r for r in existing_responses}
+    existing_by_question = {str(r.question_id): r for r in existing_responses}
 
     new_responses_count = 0
 
     for response_data in progress_data.responses:
-        existing_response = existing_by_question.get(response_data.question_id)
+        existing_response = existing_by_question.get(str(response_data.question_id))
 
         if existing_response:
-            existing_response.answer_value = response_data.answer_value
-            existing_response.comment = response_data.comment
-            existing_response.updated_at = datetime.now(UTC)
+            existing_response.answer_value = response_data.answer_value  # type: ignore[assignment]
+            existing_response.comment = response_data.comment  # type: ignore[assignment]
+            existing_response.updated_at = datetime.now(UTC)  # type: ignore[assignment]
         else:
             new_response = AssessmentResponseModel(
                 assessment_id=assessment_id,
@@ -425,7 +425,7 @@ async def save_assessment_progress(
 
     return {
         "message": "Progress saved successfully",
-        "progress_percentage": assessment.progress_percentage,
+        "progress_percentage": float(assessment.progress_percentage),
     }
 
 

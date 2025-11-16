@@ -2,6 +2,8 @@
 Scoring scales for weighted assessment scoring
 """
 
+from typing import Any
+
 SCALE_WEIGHTS: dict[str, dict[str, float]] = {
     "maturity": {
         "optimized": 1.0,
@@ -88,7 +90,7 @@ def normalize_option_value(value: str) -> str:
     return normalized
 
 
-def map_numeric_to_slug(question: object, answer_value: str) -> str:
+def map_numeric_to_slug(question: Any, answer_value: str) -> str:
     """
     Map numeric answer values to slugs based on question's current options.
 

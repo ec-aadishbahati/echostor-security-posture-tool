@@ -45,16 +45,16 @@ def after_cursor_execute(
     context: object,
     executemany: object,
 ) -> None:
-    total_time = time.time() - conn.info["query_start_time"].pop()
+    total_time = time.time() - conn.info["query_start_time"].pop()  # type: ignore[attr-defined]
     duration_ms = total_time * 1000
 
     if duration_ms > SLOW_QUERY_THRESHOLD:
-        logger.warning(f"Slow query ({duration_ms:.2f}ms): {statement[:200]}")
+        logger.warning(f"Slow query ({duration_ms:.2f}ms): {str(statement)[:200]}")  # type: ignore[index]
         if settings.SENTRY_DSN:
             sentry_sdk.capture_message(
                 f"Slow database query: {duration_ms:.2f}ms",
                 level="warning",
-                extras={"query": statement[:500], "duration_ms": duration_ms},
+                extras={"query": str(statement)[:500], "duration_ms": duration_ms},  # type: ignore[dict-item]
             )
 
 
