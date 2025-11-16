@@ -1,8 +1,8 @@
-import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric } from 'web-vitals';
+import { onCLS, onFCP, onINP, onLCP, onTTFB, Metric } from 'web-vitals';
 
 const THRESHOLDS = {
   LCP: { good: 2500, needsImprovement: 4000 },
-  FID: { good: 100, needsImprovement: 300 },
+  INP: { good: 200, needsImprovement: 500 },
   CLS: { good: 0.1, needsImprovement: 0.25 },
   FCP: { good: 1800, needsImprovement: 3000 },
   TTFB: { good: 800, needsImprovement: 1800 },
@@ -51,12 +51,12 @@ function reportMetric(metric: Metric): void {
 export function initWebVitals(): void {
   if (typeof window === 'undefined') return;
 
-  getCLS(reportMetric);
-  getFID(reportMetric);
-  getLCP(reportMetric);
+  onCLS(reportMetric);
+  onINP(reportMetric);
+  onLCP(reportMetric);
 
-  getFCP(reportMetric);
-  getTTFB(reportMetric);
+  onFCP(reportMetric);
+  onTTFB(reportMetric);
 }
 
 export { THRESHOLDS };

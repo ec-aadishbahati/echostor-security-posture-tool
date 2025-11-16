@@ -19,6 +19,50 @@ from app.middleware.security_headers import SecurityHeadersMiddleware
 
 logger = logging.getLogger(__name__)
 
+
+def scrub_pii_from_sentry_event(event: dict, hint: dict | None = None) -> dict:
+    """Scrub PII from Sentry events before sending"""
+    import re
+
+    pii_patterns = {
+        "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+        "phone": r"\b\d{3}[-.]?\d{3}[-.]?\d{4}\b",
+        "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
+        "ip": r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b",
+    }
+
+    def scrub_string(text: str) -> str:
+        """Scrub PII from a string"""
+        if not isinstance(text, str):
+            return text
+        for pii_type, pattern in pii_patterns.items():
+            text = re.sub(pattern, f"[REDACTED_{pii_type.upper()}]", text)
+        return text
+
+    def scrub_dict(data: dict) -> dict:
+        """Recursively scrub PII from dictionary"""
+        scrubbed = {}
+        for key, value in data.items():
+            if isinstance(value, str):
+                scrubbed[key] = scrub_string(value)
+            elif isinstance(value, dict):
+                scrubbed[key] = scrub_dict(value)
+            elif isinstance(value, list):
+                scrubbed[key] = [
+                    scrub_dict(item)
+                    if isinstance(item, dict)
+                    else scrub_string(item)
+                    if isinstance(item, str)
+                    else item
+                    for item in value
+                ]
+            else:
+                scrubbed[key] = value
+        return scrubbed
+
+    return scrub_dict(event)
+
+
 if settings.SENTRY_DSN:
     sentry_sdk.init(
         dsn=settings.SENTRY_DSN,
@@ -26,12 +70,14 @@ if settings.SENTRY_DSN:
         traces_sample_rate=settings.SENTRY_TRACES_SAMPLE_RATE,
         profiles_sample_rate=settings.SENTRY_PROFILES_SAMPLE_RATE,
         enable_tracing=True,
+        send_default_pii=False,
         integrations=[
             FastApiIntegration(),
             SqlalchemyIntegration(),
         ],
+        before_send=lambda event, hint: scrub_pii_from_sentry_event(event),
     )
-    logger.info("Sentry performance monitoring initialized")
+    logger.info("Sentry performance monitoring initialized with PII scrubbing")
 else:
     logger.warning("Sentry DSN not configured, performance monitoring disabled")
 
@@ -74,8 +120,14 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allow_headers=[
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "Origin",
+        "X-Requested-With",
+    ],
 )
 
 app.add_middleware(CSRFMiddleware)

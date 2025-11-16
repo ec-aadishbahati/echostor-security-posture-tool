@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -34,14 +34,12 @@ export default function AdminUsers() {
     data: usersData,
     isLoading,
     error,
-  } = useQuery(
-    ['adminUsers', { skip, limit, search }],
-    () => adminAPI.getUsers({ skip, limit, search: search || undefined }),
-    {
-      keepPreviousData: true,
-      refetchInterval: 30000,
-    }
-  );
+  } = useQuery({
+    queryKey: ['adminUsers', { skip, limit, search }],
+    queryFn: () => adminAPI.getUsers({ skip, limit, search: search || undefined }),
+    placeholderData: (previousData) => previousData,
+    refetchInterval: 30000,
+  });
 
   const users = usersData?.data?.items || [];
   const pagination = usersData?.data;
@@ -63,10 +61,11 @@ export default function AdminUsers() {
     });
   };
 
-  const deleteUserMutation = useMutation((userId: string) => adminAPI.deleteUser(userId), {
+  const deleteUserMutation = useMutation({
+    mutationFn: (userId: string) => adminAPI.deleteUser(userId),
     onSuccess: () => {
       toast.success('User deleted successfully');
-      queryClient.invalidateQueries('adminUsers');
+      queryClient.invalidateQueries({ queryKey: ['adminUsers'] });
       setShowDeleteModal(false);
       setSelectedUser(null);
     },
@@ -75,43 +74,40 @@ export default function AdminUsers() {
     },
   });
 
-  const resetPasswordMutation = useMutation(
-    ({ userId, password }: { userId: string; password: string }) =>
+  const resetPasswordMutation = useMutation({
+    mutationFn: ({ userId, password }: { userId: string; password: string }) =>
       adminAPI.resetUserPassword(userId, password),
-    {
-      onSuccess: () => {
-        toast.success('Password reset successfully');
-        setShowPasswordModal(false);
-        setSelectedUser(null);
-        setNewPassword('');
-      },
-      onError: () => {
-        toast.error('Failed to reset password');
-      },
-    }
-  );
+    onSuccess: () => {
+      toast.success('Password reset successfully');
+      setShowPasswordModal(false);
+      setSelectedUser(null);
+      setNewPassword('');
+    },
+    onError: () => {
+      toast.error('Failed to reset password');
+    },
+  });
 
-  const bulkUpdateStatusMutation = useMutation(
-    ({ userIds, isActive }: { userIds: string[]; isActive: boolean }) =>
+  const bulkUpdateStatusMutation = useMutation({
+    mutationFn: ({ userIds, isActive }: { userIds: string[]; isActive: boolean }) =>
       adminAPI.bulkUpdateUserStatus(userIds, isActive),
-    {
-      onSuccess: (data) => {
-        toast.success(`${data.data.message}`);
-        queryClient.invalidateQueries('adminUsers');
-        setSelectedUsers([]);
-        setShowBulkModal(false);
-        setBulkOperation(null);
-      },
-      onError: () => {
-        toast.error('Failed to update users');
-      },
-    }
-  );
-
-  const bulkDeleteMutation = useMutation((userIds: string[]) => adminAPI.bulkDeleteUsers(userIds), {
     onSuccess: (data) => {
       toast.success(`${data.data.message}`);
-      queryClient.invalidateQueries('adminUsers');
+      queryClient.invalidateQueries({ queryKey: ['adminUsers'] });
+      setSelectedUsers([]);
+      setShowBulkModal(false);
+      setBulkOperation(null);
+    },
+    onError: () => {
+      toast.error('Failed to update users');
+    },
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: (userIds: string[]) => adminAPI.bulkDeleteUsers(userIds),
+    onSuccess: (data) => {
+      toast.success(`${data.data.message}`);
+      queryClient.invalidateQueries({ queryKey: ['adminUsers'] });
       setSelectedUsers([]);
       setShowBulkModal(false);
       setBulkOperation(null);
@@ -370,10 +366,10 @@ export default function AdminUsers() {
                       </button>
                       <button
                         onClick={confirmDelete}
-                        disabled={deleteUserMutation.isLoading}
+                        disabled={deleteUserMutation.isPending}
                         className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md disabled:opacity-50"
                       >
-                        {deleteUserMutation.isLoading ? 'Deleting...' : 'Delete'}
+                        {deleteUserMutation.isPending ? 'Deleting...' : 'Delete'}
                       </button>
                     </div>
                   </div>
@@ -413,10 +409,10 @@ export default function AdminUsers() {
                       </button>
                       <button
                         onClick={confirmPasswordReset}
-                        disabled={resetPasswordMutation.isLoading || !newPassword}
+                        disabled={resetPasswordMutation.isPending || !newPassword}
                         className="btn-primary disabled:opacity-50"
                       >
-                        {resetPasswordMutation.isLoading ? 'Resetting...' : 'Reset Password'}
+                        {resetPasswordMutation.isPending ? 'Resetting...' : 'Reset Password'}
                       </button>
                     </div>
                   </div>
@@ -457,7 +453,7 @@ export default function AdminUsers() {
                       <button
                         onClick={confirmBulkOperation}
                         disabled={
-                          bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading
+                          bulkUpdateStatusMutation.isPending || bulkDeleteMutation.isPending
                         }
                         className={`px-4 py-2 rounded-md disabled:opacity-50 ${
                           bulkOperation === 'delete'
@@ -465,7 +461,7 @@ export default function AdminUsers() {
                             : 'btn-primary'
                         }`}
                       >
-                        {bulkUpdateStatusMutation.isLoading || bulkDeleteMutation.isLoading
+                        {bulkUpdateStatusMutation.isPending || bulkDeleteMutation.isPending
                           ? 'Processing...'
                           : `${
                               bulkOperation === 'delete'

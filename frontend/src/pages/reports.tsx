@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Layout from '../components/Layout';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Link from 'next/link';
@@ -24,11 +24,14 @@ export default function Reports() {
     data: reportsData,
     isLoading,
     error,
-  } = useQuery('userReports', () => reportsAPI.getUserReports(), {
+  } = useQuery({
+    queryKey: ['userReports'],
+    queryFn: () => reportsAPI.getUserReports(),
     refetchInterval: 30000,
   });
 
-  const downloadMutation = useMutation((reportId: string) => reportsAPI.downloadReport(reportId), {
+  const downloadMutation = useMutation({
+    mutationFn: (reportId: string) => reportsAPI.downloadReport(reportId),
     onSuccess: (response, reportId) => {
       const blob = new Blob([response.data], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
@@ -46,31 +49,27 @@ export default function Reports() {
     },
   });
 
-  const generateReportMutation = useMutation(
-    (assessmentId: string) => reportsAPI.generateReport(assessmentId),
-    {
-      onSuccess: () => {
-        toast.success('Report generation started!');
-        queryClient.invalidateQueries('userReports');
-      },
-      onError: () => {
-        toast.error('Failed to generate report');
-      },
-    }
-  );
+  const generateReportMutation = useMutation({
+    mutationFn: (assessmentId: string) => reportsAPI.generateReport(assessmentId),
+    onSuccess: () => {
+      toast.success('Report generation started!');
+      queryClient.invalidateQueries({ queryKey: ['userReports'] });
+    },
+    onError: () => {
+      toast.error('Failed to generate report');
+    },
+  });
 
-  const requestAIReportMutation = useMutation(
-    (assessmentId: string) => reportsAPI.requestAIReport(assessmentId),
-    {
-      onSuccess: () => {
-        toast.success('AI-enhanced report requested! You will be notified when ready.');
-        queryClient.invalidateQueries('userReports');
-      },
-      onError: () => {
-        toast.error('Failed to request AI report');
-      },
-    }
-  );
+  const requestAIReportMutation = useMutation({
+    mutationFn: (assessmentId: string) => reportsAPI.requestAIReport(assessmentId),
+    onSuccess: () => {
+      toast.success('AI-enhanced report requested! You will be notified when ready.');
+      queryClient.invalidateQueries({ queryKey: ['userReports'] });
+    },
+    onError: () => {
+      toast.error('Failed to request AI report');
+    },
+  });
 
   const reports = reportsData?.data?.items || [];
 
@@ -254,7 +253,7 @@ export default function Reports() {
                           {(report.status === 'completed' || report.status === 'released') && (
                             <button
                               onClick={() => handleDownload(report.id)}
-                              disabled={downloadMutation.isLoading}
+                              disabled={downloadMutation.isPending}
                               className="btn-secondary inline-flex items-center text-sm"
                             >
                               <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
@@ -332,7 +331,7 @@ export default function Reports() {
                             {!hasStandard && (
                               <button
                                 onClick={() => handleGenerateReport(assessmentId)}
-                                disabled={generateReportMutation.isLoading}
+                                disabled={generateReportMutation.isPending}
                                 className="btn-secondary text-sm"
                               >
                                 Generate Standard Report
@@ -342,7 +341,7 @@ export default function Reports() {
                             {!hasAI && (
                               <button
                                 onClick={() => handleRequestAIReport(assessmentId)}
-                                disabled={requestAIReportMutation.isLoading}
+                                disabled={requestAIReportMutation.isPending}
                                 className="btn-primary text-sm inline-flex items-center"
                               >
                                 <SparklesIcon className="h-4 w-4 mr-1" />

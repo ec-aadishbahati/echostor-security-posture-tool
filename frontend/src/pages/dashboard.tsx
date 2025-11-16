@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
@@ -24,12 +24,16 @@ export default function Dashboard() {
     data: assessment,
     isLoading: assessmentLoading,
     error: assessmentError,
-  } = useQuery('latestAssessment', assessmentAPI.getLatestAssessment, {
+  } = useQuery({
+    queryKey: ['latestAssessment'],
+    queryFn: assessmentAPI.getLatestAssessment,
     retry: false,
     refetchOnWindowFocus: false,
   });
 
-  const { data: retakeData } = useQuery('canRetake', assessmentAPI.canRetakeAssessment, {
+  const { data: retakeData } = useQuery({
+    queryKey: ['canRetake'],
+    queryFn: assessmentAPI.canRetakeAssessment,
     refetchOnWindowFocus: false,
   });
 

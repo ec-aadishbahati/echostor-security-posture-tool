@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -21,14 +21,12 @@ export default function AdminConsultations() {
     data: consultationsData,
     isLoading,
     error: _error,
-  } = useQuery(
-    ['adminConsultations', { skip, limit }],
-    () => adminAPI.getConsultationRequests(skip, limit),
-    {
-      keepPreviousData: true,
-      refetchInterval: 30000,
-    }
-  );
+  } = useQuery({
+    queryKey: ['adminConsultations', { skip, limit }],
+    queryFn: () => adminAPI.getConsultationRequests(skip, limit),
+    placeholderData: (previousData) => previousData,
+    refetchInterval: 30000,
+  });
 
   const consultations = consultationsData?.data?.items || [];
   const pagination = consultationsData?.data;

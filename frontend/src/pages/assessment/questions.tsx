@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/lib/auth';
 import { useAutoLogout } from '@/lib/useAutoLogout';
 import Layout from '@/components/Layout';
@@ -63,21 +63,29 @@ export default function AssessmentQuestions() {
   const [hasManuallyNavigated, setHasManuallyNavigated] = useState(false);
   const responsesRef = useRef(responses);
 
-  const { data: structure, isLoading: structureLoading } = useQuery(
-    ['assessmentStructure', assessmentId],
-    () =>
-      assessmentId ? assessmentAPI.getFilteredStructure(assessmentId) : assessmentAPI.getStructure()
-  );
+  const { data: structure, isLoading: structureLoading } = useQuery({
+    queryKey: ['assessmentStructure', assessmentId],
+    queryFn: () =>
+      assessmentId
+        ? assessmentAPI.getFilteredStructure(assessmentId)
+        : assessmentAPI.getStructure(),
+  });
 
   const {
     data: _assessment,
     isLoading: assessmentLoading,
     error: assessmentError,
-  } = useQuery('currentAssessment', assessmentAPI.getCurrentAssessment, {
-    onSuccess: (data) => {
-      setAssessmentId(data.data.id);
-      setSavedProgress(data.data.progress_percentage || 0);
-      assessmentAPI.getResponses(data.data.id).then((responseData) => {
+  } = useQuery({
+    queryKey: ['currentAssessment'],
+    queryFn: assessmentAPI.getCurrentAssessment,
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (_assessment?.data) {
+      setAssessmentId(_assessment.data.id);
+      setSavedProgress(_assessment.data.progress_percentage || 0);
+      assessmentAPI.getResponses(_assessment.data.id).then((responseData) => {
         const existingResponses: Record<string, any> = {};
         const existingComments: Record<string, string> = {};
         responseData.data.forEach((response: any) => {
@@ -89,17 +97,14 @@ export default function AssessmentQuestions() {
         setResponses((prev) => ({ ...prev, ...existingResponses }));
         setComments((prev) => ({ ...prev, ...existingComments }));
       });
-    },
-    onError: (_error: any) => {
-      console.log('No active assessment found, will show start assessment UI');
-    },
-    retry: false,
-  });
+    }
+  }, [_assessment]);
 
-  const startAssessmentMutation = useMutation(assessmentAPI.startAssessment, {
+  const startAssessmentMutation = useMutation({
+    mutationFn: assessmentAPI.startAssessment,
     onSuccess: (data) => {
       setAssessmentId(data.data.id);
-      queryClient.invalidateQueries('currentAssessment');
+      queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
       crossTabSync.broadcast(SyncEventType.ASSESSMENT_STARTED, data.data.id);
     },
     onError: (error: any) => {
@@ -110,37 +115,33 @@ export default function AssessmentQuestions() {
     },
   });
 
-  const saveProgressMutation = useMutation(
-    ({ assessmentId, responses }: { assessmentId: string; responses: any[] }) =>
+  const saveProgressMutation = useMutation({
+    mutationFn: ({ assessmentId, responses }: { assessmentId: string; responses: any[] }) =>
       assessmentAPI.saveProgress(assessmentId, responses),
-    {
-      onSuccess: (data, variables) => {
-        setLastSaved(new Date());
-        if (data.data.progress_percentage !== undefined) {
-          setSavedProgress(data.data.progress_percentage);
-        }
-        crossTabSync.broadcast(SyncEventType.PROGRESS_SAVED, variables.assessmentId);
-        toast.success('Progress saved!');
-      },
-      onError: (_error: any) => {
-        toast.error('Failed to save progress');
-      },
-    }
-  );
+    onSuccess: (data, variables) => {
+      setLastSaved(new Date());
+      if (data.data.progress_percentage !== undefined) {
+        setSavedProgress(data.data.progress_percentage);
+      }
+      crossTabSync.broadcast(SyncEventType.PROGRESS_SAVED, variables.assessmentId);
+      toast.success('Progress saved!');
+    },
+    onError: (_error: any) => {
+      toast.error('Failed to save progress');
+    },
+  });
 
-  const completeAssessmentMutation = useMutation(
-    (assessmentId: string) => assessmentAPI.completeAssessment(assessmentId),
-    {
-      onSuccess: (_data, assessmentId) => {
-        crossTabSync.broadcast(SyncEventType.ASSESSMENT_COMPLETED, assessmentId);
-        toast.success('Assessment completed!');
-        router.push('/reports');
-      },
-      onError: (_error: any) => {
-        toast.error('Failed to complete assessment');
-      },
-    }
-  );
+  const completeAssessmentMutation = useMutation({
+    mutationFn: (assessmentId: string) => assessmentAPI.completeAssessment(assessmentId),
+    onSuccess: (_data, assessmentId) => {
+      crossTabSync.broadcast(SyncEventType.ASSESSMENT_COMPLETED, assessmentId);
+      toast.success('Assessment completed!');
+      router.push('/reports');
+    },
+    onError: (_error: any) => {
+      toast.error('Failed to complete assessment');
+    },
+  });
 
   useEffect(() => {
     responsesRef.current = responses;
@@ -202,11 +203,11 @@ export default function AssessmentQuestions() {
       switch (event.type) {
         case SyncEventType.ASSESSMENT_STARTED:
         case SyncEventType.PROGRESS_SAVED:
-          queryClient.invalidateQueries('currentAssessment');
+          queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
           toast('Assessment updated in another tab', { icon: '🔄' });
           break;
         case SyncEventType.ASSESSMENT_COMPLETED:
-          queryClient.invalidateQueries('currentAssessment');
+          queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
           toast.success('Assessment completed in another tab');
           router.push('/reports');
           break;
@@ -434,7 +435,7 @@ export default function AssessmentQuestions() {
     );
   }
 
-  if (startAssessmentMutation.isLoading) {
+  if (startAssessmentMutation.isPending) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -464,11 +465,11 @@ export default function AssessmentQuestions() {
                 startAssessmentMutation.reset();
                 startAssessmentMutation.mutate();
               }}
-              disabled={startAssessmentMutation.isLoading}
+              disabled={startAssessmentMutation.isPending}
               className="btn-primary mr-4"
               data-testid="retry-start-assessment"
             >
-              {startAssessmentMutation.isLoading ? 'Starting...' : 'Try Again'}
+              {startAssessmentMutation.isPending ? 'Starting...' : 'Try Again'}
             </button>
             <button
               onClick={() => router.push('/dashboard')}
@@ -497,11 +498,11 @@ export default function AssessmentQuestions() {
             </p>
             <button
               onClick={() => startAssessmentMutation.mutate()}
-              disabled={startAssessmentMutation.isLoading}
+              disabled={startAssessmentMutation.isPending}
               className="btn-primary"
               data-testid="start-new-assessment"
             >
-              {startAssessmentMutation.isLoading ? 'Starting...' : 'Start Assessment'}
+              {startAssessmentMutation.isPending ? 'Starting...' : 'Start Assessment'}
             </button>
           </div>
         </div>
@@ -938,19 +939,19 @@ export default function AssessmentQuestions() {
                 <div className="flex space-x-4">
                   <button
                     onClick={saveProgress}
-                    disabled={saveProgressMutation.isLoading}
+                    disabled={saveProgressMutation.isPending}
                     className="btn-secondary flex items-center"
                     data-testid="save-progress-btn"
                   >
                     <BookmarkIcon className="h-4 w-4 mr-2" />
-                    {saveProgressMutation.isLoading ? 'Saving...' : 'Save Progress'}
+                    {saveProgressMutation.isPending ? 'Saving...' : 'Save Progress'}
                   </button>
 
                   {isLastQuestion() ? (
                     <button
                       onClick={handleCompleteAssessment}
                       disabled={
-                        completeAssessmentMutation.isLoading ||
+                        completeAssessmentMutation.isPending ||
                         consultationInterest === null ||
                         (consultationInterest === true &&
                           consultationDetails.trim().length > 0 &&
@@ -967,7 +968,7 @@ export default function AssessmentQuestions() {
                       data-testid="complete-assessment-btn"
                     >
                       <CheckCircleIcon className="h-4 w-4 mr-2" />
-                      {completeAssessmentMutation.isLoading
+                      {completeAssessmentMutation.isPending
                         ? 'Completing...'
                         : 'Complete Assessment'}
                     </button>

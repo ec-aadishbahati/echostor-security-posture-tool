@@ -497,7 +497,7 @@ async def admin_regenerate_pdf_from_artifacts(
     filename = f"ai_report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
     storage_service = get_storage_service()
 
-    pdf_bytes = HTML(string=html_content).write_pdf()
+    pdf_bytes = HTML(string=html_content, url_fetcher=None).write_pdf()
 
     storage_location = storage_service.save(pdf_bytes, filename)
 
@@ -630,7 +630,7 @@ async def download_report(
                 assessment, responses, scores, structure
             )
 
-            pdf_bytes = HTML(string=html_content).write_pdf()
+            pdf_bytes = HTML(string=html_content, url_fetcher=None).write_pdf()
 
             new_filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
             storage_location = storage_service.save(pdf_bytes, new_filename)

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -35,55 +35,51 @@ export default function OpenAIKeysManagement() {
   const [testApiKey, setTestApiKey] = useState('');
   const [testResult, setTestResult] = useState<{ is_valid: boolean; message: string } | null>(null);
 
-  const { data: keys, isLoading } = useQuery<{ data: OpenAIKey[] }>(
-    'openaiKeys',
-    () => adminAPI.listOpenAIKeys(true),
-    {
-      refetchInterval: 30000,
-    }
-  );
+  const { data: keys, isLoading } = useQuery<{ data: OpenAIKey[] }>({
+    queryKey: ['openaiKeys'],
+    queryFn: () => adminAPI.listOpenAIKeys(true),
+    refetchInterval: 30000,
+  });
 
-  const addKeyMutation = useMutation(
-    (data: { key_name: string; api_key: string }) => adminAPI.createOpenAIKey(data),
-    {
-      onSuccess: () => {
-        toast.success('API key added successfully');
-        setShowAddModal(false);
-        setNewKeyName('');
-        setNewApiKey('');
-        queryClient.invalidateQueries('openaiKeys');
-      },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to add API key');
-      },
-    }
-  );
+  const addKeyMutation = useMutation({
+    mutationFn: (data: { key_name: string; api_key: string }) => adminAPI.createOpenAIKey(data),
+    onSuccess: () => {
+      toast.success('API key added successfully');
+      setShowAddModal(false);
+      setNewKeyName('');
+      setNewApiKey('');
+      queryClient.invalidateQueries({ queryKey: ['openaiKeys'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.detail || 'Failed to add API key');
+    },
+  });
 
-  const toggleKeyMutation = useMutation(
-    (data: { key_id: string; is_active: boolean }) =>
+  const toggleKeyMutation = useMutation({
+    mutationFn: (data: { key_id: string; is_active: boolean }) =>
       adminAPI.toggleOpenAIKey(data.key_id, data.is_active),
-    {
-      onSuccess: () => {
-        toast.success('API key status updated');
-        queryClient.invalidateQueries('openaiKeys');
-      },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to update API key');
-      },
-    }
-  );
+    onSuccess: () => {
+      toast.success('API key status updated');
+      queryClient.invalidateQueries({ queryKey: ['openaiKeys'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.detail || 'Failed to update API key');
+    },
+  });
 
-  const deleteKeyMutation = useMutation((key_id: string) => adminAPI.deleteOpenAIKey(key_id), {
+  const deleteKeyMutation = useMutation({
+    mutationFn: (key_id: string) => adminAPI.deleteOpenAIKey(key_id),
     onSuccess: () => {
       toast.success('API key deleted successfully');
-      queryClient.invalidateQueries('openaiKeys');
+      queryClient.invalidateQueries({ queryKey: ['openaiKeys'] });
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.detail || 'Failed to delete API key');
     },
   });
 
-  const testKeyMutation = useMutation((api_key: string) => adminAPI.testOpenAIKey(api_key), {
+  const testKeyMutation = useMutation({
+    mutationFn: (api_key: string) => adminAPI.testOpenAIKey(api_key),
     onSuccess: (data) => {
       setTestResult(data.data);
     },
@@ -373,10 +369,10 @@ export default function OpenAIKeysManagement() {
                   <div className="flex gap-3 mt-6">
                     <button
                       onClick={handleAddKey}
-                      disabled={addKeyMutation.isLoading}
+                      disabled={addKeyMutation.isPending}
                       className="flex-1 btn-primary"
                     >
-                      {addKeyMutation.isLoading ? 'Adding...' : 'Add Key'}
+                      {addKeyMutation.isPending ? 'Adding...' : 'Add Key'}
                     </button>
                     <button
                       onClick={() => {
@@ -443,10 +439,10 @@ export default function OpenAIKeysManagement() {
                   <div className="flex gap-3 mt-6">
                     <button
                       onClick={handleTestKey}
-                      disabled={testKeyMutation.isLoading}
+                      disabled={testKeyMutation.isPending}
                       className="flex-1 btn-primary"
                     >
-                      {testKeyMutation.isLoading ? 'Testing...' : 'Test Key'}
+                      {testKeyMutation.isPending ? 'Testing...' : 'Test Key'}
                     </button>
                     <button
                       onClick={() => {

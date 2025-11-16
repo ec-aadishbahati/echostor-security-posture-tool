@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Layout from '../../components/Layout';
 import ProtectedRoute from '../../components/ProtectedRoute';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -29,38 +29,38 @@ export default function AdminReports() {
   const skip = (currentPage - 1) * limit;
   const queryClient = useQueryClient();
 
-  const generateAIReportMutation = useMutation(adminAPI.generateAIReport, {
+  const generateAIReportMutation = useMutation({
+    mutationFn: (reportId: string) => adminAPI.generateAIReport(reportId),
     onSuccess: () => {
       toast.success('AI report generation started');
-      queryClient.invalidateQueries('adminReports');
+      queryClient.invalidateQueries({ queryKey: ['adminReports'] });
     },
     onError: (error: any) => {
       toast.error(formatApiError(error, 'Failed to generate AI report'));
     },
   });
 
-  const releaseAIReportMutation = useMutation(adminAPI.releaseAIReport, {
+  const releaseAIReportMutation = useMutation({
+    mutationFn: (reportId: string) => adminAPI.releaseAIReport(reportId),
     onSuccess: () => {
       toast.success('AI report released to user');
-      queryClient.invalidateQueries('adminReports');
+      queryClient.invalidateQueries({ queryKey: ['adminReports'] });
     },
     onError: (error: any) => {
       toast.error(formatApiError(error, 'Failed to release AI report'));
     },
   });
 
-  const retryStandardReportMutation = useMutation(
-    (reportId: string) => adminAPI.retryStandardReport(reportId),
-    {
-      onSuccess: () => {
-        toast.success('Standard report retry started');
-        queryClient.invalidateQueries('adminReports');
-      },
-      onError: (error: any) => {
-        toast.error(formatApiError(error, 'Failed to retry standard report'));
-      },
-    }
-  );
+  const retryStandardReportMutation = useMutation({
+    mutationFn: (reportId: string) => adminAPI.retryStandardReport(reportId),
+    onSuccess: () => {
+      toast.success('Standard report retry started');
+      queryClient.invalidateQueries({ queryKey: ['adminReports'] });
+    },
+    onError: (error: any) => {
+      toast.error(formatApiError(error, 'Failed to retry standard report'));
+    },
+  });
 
   const handleDownloadReport = async (reportId: string, reportType: string) => {
     setDownloadingReportId(reportId);
@@ -106,20 +106,21 @@ export default function AdminReports() {
     data: reportsData,
     isLoading,
     error,
-  } = useQuery(
-    ['adminReports', { skip, limit, report_type: typeFilter, status: effectiveStatusFilter }],
-    () =>
+  } = useQuery({
+    queryKey: [
+      'adminReports',
+      { skip, limit, report_type: typeFilter, status: effectiveStatusFilter },
+    ],
+    queryFn: () =>
       adminAPI.getReports({
         skip,
         limit,
         report_type: typeFilter || undefined,
         status: effectiveStatusFilter || undefined,
       }),
-    {
-      keepPreviousData: true,
-      refetchInterval: 30000,
-    }
-  );
+    placeholderData: (previousData) => previousData,
+    refetchInterval: 30000,
+  });
 
   const reports = reportsData?.data?.items || [];
   const pagination = reportsData?.data;
@@ -399,22 +400,22 @@ export default function AdminReports() {
                               {report.report_type === 'standard' && report.status === 'failed' && (
                                 <button
                                   onClick={() => retryStandardReportMutation.mutate(report.id)}
-                                  disabled={retryStandardReportMutation.isLoading}
+                                  disabled={retryStandardReportMutation.isPending}
                                   className="btn-secondary text-xs flex items-center"
                                 >
                                   <ExclamationTriangleIcon className="h-3 w-3 mr-1" />
-                                  {retryStandardReportMutation.isLoading ? 'Retrying...' : 'Retry'}
+                                  {retryStandardReportMutation.isPending ? 'Retrying...' : 'Retry'}
                                 </button>
                               )}
                               {report.report_type === 'ai_enhanced' &&
                                 report.status === 'pending' && (
                                   <button
                                     onClick={() => generateAIReportMutation.mutate(report.id)}
-                                    disabled={generateAIReportMutation.isLoading}
+                                    disabled={generateAIReportMutation.isPending}
                                     className="btn-primary text-xs flex items-center"
                                   >
                                     <SparklesIcon className="h-3 w-3 mr-1" />
-                                    {generateAIReportMutation.isLoading
+                                    {generateAIReportMutation.isPending
                                       ? 'Generating...'
                                       : 'Generate'}
                                   </button>
@@ -423,11 +424,11 @@ export default function AdminReports() {
                                 report.status === 'completed' && (
                                   <button
                                     onClick={() => releaseAIReportMutation.mutate(report.id)}
-                                    disabled={releaseAIReportMutation.isLoading}
+                                    disabled={releaseAIReportMutation.isPending}
                                     className="btn-secondary text-xs flex items-center"
                                   >
                                     <PaperAirplaneIcon className="h-3 w-3 mr-1" />
-                                    {releaseAIReportMutation.isLoading ? 'Releasing...' : 'Release'}
+                                    {releaseAIReportMutation.isPending ? 'Releasing...' : 'Release'}
                                   </button>
                                 )}
                             </div>

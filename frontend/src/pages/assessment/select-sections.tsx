@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useAuth } from '@/lib/auth';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -61,26 +61,25 @@ export default function SelectSections() {
   const router = useRouter();
   const [selectedSections, setSelectedSections] = useState<Set<string>>(new Set());
 
-  const { data: structure, isLoading: structureLoading } = useQuery(
-    'assessmentStructure',
-    assessmentAPI.getStructure
-  );
+  const { data: structure, isLoading: structureLoading } = useQuery({
+    queryKey: ['assessmentStructure'],
+    queryFn: assessmentAPI.getStructure,
+  });
 
-  const startAssessmentMutation = useMutation(
-    (selectedSectionIds: string[]) => assessmentAPI.startAssessmentWithSections(selectedSectionIds),
-    {
-      onSuccess: () => {
-        toast.success('Assessment started!');
-        router.push('/assessment/questions');
-      },
-      onError: (error: any) => {
-        console.error('Failed to start assessment:', error);
-        const errorMessage =
-          error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
-        toast.error(errorMessage);
-      },
-    }
-  );
+  const startAssessmentMutation = useMutation<any, Error, string[]>({
+    mutationFn: (selectedSectionIds: string[]) =>
+      assessmentAPI.startAssessmentWithSections(selectedSectionIds),
+    onSuccess: () => {
+      toast.success('Assessment started!');
+      router.push('/assessment/questions');
+    },
+    onError: (error: any) => {
+      console.error('Failed to start assessment:', error);
+      const errorMessage =
+        error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+      toast.error(errorMessage);
+    },
+  });
 
   const toggleSection = (sectionId: string) => {
     setSelectedSections((prev) => {
@@ -218,10 +217,10 @@ export default function SelectSections() {
               </button>
               <button
                 onClick={handleStartAssessment}
-                disabled={selectedSections.size === 0 || startAssessmentMutation.isLoading}
+                disabled={selectedSections.size === 0 || startAssessmentMutation.isPending}
                 className="px-6 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
-                {startAssessmentMutation.isLoading
+                {startAssessmentMutation.isPending
                   ? 'Starting Assessment...'
                   : `Begin Assessment (${selectedSections.size} sections)`}
               </button>

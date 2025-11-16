@@ -3,8 +3,8 @@ import { render } from '@testing-library/react'
 import Dashboard from '@/pages/dashboard'
 
 jest.mock('next/router', () => require('next-router-mock'))
-jest.mock('react-query', () => ({
-  useQuery: () => ({ data: null, isLoading: false }),
+jest.mock('@tanstack/react-query', () => ({
+  useQuery: () => ({ data: null, isLoading: false, error: null }),
 }))
 jest.mock('@/lib/auth', () => ({
   useAuth: () => ({

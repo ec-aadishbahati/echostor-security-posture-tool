@@ -137,7 +137,7 @@ def generate_standard_report(report_id: str) -> None:
         logger.info("REPORTS_DIR configured as: %s", settings.REPORTS_DIR)
         logger.info("Generating PDF bytes for storage")
         try:
-            pdf_bytes = HTML(string=html_content).write_pdf()
+            pdf_bytes = HTML(string=html_content, url_fetcher=None).write_pdf()
             logger.info("WeasyPrint PDF byte generation completed")
         except Exception as pdf_error:
             logger.error(
@@ -323,7 +323,7 @@ def generate_ai_report(report_id: str) -> None:
         storage_service = get_storage_service()
 
         logger.info("Generating AI PDF bytes")
-        pdf_bytes = HTML(string=html_content).write_pdf()
+        pdf_bytes = HTML(string=html_content, url_fetcher=None).write_pdf()
 
         logger.info("Saving AI report to configured storage backend")
         storage_location = storage_service.save(pdf_bytes, filename)

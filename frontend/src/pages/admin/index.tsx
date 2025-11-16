@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import Layout from '@/components/Layout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -14,25 +14,23 @@ import {
 import Link from 'next/link';
 
 export default function AdminDashboard() {
-  const { data: stats, isLoading: statsLoading } = useQuery(
-    'dashboardStats',
-    adminAPI.getDashboardStats,
-    {
-      refetchInterval: 30000, // Refetch every 30 seconds
-    }
-  );
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboardStats'],
+    queryFn: adminAPI.getDashboardStats,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
 
-  const { data: alerts, isLoading: alertsLoading } = useQuery('adminAlerts', adminAPI.getAlerts, {
+  const { data: alerts, isLoading: alertsLoading } = useQuery({
+    queryKey: ['adminAlerts'],
+    queryFn: adminAPI.getAlerts,
     refetchInterval: 60000, // Refetch every minute
   });
 
-  const { data: usersProgress, isLoading: usersProgressLoading } = useQuery(
-    'usersProgress',
-    adminAPI.getUsersProgressSummary,
-    {
-      refetchInterval: 30000, // Refetch every 30 seconds
-    }
-  );
+  const { data: usersProgress, isLoading: usersProgressLoading } = useQuery({
+    queryKey: ['usersProgress'],
+    queryFn: adminAPI.getUsersProgressSummary,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat().format(num);
