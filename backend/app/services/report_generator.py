@@ -649,6 +649,9 @@ def generate_ai_insights(
                     )
                     end_time = datetime.now()
 
+                    if not response or not response.choices:
+                        raise ValueError("Empty response from OpenAI API")
+
                     json_str = response.choices[0].message.content
                     artifact = safe_validate_section_artifact(json_str, section.id)
 

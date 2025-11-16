@@ -119,7 +119,7 @@ class AIMetricsService:
         )
 
         cache_hit_rate = Decimal("0")
-        if metrics.total_sections and cache_stats.total_hits:
+        if metrics.total_sections and cache_stats and cache_stats.total_hits:
             total_requests = metrics.total_sections + (cache_stats.total_hits or 0)
             cache_hit_rate = Decimal(
                 str(round((cache_stats.total_hits / total_requests) * 100, 2))
