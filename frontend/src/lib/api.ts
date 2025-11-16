@@ -8,12 +8,19 @@ const API_BASE_URL =
 const ENABLE_CSRF = process.env.NEXT_PUBLIC_ENABLE_CSRF === 'true';
 
 let csrfToken: string | null = null;
+let authToken: string | null = null;
 
 export const setCSRFToken = (token: string | null) => {
   csrfToken = token;
 };
 
 export const getCSRFToken = () => csrfToken;
+
+export const setAuthToken = (token: string | null) => {
+  authToken = token;
+};
+
+export const getAuthToken = () => authToken;
 
 const pendingRequests = new Map<string, Promise<any>>();
 
@@ -54,7 +61,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     return Promise.reject({ _isDuplicate: true, promise: pendingRequest });
   }
 
-  const token = Cookies.get('access_token');
+  const token = authToken || Cookies.get('access_token');
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -86,6 +93,7 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
+      authToken = null;
       Cookies.remove('access_token');
       window.location.href = '/auth/login';
     }
