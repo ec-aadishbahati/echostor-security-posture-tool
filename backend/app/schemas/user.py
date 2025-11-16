@@ -72,6 +72,7 @@ class Token(BaseModel):
     expires_in: int
     user: UserResponse | None = None
     is_admin: bool | None = None
+    csrf_token: str | None = None
 
 
 class TokenData(BaseModel):

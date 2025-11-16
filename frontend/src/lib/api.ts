@@ -5,6 +5,16 @@ import axiosRetry, { isNetworkError, isRetryableError } from 'axios-retry';
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://echostor-security-posture-tool.fly.dev';
 
+const ENABLE_CSRF = process.env.NEXT_PUBLIC_ENABLE_CSRF === 'true';
+
+let csrfToken: string | null = null;
+
+export const setCSRFToken = (token: string | null) => {
+  csrfToken = token;
+};
+
+export const getCSRFToken = () => csrfToken;
+
 const pendingRequests = new Map<string, Promise<any>>();
 
 function generateRequestKey(config: InternalAxiosRequestConfig): string {
@@ -28,6 +38,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 axiosRetry(api, {
@@ -47,6 +58,13 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
+  if (ENABLE_CSRF && csrfToken && config.method && !['get', 'head', 'options'].includes(config.method.toLowerCase())) {
+    if (config.headers) {
+      config.headers['X-CSRF-Token'] = csrfToken;
+    }
+  }
+
   return config;
 });
 
@@ -83,7 +101,11 @@ export const authAPI = {
 
   login: (data: { email: string; password: string }) => api.post('/api/auth/login', data),
 
+  logout: () => api.post('/api/auth/logout'),
+
   getCurrentUser: () => api.get('/api/auth/me'),
+
+  getCSRFToken: () => api.get('/api/auth/csrf'),
 };
 
 export const assessmentAPI = {
