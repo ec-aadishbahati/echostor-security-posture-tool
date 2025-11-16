@@ -42,7 +42,7 @@ class EnhancedContextExtractor:
                 collecting_option_block = False
                 continue
 
-            option_match = re.match(r"\*\*Option (\d+):", line)
+            option_match = re.match(r"\*\*Option ([a-z0-9_]+):", line)
             if option_match and current_question_id:
                 if collecting_option_block and current_option_num:
                     key = f"{current_question_id}_option_{current_option_num}"
@@ -142,7 +142,7 @@ class EnhancedContextExtractor:
 
         next_section_patterns = [
             r"^\s*(?:\*\*)?(?:📋|📊|⚖️|🎯|🔄)?\s*(?:What This|Why It|Market Context|Compliance|Recommendations|Path to)",
-            r"^\*\*Option \d+:",
+            r"^\*\*Option [a-z0-9_]+:",
             r"^####",
         ]
 

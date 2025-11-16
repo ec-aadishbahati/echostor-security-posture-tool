@@ -116,7 +116,7 @@
 
 **Answer Options:**
 
-**Option 1: Documented, approved, and maintained**
+**Option documented_approved_maintained: Documented, approved, and maintained**
 *Basic Description:* Current, approved strategy with regular updates
 
 **📋 What This Option Means:**
@@ -132,7 +132,7 @@
 - **If You Select This Option:** Ensure strategy is reviewed at least annually and communicated effectively across the organization.
 - **Path to Improvement:** Focus on measuring strategy effectiveness and demonstrating ROI to stakeholders.
 
-**Option 2: Documented but not approved or maintained**
+**Option documented_but_stale: Documented but not approved or maintained**
 *Basic Description:* Written strategy but outdated or not formally approved
 
 **📋 What This Option Means:**
@@ -148,7 +148,7 @@
 - **If You Select This Option:** Prioritize getting formal leadership approval and establishing a regular review cycle (at least annually).
 - **Path to Improvement:** Update strategy to reflect current business objectives and threat landscape, then seek formal approval.
 
-**Option 3: Informal understanding (not documented)**
+**Option informal_understanding: Informal understanding (not documented)**
 *Basic Description:* Strategy exists in practice but not written down
 
 **📋 What This Option Means:**
@@ -164,7 +164,7 @@
 - **If You Select This Option:** Document current informal strategy as a first step. Engage leadership to formalize and approve the documented strategy.
 - **Path to Improvement:** Create a concise strategy document (5-10 pages) covering objectives, scope, governance, and key initiatives.
 
-**Option 4: No strategy in place**
+**Option no_strategy: No strategy in place**
 *Basic Description:* No cybersecurity strategy exists
 
 **📋 What This Option Means:**
@@ -180,7 +180,7 @@
 - **If You Select This Option:** Developing a cybersecurity strategy should be immediate priority. Start with a simple one-page strategic plan covering key objectives, scope, and governance.
 - **Path to Improvement:** Engage executive leadership to define security vision and objectives aligned with business goals.
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear if strategy exists or its status
 
 **📋 What This Option Means:**
@@ -209,7 +209,7 @@
 
 **Answer Options:**
 
-**Option 1: Quarterly**
+**Option quarterly: Quarterly**
 *Basic Description:* Every three months review cycle
 
 **📋 What This Option Means:**
@@ -225,7 +225,7 @@
 - **If You Select This Option:** Ensure reviews remain substantive and don't become administrative overhead. Focus on actionable insights and strategic adjustments.
 - **Path to Improvement:** Maintain this cadence and focus on measuring strategy effectiveness through KPIs.
 
-**Option 2: Annually**
+**Option annually: Annually**
 *Basic Description:* Once per year review cycle
 
 **📋 What This Option Means:**
@@ -241,7 +241,7 @@
 - **If You Select This Option:** Consider supplementing with quarterly threat landscape reviews and ad-hoc reviews after major business changes or security incidents.
 - **Path to Improvement:** Move to bi-annual or quarterly reviews for more dynamic threat response, especially in high-risk industries.
 
-**Option 3: Only after major changes/incidents**
+**Option only_after_changes: Only after major changes/incidents**
 *Basic Description:* Event-driven reviews only
 
 **📋 What This Option Means:**
@@ -257,7 +257,7 @@
 - **If You Select This Option:** Establish clear criteria for what events trigger reviews and ensure minimum annual review regardless of events. Document review triggers and maintain review schedule visibility.
 - **Path to Improvement:** Transition to scheduled reviews (at least annually) supplemented by event-driven reviews for major changes.
 
-**Option 4: No formal review schedule**
+**Option only_after_major_changes: No formal review schedule**
 *Basic Description:* No regular review process
 
 **📋 What This Option Means:**
@@ -284,16 +284,16 @@
 
 **Answer Options:**
 
-**Option 1: Fully aligned**
+**Option fully_aligned: Fully aligned**
 *Basic Description:* Complete integration with business goals
 
-**Option 2: Partially aligned**
+**Option partially_aligned: Partially aligned**
 *Basic Description:* Some alignment but gaps exist
 
-**Option 3: Not aligned**
+**Option not_aligned: Not aligned**
 *Basic Description:* Security operates independently
 
-**Option 4: Unknown**
+**Option unknown: Unknown**
 *Basic Description:* Alignment status unclear
 
 
@@ -307,7 +307,7 @@
 
 **Answer Options:**
 
-**Option 1: CISO**
+**Option ciso: CISO**
 *Basic Description:* Chief Information Security Officer
 
 **📋 What This Option Means:**
@@ -323,7 +323,7 @@
 - **If You Select This Option:** Ensure CISO has sufficient authority, budget, and board access to execute strategy effectively. Define clear success metrics and reporting relationships.
 - **Path to Improvement:** Consider dual accountability with business executives for strategic alignment while maintaining CISO operational accountability.
 
-**Option 2: CIO**
+**Option cio: CIO**
 *Basic Description:* Chief Information Officer
 
 **📋 What This Option Means:**
@@ -339,7 +339,7 @@
 - **If You Select This Option:** Ensure CIO has adequate security expertise or dedicated security leadership reporting to them. Define clear security performance metrics separate from IT operational metrics.
 - **Path to Improvement:** Consider establishing dedicated CISO role as organization grows, or appointing Deputy CISO under CIO leadership.
 
-**Option 3: CEO**
+**Option ceo: CEO**
 *Basic Description:* Chief Executive Officer
 
 **📋 What This Option Means:**
@@ -355,7 +355,7 @@
 - **If You Select This Option:** Ensure CEO has strong security advisory support and delegates operational execution to qualified security professionals. Maintain CEO strategic oversight while building dedicated security capabilities.
 - **Path to Improvement:** Transition to dedicated CISO accountability as organization scales, while maintaining CEO strategic oversight and support.
 
-**Option 4: Board**
+**Option board: Board**
 *Basic Description:* Board of Directors oversight
 
 **📋 What This Option Means:**
@@ -371,7 +371,7 @@
 - **If You Select This Option:** Establish clear delegation to executive leadership for day-to-day execution while maintaining board strategic oversight. Ensure board has adequate security expertise or advisory support.
 - **Path to Improvement:** Transition to executive accountability (CEO/CISO) with regular board reporting and oversight rather than direct board execution responsibility.
 
-**Option 5: Shared between multiple executives**
+**Option shared_between_multiple_executives: Shared between multiple executives**
 *Basic Description:* Distributed accountability across leadership team
 
 **📋 What This Option Means:**
@@ -387,7 +387,7 @@
 - **If You Select This Option:** Document accountability matrix clearly, establish coordination mechanisms (steering committee, regular sync meetings), and define escalation paths for conflicts. Ensure one executive has tie-breaking authority.
 - **Path to Improvement:** Formalize shared accountability with written RACI matrix and regular governance reviews to ensure effective coordination.
 
-**Option 6: No clear owner / Unclear**
+**Option no: No clear owner / Unclear**
 *Basic Description:* Accountability not clearly defined
 
 **📋 What This Option Means:**
@@ -403,7 +403,7 @@
 - **If You Select This Option:** Immediately prioritize establishing clear accountability. Engage executive leadership to assign primary accountability (typically CISO, CIO, or CEO) with documented authority and responsibilities.
 - **Path to Improvement:** This is a high-priority remediation item. Establish clear accountability within 30 days and document in security governance charter.
 
-**Option 7: Other**
+**Option other: Other**
 *Basic Description:* Different role or structure
 
 **📋 What This Option Means:**
@@ -430,19 +430,19 @@
 
 **Answer Options:**
 
-**Option 1: Very low**
+**Option very_low: Very low**
 *Basic Description:* Minimal risk tolerance, maximum security
 
-**Option 2: Low**
+**Option low: Low**
 *Basic Description:* Conservative approach to risk
 
-**Option 3: Medium**
+**Option medium: Medium**
 *Basic Description:* Balanced risk and business needs
 
-**Option 4: High**
+**Option high: High**
 *Basic Description:* Accept higher risk for agility
 
-**Option 5: Very high**
+**Option very_high: Very high**
 *Basic Description:* Maximum risk tolerance
 
 
@@ -455,8 +455,8 @@
 **Explanation:** Regular reporting ensures leadership visibility into cybersecurity posture and performance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -470,16 +470,16 @@
 
 **Answer Options:**
 
-**Option 1: Ad-hoc**
+**Option ad_hoc: Ad-hoc**
 *Basic Description:* Informal, reactive processes
 
-**Option 2: Defined**
+**Option defined: Defined**
 *Basic Description:* Documented processes and procedures
 
-**Option 3: Managed**
+**Option managed: Managed**
 *Basic Description:* Measured and controlled processes
 
-**Option 4: Optimized**
+**Option optimized: Optimized**
 *Basic Description:* Continuously improving processes
 
 
@@ -496,16 +496,16 @@
 
 **Answer Options:**
 
-**Option 1: 0-5**
+**Option 0_5: 0-5**
 *Basic Description:* Minimal policy coverage
 
-**Option 2: 6-15**
+**Option 6_15: 6-15**
 *Basic Description:* Basic policy framework
 
-**Option 3: 16-30**
+**Option 16_30: 16-30**
 *Basic Description:* Comprehensive policy set
 
-**Option 4: 30+**
+**Option 30: 30+**
 *Basic Description:* Extensive policy library
 
 
@@ -521,16 +521,16 @@
 
 **Answer Options:**
 
-**Option 1: Quarterly**
+**Option quarterly: Quarterly**
 *Basic Description:* Every three months review cycle
 
-**Option 2: Annually**
+**Option annually: Annually**
 *Basic Description:* Once per year review
 
-**Option 3: Only after major changes/incidents**
+**Option only_after_changes: Only after major changes/incidents**
 *Basic Description:* Event-driven reviews only
 
-**Option 4: No formal review schedule**
+**Option only_after_major_changes: No formal review schedule**
 *Basic Description:* No regular review process
 
 
@@ -544,19 +544,19 @@
 
 **Answer Options:**
 
-**Option 1: <1 year**
+**Option 1_year: <1 year**
 *Basic Description:* Recently created or updated
 
-**Option 2: 1-2 years**
+**Option 1_2_years: 1-2 years**
 *Basic Description:* Moderately current policies
 
-**Option 3: 2-3 years**
+**Option 2_3_years: 2-3 years**
 *Basic Description:* Aging policies needing review
 
-**Option 4: 3+ years**
+**Option 3_years: 3+ years**
 *Basic Description:* Outdated policies requiring updates
 
-**Option 5: Unknown**
+**Option unknown: Unknown**
 *Basic Description:* Policy age not tracked or unclear
 
 
@@ -569,8 +569,8 @@
 **Explanation:** Formal approval ensures policies have proper authority and stakeholder buy-in.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -583,8 +583,8 @@
 **Explanation:** Communication ensures employees understand their security responsibilities and requirements.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -600,19 +600,19 @@
 
 **Answer Options:**
 
-**Option 1: Automated tools**
+**Option fully_implemented: Automated tools**
 *Basic Description:* Software-based compliance monitoring
 
-**Option 2: Manual tracking**
+**Option partially_implemented: Manual tracking**
 *Basic Description:* Human-driven compliance checks
 
-**Option 3: Combination of automated + manual**
+**Option planned: Combination of automated + manual**
 *Basic Description:* Hybrid approach using both methods
 
-**Option 4: No tracking**
+**Option not_implemented: No tracking**
 *Basic Description:* No compliance monitoring in place
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Tracking method unclear
 
 
@@ -625,8 +625,8 @@
 **Explanation:** Exception processes allow controlled deviations while maintaining security oversight.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -645,19 +645,19 @@
 
 **Answer Options:**
 
-**Option 1: 15.0%+**
+**Option 76_100: 15.0%+**
 *Basic Description:* Above average investment
 
-**Option 2: 10.0-14.9%**
+**Option 51_75: 10.0-14.9%**
 *Basic Description:* Industry standard allocation
 
-**Option 3: 5.0-9.9%**
+**Option 26_50: 5.0-9.9%**
 *Basic Description:* Basic security investment
 
-**Option 4: 0-4.9%**
+**Option 0_25: 0-4.9%**
 *Basic Description:* Below industry minimum
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Budget allocation not tracked or unclear
 
 
@@ -671,16 +671,16 @@
 
 **Answer Options:**
 
-**Option 1: Increased significantly**
+**Option increased_significantly: Increased significantly**
 *Basic Description:* Major budget growth (>20%)
 
-**Option 2: Increased slightly**
+**Option increased_slightly: Increased slightly**
 *Basic Description:* Modest budget growth (<20%)
 
-**Option 3: Remained same**
+**Option remained_same: Remained same**
 *Basic Description:* No budget change
 
-**Option 4: Decreased**
+**Option decreased: Decreased**
 *Basic Description:* Budget reduction
 
 
@@ -693,8 +693,8 @@
 **Explanation:** Dedicated staff ensures focused expertise and accountability for security functions.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -708,19 +708,19 @@
 
 **Answer Options:**
 
-**Option 1: 0**
+**Option 0: 0**
 *Basic Description:* No dedicated security staff
 
-**Option 2: 1-5**
+**Option 1_5: 1-5**
 *Basic Description:* Small security team
 
-**Option 3: 6-15**
+**Option 6_15: 6-15**
 *Basic Description:* Medium security team
 
-**Option 4: 16-30**
+**Option 16_30: 16-30**
 *Basic Description:* Large security team
 
-**Option 5: 30+**
+**Option 30: 30+**
 *Basic Description:* Enterprise security organization
 
 
@@ -733,8 +733,8 @@
 **Explanation:** External services can supplement internal capabilities and provide specialized expertise.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -748,16 +748,16 @@
 
 **Answer Options:**
 
-**Option 1: Risk-based**
+**Option risk_based: Risk-based**
 *Basic Description:* Investments based on risk analysis
 
-**Option 2: Compliance-driven**
+**Option compliance_driven: Compliance-driven**
 *Basic Description:* Investments for regulatory compliance
 
-**Option 3: Industry benchmarks**
+**Option industry_benchmarks: Industry benchmarks**
 *Basic Description:* Investments based on peer comparison
 
-**Option 4: Ad-hoc**
+**Option ad_hoc: Ad-hoc**
 *Basic Description:* No systematic justification process
 
 
@@ -776,13 +776,13 @@
 
 **Answer Options:**
 
-**Option 1: Yes, formal KPIs with regular tracking**
+**Option fully_implemented: Yes, formal KPIs with regular tracking**
 *Basic Description:* Documented KPIs with consistent measurement
 
-**Option 2: Yes, informal metrics tracked**
+**Option partially_implemented: Yes, informal metrics tracked**
 *Basic Description:* Some metrics tracked but not formalized
 
-**Option 3: No KPIs established**
+**Option planned: No KPIs established**
 *Basic Description:* No formal or informal KPI tracking
 
 
@@ -796,16 +796,16 @@
 
 **Answer Options:**
 
-**Option 1: Monthly**
+**Option monthly: Monthly**
 *Basic Description:* Every month board reporting
 
-**Option 2: Quarterly**
+**Option quarterly: Quarterly**
 *Basic Description:* Every three months reporting
 
-**Option 3: Annually**
+**Option annually: Annually**
 *Basic Description:* Once per year reporting
 
-**Option 4: Never**
+**Option never: Never**
 *Basic Description:* No board reporting
 
 
@@ -818,28 +818,28 @@
 **Explanation:** Comprehensive metrics provide visibility into different aspects of security posture.
 
 **Answer Options:**
-**Option 1: Security incidents count**
+**Option security_incidents_count: Security incidents count**
 *Basic Description:* Number of security incidents per period
 
-**Option 2: Mean time to detect (MTTD)**
+**Option mean_time_to_detect_mttd: Mean time to detect (MTTD)**
 *Basic Description:* Average time to detect security incidents
 
-**Option 3: Mean time to respond (MTTR)**
+**Option mean_time_to_respond_mttr: Mean time to respond (MTTR)**
 *Basic Description:* Average time to respond to incidents
 
-**Option 4: Vulnerability remediation time**
+**Option vulnerability_remediation_time: Vulnerability remediation time**
 *Basic Description:* Time taken to remediate vulnerabilities
 
-**Option 5: Patch compliance rate**
+**Option patch_compliance_rate: Patch compliance rate**
 *Basic Description:* Percentage of systems with current patches
 
-**Option 6: User awareness training completion**
+**Option user_awareness_training_completion: User awareness training completion**
 *Basic Description:* Training completion rates
 
-**Option 7: Security audit findings**
+**Option security_audit_findings: Security audit findings**
 *Basic Description:* Number and severity of audit findings
 
-**Option 8: Risk assessment scores**
+**Option risk_assessment_scores: Risk assessment scores**
 *Basic Description:* Overall risk posture scores
 
 
@@ -853,8 +853,8 @@
 **Explanation:** Benchmarking helps identify gaps and improvement opportunities relative to industry standards.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -868,16 +868,16 @@
 
 **Answer Options:**
 
-**Option 1: Quantitative metrics**
+**Option quantitative_metrics: Quantitative metrics**
 *Basic Description:* Numerical data and measurements
 
-**Option 2: Qualitative assessments**
+**Option qualitative_assessments: Qualitative assessments**
 *Basic Description:* Subjective evaluations and reviews
 
-**Option 3: Both**
+**Option both: Both**
 *Basic Description:* Combined quantitative and qualitative
 
-**Option 4: Not measured**
+**Option not_measured: Not measured**
 *Basic Description:* No effectiveness measurement
 
 
@@ -892,25 +892,25 @@
 **Explanation:** Security KPIs provide measurable insights into security program effectiveness.
 
 **Answer Options:**
-**Option 1: Incident response time**
+**Option incident_response_time: Incident response time**
 *Basic Description:* Time to detect and respond to incidents
 
-**Option 2: Vulnerability remediation rate**
+**Option vulnerability_remediation_rate: Vulnerability remediation rate**
 *Basic Description:* Speed of vulnerability patching
 
-**Option 3: Security awareness metrics**
+**Option security_awareness_metrics: Security awareness metrics**
 *Basic Description:* Training completion and phishing test results
 
-**Option 4: Compliance status**
+**Option compliance_status: Compliance status**
 *Basic Description:* Adherence to regulatory requirements
 
-**Option 5: Access control effectiveness**
+**Option access_control_effectiveness: Access control effectiveness**
 *Basic Description:* Proper access provisioning and reviews
 
-**Option 6: Security tool coverage**
+**Option security_tool_coverage: Security tool coverage**
 *Basic Description:* Percentage of assets protected
 
-**Option 7: No KPIs maintained**
+**Option no: No KPIs maintained**
 *Basic Description:* KPIs not currently tracked
 
 
@@ -926,8 +926,8 @@
 **Explanation:** Security OKRs align security initiatives with business objectives and drive measurable outcomes.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -942,22 +942,22 @@
 **Explanation:** Maturity measurement guides security program improvement and investment decisions.
 
 **Answer Options:**
-**Option 1: Maturity model framework**
+**Option maturity_model_framework: Maturity model framework**
 *Basic Description:* Using CMMI, NIST CSF, or similar
 
-**Option 2: Capability assessments**
+**Option capability_assessments: Capability assessments**
 *Basic Description:* Regular capability evaluations
 
-**Option 3: Benchmark comparisons**
+**Option benchmark_comparisons: Benchmark comparisons**
 *Basic Description:* Comparing against industry standards
 
-**Option 4: Audit results**
+**Option audit_results: Audit results**
 *Basic Description:* Based on internal/external audit findings
 
-**Option 5: Self-assessment**
+**Option self_assessment: Self-assessment**
 *Basic Description:* Internal maturity evaluations
 
-**Option 6: Not measured**
+**Option not_measured: Not measured**
 *Basic Description:* Maturity not currently assessed
 
 
@@ -973,28 +973,28 @@
 **Explanation:** Board-level security metrics ensure executive visibility into security program performance.
 
 **Answer Options:**
-**Option 1: Incident statistics**
+**Option incident_statistics: Incident statistics**
 *Basic Description:* Number and severity of security incidents
 
-**Option 2: Risk posture**
+**Option risk_posture: Risk posture**
 *Basic Description:* Overall organizational risk levels
 
-**Option 3: Compliance status**
+**Option compliance_status: Compliance status**
 *Basic Description:* Regulatory compliance metrics
 
-**Option 4: Security investments**
+**Option security_investments: Security investments**
 *Basic Description:* Budget and resource allocation
 
-**Option 5: Program maturity**
+**Option program_maturity: Program maturity**
 *Basic Description:* Security program maturity scores
 
-**Option 6: Vulnerability metrics**
+**Option vulnerability_metrics: Vulnerability metrics**
 *Basic Description:* Critical vulnerability counts and trends
 
-**Option 7: Third-party risk**
+**Option third_party_risk: Third-party risk**
 *Basic Description:* Vendor security risk metrics
 
-**Option 8: No board reporting**
+**Option no: No board reporting**
 *Basic Description:* Security metrics not reported to board
 
 
@@ -1005,7 +1005,7 @@
 ## Section 4: Identity & Access Management (IAM)
 
 
-**Option 9: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 **Suggested Respondents:** Directory/IAM Architect
 
@@ -1021,25 +1021,25 @@
 
 **Answer Options:**
 
-**Option 1: Active Directory**
+**Option active_directory: Active Directory**
 *Basic Description:* Microsoft on-premises directory
 
-**Option 2: Azure AD**
+**Option azure_ad: Azure AD**
 *Basic Description:* Microsoft cloud identity service
 
-**Option 3: Okta**
+**Option okta: Okta**
 *Basic Description:* Third-party identity provider
 
-**Option 4: Auth0**
+**Option auth0: Auth0**
 *Basic Description:* Developer-focused identity platform
 
-**Option 5: Google Workspace**
+**Option google_workspace: Google Workspace**
 *Basic Description:* Google cloud identity service
 
-**Option 6: Other**
+**Option other: Other**
 *Basic Description:* Different identity provider
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1056,16 +1056,16 @@
 **Option 1: 1**
 *Basic Description:* Single identity store
 
-**Option 2: 2-3**
+**Option 2_3: 2-3**
 *Basic Description:* Few identity stores
 
-**Option 3: 4-5**
+**Option 4_5: 4-5**
 *Basic Description:* Multiple identity stores
 
-**Option 4: 6+**
+**Option 6: 6+**
 *Basic Description:* Many identity stores
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1078,8 +1078,8 @@
 **Explanation:** Federation allows secure sharing of identity information across different systems and organizations.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1093,19 +1093,19 @@
 
 **Answer Options:**
 
-**Option 1: 0-25%**
+**Option 0_25: 0-25%**
 *Basic Description:* Minimal centralized authentication
 
-**Option 2: 26-50%**
+**Option 26_50: 26-50%**
 *Basic Description:* Some centralized authentication
 
-**Option 3: 51-75%**
+**Option 51_75: 51-75%**
 *Basic Description:* Most applications centralized
 
-**Option 4: 76-100%**
+**Option 76_100: 76-100%**
 *Basic Description:* Nearly all applications centralized
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1118,8 +1118,8 @@
 **Explanation:** SSO improves user experience and security by reducing password fatigue and enabling centralized access control.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1133,16 +1133,16 @@
 
 **Answer Options:**
 
-**Option 1: Automated**
+**Option automated: Automated**
 *Basic Description:* System-driven synchronization
 
-**Option 2: Manual**
+**Option manual: Manual**
 *Basic Description:* Human-driven synchronization
 
-**Option 3: Not synchronized**
+**Option not_synchronized: Not synchronized**
 *Basic Description:* No identity synchronization
 
-**Option 4: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1155,8 +1155,8 @@
 **Explanation:** Directory redundancy ensures authentication availability during outages.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1169,24 +1169,24 @@
 **Explanation:** Directory monitoring ensures reliable identity services and detects security issues.
 
 **Answer Options:**
-**Option 1: Automated monitoring tools**
+**Option automated_monitoring_tools: Automated monitoring tools**
 *Basic Description:* Using SIEM, monitoring platforms, or similar
 
-**Option 2: Manual reviews**
+**Option manual_reviews: Manual reviews**
 *Basic Description:* Regular manual checks and reviews
 
-**Option 3: Combination approach**
+**Option combination_approach: Combination approach**
 *Basic Description:* Mix of automated and manual monitoring
 
-**Option 4: Third-party service**
+**Option third_party_service: Third-party service**
 *Basic Description:* Outsourced monitoring
 
-**Option 5: Not monitored**
+**Option not_monitored: Not monitored**
 *Basic Description:* Not currently monitored
 
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1202,22 +1202,22 @@
 
 **Answer Options:**
 
-**Option 1: Role-based (RBAC)**
+**Option role_based_rbac: Role-based (RBAC)**
 *Basic Description:* Permissions based on user roles
 
-**Option 2: Attribute-based (ABAC)**
+**Option attribute_based_abac: Attribute-based (ABAC)**
 *Basic Description:* Permissions based on attributes
 
-**Option 3: Discretionary (DAC)**
+**Option discretionary_dac: Discretionary (DAC)**
 *Basic Description:* Owner-controlled permissions
 
-**Option 4: Mandatory (MAC)**
+**Option mandatory_mac: Mandatory (MAC)**
 *Basic Description:* System-enforced permissions
 
-**Option 5: Mixed approach**
+**Option mixed_approach: Mixed approach**
 *Basic Description:* Combination of access models
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1230,8 +1230,8 @@
 **Explanation:** Least privilege reduces security risk by granting minimal necessary access.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1244,26 +1244,26 @@
 **Explanation:** Privileged account management protects high-risk administrative access.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1276,8 +1276,8 @@
 **Explanation:** Dynamic authorization adapts access decisions based on context and risk.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1290,26 +1290,26 @@
 **Explanation:** Emergency access procedures balance security with operational needs during crises.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1322,8 +1322,8 @@
 **Explanation:** Segregation of duties prevents single individuals from having excessive control.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1339,8 +1339,8 @@
 **Explanation:** Automated provisioning ensures consistent and timely account creation.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1353,26 +1353,26 @@
 **Explanation:** Structured onboarding ensures users receive appropriate access from day one.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1386,22 +1386,22 @@
 
 **Answer Options:**
 
-**Option 1: Monthly**
+**Option monthly: Monthly**
 *Basic Description:* Every month review cycle
 
-**Option 2: Quarterly**
+**Option quarterly: Quarterly**
 *Basic Description:* Every three months review
 
-**Option 3: Annually**
+**Option annually: Annually**
 *Basic Description:* Once per year review
 
-**Option 4: As needed**
+**Option as_needed: As needed**
 *Basic Description:* Event-driven reviews only
 
-**Option 5: Never**
+**Option never: Never**
 *Basic Description:* No formal reviews
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1414,26 +1414,26 @@
 **Explanation:** Role change processes ensure access remains appropriate as responsibilities change.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1446,8 +1446,8 @@
 **Explanation:** Automated deprovisioning ensures timely access removal when users leave.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1461,22 +1461,22 @@
 
 **Answer Options:**
 
-**Option 1: Immediately**
+**Option immediately: Immediately**
 *Basic Description:* Instant account disabling
 
-**Option 2: Within 1 hour**
+**Option within_1_hour: Within 1 hour**
 *Basic Description:* Disabled within one hour
 
-**Option 3: Within 24 hours**
+**Option within_24_hours: Within 24 hours**
 *Basic Description:* Disabled within one day
 
-**Option 4: Within 1 week**
+**Option within_1_week: Within 1 week**
 *Basic Description:* Disabled within one week
 
-**Option 5: No defined timeframe**
+**Option no: No defined timeframe**
 *Basic Description:* No specific timeline
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1489,8 +1489,8 @@
 **Explanation:** Orphaned account tracking identifies accounts that should be disabled or removed.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1506,8 +1506,8 @@
 **Explanation:** MFA significantly reduces the risk of account compromise from stolen credentials.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1520,26 +1520,26 @@
 **Explanation:** Multiple MFA methods provide flexibility while maintaining security.
 
 **Answer Options:**
-**Option 1: SMS/Text message**
+**Option sms_text_message: SMS/Text message**
 *Basic Description:* One-time codes via SMS
 
-**Option 2: Authenticator app**
+**Option authenticator_app: Authenticator app**
 *Basic Description:* TOTP-based authenticator apps
 
-**Option 3: Hardware token**
+**Option hardware_token: Hardware token**
 *Basic Description:* Physical security keys like YubiKey
 
-**Option 4: Biometric**
+**Option biometric: Biometric**
 *Basic Description:* Fingerprint or facial recognition
 
-**Option 5: Push notification**
+**Option push_notification: Push notification**
 *Basic Description:* Mobile app push approvals
 
-**Option 6: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* MFA not currently implemented
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1553,19 +1553,19 @@
 
 **Answer Options:**
 
-**Option 1: 0-25%**
+**Option 0_25: 0-25%**
 *Basic Description:* Minimal MFA adoption
 
-**Option 2: 26-50%**
+**Option 26_50: 26-50%**
 *Basic Description:* Some MFA adoption
 
-**Option 3: 51-75%**
+**Option 51_75: 51-75%**
 *Basic Description:* Most users have MFA
 
-**Option 4: 76-100%**
+**Option 76_100: 76-100%**
 *Basic Description:* Nearly all users have MFA
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -1578,8 +1578,8 @@
 **Explanation:** Conditional access adapts authentication requirements based on risk factors.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1594,19 +1594,19 @@
 **Explanation:** MFA bypass procedures should balance security with operational needs.
 
 **Answer Options:**
-**Option 1: Formal documented approval process with logging**
+**Option documented_approved_maintained: Formal documented approval process with logging**
 *Basic Description:* Documented procedure with audit trail
 
-**Option 2: Temporary time-bound bypass with justification**
+**Option documented_but_stale: Temporary time-bound bypass with justification**
 *Basic Description:* Limited duration with business justification required
 
-**Option 3: Manual ad-hoc approval (no logging)**
+**Option informal_understanding: Manual ad-hoc approval (no logging)**
 *Basic Description:* Case-by-case approval without formal tracking
 
-**Option 4: Not allowed (no bypasses permitted)**
+**Option no_strategy: Not allowed (no bypasses permitted)**
 *Basic Description:* MFA cannot be bypassed under any circumstances
 
-**Option 5: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* No formal process for handling bypass requests
 
 
@@ -1632,17 +1632,17 @@
 
 **Answer Options:**
 
-**Option 1:** Monthly
+**Option quarterly:** Monthly
 
-**Option 2:** Quarterly
+**Option annually:** Quarterly
 
-**Option 3:** Annually
+**Option only_after_changes:** Annually
 
-**Option 4:** Bi-annually
+**Option only_after_major_changes:** Bi-annually
 
-**Option 5:** As needed
+**Option as_needed:** As needed
 
-**Option 6:** Never
+**Option no_formal_review:** Never
 
 
 #### Question 2.1.2
@@ -1654,8 +1654,8 @@
 **Explanation:** A formal framework provides structure and consistency for risk management activities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1669,19 +1669,19 @@
 
 **Answer Options:**
 
-**Option 1: NIST**
+**Option nist: NIST**
 *Basic Description:* NIST Risk Management Framework
 
-**Option 2: ISO 27001**
+**Option iso_27001: ISO 27001**
 *Basic Description:* ISO 27001 risk management
 
-**Option 3: FAIR**
+**Option fair: FAIR**
 *Basic Description:* Factor Analysis of Information Risk
 
-**Option 4: Custom**
+**Option custom: Custom**
 *Basic Description:* Organization-specific methodology
 
-**Option 5: None**
+**Option none: None**
 *Basic Description:* No formal methodology
 
 
@@ -1694,8 +1694,8 @@
 **Explanation:** A risk register provides centralized tracking and management of identified risks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1709,19 +1709,19 @@
 
 **Answer Options:**
 
-**Option 1: Impact x Likelihood**
+**Option impact_x_likelihood: Impact x Likelihood**
 *Basic Description:* Risk matrix approach
 
-**Option 2: Business criticality**
+**Option business_criticality: Business criticality**
 *Basic Description:* Based on business importance
 
-**Option 3: Regulatory requirements**
+**Option regulatory_requirements: Regulatory requirements**
 *Basic Description:* Compliance-driven prioritization
 
-**Option 4: Ad-hoc**
+**Option ad_hoc: Ad-hoc**
 *Basic Description:* No systematic approach
 
-**Option 5: Not prioritized**
+**Option not_prioritized: Not prioritized**
 *Basic Description:* No risk prioritization
 
 
@@ -1734,8 +1734,8 @@
 **Explanation:** Threat modeling helps identify potential attack vectors and security weaknesses.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1751,19 +1751,19 @@
 
 **Answer Options:**
 
-**Option 1: Continuously**
+**Option quarterly: Continuously**
 *Basic Description:* Ongoing risk assessment updates
 
-**Option 2: Quarterly**
+**Option annually: Quarterly**
 *Basic Description:* Every three months updates
 
-**Option 3: Annually**
+**Option only_after_changes: Annually**
 *Basic Description:* Once per year updates
 
-**Option 4: When incidents occur**
+**Option only_after_major_changes: When incidents occur**
 *Basic Description:* Event-driven updates only
 
-**Option 5: Never**
+**Option as_needed: Never**
 *Basic Description:* No risk assessment updates
 
 
@@ -1779,22 +1779,22 @@
 **Explanation:** Multiple treatment strategies provide flexibility in addressing different types of risks.
 
 **Answer Options:**
-**Option 1: Avoid**
+**Option avoid: Avoid**
 *Basic Description:* Eliminate the risk entirely by discontinuing the activity or changing approach
 
-**Option 2: Mitigate**
+**Option mitigate: Mitigate**
 *Basic Description:* Reduce likelihood or impact through security controls and safeguards
 
-**Option 3: Transfer**
+**Option transfer: Transfer**
 *Basic Description:* Shift risk to third parties via insurance, contracts, or outsourcing
 
-**Option 4: Accept**
+**Option accept: Accept**
 *Basic Description:* Acknowledge and monitor risk within organizational tolerance levels
 
-**Option 5: Monitor**
+**Option monitor: Monitor**
 *Basic Description:* Track risk over time for future action or reassessment
 
-**Option 6: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -1808,8 +1808,8 @@
 **Explanation:** Risk tolerance levels guide decision-making about which risks to accept or mitigate.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1823,16 +1823,16 @@
 
 **Answer Options:**
 
-**Option 1: Automated tools**
+**Option automated_tools: Automated tools**
 *Basic Description:* Software-based progress tracking
 
-**Option 2: Manual tracking**
+**Option manual_tracking: Manual tracking**
 *Basic Description:* Human-driven progress monitoring
 
-**Option 3: Periodic reviews**
+**Option periodic_reviews: Periodic reviews**
 *Basic Description:* Regular review meetings
 
-**Option 4: Not tracked**
+**Option not_tracked: Not tracked**
 *Basic Description:* No progress tracking
 
 
@@ -1845,8 +1845,8 @@
 **Explanation:** Cybersecurity insurance provides financial protection against cyber incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1860,16 +1860,16 @@
 
 **Answer Options:**
 
-**Option 1: Formally documented**
+**Option formally_documented: Formally documented**
 *Basic Description:* Written risk appetite statement
 
-**Option 2: Informally understood**
+**Option informally_understood: Informally understood**
 *Basic Description:* Unwritten but understood
 
-**Option 3: Under development**
+**Option under_development: Under development**
 *Basic Description:* Currently being created
 
-**Option 4: Not defined**
+**Option not_defined: Not defined**
 *Basic Description:* No risk appetite defined
 
 
@@ -1883,16 +1883,16 @@
 
 **Answer Options:**
 
-**Option 1: Regular reports**
+**Option regular_reports: Regular reports**
 *Basic Description:* Scheduled risk reporting
 
-**Option 2: Dashboard/metrics**
+**Option dashboard_metrics: Dashboard/metrics**
 *Basic Description:* Visual risk dashboards
 
-**Option 3: Ad-hoc briefings**
+**Option ad_hoc_briefings: Ad-hoc briefings**
 *Basic Description:* As-needed risk communication
 
-**Option 4: Not communicated**
+**Option not_communicated: Not communicated**
 *Basic Description:* No risk communication
 
 
@@ -1908,8 +1908,8 @@
 **Explanation:** BIA identifies critical business processes and their dependencies for risk prioritization.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1923,16 +1923,16 @@
 
 **Answer Options:**
 
-**Option 1: Critical/High/Medium/Low**
+**Option critical_high_medium_low: Critical/High/Medium/Low**
 *Basic Description:* Four-tier criticality levels
 
-**Option 2: Tier 1/2/3**
+**Option tier_1_2_3: Tier 1/2/3**
 *Basic Description:* Three-tier classification system
 
-**Option 3: Custom classification**
+**Option custom_classification: Custom classification**
 *Basic Description:* Organization-specific classification
 
-**Option 4: Not classified**
+**Option not_classified: Not classified**
 *Basic Description:* No process classification
 
 
@@ -1945,8 +1945,8 @@
 **Explanation:** RTOs define acceptable downtime for business processes and guide recovery planning.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1959,8 +1959,8 @@
 **Explanation:** RPOs define acceptable data loss and guide backup and recovery strategies.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -1976,16 +1976,16 @@
 
 **Answer Options:**
 
-**Option 1: Annually**
+**Option quarterly: Annually**
 *Basic Description:* Once per year updates
 
-**Option 2: Bi-annually**
+**Option annually: Bi-annually**
 *Basic Description:* Twice per year updates
 
-**Option 3: When business changes**
+**Option only_after_changes: When business changes**
 *Basic Description:* Event-driven updates only
 
-**Option 4: Never updated**
+**Option only_after_major_changes: Never updated**
 *Basic Description:* No BIA updates
 
 
@@ -1998,8 +1998,8 @@
 **Explanation:** Financial quantification helps justify security investments and insurance decisions.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2021,8 +2021,8 @@
 **Explanation:** Asset inventory is fundamental for security management and risk assessment.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2036,15 +2036,15 @@
 
 **Answer Options:**
 
-**Option 1:** 90-100%
+**Option 90_100:** 90-100%
 
-**Option 2:** 75-89%
+**Option 75_89:** 75-89%
 
-**Option 3:** 50-74%
+**Option 50_74:** 50-74%
 
-**Option 4:** 25-49%
+**Option 25_49:** 25-49%
 
-**Option 5:** 0-24%
+**Option 0_24:** 0-24%
 
 
 #### Question 3.1.3
@@ -2057,15 +2057,15 @@
 
 **Answer Options:**
 
-**Option 1:** Automated discovery
+**Option automated_discovery:** Automated discovery
 
-**Option 2:** Manual registration
+**Option manual_registration:** Manual registration
 
-**Option 3:** Network scanning
+**Option network_scanning:** Network scanning
 
-**Option 4:** Combination
+**Option combination:** Combination
 
-**Option 5:** No process
+**Option no:** No process
 
 
 #### Question 3.1.4
@@ -2077,8 +2077,8 @@
 **Explanation:** Asset classification enables risk-based security controls and resource allocation.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2091,37 +2091,37 @@
 **Explanation:** Comprehensive asset tracking covers all technology components that could pose security risks.
 
 **Answer Options:**
-**Option 1: Endpoints**
+**Option endpoints: Endpoints**
 *Basic Description:* Laptops, desktops, and workstations
 
-**Option 2: Servers**
+**Option servers: Servers**
 *Basic Description:* Physical and virtual servers
 
-**Option 3: Mobile devices**
+**Option mobile_devices: Mobile devices**
 *Basic Description:* Smartphones, tablets, and mobile endpoints
 
-**Option 4: Network devices**
+**Option network_devices: Network devices**
 *Basic Description:* Switches, routers, firewalls, and network infrastructure
 
-**Option 5: Applications and services**
+**Option applications_and_services: Applications and services**
 *Basic Description:* Software applications and business services
 
-**Option 6: Databases and storage**
+**Option databases_and_storage: Databases and storage**
 *Basic Description:* Database systems and storage infrastructure
 
-**Option 7: Cloud resources**
+**Option cloud_resources: Cloud resources**
 *Basic Description:* IaaS, PaaS, and SaaS cloud assets
 
-**Option 8: OT/ICS/IoT devices**
+**Option ot_ics_iot_devices: OT/ICS/IoT devices**
 *Basic Description:* Operational technology, industrial control systems, and IoT devices
 
-**Option 9: Backup media**
+**Option backup_media: Backup media**
 *Basic Description:* Backup tapes, drives, and archive storage
 
-**Option 10: Third-party/SaaS applications**
+**Option third_party_saas_applications: Third-party/SaaS applications**
 *Basic Description:* External SaaS applications and third-party services
 
-**Option 11: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -2138,17 +2138,17 @@
 
 **Answer Options:**
 
-**Option 1:** Real-time
+**Option quarterly:** Real-time
 
-**Option 2:** Daily
+**Option annually:** Daily
 
-**Option 3:** Weekly
+**Option only_after_changes:** Weekly
 
-**Option 4:** Monthly
+**Option only_after_major_changes:** Monthly
 
-**Option 5:** Quarterly
+**Option as_needed:** Quarterly
 
-**Option 6:** Annually
+**Option no_formal_review:** Annually
 
 
 #### Question 3.1.7
@@ -2160,8 +2160,8 @@
 **Explanation:** Clear ownership ensures accountability for asset security and maintenance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2177,8 +2177,8 @@
 **Explanation:** Lifecycle management ensures security controls are maintained throughout asset lifespan.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2192,16 +2192,16 @@
 
 **Answer Options:**
 
-**Option 1: Security review required**
+**Option security_review_required: Security review required**
 *Basic Description:* Mandatory security review process
 
-**Option 2: Standard security specs**
+**Option standard_security_specs: Standard security specs**
 *Basic Description:* Predefined security specifications
 
-**Option 3: Vendor security assessment**
+**Option vendor_security_assessment: Vendor security assessment**
 *Basic Description:* Vendor security evaluation
 
-**Option 4: No requirements**
+**Option no: No requirements**
 *Basic Description:* No security requirements
 
 
@@ -2214,8 +2214,8 @@
 **Explanation:** Secure disposal prevents data breaches and ensures compliance with data protection regulations.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2229,15 +2229,15 @@
 
 **Answer Options:**
 
-**Option 1:** Data wiping
+**Option data_wiping:** Data wiping
 
-**Option 2:** Physical destruction
+**Option physical_destruction:** Physical destruction
 
-**Option 3:** Certified disposal
+**Option certified_disposal:** Certified disposal
 
-**Option 4:** Return to vendor
+**Option return_to_vendor:** Return to vendor
 
-**Option 5:** No formal process
+**Option no:** No formal process
 
 
 #### Question 3.2.5
@@ -2249,8 +2249,8 @@
 **Explanation:** Tracking support status helps identify assets that may lack security updates.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2264,16 +2264,16 @@
 
 **Answer Options:**
 
-**Option 1: Change management process**
+**Option change_management_process: Change management process**
 *Basic Description:* Formal change control procedures
 
-**Option 2: Automated configuration**
+**Option automated_configuration: Automated configuration**
 *Basic Description:* System-driven configuration management
 
-**Option 3: Manual tracking**
+**Option manual_tracking: Manual tracking**
 *Basic Description:* Human-driven change tracking
 
-**Option 4: No formal process**
+**Option no: No formal process**
 *Basic Description:* No configuration management
 
 
@@ -2289,8 +2289,8 @@
 **Explanation:** Data classification enables appropriate protection controls based on sensitivity.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2304,16 +2304,16 @@
 
 **Answer Options:**
 
-**Option 1: Public/Internal/Confidential/Restricted**
+**Option public_internal_confidential_restricted: Public/Internal/Confidential/Restricted**
 *Basic Description:* Four-tier data classification
 
-**Option 2: High/Medium/Low**
+**Option high_medium_low: High/Medium/Low**
 *Basic Description:* Three-tier classification system
 
-**Option 3: Custom scheme**
+**Option custom_scheme: Custom scheme**
 *Basic Description:* Organization-specific classification
 
-**Option 4: No classification**
+**Option no: No classification**
 *Basic Description:* No data classification
 
 
@@ -2326,8 +2326,8 @@
 **Explanation:** Data labeling helps users identify and apply appropriate protection measures.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2341,15 +2341,15 @@
 
 **Answer Options:**
 
-**Option 1:** Technical controls
+**Option technical_controls:** Technical controls
 
-**Option 2:** Policy enforcement
+**Option policy_enforcement:** Policy enforcement
 
-**Option 3:** Training
+**Option training:** Training
 
-**Option 4:** Combination
+**Option combination:** Combination
 
-**Option 5:** Not enforced
+**Option not_enforced:** Not enforced
 
 
 #### Question 3.3.5
@@ -2361,8 +2361,8 @@
 **Explanation:** Data tracking helps ensure compliance with regulations and internal policies.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2376,16 +2376,16 @@
 
 **Answer Options:**
 
-**Option 1: Automated policies**
+**Option automated_policies: Automated policies**
 *Basic Description:* System-driven retention and disposal
 
-**Option 2: Manual processes**
+**Option manual_processes: Manual processes**
 *Basic Description:* Human-driven data management
 
-**Option 3: Legal hold procedures**
+**Option legal_hold_procedures: Legal hold procedures**
 *Basic Description:* Legal compliance procedures
 
-**Option 4: No formal process**
+**Option no: No formal process**
 *Basic Description:* No retention/disposal process
 
 
@@ -2407,8 +2407,8 @@
 **Explanation:** Network segmentation limits the spread of attacks and reduces blast radius.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2421,19 +2421,19 @@
 **Explanation:** Multiple segmentation techniques provide defense in depth.
 
 **Answer Options:**
-**Option 1: Physical segmentation**
+**Option physical_segmentation: Physical segmentation**
 *Basic Description:* Separate physical networks
 
-**Option 2: Virtual segmentation (VLANs)**
+**Option virtual_segmentation_vlans: Virtual segmentation (VLANs)**
 *Basic Description:* Virtual LANs
 
-**Option 3: Software-defined networking (SDN)**
+**Option software_defined_networking_sdn: Software-defined networking (SDN)**
 *Basic Description:* SDN-based segmentation
 
-**Option 4: Micro-segmentation**
+**Option micro_segmentation: Micro-segmentation**
 *Basic Description:* Granular workload-level segmentation
 
-**Option 5: No segmentation**
+**Option no: No segmentation**
 *Basic Description:* No network segmentation implemented
 
 
@@ -2447,8 +2447,8 @@
 **Explanation:** DMZ provides additional protection for public-facing services.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2462,16 +2462,16 @@
 
 **Answer Options:**
 
-**Option 1: Firewalls**
+**Option firewalls: Firewalls**
 *Basic Description:* Firewall-based access control
 
-**Option 2: Access control lists**
+**Option access_control_lists: Access control lists**
 *Basic Description:* ACL-based access control
 
-**Option 3: Zero trust model**
+**Option zero_trust_model: Zero trust model**
 *Basic Description:* Zero trust network architecture
 
-**Option 4: No controls**
+**Option no: No controls**
 *Basic Description:* No network access controls
 
 
@@ -2485,16 +2485,16 @@
 
 **Answer Options:**
 
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Complete zero trust implementation
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Some zero trust principles
 
-**Option 3: Planning**
+**Option planning: Planning**
 *Basic Description:* Zero trust implementation planned
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* No zero trust implementation
 
 
@@ -2509,25 +2509,25 @@
 **Explanation:** Wireless security prevents unauthorized network access and data interception.
 
 **Answer Options:**
-**Option 1: WPA2-Enterprise or WPA3 encryption**
+**Option fully_implemented: WPA2-Enterprise or WPA3 encryption**
 *Basic Description:* Modern encryption standards with enterprise authentication
 
-**Option 2: WPA2-Personal (pre-shared key)**
+**Option partially_implemented: WPA2-Personal (pre-shared key)**
 *Basic Description:* Basic password-based encryption
 
-**Option 3: Guest network isolation (separate SSID)**
+**Option planned: Guest network isolation (separate SSID)**
 *Basic Description:* Segregated network for visitors
 
-**Option 4: 802.1X authentication**
+**Option not_implemented: 802.1X authentication**
 *Basic Description:* Certificate or credential-based access control
 
-**Option 5: Network access control (NAC)**
+**Option network_access_control_nac: Network access control (NAC)**
 *Basic Description:* Device posture checking before network access
 
-**Option 6: Wireless intrusion detection/prevention**
+**Option wireless_intrusion_detection_prevention: Wireless intrusion detection/prevention**
 *Basic Description:* Monitoring for rogue access points and attacks
 
-**Option 7: No specific wireless security controls**
+**Option no: No specific wireless security controls**
 *Basic Description:* Basic or no wireless security measures
 
 
@@ -2541,8 +2541,8 @@
 **Explanation:** Network documentation is essential for security planning and incident response.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2558,19 +2558,19 @@
 **Explanation:** Multiple firewall types provide layered protection at different network levels.
 
 **Answer Options:**
-**Option 1: Next-generation firewall (NGFW)**
+**Option next_generation_firewall_ngfw: Next-generation firewall (NGFW)**
 *Basic Description:* Advanced firewall with IPS/IDS
 
-**Option 2: Traditional firewall**
+**Option traditional_firewall: Traditional firewall**
 *Basic Description:* Standard packet filtering firewall
 
-**Option 3: Web application firewall (WAF)**
+**Option web_application_firewall_waf: Web application firewall (WAF)**
 *Basic Description:* Application-layer firewall
 
-**Option 4: Cloud firewall**
+**Option cloud_firewall: Cloud firewall**
 *Basic Description:* Cloud-native firewall service
 
-**Option 5: Not deployed**
+**Option not_deployed: Not deployed**
 *Basic Description:* No firewall deployed
 
 
@@ -2587,22 +2587,22 @@
 
 **Answer Options:**
 
-**Option 1: Weekly**
+**Option quarterly: Weekly**
 *Basic Description:* Every week review cycle
 
-**Option 2: Monthly**
+**Option annually: Monthly**
 *Basic Description:* Every month review cycle
 
-**Option 3: Quarterly**
+**Option only_after_changes: Quarterly**
 *Basic Description:* Every three months review
 
-**Option 4: Annually**
+**Option only_after_major_changes: Annually**
 *Basic Description:* Once per year review
 
-**Option 5: As needed**
+**Option as_needed: As needed**
 *Basic Description:* Event-driven reviews only
 
-**Option 6: Never**
+**Option no_formal_review: Never**
 *Basic Description:* No formal reviews
 
 
@@ -2615,8 +2615,8 @@
 **Explanation:** Default deny ensures only explicitly allowed traffic is permitted.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2630,13 +2630,13 @@
 
 **Answer Options:**
 
-**Option 1:** Both IDS and IPS
+**Option both_ids_and_ips:** Both IDS and IPS
 
-**Option 2:** IDS only
+**Option ids_only:** IDS only
 
-**Option 3:** IPS only
+**Option ips_only:** IPS only
 
-**Option 4:** Neither
+**Option neither:** Neither
 
 
 #### Question 5.2.5
@@ -2649,13 +2649,13 @@
 
 **Answer Options:**
 
-**Option 1:** Formal change process
+**Option formal_change_process:** Formal change process
 
-**Option 2:** Automated deployment
+**Option automated_deployment:** Automated deployment
 
-**Option 3:** Manual changes
+**Option manual_changes:** Manual changes
 
-**Option 4:** No process
+**Option no:** No process
 
 
 #### Question 5.2.6
@@ -2667,8 +2667,8 @@
 **Explanation:** Log monitoring helps detect attacks and troubleshoot connectivity issues.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2682,13 +2682,13 @@
 
 **Answer Options:**
 
-**Option 1:** Annually
+**Option annually:** Annually
 
-**Option 2:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 3:** After major changes
+**Option after_major_changes:** After major changes
 
-**Option 4:** Never
+**Option never:** Never
 
 
 
@@ -2703,8 +2703,8 @@
 **Explanation:** Traffic monitoring helps detect anomalies and potential security incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2717,19 +2717,19 @@
 **Explanation:** Multiple monitoring tools provide comprehensive visibility into network activity.
 
 **Answer Options:**
-**Option 1: Commercial solution**
+**Option commercial_solution: Commercial solution**
 *Basic Description:* Vendor-provided commercial product
 
-**Option 2: Open-source solution**
+**Option open_source_solution: Open-source solution**
 *Basic Description:* Open-source tools and platforms
 
-**Option 3: Custom-built solution**
+**Option custom_built_solution: Custom-built solution**
 *Basic Description:* Internally developed solution
 
-**Option 4: Managed service**
+**Option managed_service: Managed service**
 *Basic Description:* Third-party managed service
 
-**Option 5: Not deployed**
+**Option not_deployed: Not deployed**
 *Basic Description:* Not currently deployed
 
 
@@ -2743,8 +2743,8 @@
 **Explanation:** Lateral movement detection helps identify compromised systems spreading through the network.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2758,15 +2758,15 @@
 
 **Answer Options:**
 
-**Option 1:** Machine learning
+**Option machine_learning:** Machine learning
 
-**Option 2:** Signature-based
+**Option signature_based:** Signature-based
 
-**Option 3:** Behavioral analysis
+**Option behavioral_analysis:** Behavioral analysis
 
-**Option 4:** Manual review
+**Option manual_review:** Manual review
 
-**Option 5:** No detection
+**Option no:** No detection
 
 
 #### Question 5.3.5
@@ -2778,8 +2778,8 @@
 **Explanation:** Network forensics enables investigation of security incidents and attack reconstruction.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2793,17 +2793,17 @@
 
 **Answer Options:**
 
-**Option 1:** 30 days
+**Option 30_days:** 30 days
 
-**Option 2:** 90 days
+**Option 90_days:** 90 days
 
-**Option 3:** 6 months
+**Option 6_months:** 6 months
 
-**Option 4:** 1 year
+**Option 1_year:** 1 year
 
-**Option 5:** > 1 year
+**Option 1_year_5:** > 1 year
 
-**Option 6:** Not retained
+**Option not_retained:** Not retained
 
 
 
@@ -2818,19 +2818,19 @@
 **Explanation:** Secure remote access is essential for modern distributed workforces.
 
 **Answer Options:**
-**Option 1: Commercial solution**
+**Option commercial_solution: Commercial solution**
 *Basic Description:* Vendor-provided commercial product
 
-**Option 2: Open-source solution**
+**Option open_source_solution: Open-source solution**
 *Basic Description:* Open-source tools and platforms
 
-**Option 3: Custom-built solution**
+**Option custom_built_solution: Custom-built solution**
 *Basic Description:* Internally developed solution
 
-**Option 4: Managed service**
+**Option managed_service: Managed service**
 *Basic Description:* Third-party managed service
 
-**Option 5: Not deployed**
+**Option not_deployed: Not deployed**
 *Basic Description:* Not currently deployed
 
 
@@ -2844,8 +2844,8 @@
 **Explanation:** MFA significantly reduces the risk of unauthorized remote access.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2858,22 +2858,22 @@
 **Explanation:** Modern VPN protocols provide better security and performance than legacy options.
 
 **Answer Options:**
-**Option 1: IPsec/IKEv2**
+**Option ipsec_ikev2: IPsec/IKEv2**
 *Basic Description:* Industry-standard IPsec with IKEv2 key exchange
 
-**Option 2: SSL/TLS VPN (e.g., OpenVPN)**
+**Option ssl_tls_vpn_e_g_openvpn: SSL/TLS VPN (e.g., OpenVPN)**
 *Basic Description:* SSL/TLS-based VPN protocols like OpenVPN
 
-**Option 3: WireGuard**
+**Option wireguard: WireGuard**
 *Basic Description:* Modern, lightweight VPN protocol with strong cryptography
 
-**Option 4: L2TP/IPsec**
+**Option l2tp_ipsec: L2TP/IPsec**
 *Basic Description:* Layer 2 Tunneling Protocol with IPsec encryption
 
-**Option 5: SSTP**
+**Option sstp: SSTP**
 *Basic Description:* Secure Socket Tunneling Protocol (Microsoft)
 
-**Option 6: None/Not applicable**
+**Option none_not_applicable: None/Not applicable**
 *Basic Description:* No VPN or not applicable to our organization
 
 
@@ -2888,13 +2888,13 @@
 
 **Answer Options:**
 
-**Option 1:** Prohibited
+**Option prohibited:** Prohibited
 
-**Option 2:** Allowed with restrictions
+**Option allowed_with_restrictions:** Allowed with restrictions
 
-**Option 3:** Fully allowed
+**Option fully_allowed:** Fully allowed
 
-**Option 4:** Not configured
+**Option not_configured:** Not configured
 
 
 #### Question 5.4.5
@@ -2907,13 +2907,13 @@
 
 **Answer Options:**
 
-**Option 1:** Real-time monitoring
+**Option real_time_monitoring:** Real-time monitoring
 
-**Option 2:** Log analysis
+**Option log_analysis:** Log analysis
 
-**Option 3:** Periodic reviews
+**Option periodic_reviews:** Periodic reviews
 
-**Option 4:** Not monitored
+**Option not_monitored:** Not monitored
 
 
 #### Question 5.4.6
@@ -2925,8 +2925,8 @@
 **Explanation:** Device compliance ensures remote devices meet security standards before network access.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2948,19 +2948,19 @@
 **Explanation:** Multiple endpoint protection layers provide comprehensive defense against various threats.
 
 **Answer Options:**
-**Option 1: Commercial solution**
+**Option commercial_solution: Commercial solution**
 *Basic Description:* Vendor-provided commercial product
 
-**Option 2: Open-source solution**
+**Option open_source_solution: Open-source solution**
 *Basic Description:* Open-source tools and platforms
 
-**Option 3: Custom-built solution**
+**Option custom_built_solution: Custom-built solution**
 *Basic Description:* Internally developed solution
 
-**Option 4: Managed service**
+**Option managed_service: Managed service**
 *Basic Description:* Third-party managed service
 
-**Option 5: Not deployed**
+**Option not_deployed: Not deployed**
 *Basic Description:* Not currently deployed
 
 
@@ -2974,8 +2974,8 @@
 **Explanation:** Centralized management enables consistent policy enforcement and monitoring across all endpoints.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -2989,18 +2989,18 @@
 
 **Answer Options:**
 
-**Option 1: Group Policy**
+**Option group_policy: Group Policy**
 *Basic Description:* Microsoft Active Directory centralized configuration management
 
-**Option 2: MDM/EMM**
+**Option mdm_emm: MDM/EMM**
 *Basic Description:* Mobile Device Management/Enterprise Mobility Management
 
-**Option 3: Configuration management tools**
+**Option configuration_management_tools: Configuration management tools**
 *Basic Description:* Automated tools like Ansible, Puppet, Chef
 
-**Option 4:** Manual configuration
+**Option manual_configuration:** Manual configuration
 
-**Option 5:** No management
+**Option no:** No management
 
 
 #### Question 6.1.4
@@ -3012,8 +3012,8 @@
 **Explanation:** Application control prevents execution of unauthorized or malicious software.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3029,15 +3029,15 @@
 
 **Answer Options:**
 
-**Option 1:** Real-time
+**Option quarterly:** Real-time
 
-**Option 2:** Hourly
+**Option annually:** Hourly
 
-**Option 3:** Daily
+**Option only_after_changes:** Daily
 
-**Option 4:** Weekly
+**Option only_after_major_changes:** Weekly
 
-**Option 5:** Manual updates
+**Option as_needed:** Manual updates
 
 
 #### Question 6.1.6
@@ -3049,8 +3049,8 @@
 **Explanation:** Event monitoring enables rapid detection and response to security incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3064,15 +3064,15 @@
 
 **Answer Options:**
 
-**Option 1:** 90-100%
+**Option 90_100:** 90-100%
 
-**Option 2:** 75-89%
+**Option 75_89:** 75-89%
 
-**Option 3:** 50-74%
+**Option 50_74:** 50-74%
 
-**Option 4:** 25-49%
+**Option 25_49:** 25-49%
 
-**Option 5:** 0-24%
+**Option 0_24:** 0-24%
 
 
 
@@ -3087,8 +3087,8 @@
 **Explanation:** MDM solutions provide centralized management and security for mobile devices.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3101,31 +3101,31 @@
 **Explanation:** Mobile policies protect corporate data on personal and company devices.
 
 **Answer Options:**
-**Option 1: Screen lock/passcode enforcement**
+**Option screen_lock_passcode_enforcement: Screen lock/passcode enforcement**
 *Basic Description:* Require device passcode or biometric authentication
 
-**Option 2: Full-device encryption**
+**Option full_device_encryption: Full-device encryption**
 *Basic Description:* Mandate encryption for all mobile devices
 
-**Option 3: MDM enrollment**
+**Option mdm_enrollment: MDM enrollment**
 *Basic Description:* Require Mobile Device Management enrollment
 
-**Option 4: OS version enforcement**
+**Option os_version_enforcement: OS version enforcement**
 *Basic Description:* Enforce minimum operating system versions
 
-**Option 5: App allow/deny lists**
+**Option app_allow_deny_lists: App allow/deny lists**
 *Basic Description:* Control which applications can be installed
 
-**Option 6: Jailbreak/root detection**
+**Option jailbreak_root_detection: Jailbreak/root detection**
 *Basic Description:* Detect and block compromised devices
 
-**Option 7: Remote wipe capability**
+**Option remote_wipe_capability: Remote wipe capability**
 *Basic Description:* Ability to remotely erase device data
 
-**Option 8: Conditional access policies**
+**Option conditional_access_policies: Conditional access policies**
 *Basic Description:* Context-based access controls for mobile devices
 
-**Option 9: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -3140,15 +3140,15 @@
 
 **Answer Options:**
 
-**Option 1:** Full MDM enrollment
+**Option full_mdm_enrollment:** Full MDM enrollment
 
-**Option 2:** App wrapping/containerization
+**Option app_wrapping_containerization:** App wrapping/containerization
 
-**Option 3:** VPN-only access
+**Option vpn_only_access:** VPN-only access
 
-**Option 4:** Not allowed
+**Option not_allowed:** Not allowed
 
-**Option 5:** No controls
+**Option no:** No controls
 
 
 #### Question 6.2.4
@@ -3160,8 +3160,8 @@
 **Explanation:** Data separation protects corporate information while preserving user privacy.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3175,13 +3175,13 @@
 
 **Answer Options:**
 
-**Option 1:** App store restrictions
+**Option app_store_restrictions:** App store restrictions
 
-**Option 2:** Corporate app catalog
+**Option corporate_app_catalog:** Corporate app catalog
 
-**Option 3:** Sideloading blocked
+**Option sideloading_blocked:** Sideloading blocked
 
-**Option 4:** No restrictions
+**Option no:** No restrictions
 
 
 #### Question 6.2.6
@@ -3193,8 +3193,8 @@
 **Explanation:** Compliance monitoring ensures devices meet security requirements before accessing corporate resources.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3212,8 +3212,8 @@
 **Explanation:** Standardized configurations reduce security risks and improve management efficiency.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3229,15 +3229,15 @@
 
 **Answer Options:**
 
-**Option 1: Group Policy**
+**Option group_policy: Group Policy**
 *Basic Description:* Microsoft Active Directory centralized configuration management
 
-**Option 2: Configuration management tools**
+**Option configuration_management_tools: Configuration management tools**
 *Basic Description:* Automated tools like Ansible, Puppet, Chef
 
-**Option 3:** Manual checks
+**Option manual_checks:** Manual checks
 
-**Option 4:** No enforcement
+**Option no:** No enforcement
 
 
 #### Question 6.3.3
@@ -3251,8 +3251,8 @@
 **Explanation:** Configuration drift monitoring helps maintain security baselines over time.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3270,17 +3270,17 @@
 
 **Answer Options:**
 
-**Option 1:** Weekly
+**Option quarterly:** Weekly
 
-**Option 2:** Monthly
+**Option annually:** Monthly
 
-**Option 3:** Quarterly
+**Option only_after_changes:** Quarterly
 
-**Option 4:** Annually
+**Option only_after_major_changes:** Annually
 
-**Option 5:** As needed
+**Option as_needed:** As needed
 
-**Option 6:** Never
+**Option no_formal_review:** Never
 
 
 
@@ -3301,8 +3301,8 @@
 **Explanation:** Data encryption at rest protects against unauthorized access to stored information.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3315,8 +3315,8 @@
 **Explanation:** Data encryption in transit protects against interception during transmission.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3329,19 +3329,19 @@
 **Explanation:** Strong encryption standards provide robust protection for sensitive data.
 
 **Answer Options:**
-**Option 1: AES-256**
+**Option aes_256: AES-256**
 *Basic Description:* Advanced Encryption Standard 256-bit
 
-**Option 2: AES-128**
+**Option aes_128: AES-128**
 *Basic Description:* Advanced Encryption Standard 128-bit
 
-**Option 3: RSA**
+**Option rsa: RSA**
 *Basic Description:* RSA encryption
 
-**Option 4: Other encryption**
+**Option other: Other encryption**
 *Basic Description:* Other encryption methods
 
-**Option 5: Not encrypted**
+**Option not_encrypted: Not encrypted**
 *Basic Description:* Data not encrypted
 
 
@@ -3356,15 +3356,15 @@
 
 **Answer Options:**
 
-**Option 1:** Hardware Security Module (HSM)
+**Option hardware_security_module_hsm:** Hardware Security Module (HSM)
 
-**Option 2:** Key Management Service (KMS)
+**Option key_management_service_kms:** Key Management Service (KMS)
 
-**Option 3:** Software-based
+**Option software_based:** Software-based
 
-**Option 4:** Manual management
+**Option manual_management:** Manual management
 
-**Option 5:** No key management
+**Option no:** No key management
 
 
 #### Question 7.1.5
@@ -3376,8 +3376,8 @@
 **Explanation:** DLP controls prevent unauthorized data exfiltration and ensure compliance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3390,22 +3390,22 @@
 **Explanation:** Mobile data protection prevents loss of sensitive information on portable devices.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
@@ -3420,13 +3420,13 @@
 
 **Answer Options:**
 
-**Option 1:** Transparent Data Encryption (TDE)
+**Option transparent_data_encryption_tde:** Transparent Data Encryption (TDE)
 
-**Option 2:** Column-level encryption
+**Option column_level_encryption:** Column-level encryption
 
-**Option 3:** Application-level encryption
+**Option application_level_encryption:** Application-level encryption
 
-**Option 4:** No database encryption
+**Option no:** No database encryption
 
 
 
@@ -3441,31 +3441,31 @@
 **Explanation:** Understanding applicable regulations is essential for compliance planning.
 
 **Answer Options:**
-**Option 1: GDPR**
+**Option gdpr: GDPR**
 *Basic Description:* General Data Protection Regulation (European Union)
 
-**Option 2: CCPA/CPRA**
+**Option ccpa_cpra: CCPA/CPRA**
 *Basic Description:* California Consumer Privacy Act / California Privacy Rights Act
 
-**Option 3: HIPAA**
+**Option hipaa: HIPAA**
 *Basic Description:* Health Insurance Portability and Accountability Act
 
-**Option 4: GLBA**
+**Option glba: GLBA**
 *Basic Description:* Gramm-Leach-Bliley Act (financial services)
 
-**Option 5: SOX**
+**Option sox: SOX**
 *Basic Description:* Sarbanes-Oxley Act (financial reporting)
 
-**Option 6: PCI DSS**
+**Option pci_dss: PCI DSS**
 *Basic Description:* Payment Card Industry Data Security Standard
 
-**Option 7: PIPEDA**
+**Option pipeda: PIPEDA**
 *Basic Description:* Personal Information Protection and Electronic Documents Act (Canada)
 
-**Option 8: LGPD**
+**Option lgpd: LGPD**
 *Basic Description:* Lei Geral de Proteção de Dados (Brazil)
 
-**Option 9: None/Not applicable**
+**Option none_not_applicable: None/Not applicable**
 *Basic Description:* No specific privacy regulations apply
 
 
@@ -3479,8 +3479,8 @@
 **Explanation:** Privacy policies inform users about data collection and processing practices.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3493,8 +3493,8 @@
 **Explanation:** PIAs help identify and mitigate privacy risks in new projects and systems.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3508,13 +3508,13 @@
 
 **Answer Options:**
 
-**Option 1:** Automated system
+**Option automated_system:** Automated system
 
-**Option 2:** Manual process
+**Option manual_process:** Manual process
 
-**Option 3:** Third-party service
+**Option third_party_service:** Third-party service
 
-**Option 4:** No formal process
+**Option no:** No formal process
 
 
 #### Question 7.2.5
@@ -3526,8 +3526,8 @@
 **Explanation:** DPOs provide expertise and oversight for privacy compliance programs.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3541,15 +3541,15 @@
 
 **Answer Options:**
 
-**Option 1:** Explicit consent
+**Option explicit_consent:** Explicit consent
 
-**Option 2:** Opt-in
+**Option opt_in:** Opt-in
 
-**Option 3:** Opt-out
+**Option opt_out:** Opt-out
 
-**Option 4:** Implied consent
+**Option implied_consent:** Implied consent
 
-**Option 5:** No consent mechanism
+**Option no:** No consent mechanism
 
 
 
@@ -3564,8 +3564,8 @@
 **Explanation:** Backup strategies ensure data availability and business continuity.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3579,15 +3579,15 @@
 
 **Answer Options:**
 
-**Option 1:** Real-time
+**Option real_time:** Real-time
 
-**Option 2:** Hourly
+**Option hourly:** Hourly
 
-**Option 3:** Daily
+**Option daily:** Daily
 
-**Option 4:** Weekly
+**Option weekly:** Weekly
 
-**Option 5:** Monthly
+**Option monthly:** Monthly
 
 
 #### Question 7.3.3
@@ -3601,25 +3601,25 @@
 **Explanation:** Multiple backup locations protect against site-specific disasters.
 
 **Answer Options:**
-**Option 1: Primary site only**
+**Option 76_100: Primary site only**
 *Basic Description:* Backups stored at main facility
 
-**Option 2: Secondary on-premises site**
+**Option 51_75: Secondary on-premises site**
 *Basic Description:* Separate physical location (same organization)
 
-**Option 3: Cloud storage (single region)**
+**Option 26_50: Cloud storage (single region)**
 *Basic Description:* Cloud provider in one geographic region
 
-**Option 4: Cloud storage (multi-region)**
+**Option 0_25: Cloud storage (multi-region)**
 *Basic Description:* Replicated across multiple geographic regions
 
-**Option 5: Offline / off-site media**
+**Option offline_off_site_media: Offline / off-site media**
 *Basic Description:* Tape or removable media stored off-site
 
-**Option 6: Mix of the above**
+**Option mix_of_the_above: Mix of the above**
 *Basic Description:* Combination of multiple storage locations
 
-**Option 7: Not sure / No defined strategy**
+**Option not_sure: Not sure / No defined strategy**
 *Basic Description:* Backup location not clearly defined
 
 
@@ -3634,13 +3634,13 @@
 
 **Answer Options:**
 
-**Option 1:** Monthly
+**Option monthly:** Monthly
 
-**Option 2:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 3:** Annually
+**Option annually:** Annually
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 7.3.5
@@ -3652,8 +3652,8 @@
 **Explanation:** Backup encryption protects data confidentiality during storage and transmission.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3667,15 +3667,15 @@
 
 **Answer Options:**
 
-**Option 1:** < 1 hour
+**Option 1_hour:** < 1 hour
 
-**Option 2:** 1-4 hours
+**Option 1_4_hours:** 1-4 hours
 
-**Option 3:** 4-24 hours
+**Option 4_24_hours:** 4-24 hours
 
-**Option 4:** > 24 hours
+**Option 24_hours:** > 24 hours
 
-**Option 5:** Not defined
+**Option not_defined:** Not defined
 
 
 
@@ -3693,13 +3693,13 @@
 
 **Answer Options:**
 
-**Option 1:** Automated discovery
+**Option automated_discovery:** Automated discovery
 
-**Option 2:** Manual mapping
+**Option manual_mapping:** Manual mapping
 
-**Option 3:** Partial capabilities
+**Option partial_capabilities:** Partial capabilities
 
-**Option 4:** No capabilities
+**Option no:** No capabilities
 
 
 #### Question 7.4.2
@@ -3713,22 +3713,22 @@
 **Explanation:** Efficient DSAR handling ensures compliance with privacy regulations.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -3745,13 +3745,13 @@
 
 **Answer Options:**
 
-**Option 1:** For all high-risk processing
+**Option for_all_high_risk_processing:** For all high-risk processing
 
-**Option 2:** For new systems only
+**Option for_new_systems_only:** For new systems only
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 7.4.4
@@ -3765,22 +3765,22 @@
 **Explanation:** Proper transfer mechanisms ensure lawful international data transfers.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -3796,19 +3796,19 @@
 **Explanation:** Consent management ensures lawful processing and user control over personal data.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -3819,7 +3819,7 @@
 ## Section 8: Application Security
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 **Suggested Respondents:** DevSecOps Lead, Application Security Architect
 
@@ -3834,8 +3834,8 @@
 **Explanation:** Secure SDLC integrates security practices throughout the development process.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3849,15 +3849,15 @@
 
 **Answer Options:**
 
-**Option 1:** Always
+**Option always:** Always
 
-**Option 2:** For critical applications
+**Option for_critical_applications:** For critical applications
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -3870,23 +3870,23 @@
 **Explanation:** SAST tools automatically identify security vulnerabilities in source code.
 
 **Answer Options:**
-**Option 1: Commercial SAST tool**
+**Option commercial_sast_tool: Commercial SAST tool**
 *Basic Description:* Vendor SAST solution
 
-**Option 2: Open-source SAST tool**
+**Option open_source_sast_tool: Open-source SAST tool**
 *Basic Description:* Open-source static analysis
 
-**Option 3: IDE-integrated analysis**
+**Option ide_integrated_analysis: IDE-integrated analysis**
 *Basic Description:* Built into development environment
 
-**Option 4: Manual code review**
+**Option manual_code_review: Manual code review**
 *Basic Description:* Manual security code review
 
-**Option 5: Not performed**
+**Option not_performed: Not performed**
 *Basic Description:* SAST not performed
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -3899,8 +3899,8 @@
 **Explanation:** DAST identifies vulnerabilities in running applications through external testing.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3913,8 +3913,8 @@
 **Explanation:** IAST combines SAST and DAST approaches for comprehensive testing.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3928,15 +3928,15 @@
 
 **Answer Options:**
 
-**Option 1:** Automated scanning
+**Option automated_scanning:** Automated scanning
 
-**Option 2:** Manual review
+**Option manual_review:** Manual review
 
-**Option 3:** Dependency management tools
+**Option dependency_management_tools:** Dependency management tools
 
-**Option 4:** No management
+**Option no:** No management
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -3949,8 +3949,8 @@
 **Explanation:** Coding standards provide guidelines for writing secure code.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3966,8 +3966,8 @@
 **Explanation:** OWASP Top 10 represents the most critical web application security risks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3980,8 +3980,8 @@
 **Explanation:** Input validation prevents injection attacks and data corruption.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -3996,22 +3996,22 @@
 **Explanation:** Proper authentication mechanisms protect against unauthorized access.
 
 **Answer Options:**
-**Option 1: Centralized SSO (SAML/OIDC/OAuth) for all apps**
+**Option fully_implemented: Centralized SSO (SAML/OIDC/OAuth) for all apps**
 *Basic Description:* Single sign-on across all applications
 
-**Option 2: Centralized SSO for some apps, local auth for others**
+**Option partially_implemented: Centralized SSO for some apps, local auth for others**
 *Basic Description:* Mixed authentication approach
 
-**Option 3: Local username/password per application**
+**Option planned: Local username/password per application**
 *Basic Description:* Each app manages its own authentication
 
-**Option 4: Social login (Google/Microsoft/etc.) only**
+**Option not_implemented: Social login (Google/Microsoft/etc.) only**
 *Basic Description:* Third-party identity providers
 
-**Option 5: Mixed approach / legacy systems**
+**Option mixed_approach_legacy_systems: Mixed approach / legacy systems**
 *Basic Description:* Combination of multiple authentication methods
 
-**Option 6: Not sure / Not defined**
+**Option not_sure: Not sure / Not defined**
 *Basic Description:* Authentication approach unclear
 
 
@@ -4025,8 +4025,8 @@
 **Explanation:** Session management prevents session hijacking and fixation attacks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4039,8 +4039,8 @@
 **Explanation:** CSP helps prevent cross-site scripting (XSS) attacks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4054,16 +4054,16 @@
 
 **Answer Options:**
 
-**Option 1:** CSRF tokens
+**Option csrf_tokens:** CSRF tokens
 
-**Option 2:** SameSite cookies
+**Option samesite_cookies:** SameSite cookies
 
-**Option 3:** Referrer validation
+**Option referrer_validation:** Referrer validation
 
-**Option 4:** No protection
+**Option no:** No protection
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4078,26 +4078,26 @@
 **Explanation:** API security prevents unauthorized access and abuse of application interfaces.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4110,8 +4110,8 @@
 **Explanation:** Rate limiting prevents API abuse and denial of service attacks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4124,8 +4124,8 @@
 **Explanation:** API monitoring helps detect suspicious activity and security incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4139,15 +4139,15 @@
 
 **Answer Options:**
 
-**Option 1:** URL versioning
+**Option url_versioning:** URL versioning
 
-**Option 2:** Header versioning
+**Option header_versioning:** Header versioning
 
-**Option 3:** Parameter versioning
+**Option parameter_versioning:** Parameter versioning
 
-**Option 4:** No versioning
+**Option no:** No versioning
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4160,8 +4160,8 @@
 **Explanation:** Input/output validation prevents injection attacks and data leakage.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4174,8 +4174,8 @@
 **Explanation:** API gateways provide centralized security, monitoring, and management.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4193,23 +4193,23 @@
 **Explanation:** Automated security testing in CI/CD enables early detection of vulnerabilities.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4224,23 +4224,23 @@
 **Explanation:** Merge gates prevent vulnerable code from reaching production.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4255,20 +4255,20 @@
 **Explanation:** Secret scanning prevents credential exposure in source code.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4283,23 +4283,23 @@
 **Explanation:** IaC scanning identifies misconfigurations before deployment.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4314,26 +4314,26 @@
 **Explanation:** Structured handling ensures security findings are addressed promptly.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4348,23 +4348,23 @@
 **Explanation:** SBOM enforcement provides supply chain transparency and enables vulnerability tracking.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4379,19 +4379,19 @@
 **Explanation:** Mandatory IaC policies prevent misconfigurations and enforce security standards.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -4402,7 +4402,7 @@
 ## Section 9: Cloud & Container Security
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 **Suggested Respondents:** Cloud Security Architect
 
@@ -4417,29 +4417,29 @@
 **Explanation:** Different service models require different security approaches and responsibilities.
 
 **Answer Options:**
-**Option 1: IaaS**
+**Option iaas: IaaS**
 *Basic Description:* Infrastructure as a Service (virtual machines, storage, networks)
 
-**Option 2: PaaS**
+**Option paas: PaaS**
 *Basic Description:* Platform as a Service (application platforms, databases)
 
-**Option 3: SaaS**
+**Option saas: SaaS**
 *Basic Description:* Software as a Service (cloud applications)
 
-**Option 4: FaaS/Serverless**
+**Option faas_serverless: FaaS/Serverless**
 *Basic Description:* Function as a Service or serverless computing
 
-**Option 5: Private cloud**
+**Option private_cloud: Private cloud**
 *Basic Description:* Dedicated private cloud infrastructure
 
-**Option 6: Hybrid/Multi-cloud**
+**Option hybrid_multi_cloud: Hybrid/Multi-cloud**
 *Basic Description:* Combination of multiple cloud environments
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 8: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4452,8 +4452,8 @@
 **Explanation:** A cloud security strategy ensures consistent protection across cloud environments.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4466,26 +4466,26 @@
 **Explanation:** Secure configurations prevent common cloud misconfigurations and vulnerabilities.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4498,23 +4498,23 @@
 **Explanation:** Cloud network security controls protect against unauthorized access and attacks.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4527,23 +4527,23 @@
 **Explanation:** Cloud security monitoring provides visibility into threats and compliance issues.
 
 **Answer Options:**
-**Option 1: Automated monitoring tools**
+**Option automated_monitoring_tools: Automated monitoring tools**
 *Basic Description:* Using SIEM, monitoring platforms, or similar
 
-**Option 2: Manual reviews**
+**Option manual_reviews: Manual reviews**
 *Basic Description:* Regular manual checks and reviews
 
-**Option 3: Combination approach**
+**Option combination_approach: Combination approach**
 *Basic Description:* Mix of automated and manual monitoring
 
-**Option 4: Third-party service**
+**Option third_party_service: Third-party service**
 *Basic Description:* Outsourced monitoring
 
-**Option 5: Not monitored**
+**Option not_monitored: Not monitored**
 *Basic Description:* Not currently monitored
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4556,8 +4556,8 @@
 **Explanation:** Cloud data encryption protects against unauthorized access to stored information.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4571,16 +4571,16 @@
 
 **Answer Options:**
 
-**Option 1:** Security-first approach
+**Option security_first_approach:** Security-first approach
 
-**Option 2:** Cost-optimized with security
+**Option cost_optimized_with_security:** Cost-optimized with security
 
-**Option 3:** Balanced approach
+**Option balanced_approach:** Balanced approach
 
-**Option 4:** Cost-first approach
+**Option cost_first_approach:** Cost-first approach
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4595,26 +4595,26 @@
 **Explanation:** Proper cloud identity management ensures secure access to cloud resources.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4627,8 +4627,8 @@
 **Explanation:** Least privilege reduces the risk of unauthorized access and privilege escalation.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4641,26 +4641,26 @@
 **Explanation:** API security prevents unauthorized access to cloud management interfaces.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4674,16 +4674,16 @@
 
 **Answer Options:**
 
-**Option 1:** Automatically
+**Option automatically:** Automatically
 
-**Option 2:** Regularly
+**Option regularly:** Regularly
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 #### Question 9.2.5
@@ -4696,13 +4696,13 @@
 
 **Answer Options:**
 
-**Option 1:** PAM solution
+**Option pam_solution:** PAM solution
 
-**Option 2:** Break-glass procedures
+**Option break_glass_procedures:** Break-glass procedures
 
-**Option 3:** Shared accounts
+**Option shared_accounts:** Shared accounts
 
-**Option 4:** No special controls
+**Option no:** No special controls
 
 
 #### Question 9.2.6
@@ -4714,8 +4714,8 @@
 **Explanation:** Activity monitoring helps detect unauthorized access and suspicious behavior.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4731,8 +4731,8 @@
 **Explanation:** Container usage requires specific security considerations and controls.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4745,26 +4745,26 @@
 **Explanation:** Container image security prevents deployment of vulnerable or malicious containers.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4777,23 +4777,23 @@
 **Explanation:** Runtime security protects containers during execution from various threats.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4806,26 +4806,26 @@
 **Explanation:** Serverless security addresses unique risks in function-as-a-service environments.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4838,8 +4838,8 @@
 **Explanation:** Vulnerability scanning identifies security weaknesses in cloud-deployed applications.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4853,15 +4853,15 @@
 
 **Answer Options:**
 
-**Option 1:** Cloud secret managers
+**Option cloud_secret_managers:** Cloud secret managers
 
-**Option 2:** Environment variables
+**Option environment_variables:** Environment variables
 
-**Option 3:** Configuration files
+**Option configuration_files:** Configuration files
 
-**Option 4:** Hardcoded
+**Option hardcoded:** Hardcoded
 
-**Option 5:** External vault
+**Option external_vault:** External vault
 
 
 
@@ -4870,7 +4870,7 @@
 ## Section 10: Incident Response & Resilience
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 **Suggested Respondents:** CISO, Incident Response Manager
 
@@ -4885,8 +4885,8 @@
 **Explanation:** A formal incident response plan ensures coordinated and effective response to security incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4902,17 +4902,17 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** After incidents
+**Option only_after_changes:** After incidents
 
-**Option 4:** As needed
+**Option only_after_major_changes:** As needed
 
-**Option 5:** Never updated
+**Option as_needed:** Never updated
 
-**Option 6: Not sure**
+**Option no_formal_review: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4925,8 +4925,8 @@
 **Explanation:** A dedicated incident response team provides specialized expertise for handling security incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -4939,41 +4939,41 @@
 **Explanation:** Clear roles ensure effective coordination and decision-making during incidents.
 
 **Answer Options:**
-**Option 1: Incident Commander/Lead**
+**Option incident_commander_lead: Incident Commander/Lead**
 *Basic Description:* Overall incident response coordinator and decision maker
 
-**Option 2: Communications Lead**
+**Option communications_lead: Communications Lead**
 *Basic Description:* Internal and external communications coordinator
 
-**Option 3: Forensics/Investigation Lead**
+**Option forensics_investigation_lead: Forensics/Investigation Lead**
 *Basic Description:* Digital forensics and investigation specialist
 
-**Option 4: IT Operations**
+**Option it_operations: IT Operations**
 *Basic Description:* Technical operations and system recovery
 
-**Option 5: Security Engineering**
+**Option security_engineering: Security Engineering**
 *Basic Description:* Security tools and threat analysis
 
-**Option 6: Legal/Privacy Officer**
+**Option legal_privacy_officer: Legal/Privacy Officer**
 *Basic Description:* Legal compliance and privacy considerations
 
-**Option 7: Human Resources**
+**Option human_resources: Human Resources**
 *Basic Description:* Employee-related incident handling
 
-**Option 8: Public Relations/Communications**
+**Option public_relations_communications: Public Relations/Communications**
 *Basic Description:* External media and stakeholder communications
 
-**Option 9: External IR Provider/Consultant**
+**Option external_ir_provider_consultant: External IR Provider/Consultant**
 *Basic Description:* Third-party incident response support
 
-**Option 10: Business Unit Representatives**
+**Option business_unit_representatives: Business Unit Representatives**
 *Basic Description:* Business stakeholders and process owners
 
-**Option 11: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 12: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -4987,16 +4987,16 @@
 
 **Answer Options:**
 
-**Option 1:** Regularly
+**Option regularly:** Regularly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 #### Question 10.1.6
@@ -5009,13 +5009,13 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 10.1.7
@@ -5027,8 +5027,8 @@
 **Explanation:** Severity levels help prioritize response efforts and determine escalation procedures.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5044,20 +5044,20 @@
 **Explanation:** Multiple detection methods improve the likelihood of identifying security incidents quickly.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -5071,17 +5071,17 @@
 
 **Answer Options:**
 
-**Option 1:** < 1 hour
+**Option 1_hour:** < 1 hour
 
-**Option 2:** 1-4 hours
+**Option 1_4_hours:** 1-4 hours
 
-**Option 3:** 4-24 hours
+**Option 4_24_hours:** 4-24 hours
 
-**Option 4:** > 24 hours
+**Option 24_hours:** > 24 hours
 
-**Option 5:** No target
+**Option no:** No target
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -5094,8 +5094,8 @@
 **Explanation:** Round-the-clock capabilities ensure incidents can be addressed regardless of when they occur.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5108,20 +5108,20 @@
 **Explanation:** Containment prevents incidents from spreading and causing additional damage.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -5134,8 +5134,8 @@
 **Explanation:** Escalation procedures ensure appropriate stakeholders are notified based on incident severity.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5148,21 +5148,21 @@
 **Explanation:** Effective communication keeps stakeholders informed and coordinates response efforts.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -5177,8 +5177,8 @@
 **Explanation:** Recovery procedures ensure systems and operations are restored safely after incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5192,15 +5192,15 @@
 
 **Answer Options:**
 
-**Option 1:** Automated scanning
+**Option automated_scanning:** Automated scanning
 
-**Option 2:** Manual verification
+**Option manual_verification:** Manual verification
 
-**Option 3:** Third-party assessment
+**Option third_party_assessment:** Third-party assessment
 
-**Option 4:** No validation
+**Option no:** No validation
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -5213,8 +5213,8 @@
 **Explanation:** Post-incident reviews identify lessons learned and opportunities for improvement.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5227,8 +5227,8 @@
 **Explanation:** Documentation provides valuable information for future incidents and compliance requirements.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5241,20 +5241,20 @@
 **Explanation:** Metrics help measure incident response effectiveness and identify improvement areas.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -5267,8 +5267,8 @@
 **Explanation:** Control updates help prevent similar incidents from occurring in the future.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5290,8 +5290,8 @@
 **Explanation:** A BCP ensures critical business functions can continue during and after disruptions.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5307,15 +5307,15 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** After incidents
+**Option only_after_changes:** After incidents
 
-**Option 4:** As needed
+**Option only_after_major_changes:** As needed
 
-**Option 5:** Never updated
+**Option as_needed:** Never updated
 
 
 #### Question 11.1.3
@@ -5327,8 +5327,8 @@
 **Explanation:** BIAs identify critical business processes and their recovery requirements.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5342,15 +5342,15 @@
 
 **Answer Options:**
 
-**Option 1:** < 1 hour
+**Option 1_hour:** < 1 hour
 
-**Option 2:** 1-4 hours
+**Option 1_4_hours:** 1-4 hours
 
-**Option 3:** 4-24 hours
+**Option 4_24_hours:** 4-24 hours
 
-**Option 4:** > 24 hours
+**Option 24_hours:** > 24 hours
 
-**Option 5:** Not defined
+**Option not_defined:** Not defined
 
 
 #### Question 11.1.5
@@ -5362,8 +5362,8 @@
 **Explanation:** Alternate locations ensure business operations can continue if primary facilities are unavailable.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5377,13 +5377,13 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
 
@@ -5398,8 +5398,8 @@
 **Explanation:** A DRP provides procedures for recovering IT systems and data after disasters.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5412,28 +5412,28 @@
 **Explanation:** Multiple recovery options provide flexibility and resilience against different disaster scenarios.
 
 **Answer Options:**
-**Option 1: On-premises data center**
+**Option on_premises_data_center: On-premises data center**
 *Basic Description:* Secondary on-premises facility
 
-**Option 2: Co-location facility**
+**Option co_location_facility: Co-location facility**
 *Basic Description:* Third-party colocation data center
 
-**Option 3: Cloud provider (IaaS)**
+**Option cloud_provider_iaas: Cloud provider (IaaS)**
 *Basic Description:* Cloud-based disaster recovery infrastructure
 
-**Option 4: Managed DR service**
+**Option managed_dr_service: Managed DR service**
 *Basic Description:* Third-party managed disaster recovery service
 
-**Option 5: Hot site**
+**Option hot_site: Hot site**
 *Basic Description:* Fully operational backup site ready for immediate use
 
-**Option 6: Warm site**
+**Option warm_site: Warm site**
 *Basic Description:* Partially equipped site requiring some setup time
 
-**Option 7: Cold site**
+**Option cold_site: Cold site**
 *Basic Description:* Basic facility requiring significant setup
 
-**Option 8: None/Not applicable**
+**Option none_not_applicable: None/Not applicable**
 *Basic Description:* No dedicated DR capabilities
 
 
@@ -5448,15 +5448,15 @@
 
 **Answer Options:**
 
-**Option 1:** Real-time replication
+**Option real_time_replication:** Real-time replication
 
-**Option 2:** Near real-time
+**Option near_real_time:** Near real-time
 
-**Option 3:** Scheduled backups
+**Option scheduled_backups:** Scheduled backups
 
-**Option 4:** Manual copying
+**Option manual_copying:** Manual copying
 
-**Option 5:** No replication
+**Option no:** No replication
 
 
 #### Question 11.2.4
@@ -5469,13 +5469,13 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 11.2.5
@@ -5487,28 +5487,28 @@
 **Explanation:** Effective communication keeps stakeholders informed during recovery operations.
 
 **Answer Options:**
-**Option 1: Out-of-band messaging**
+**Option out_of_band_messaging: Out-of-band messaging**
 *Basic Description:* SMS, phone tree, or alternate communication channels
 
-**Option 2: Emergency notification system**
+**Option emergency_notification_system: Emergency notification system**
 *Basic Description:* Dedicated mass notification platform
 
-**Option 3: Dedicated DR communication platform**
+**Option dedicated_dr_communication_platform: Dedicated DR communication platform**
 *Basic Description:* Separate Slack/Teams tenant or communication tool
 
-**Option 4: Satellite/backup phone system**
+**Option satellite_backup_phone_system: Satellite/backup phone system**
 *Basic Description:* Backup telephony infrastructure
 
-**Option 5: Alternate email system**
+**Option alternate_email_system: Alternate email system**
 *Basic Description:* Secondary email system independent of primary
 
-**Option 6: Predefined conference bridges**
+**Option predefined_conference_bridges: Predefined conference bridges**
 *Basic Description:* Pre-configured conference call lines
 
-**Option 7: Physical rally points**
+**Option physical_rally_points: Physical rally points**
 *Basic Description:* Designated physical meeting locations
 
-**Option 8: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* No dedicated DR communication plan
 
 
@@ -5525,8 +5525,8 @@
 **Explanation:** A crisis management team provides leadership and coordination during major disruptions.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5539,8 +5539,8 @@
 **Explanation:** Communication procedures ensure consistent and timely information sharing during crises.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5553,16 +5553,16 @@
 **Explanation:** External coordination ensures comprehensive crisis response and stakeholder management.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -5577,13 +5577,13 @@
 
 **Answer Options:**
 
-**Option 1:** Regularly
+**Option regularly:** Regularly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 11.3.5
@@ -5595,22 +5595,22 @@
 **Explanation:** Clear decision-making authority enables rapid crisis response.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -5624,8 +5624,8 @@
 **Explanation:** Resource allocation procedures ensure critical needs are met during crises.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5641,8 +5641,8 @@
 **Explanation:** Recovery procedures provide step-by-step guidance for restoring operations.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5655,16 +5655,16 @@
 **Explanation:** Recovery prioritization ensures critical functions are restored first.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -5678,8 +5678,8 @@
 **Explanation:** RTOs establish target timeframes for restoring business functions.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5692,8 +5692,8 @@
 **Explanation:** RPOs define acceptable data loss limits during recovery.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5706,16 +5706,16 @@
 **Explanation:** Coordinated recovery ensures efficient restoration of operations.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -5729,8 +5729,8 @@
 **Explanation:** Post-incident reviews identify lessons learned and improvement opportunities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5752,8 +5752,8 @@
 **Explanation:** Vendor security assessments help identify and mitigate third-party risks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5766,31 +5766,31 @@
 **Explanation:** Multiple evaluation criteria provide comprehensive vendor risk assessment.
 
 **Answer Options:**
-**Option 1: Security questionnaire/assessment**
+**Option security_questionnaire_assessment: Security questionnaire/assessment**
 *Basic Description:* Standardized security questionnaire or assessment
 
-**Option 2: SOC 2 Type II or ISO 27001 certification**
+**Option soc_2_type_ii_or_iso_27001_certification: SOC 2 Type II or ISO 27001 certification**
 *Basic Description:* Third-party security certifications and attestations
 
-**Option 3: Penetration test reports**
+**Option penetration_test_reports: Penetration test reports**
 *Basic Description:* Recent penetration testing results
 
-**Option 4: Data Processing Agreement (DPA)**
+**Option data_processing_agreement_dpa: Data Processing Agreement (DPA)**
 *Basic Description:* Data processing and privacy agreements
 
-**Option 5: Breach notification history**
+**Option breach_notification_history: Breach notification history**
 *Basic Description:* Historical security incident and breach record
 
-**Option 6: Subprocessor management**
+**Option subprocessor_management: Subprocessor management**
 *Basic Description:* Vendor's third-party and subprocessor controls
 
-**Option 7: Regulatory compliance attestations**
+**Option regulatory_compliance_attestations: Regulatory compliance attestations**
 *Basic Description:* Compliance with relevant regulations (HIPAA, PCI DSS, etc.)
 
-**Option 8: Contractual SLAs and guarantees**
+**Option contractual_slas_and_guarantees: Contractual SLAs and guarantees**
 *Basic Description:* Service level agreements and security guarantees
 
-**Option 9: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -5805,13 +5805,13 @@
 
 **Answer Options:**
 
-**Option 1:** High/Medium/Low
+**Option high_medium_low:** High/Medium/Low
 
-**Option 2:** Critical/Important/Standard
+**Option critical_important_standard:** Critical/Important/Standard
 
-**Option 3:** Tiered approach
+**Option tiered_approach:** Tiered approach
 
-**Option 4:** No classification
+**Option no:** No classification
 
 
 #### Question 12.1.4
@@ -5823,19 +5823,19 @@
 **Explanation:** Security certifications provide assurance of vendor security practices.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -5852,15 +5852,15 @@
 
 **Answer Options:**
 
-**Option 1:** Annually
+**Option quarterly:** Annually
 
-**Option 2:** Bi-annually
+**Option annually:** Bi-annually
 
-**Option 3:** Contract renewal
+**Option only_after_changes:** Contract renewal
 
-**Option 4:** As needed
+**Option only_after_major_changes:** As needed
 
-**Option 5:** Never
+**Option as_needed:** Never
 
 
 #### Question 12.1.6
@@ -5872,8 +5872,8 @@
 **Explanation:** A risk register provides centralized tracking of vendor security risks.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5886,22 +5886,22 @@
 **Explanation:** High-risk vendors require additional security measures and oversight.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -5918,8 +5918,8 @@
 **Explanation:** Contractual security requirements establish legal obligations for vendor security.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -5932,19 +5932,19 @@
 **Explanation:** Comprehensive security clauses protect organizational interests and data.
 
 **Answer Options:**
-**Option 1: Option 1**
+**Option option_1: Option 1**
 *Basic Description:* First option
 
-**Option 2: Option 2**
+**Option option_2: Option 2**
 *Basic Description:* Second option
 
-**Option 3: Option 3**
+**Option option_3: Option 3**
 *Basic Description:* Third option
 
-**Option 4: Option 4**
+**Option option_4: Option 4**
 *Basic Description:* Fourth option
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -5959,15 +5959,15 @@
 
 **Answer Options:**
 
-**Option 1:** Cyber liability
+**Option cyber_liability:** Cyber liability
 
-**Option 2:** Professional liability
+**Option professional_liability:** Professional liability
 
-**Option 3:** General liability
+**Option general_liability:** General liability
 
-**Option 4:** All of the above
+**Option all_of_the_above:** All of the above
 
-**Option 5:** None required
+**Option none_required:** None required
 
 
 #### Question 12.2.4
@@ -5980,13 +5980,13 @@
 
 **Answer Options:**
 
-**Option 1:** Standard DPA
+**Option standard_dpa:** Standard DPA
 
-**Option 2:** Custom agreements
+**Option custom_agreements:** Custom agreements
 
-**Option 3:** Vendor templates
+**Option vendor_templates:** Vendor templates
 
-**Option 4:** No formal agreements
+**Option no:** No formal agreements
 
 
 #### Question 12.2.5
@@ -5998,8 +5998,8 @@
 **Explanation:** Audit rights enable verification of vendor security compliance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6012,22 +6012,22 @@
 **Explanation:** Termination requirements ensure secure end-of-relationship procedures.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -6044,19 +6044,19 @@
 **Explanation:** Ongoing monitoring ensures vendors maintain security standards.
 
 **Answer Options:**
-**Option 1: Automated monitoring tools**
+**Option automated_monitoring_tools: Automated monitoring tools**
 *Basic Description:* Using SIEM, monitoring platforms, or similar
 
-**Option 2: Manual reviews**
+**Option manual_reviews: Manual reviews**
 *Basic Description:* Regular manual checks and reviews
 
-**Option 3: Combination approach**
+**Option combination_approach: Combination approach**
 *Basic Description:* Mix of automated and manual monitoring
 
-**Option 4: Third-party service**
+**Option third_party_service: Third-party service**
 *Basic Description:* Outsourced monitoring
 
-**Option 5: Not monitored**
+**Option not_monitored: Not monitored**
 *Basic Description:* Not currently monitored
 
 
@@ -6070,8 +6070,8 @@
 **Explanation:** Incident notification enables rapid response to vendor security events.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6085,15 +6085,15 @@
 
 **Answer Options:**
 
-**Option 1:** Immediately
+**Option immediately:** Immediately
 
-**Option 2:** 24 hours
+**Option 24_hours:** 24 hours
 
-**Option 3:** 72 hours
+**Option 72_hours:** 72 hours
 
-**Option 4:** 1 week
+**Option 1_week:** 1 week
 
-**Option 5:** No requirement
+**Option no:** No requirement
 
 
 #### Question 12.3.4
@@ -6106,13 +6106,13 @@
 
 **Answer Options:**
 
-**Option 1:** Regularly
+**Option regularly:** Regularly
 
-**Option 2:** Risk-based
+**Option risk_based:** Risk-based
 
-**Option 3:** Contract-driven
+**Option contract_driven:** Contract-driven
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 12.3.5
@@ -6124,22 +6124,22 @@
 **Explanation:** Structured incident handling ensures effective response to vendor security events.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -6153,8 +6153,8 @@
 **Explanation:** Current contact information enables rapid communication during security incidents.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6173,13 +6173,13 @@
 
 **Answer Options:**
 
-**Option 1:** Comprehensive SBOM
+**Option comprehensive_sbom:** Comprehensive SBOM
 
-**Option 2:** Partial SBOM
+**Option partial_sbom:** Partial SBOM
 
-**Option 3:** Planning to implement
+**Option planning_to_implement:** Planning to implement
 
-**Option 4:** No SBOM
+**Option no:** No SBOM
 
 
 #### Question 12.4.2
@@ -6193,16 +6193,16 @@
 **Explanation:** Software integrity verification prevents tampering and ensures authenticity.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -6218,19 +6218,19 @@
 **Explanation:** Open source risk assessment identifies potential security and compliance issues.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -6246,22 +6246,22 @@
 **Explanation:** SaaS security assessment ensures third-party services meet security standards.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -6277,19 +6277,19 @@
 **Explanation:** Supply chain monitoring enables rapid response to emerging threats.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -6312,8 +6312,8 @@
 **Explanation:** A formal program ensures consistent and comprehensive security awareness across the organization.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6327,19 +6327,19 @@
 
 **Answer Options:**
 
-**Option 1: Monthly**
+**Option monthly: Monthly**
 *Basic Description:* Every month review cycle
 
-**Option 2: Quarterly**
+**Option quarterly: Quarterly**
 *Basic Description:* Every three months review
 
-**Option 3: Annually**
+**Option annually: Annually**
 *Basic Description:* Once per year review
 
-**Option 4: As needed**
+**Option as_needed: As needed**
 *Basic Description:* Event-driven reviews only
 
-**Option 5: Never**
+**Option never: Never**
 *Basic Description:* No formal reviews
 
 
@@ -6352,34 +6352,34 @@
 **Explanation:** Comprehensive topics ensure broad security awareness coverage.
 
 **Answer Options:**
-**Option 1: Phishing and social engineering**
+**Option phishing_and_social_engineering: Phishing and social engineering**
 *Basic Description:* Recognizing and responding to phishing attacks
 
-**Option 2: Password security and MFA**
+**Option password_security_and_mfa: Password security and MFA**
 *Basic Description:* Strong passwords and multi-factor authentication
 
-**Option 3: Data handling and classification**
+**Option data_handling_and_classification: Data handling and classification**
 *Basic Description:* Proper handling of sensitive data
 
-**Option 4: Device and endpoint security**
+**Option device_and_endpoint_security: Device and endpoint security**
 *Basic Description:* Securing laptops, mobile devices, and endpoints
 
-**Option 5: Incident reporting procedures**
+**Option incident_reporting_procedures: Incident reporting procedures**
 *Basic Description:* How to report security incidents
 
-**Option 6: Acceptable use policies**
+**Option acceptable_use_policies: Acceptable use policies**
 *Basic Description:* Acceptable use of company resources
 
-**Option 7: Remote work security**
+**Option remote_work_security: Remote work security**
 *Basic Description:* Security practices for remote work
 
-**Option 8: Third-party and supply chain risk**
+**Option third_party_and_supply_chain_risk: Third-party and supply chain risk**
 *Basic Description:* Vendor and third-party security awareness
 
-**Option 9: Secure coding practices**
+**Option secure_coding_practices: Secure coding practices**
 *Basic Description:* Security best practices for developers
 
-**Option 10: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -6393,16 +6393,16 @@
 **Explanation:** Multiple delivery methods accommodate different learning preferences and reinforce messages.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -6416,8 +6416,8 @@
 **Explanation:** Tracking ensures all employees receive required security awareness training.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6431,15 +6431,15 @@
 
 **Answer Options:**
 
-**Option 1:** 100%
+**Option 100:** 100%
 
-**Option 2:** 95-99%
+**Option 95_99:** 95-99%
 
-**Option 3:** 90-94%
+**Option 90_94:** 90-94%
 
-**Option 4:** 80-89%
+**Option 80_89:** 80-89%
 
-**Option 5:** No target
+**Option no:** No target
 
 
 #### Question 13.1.7
@@ -6451,8 +6451,8 @@
 **Explanation:** Customized training addresses specific organizational risks and improves relevance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6468,15 +6468,15 @@
 
 **Answer Options:**
 
-**Option 1:** Monthly
+**Option monthly:** Monthly
 
-**Option 2:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 3:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 4:** Annually
+**Option annually:** Annually
 
-**Option 5:** Never
+**Option never:** Never
 
 
 #### Question 13.1.9
@@ -6491,15 +6491,15 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 4:** As needed
+**Option as_needed:** As needed
 
-**Option 5:** Never
+**Option never:** Never
 
 
 #### Question 13.1.10
@@ -6513,16 +6513,16 @@
 **Explanation:** Security culture measurement identifies areas for improvement in human security factors.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -6539,8 +6539,8 @@
 **Explanation:** Phishing simulations test and improve employee ability to identify malicious emails.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6554,15 +6554,15 @@
 
 **Answer Options:**
 
-**Option 1:** Monthly
+**Option monthly:** Monthly
 
-**Option 2:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 3:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 4:** Annually
+**Option annually:** Annually
 
-**Option 5:** Never
+**Option never:** Never
 
 
 #### Question 13.2.3
@@ -6574,22 +6574,22 @@
 **Explanation:** Appropriate responses help improve individual security awareness without being punitive.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -6603,8 +6603,8 @@
 **Explanation:** Social engineering training helps employees recognize and respond to manipulation attempts.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6618,15 +6618,15 @@
 
 **Answer Options:**
 
-**Option 1:** 0-4.9%
+**Option 0_4_9:** 0-4.9%
 
-**Option 2:** 5.0-9.9%
+**Option 5_0_9_9:** 5.0-9.9%
 
-**Option 3:** 10-20%
+**Option 10_20:** 10-20%
 
-**Option 4:** >20%
+**Option 20:** >20%
 
-**Option 5:** Not measured
+**Option not_measured:** Not measured
 
 
 
@@ -6641,8 +6641,8 @@
 **Explanation:** Role-specific training addresses unique security responsibilities and risks for different positions.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6655,25 +6655,25 @@
 **Explanation:** Different roles face different security risks and require tailored training.
 
 **Answer Options:**
-**Option 1: All employees**
+**Option all_employees: All employees**
 *Basic Description:* General security awareness for all staff
 
-**Option 2: Privileged IT administrators**
+**Option privileged_it_administrators: Privileged IT administrators**
 *Basic Description:* System and network administrators with elevated access
 
-**Option 3: Developers and engineers**
+**Option developers_and_engineers: Developers and engineers**
 *Basic Description:* Software developers and engineering teams
 
-**Option 4: Executive leadership**
+**Option executive_leadership: Executive leadership**
 *Basic Description:* C-level executives and senior management
 
-**Option 5: Contractors and temporary staff**
+**Option contractors_and_temporary_staff: Contractors and temporary staff**
 *Basic Description:* Non-employee workers with system access
 
-**Option 6: Third-party vendors**
+**Option third_party_vendors: Third-party vendors**
 *Basic Description:* External vendors with access to systems or data
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -6687,8 +6687,8 @@
 **Explanation:** New employee training ensures security awareness from the start of employment.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6701,16 +6701,16 @@
 **Explanation:** Effectiveness measurement helps improve training programs and demonstrate value.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -6724,8 +6724,8 @@
 **Explanation:** Third-party training ensures consistent security practices across all personnel.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6738,22 +6738,22 @@
 **Explanation:** Remote workers face unique security challenges requiring tailored training approaches.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -6770,8 +6770,8 @@
 **Explanation:** Training records provide compliance evidence and track individual progress.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6784,22 +6784,22 @@
 **Explanation:** Compliance requirements drive training content and frequency decisions.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -6814,15 +6814,15 @@
 
 **Answer Options:**
 
-**Option 1:** Annual
+**Option annual:** Annual
 
-**Option 2:** Bi-annual
+**Option bi_annual:** Bi-annual
 
-**Option 3:** Based on role changes
+**Option based_on_role_changes:** Based on role changes
 
-**Option 4:** As needed
+**Option as_needed:** As needed
 
-**Option 5:** No renewals
+**Option no:** No renewals
 
 
 #### Question 13.4.4
@@ -6835,15 +6835,15 @@
 
 **Answer Options:**
 
-**Option 1:** Dedicated budget
+**Option dedicated_budget:** Dedicated budget
 
-**Option 2:** Part of IT budget
+**Option part_of_it_budget:** Part of IT budget
 
-**Option 3:** HR budget
+**Option hr_budget:** HR budget
 
-**Option 4:** Ad-hoc funding
+**Option ad_hoc_funding:** Ad-hoc funding
 
-**Option 5:** No specific budget
+**Option no:** No specific budget
 
 
 #### Question 13.4.5
@@ -6855,19 +6855,19 @@
 **Explanation:** External providers can offer specialized expertise and current threat intelligence.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -6881,16 +6881,16 @@
 **Explanation:** Customized training improves relevance and effectiveness for different user groups.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -6904,8 +6904,8 @@
 **Explanation:** Onboarding integration ensures new employees receive security training from day one.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6918,16 +6918,16 @@
 **Explanation:** Clear communication ensures employees understand training expectations and deadlines.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -6950,8 +6950,8 @@
 **Explanation:** Physical access controls prevent unauthorized entry to facilities and sensitive areas.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -6964,22 +6964,22 @@
 **Explanation:** Multiple access control methods provide layered physical security protection.
 
 **Answer Options:**
-**Option 1: Biometric**
+**Option biometric: Biometric**
 *Basic Description:* Fingerprint, facial recognition, etc.
 
-**Option 2: Card/badge access**
+**Option card_badge_access: Card/badge access**
 *Basic Description:* RFID or magnetic stripe cards
 
-**Option 3: PIN/password**
+**Option pin_password: PIN/password**
 *Basic Description:* Numeric or alphanumeric codes
 
-**Option 4: Multi-factor**
+**Option multi_factor: Multi-factor**
 *Basic Description:* Combination of multiple methods
 
-**Option 5: Security personnel**
+**Option security_personnel: Security personnel**
 *Basic Description:* Manned security checkpoints
 
-**Option 6: No formal controls**
+**Option no: No formal controls**
 *Basic Description:* No formal access control system
 
 
@@ -6993,19 +6993,19 @@
 **Explanation:** Surveillance systems provide detection and deterrence for physical security threats.
 
 **Answer Options:**
-**Option 1: 24/7 monitoring**
+**Option 24_7_monitoring: 24/7 monitoring**
 *Basic Description:* Continuous surveillance monitoring
 
-**Option 2: Recording only**
+**Option recording_only: Recording only**
 *Basic Description:* Cameras record but not actively monitored
 
-**Option 3: Motion-activated**
+**Option motion_activated: Motion-activated**
 *Basic Description:* Cameras activate on motion detection
 
-**Option 4: Limited coverage**
+**Option limited_coverage: Limited coverage**
 *Basic Description:* Partial surveillance coverage
 
-**Option 5: No surveillance**
+**Option no: No surveillance**
 *Basic Description:* No surveillance system
 
 
@@ -7019,22 +7019,22 @@
 **Explanation:** Visitor management ensures unauthorized individuals cannot access sensitive areas.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -7048,8 +7048,8 @@
 **Explanation:** Secure areas protect critical infrastructure and sensitive equipment from unauthorized access.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7065,15 +7065,15 @@
 
 **Answer Options:**
 
-**Option 1:** Daily
+**Option quarterly:** Daily
 
-**Option 2:** Weekly
+**Option annually:** Weekly
 
-**Option 3:** Monthly
+**Option only_after_changes:** Monthly
 
-**Option 4:** As needed
+**Option only_after_major_changes:** As needed
 
-**Option 5:** Never
+**Option as_needed:** Never
 
 
 
@@ -7088,19 +7088,19 @@
 **Explanation:** Environmental monitoring protects equipment and data from environmental threats.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -7115,15 +7115,15 @@
 
 **Answer Options:**
 
-**Option 1:** UPS systems
+**Option ups_systems:** UPS systems
 
-**Option 2:** Generators
+**Option generators:** Generators
 
-**Option 3:** Battery backup
+**Option battery_backup:** Battery backup
 
-**Option 4:** Multiple power sources
+**Option multiple_power_sources:** Multiple power sources
 
-**Option 5:** None
+**Option none:** None
 
 
 #### Question 14.2.3
@@ -7135,22 +7135,22 @@
 **Explanation:** Fire protection systems prevent damage to equipment and data from fire incidents.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
@@ -7164,8 +7164,8 @@
 **Explanation:** Climate control maintains optimal environmental conditions for equipment operation.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7181,22 +7181,22 @@
 **Explanation:** Equipment security prevents theft and unauthorized access to devices.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
@@ -7210,8 +7210,8 @@
 **Explanation:** Secure disposal policies ensure sensitive data is properly destroyed when equipment is retired.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7224,22 +7224,22 @@
 **Explanation:** Mobile device security protects against data loss and unauthorized access.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -7253,8 +7253,8 @@
 **Explanation:** Asset inventory helps track and manage physical security of equipment and devices.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7267,22 +7267,22 @@
 **Explanation:** Server room security protects critical infrastructure from physical threats.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
@@ -7296,8 +7296,8 @@
 **Explanation:** Maintenance security procedures ensure equipment servicing doesn't compromise security.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7310,22 +7310,22 @@
 **Explanation:** Equipment loan procedures prevent unauthorized use and ensure accountability.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -7340,13 +7340,13 @@
 
 **Answer Options:**
 
-**Option 1:** Annually
+**Option annually:** Annually
 
-**Option 2:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 3:** As needed
+**Option as_needed:** As needed
 
-**Option 4:** Never
+**Option never:** Never
 
 
 #### Question 14.3.9
@@ -7358,22 +7358,22 @@
 **Explanation:** Network infrastructure security prevents unauthorized access and tampering.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
@@ -7387,8 +7387,8 @@
 **Explanation:** Emergency procedures ensure critical equipment remains accessible during crises.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7401,22 +7401,22 @@
 **Explanation:** EMI protection ensures equipment operates reliably and data remains secure.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
@@ -7430,8 +7430,8 @@
 **Explanation:** Clean desk policies prevent unauthorized access to sensitive information.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7444,19 +7444,19 @@
 **Explanation:** Backup media security ensures data recovery capabilities are protected.
 
 **Answer Options:**
-**Option 1: Daily**
+**Option daily: Daily**
 *Basic Description:* Daily backup schedule
 
-**Option 2: Weekly**
+**Option weekly: Weekly**
 *Basic Description:* Weekly backup schedule
 
-**Option 3: Monthly**
+**Option monthly: Monthly**
 *Basic Description:* Monthly backup schedule
 
-**Option 4: Real-time/Continuous**
+**Option real_time_continuous: Real-time/Continuous**
 *Basic Description:* Continuous data protection
 
-**Option 5: No regular backups**
+**Option no: No regular backups**
 *Basic Description:* Backups not performed regularly
 
 
@@ -7470,8 +7470,8 @@
 **Explanation:** Physical incident procedures ensure appropriate response to security breaches.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7484,22 +7484,22 @@
 **Explanation:** Construction security prevents unauthorized access during facility changes.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -7514,13 +7514,13 @@
 
 **Answer Options:**
 
-**Option 1:** Annually
+**Option annually:** Annually
 
-**Option 2:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 3:** As needed
+**Option as_needed:** As needed
 
-**Option 4:** Never
+**Option never:** Never
 
 
 
@@ -7529,7 +7529,7 @@
 ## Section 15: Monitoring & Detection
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 **Suggested Respondents:** SOC Lead, Security Analyst
 
@@ -7544,8 +7544,8 @@
 **Explanation:** A SOC provides centralized security monitoring and incident response capabilities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7558,23 +7558,23 @@
 **Explanation:** Multiple monitoring tools provide comprehensive visibility into security events.
 
 **Answer Options:**
-**Option 1: Commercial solution**
+**Option commercial_solution: Commercial solution**
 *Basic Description:* Vendor-provided commercial product
 
-**Option 2: Open-source solution**
+**Option open_source_solution: Open-source solution**
 *Basic Description:* Open-source tools and platforms
 
-**Option 3: Custom-built solution**
+**Option custom_built_solution: Custom-built solution**
 *Basic Description:* Internally developed solution
 
-**Option 4: Managed service**
+**Option managed_service: Managed service**
 *Basic Description:* Third-party managed service
 
-**Option 5: Not deployed**
+**Option not_deployed: Not deployed**
 *Basic Description:* Not currently deployed
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7587,8 +7587,8 @@
 **Explanation:** Continuous monitoring ensures threats are detected regardless of when they occur.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7602,15 +7602,15 @@
 
 **Answer Options:**
 
-**Option 1:** Automated correlation
+**Option automated_correlation:** Automated correlation
 
-**Option 2:** Manual analysis
+**Option manual_analysis:** Manual analysis
 
-**Option 3:** Hybrid approach
+**Option hybrid_approach:** Hybrid approach
 
-**Option 4:** No correlation
+**Option no:** No correlation
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7624,17 +7624,17 @@
 
 **Answer Options:**
 
-**Option 1:** < 1 hour
+**Option 1_hour:** < 1 hour
 
-**Option 2:** 1-4 hours
+**Option 1_4_hours:** 1-4 hours
 
-**Option 3:** 4-24 hours
+**Option 4_24_hours:** 4-24 hours
 
-**Option 4:** > 24 hours
+**Option 24_hours:** > 24 hours
 
-**Option 5:** Not measured
+**Option not_measured:** Not measured
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7647,8 +7647,8 @@
 **Explanation:** User behavior analytics help detect insider threats and compromised accounts.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7661,27 +7661,27 @@
 **Explanation:** Effective alert handling ensures timely response to genuine security threats.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7696,8 +7696,8 @@
 **Explanation:** Threat intelligence helps identify known threats and attack patterns.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7710,23 +7710,23 @@
 **Explanation:** Multiple detection methods improve coverage against different types of threats.
 
 **Answer Options:**
-**Option 1: Type A**
+**Option type_a: Type A**
 *Basic Description:* Primary implementation type
 
-**Option 2: Type B**
+**Option type_b: Type B**
 *Basic Description:* Secondary implementation type
 
-**Option 3: Type C**
+**Option type_c: Type C**
 *Basic Description:* Alternative implementation type
 
-**Option 4: Hybrid**
+**Option hybrid: Hybrid**
 *Basic Description:* Combination of multiple types
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7740,16 +7740,16 @@
 
 **Answer Options:**
 
-**Option 1:** Regularly
+**Option regularly:** Regularly
 
-**Option 2:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 3:** After incidents
+**Option after_incidents:** After incidents
 
-**Option 4:** Never
+**Option never:** Never
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 #### Question 15.2.4
@@ -7761,20 +7761,20 @@
 **Explanation:** APT detection requires sophisticated monitoring and analysis capabilities.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7787,8 +7787,8 @@
 **Explanation:** Insider threat monitoring helps detect malicious or negligent employee activities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7801,21 +7801,21 @@
 **Explanation:** Validation ensures detection capabilities are working effectively against real threats.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7830,8 +7830,8 @@
 **Explanation:** Centralized logging provides comprehensive visibility and easier analysis of security events.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7844,23 +7844,23 @@
 **Explanation:** Comprehensive log collection provides better visibility into security events.
 
 **Answer Options:**
-**Option 1: Type A**
+**Option type_a: Type A**
 *Basic Description:* Primary implementation type
 
-**Option 2: Type B**
+**Option type_b: Type B**
 *Basic Description:* Secondary implementation type
 
-**Option 3: Type C**
+**Option type_c: Type C**
 *Basic Description:* Alternative implementation type
 
-**Option 4: Hybrid**
+**Option hybrid: Hybrid**
 *Basic Description:* Combination of multiple types
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7874,19 +7874,19 @@
 
 **Answer Options:**
 
-**Option 1:** 30 days
+**Option 30_days:** 30 days
 
-**Option 2:** 90 days
+**Option 90_days:** 90 days
 
-**Option 3:** 6 months
+**Option 6_months:** 6 months
 
-**Option 4:** 1 year
+**Option 1_year:** 1 year
 
-**Option 5:** > 1 year
+**Option 1_year_5:** > 1 year
 
-**Option 6:** Varies by log type
+**Option varies_by_log_type:** Varies by log type
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7899,23 +7899,23 @@
 **Explanation:** Log integrity protection ensures logs cannot be tampered with by attackers.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7928,20 +7928,20 @@
 **Explanation:** Effective log analysis helps identify security incidents and trends.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -7954,8 +7954,8 @@
 **Explanation:** Log monitoring alerts provide real-time notification of security events.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7977,8 +7977,8 @@
 **Explanation:** Regular vulnerability assessments help identify security weaknesses before they can be exploited.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -7994,19 +7994,19 @@
 
 **Answer Options:**
 
-**Option 1:** Daily
+**Option continuously:** Daily
 
-**Option 2:** Weekly
+**Option daily:** Weekly
 
-**Option 3:** Monthly
+**Option weekly:** Monthly
 
-**Option 4:** Quarterly
+**Option monthly:** Quarterly
 
-**Option 5:** Annually
+**Option quarterly:** Annually
 
-**Option 6:** Never
+**Option only_when_issues:** Never
 
-**Option 7: Not sure**
+**Option not_monitored: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8019,23 +8019,23 @@
 **Explanation:** Comprehensive assessments cover all potential attack vectors and system types.
 
 **Answer Options:**
-**Option 1: Type A**
+**Option type_a: Type A**
 *Basic Description:* Primary implementation type
 
-**Option 2: Type B**
+**Option type_b: Type B**
 *Basic Description:* Secondary implementation type
 
-**Option 3: Type C**
+**Option type_c: Type C**
 *Basic Description:* Alternative implementation type
 
-**Option 4: Hybrid**
+**Option hybrid: Hybrid**
 *Basic Description:* Combination of multiple types
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8048,8 +8048,8 @@
 **Explanation:** Automated tools provide consistent and scalable vulnerability detection capabilities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8063,15 +8063,15 @@
 
 **Answer Options:**
 
-**Option 1:** Regularly
+**Option regularly:** Regularly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Occasionally
+**Option occasionally:** Occasionally
 
-**Option 4:** Never
+**Option never:** Never
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8084,20 +8084,20 @@
 **Explanation:** Validation ensures scan results are accurate and actionable.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8110,8 +8110,8 @@
 **Explanation:** Third-party component scanning identifies vulnerabilities in dependencies and libraries.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8127,8 +8127,8 @@
 **Explanation:** A formal process ensures consistent and effective vulnerability handling.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8141,20 +8141,20 @@
 **Explanation:** Effective prioritization ensures critical vulnerabilities are addressed first.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8168,16 +8168,16 @@
 
 **Answer Options:**
 
-**Option 1:** Critical: 24h, High: 7d, Medium: 30d
+**Option critical_24h_high_7d_medium_30d:** Critical: 24h, High: 7d, Medium: 30d
 
-**Option 2:** Critical: 72h, High: 14d, Medium: 60d
+**Option critical_72h_high_14d_medium_60d:** Critical: 72h, High: 14d, Medium: 60d
 
-**Option 3:** Critical: 7d, High: 30d, Medium: 90d
+**Option critical_7d_high_30d_medium_90d:** Critical: 7d, High: 30d, Medium: 90d
 
-**Option 4:** No defined timeframes
+**Option no:** No defined timeframes
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 #### Question 16.2.4
@@ -8189,20 +8189,20 @@
 **Explanation:** Progress tracking ensures vulnerabilities are remediated within target timeframes.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8215,8 +8215,8 @@
 **Explanation:** A disclosure process provides a channel for external researchers to report vulnerabilities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8229,27 +8229,27 @@
 **Explanation:** Zero-day handling requires rapid response and alternative protection measures.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8266,8 +8266,8 @@
 **Explanation:** Formal patch management ensures systematic and timely application of security updates.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8282,20 +8282,20 @@
 **Explanation:** Patch prioritization ensures critical vulnerabilities are addressed first.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8311,17 +8311,17 @@
 
 **Answer Options:**
 
-**Option 1:** Within 24 hours
+**Option within_24_hours:** Within 24 hours
 
-**Option 2:** Within 72 hours
+**Option within_72_hours:** Within 72 hours
 
-**Option 3:** Within 1 week
+**Option within_1_week:** Within 1 week
 
-**Option 4:** Within 1 month
+**Option within_1_month:** Within 1 month
 
-**Option 5:** No defined timeline
+**Option no:** No defined timeline
 
-**Option 6: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8336,20 +8336,20 @@
 **Explanation:** Patch testing prevents deployment issues while maintaining security.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8365,15 +8365,15 @@
 
 **Answer Options:**
 
-**Option 1:** Fully automated
+**Option fully_automated:** Fully automated
 
-**Option 2:** Semi-automated
+**Option semi_automated:** Semi-automated
 
-**Option 3:** Manual only
+**Option manual_only:** Manual only
 
-**Option 4:** Varies by system type
+**Option varies_by_system_type:** Varies by system type
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8388,20 +8388,20 @@
 **Explanation:** Deployment tracking ensures patches are successfully applied across all systems.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8416,26 +8416,26 @@
 **Explanation:** Rollback procedures enable quick recovery from problematic patches.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not sure**
+**Option not_sure: Not sure**
 *Basic Description:* Unclear or unknown
 
 
@@ -8450,8 +8450,8 @@
 **Explanation:** Emergency processes enable rapid response to zero-day vulnerabilities and active exploits.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8466,8 +8466,8 @@
 **Explanation:** Compliance reporting provides visibility into patch status across the environment.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8482,22 +8482,22 @@
 **Explanation:** End-of-life systems require alternative security measures when patching is not possible.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -8520,25 +8520,25 @@
 **Explanation:** Understanding applicable regulations is essential for compliance planning and implementation.
 
 **Answer Options:**
-**Option 1: GDPR**
+**Option gdpr: GDPR**
 *Basic Description:* General Data Protection Regulation
 
-**Option 2: HIPAA**
+**Option hipaa: HIPAA**
 *Basic Description:* Health Insurance Portability and Accountability Act
 
-**Option 3: PCI DSS**
+**Option pci_dss: PCI DSS**
 *Basic Description:* Payment Card Industry Data Security Standard
 
-**Option 4: SOC 2**
+**Option soc_2: SOC 2**
 *Basic Description:* Service Organization Control 2
 
-**Option 5: ISO 27001**
+**Option iso_27001: ISO 27001**
 *Basic Description:* International Organization for Standardization 27001
 
-**Option 6: NIST CSF**
+**Option nist_csf: NIST CSF**
 *Basic Description:* NIST Cybersecurity Framework
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* No specific compliance requirements
 
 
@@ -8552,8 +8552,8 @@
 **Explanation:** A formal compliance program ensures systematic adherence to regulatory requirements.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8566,16 +8566,16 @@
 **Explanation:** Effective tracking ensures ongoing compliance and identifies gaps before they become violations.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -8590,17 +8590,17 @@
 
 **Answer Options:**
 
-**Option 1:** Monthly
+**Option monthly:** Monthly
 
-**Option 2:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 3:** Annually
+**Option annually:** Annually
 
-**Option 4:** Bi-annually
+**Option bi_annually:** Bi-annually
 
-**Option 5:** As required
+**Option as_required:** As required
 
-**Option 6:** Never
+**Option never:** Never
 
 
 #### Question 17.1.5
@@ -8612,22 +8612,22 @@
 **Explanation:** Structured violation handling ensures proper response and prevents recurrence.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -8641,8 +8641,8 @@
 **Explanation:** Proper documentation demonstrates compliance efforts and supports audit activities.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8655,16 +8655,16 @@
 **Explanation:** Staying current with regulatory changes ensures ongoing compliance as requirements evolve.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -8681,8 +8681,8 @@
 **Explanation:** Internal audits provide independent assessment of security controls and compliance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8698,15 +8698,15 @@
 
 **Answer Options:**
 
-**Option 1:** Quarterly
+**Option quarterly:** Quarterly
 
-**Option 2:** Annually
+**Option annually:** Annually
 
-**Option 3:** Bi-annually
+**Option only_after_changes:** Bi-annually
 
-**Option 4:** As needed
+**Option only_after_major_changes:** As needed
 
-**Option 5:** Never
+**Option as_needed:** Never
 
 
 #### Question 17.2.3
@@ -8718,19 +8718,19 @@
 **Explanation:** Comprehensive audit coverage ensures all critical security areas are evaluated.
 
 **Answer Options:**
-**Option 1: Option 1**
+**Option option_1: Option 1**
 *Basic Description:* First option
 
-**Option 2: Option 2**
+**Option option_2: Option 2**
 *Basic Description:* Second option
 
-**Option 3: Option 3**
+**Option option_3: Option 3**
 *Basic Description:* Third option
 
-**Option 4: Option 4**
+**Option option_4: Option 4**
 *Basic Description:* Fourth option
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -8745,15 +8745,15 @@
 
 **Answer Options:**
 
-**Option 1:** Internal audit team
+**Option internal_audit_team:** Internal audit team
 
-**Option 2:** IT security team
+**Option it_security_team:** IT security team
 
-**Option 3:** External consultants
+**Option external_consultants:** External consultants
 
-**Option 4:** Mixed approach
+**Option mixed_approach:** Mixed approach
 
-**Option 5:** No audits conducted
+**Option no:** No audits conducted
 
 
 #### Question 17.2.5
@@ -8765,16 +8765,16 @@
 **Explanation:** Systematic tracking ensures audit findings are properly addressed and resolved.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -8788,8 +8788,8 @@
 **Explanation:** Escalation procedures ensure critical findings receive appropriate management attention.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8805,8 +8805,8 @@
 **Explanation:** External audits provide independent validation of security controls and compliance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8819,19 +8819,19 @@
 **Explanation:** Different audit types serve various compliance and business requirements.
 
 **Answer Options:**
-**Option 1: Type A**
+**Option type_a: Type A**
 *Basic Description:* Primary implementation type
 
-**Option 2: Type B**
+**Option type_b: Type B**
 *Basic Description:* Secondary implementation type
 
-**Option 3: Type C**
+**Option type_c: Type C**
 *Basic Description:* Alternative implementation type
 
-**Option 4: Hybrid**
+**Option hybrid: Hybrid**
 *Basic Description:* Combination of multiple types
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -8845,16 +8845,16 @@
 **Explanation:** Proper preparation increases audit success and reduces findings.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -8868,19 +8868,19 @@
 **Explanation:** Security certifications demonstrate commitment to security best practices.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -8894,22 +8894,22 @@
 **Explanation:** Efficient evidence collection streamlines audit processes and reduces burden.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
@@ -8923,8 +8923,8 @@
 **Explanation:** Management review ensures audit findings receive appropriate attention and resources for remediation.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8937,16 +8937,16 @@
 **Explanation:** Effective communication ensures stakeholders understand audit outcomes and required actions.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
@@ -8957,7 +8957,7 @@
 ## Section 18: OT/ICS & IoT Security
 
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 **Suggested Respondents:** OT Security Lead, Industrial Control Systems Engineer
 
@@ -8974,8 +8974,8 @@
 **Explanation:** OT/ICS systems require specialized security approaches due to safety and availability requirements.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -8990,20 +8990,20 @@
 **Explanation:** Network segmentation protects critical OT systems from IT-based attacks.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9018,8 +9018,8 @@
 **Explanation:** Safety impact analysis ensures security measures don't compromise operational safety.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -9034,26 +9034,26 @@
 **Explanation:** OT patching requires careful coordination to maintain system availability and safety.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9069,15 +9069,15 @@
 
 **Answer Options:**
 
-**Option 1:** Continuous monitoring
+**Option continuous_monitoring:** Continuous monitoring
 
-**Option 2:** Periodic monitoring
+**Option periodic_monitoring:** Periodic monitoring
 
-**Option 3:** Passive monitoring only
+**Option passive_monitoring_only:** Passive monitoring only
 
-**Option 4:** No monitoring
+**Option no:** No monitoring
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9092,8 +9092,8 @@
 **Explanation:** OT incident response requires specialized procedures considering safety and operational impact.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -9111,8 +9111,8 @@
 **Explanation:** IoT devices introduce unique security challenges requiring specialized management.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -9127,26 +9127,26 @@
 **Explanation:** Secure communications protect IoT data and prevent unauthorized access.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9162,15 +9162,15 @@
 
 **Answer Options:**
 
-**Option 1:** Comprehensive inventory
+**Option comprehensive_inventory:** Comprehensive inventory
 
-**Option 2:** Partial inventory
+**Option partial_inventory:** Partial inventory
 
-**Option 3:** Manual tracking
+**Option manual_tracking:** Manual tracking
 
-**Option 4:** No inventory
+**Option no:** No inventory
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9185,26 +9185,26 @@
 **Explanation:** Regular firmware updates address security vulnerabilities in IoT devices.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Third-party managed**
+**Option third_party_managed: Third-party managed**
 *Basic Description:* Outsourced to service provider
 
-**Option 5: Informal process**
+**Option informal_process: Informal process**
 *Basic Description:* Ad-hoc handling without formal procedures
 
-**Option 6: Not currently managed**
+**Option not_currently_managed: Not currently managed**
 *Basic Description:* Not currently managed
 
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9220,13 +9220,13 @@
 
 **Answer Options:**
 
-**Option 1:** Continuous monitoring
+**Option continuous_monitoring:** Continuous monitoring
 
-**Option 2:** Periodic monitoring
+**Option periodic_monitoring:** Periodic monitoring
 
-**Option 3:** Anomaly detection
+**Option anomaly_detection:** Anomaly detection
 
-**Option 4:** No monitoring
+**Option no:** No monitoring
 
 
 
@@ -9235,7 +9235,7 @@
 ## Section 19: AI/ML & Machine Learning Security
 
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 **Suggested Respondents:** AI/ML Security Lead, Data Science Lead
 
@@ -9252,8 +9252,8 @@
 **Explanation:** AI/ML models in production require specialized security controls and governance.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 
@@ -9268,19 +9268,19 @@
 **Explanation:** Model registries provide centralized governance and security for ML artifacts.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -9296,20 +9296,20 @@
 **Explanation:** Model provenance ensures traceability and helps identify security risks in the ML pipeline.
 
 **Answer Options:**
-**Option 1: Formal documented process**
+**Option formal_documented_process: Formal documented process**
 *Basic Description:* Documented procedures and workflows
 
-**Option 2: Automated system**
+**Option automated_system: Automated system**
 *Basic Description:* Using automation tools or platforms
 
-**Option 3: Manual process**
+**Option manual_process: Manual process**
 *Basic Description:* Manual handling and tracking
 
-**Option 4: Not currently implemented**
+**Option not_currently_implemented: Not currently implemented**
 *Basic Description:* Not currently implemented
 
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9325,15 +9325,15 @@
 
 **Answer Options:**
 
-**Option 1:** Regular testing
+**Option regular_testing:** Regular testing
 
-**Option 2:** Occasional testing
+**Option occasional_testing:** Occasional testing
 
-**Option 3:** Only for critical models
+**Option only_for_critical_models:** Only for critical models
 
-**Option 4:** No testing
+**Option no:** No testing
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9348,26 +9348,26 @@
 **Explanation:** Data poisoning protection prevents malicious manipulation of training data.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9382,19 +9382,19 @@
 **Explanation:** Explainability and bias detection ensure responsible and secure AI deployment.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -9413,26 +9413,26 @@
 **Explanation:** ML pipeline security prevents unauthorized access and resource abuse.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9447,19 +9447,19 @@
 **Explanation:** Feature store security protects sensitive data used in ML model training and inference.
 
 **Answer Options:**
-**Option 1: Fully implemented**
+**Option fully_implemented: Fully implemented**
 *Basic Description:* Fully implemented and operational
 
-**Option 2: Partially implemented**
+**Option partially_implemented: Partially implemented**
 *Basic Description:* Partially implemented or in progress
 
-**Option 3: Planned**
+**Option planned: Planned**
 *Basic Description:* Planned but not yet implemented
 
-**Option 4: Not implemented**
+**Option not_implemented: Not implemented**
 *Basic Description:* Not currently implemented
 
-**Option 5: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Not applicable to our organization
 
 
@@ -9475,26 +9475,26 @@
 **Explanation:** Inference endpoint security prevents abuse and protects model intellectual property.
 
 **Answer Options:**
-**Option 1: Encryption**
+**Option encryption: Encryption**
 *Basic Description:* Data encryption at rest and in transit
 
-**Option 2: Access controls**
+**Option access_controls: Access controls**
 *Basic Description:* Role-based access control and authentication
 
-**Option 3: Network segmentation**
+**Option network_segmentation: Network segmentation**
 *Basic Description:* Isolated network zones
 
-**Option 4: Monitoring and logging**
+**Option monitoring_and_logging: Monitoring and logging**
 *Basic Description:* Continuous monitoring and audit logs
 
-**Option 5: Security policies**
+**Option security_policies: Security policies**
 *Basic Description:* Documented security policies and procedures
 
-**Option 6: Not currently secured**
+**Option not_currently_secured: Not currently secured**
 *Basic Description:* No specific security measures
 
 
-**Option 7: Not applicable**
+**Option not_applicable: Not applicable**
 *Basic Description:* Does not apply to our organization
 
 
@@ -9509,8 +9509,8 @@
 **Explanation:** Model monitoring detects degradation and potential security issues in production.
 
 **Answer Options:**
-**Option 1: Yes** - This security control/practice is implemented in your organization
-**Option 2: No** - This security control/practice is not currently implemented
+**Option yes: Yes** - This security control/practice is implemented in your organization
+**Option no: No** - This security control/practice is not currently implemented
 *Note: If you select 'No', consider this an opportunity for security improvement.*
 
 ---

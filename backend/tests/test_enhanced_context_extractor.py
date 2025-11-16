@@ -40,11 +40,11 @@ class TestEnhancedContextExtractor:
         """Test that raw blocks are correctly parsed"""
         blocks = extractor._load_raw_blocks()
 
-        assert "1.1.2_option_1" in blocks
-        assert "1.1.2_option_2" in blocks
-        assert "1.1.2_option_3" in blocks
+        assert "1.1.2_option_quarterly" in blocks
+        assert "1.1.2_option_annually" in blocks
+        assert "1.1.2_option_only_after_changes" in blocks
 
-        option1_content = blocks["1.1.2_option_1"]
+        option1_content = blocks["1.1.2_option_quarterly"]
         assert "What This Option Means" in option1_content
         assert "Market Context" in option1_content
 
@@ -76,7 +76,7 @@ class TestEnhancedContextExtractor:
 
     def test_get_enhanced_context_with_content(self, extractor):
         """Test getting enhanced context for option with enhanced content"""
-        context = extractor.get_enhanced_context("1.1.2", "1")
+        context = extractor.get_enhanced_context("1.1.2", "quarterly")
 
         assert len(context) > 0
         assert "what_this_means" in context or "market_context" in context
