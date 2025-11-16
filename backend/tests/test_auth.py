@@ -129,7 +129,7 @@ def test_token_verification():
     from app.core.security import create_access_token, verify_token
 
     data = {"sub": "test@example.com", "user_id": "123"}
-    token = create_access_token(data=data)
+    token, csrf_token = create_access_token(data=data)
 
     assert token is not None
     assert isinstance(token, str)
@@ -144,7 +144,7 @@ def test_admin_token_creation():
     from app.core.security import create_access_token, verify_token
 
     data = {"sub": "admin@example.com", "user_id": "456"}
-    token = create_access_token(data=data, is_admin=True)
+    token, csrf_token = create_access_token(data=data, is_admin=True)
 
     decoded = verify_token(token)
     assert decoded["sub"] == "admin@example.com"
