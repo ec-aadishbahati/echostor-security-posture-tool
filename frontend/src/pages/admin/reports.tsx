@@ -107,7 +107,10 @@ export default function AdminReports() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['adminReports', { skip, limit, report_type: typeFilter, status: effectiveStatusFilter }],
+    queryKey: [
+      'adminReports',
+      { skip, limit, report_type: typeFilter, status: effectiveStatusFilter },
+    ],
     queryFn: () =>
       adminAPI.getReports({
         skip,

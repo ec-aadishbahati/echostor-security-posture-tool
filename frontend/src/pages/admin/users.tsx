@@ -82,12 +82,11 @@ export default function AdminUsers() {
       setShowPasswordModal(false);
       setSelectedUser(null);
       setNewPassword('');
-      },
-      onError: () => {
-        toast.error('Failed to reset password');
-      },
-    }
-  );
+    },
+    onError: () => {
+      toast.error('Failed to reset password');
+    },
+  });
 
   const bulkUpdateStatusMutation = useMutation({
     mutationFn: ({ userIds, isActive }: { userIds: string[]; isActive: boolean }) =>

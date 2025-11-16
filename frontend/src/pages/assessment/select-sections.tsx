@@ -67,7 +67,8 @@ export default function SelectSections() {
   });
 
   const startAssessmentMutation = useMutation<any, Error, string[]>({
-    mutationFn: (selectedSectionIds: string[]) => assessmentAPI.startAssessmentWithSections(selectedSectionIds),
+    mutationFn: (selectedSectionIds: string[]) =>
+      assessmentAPI.startAssessmentWithSections(selectedSectionIds),
     onSuccess: () => {
       toast.success('Assessment started!');
       router.push('/assessment/questions');
