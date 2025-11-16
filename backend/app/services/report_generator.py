@@ -38,7 +38,13 @@ from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
 from app.models.ai_artifacts import AISynthesisArtifact as AISynthesisArtifactModel
 from app.models.ai_metadata import AIGenerationMetadata
 from app.models.assessment import Assessment, AssessmentResponse, Report
-from app.schemas.ai_artifacts import SectionAIArtifact, SynthesisArtifact
+from app.schemas.ai_artifacts import (
+    Benchmark,
+    Gap,
+    Recommendation,
+    SectionAIArtifact,
+    SynthesisArtifact,
+)
 from app.schemas.assessment import Question
 from app.services.ai_cache import AICacheService
 from app.services.ai_synthesis import (
