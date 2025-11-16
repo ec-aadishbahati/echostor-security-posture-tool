@@ -165,7 +165,7 @@ class S3Storage(StorageService):
         bucket = parts[0]
         key = parts[1] if len(parts) > 1 else ""
 
-        url = self.s3_client.generate_presigned_url(
+        url: str = self.s3_client.generate_presigned_url(
             "get_object",
             Params={
                 "Bucket": bucket,

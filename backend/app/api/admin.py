@@ -201,7 +201,7 @@ async def get_dashboard_stats(
 
     cached_stats = cache_service.get(CACHE_KEY)
     if cached_stats:
-        return cached_stats
+        return dict(cached_stats)
 
     try:
         total_users = db.query(func.count(User.id)).scalar()

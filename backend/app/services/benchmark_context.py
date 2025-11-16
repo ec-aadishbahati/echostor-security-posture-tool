@@ -17,7 +17,8 @@ class BenchmarkContextService:
             os.path.dirname(__file__), "..", "resources", "benchmarks.yaml"
         )
         with open(yaml_path) as f:
-            return yaml.safe_load(f)
+            result: dict[str, object] = yaml.safe_load(f)
+            return result
 
     def get_relevant_context(
         self, section_title: str, section_description: str, max_controls: int = 5

@@ -22,7 +22,7 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
         transaction_name = f"{method} {path}"
 
         with sentry_sdk.start_transaction(op="http.server", name=transaction_name):
-            response = await call_next(request)
+            response: Response = await call_next(request)
 
             duration_ms = (time.time() - start_time) * 1000
 

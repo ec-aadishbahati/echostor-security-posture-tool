@@ -112,7 +112,7 @@ def map_numeric_to_slug(question: object, answer_value: str) -> str:
     try:
         index = int(answer_value) - 1
         if 0 <= index < len(question.options):
-            return question.options[index].value
+            return str(question.options[index].value)
     except (ValueError, IndexError):
         pass
 

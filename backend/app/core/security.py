@@ -18,11 +18,13 @@ COOKIE_SECURE = True  # Required with SameSite=None
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    result: bool = pwd_context.verify(plain_password, hashed_password)
+    return result
 
 
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    result: str = pwd_context.hash(password)
+    return result
 
 
 def create_access_token(
@@ -62,7 +64,7 @@ def create_access_token(
 
 def verify_token(token: str) -> dict:
     try:
-        payload = jwt.decode(
+        payload: dict = jwt.decode(
             token,
             settings.JWT_SECRET_KEY,
             algorithms=[settings.JWT_ALGORITHM],
