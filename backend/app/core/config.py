@@ -83,7 +83,7 @@ class Settings(BaseSettings):
     ENHANCED_REPORT_EXPLANATIONS: bool = False
 
     @model_validator(mode="after")
-    def validate_required_settings(self):
+    def validate_required_settings(self) -> "Settings":
         if not self.JWT_SECRET_KEY:
             raise ValueError(
                 "JWT_SECRET_KEY environment variable must be set. "

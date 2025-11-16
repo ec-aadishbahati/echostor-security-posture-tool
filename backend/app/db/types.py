@@ -15,7 +15,7 @@ class JSONBCompat(TypeDecorator):
     impl = sa.JSON
     cache_ok = True
 
-    def load_dialect_impl(self, dialect):
+    def load_dialect_impl(self, dialect) -> sa.types.TypeEngine[dict[str, object]]:
         """Load the appropriate JSON type based on the database dialect."""
         if dialect.name == "postgresql":
             from sqlalchemy.dialects.postgresql import JSONB

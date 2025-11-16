@@ -1,4 +1,4 @@
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -80,7 +80,7 @@ class SectionAIArtifact(BaseModel):
 
     @field_validator("risk_level")
     @classmethod
-    def validate_risk_matches_gaps(cls, risk_level: str, info) -> str:
+    def validate_risk_matches_gaps(cls, risk_level: str, info: Any) -> str:
         if "gaps" in info.data:
             critical_gaps = sum(
                 1 for g in info.data["gaps"] if g.severity == "Critical"
