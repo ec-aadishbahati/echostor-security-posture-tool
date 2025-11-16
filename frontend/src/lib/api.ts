@@ -8,12 +8,38 @@ const API_BASE_URL =
 const ENABLE_CSRF = process.env.NEXT_PUBLIC_ENABLE_CSRF === 'true';
 
 let csrfToken: string | null = null;
+let authToken: string | null = null;
+
+declare global {
+  interface Window {
+    __AUTH_TOKEN?: string;
+    __setAuthToken?: (t: string | null) => void;
+    __getAuthToken?: () => string | null;
+  }
+}
 
 export const setCSRFToken = (token: string | null) => {
   csrfToken = token;
 };
 
 export const getCSRFToken = () => csrfToken;
+
+export const setAuthToken = (token: string | null) => {
+  authToken = token;
+};
+
+export const getAuthToken = () => authToken;
+
+const E2E_MODE = process.env.NEXT_PUBLIC_E2E_MODE === 'true';
+if (typeof window !== 'undefined' && E2E_MODE) {
+  if (window.__AUTH_TOKEN && !authToken) {
+    authToken = window.__AUTH_TOKEN;
+  }
+  window.__setAuthToken = (t: string | null) => {
+    authToken = t;
+  };
+  window.__getAuthToken = () => authToken;
+}
 
 const pendingRequests = new Map<string, Promise<any>>();
 
@@ -54,9 +80,8 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     return Promise.reject({ _isDuplicate: true, promise: pendingRequest });
   }
 
-  const token = Cookies.get('access_token');
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (authToken && config.headers) {
+    config.headers.Authorization = `Bearer ${authToken}`;
   }
 
   if (
@@ -86,8 +111,11 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
-      Cookies.remove('access_token');
-      window.location.href = '/auth/login';
+      authToken = null;
+      if (typeof window !== 'undefined') {
+        Cookies.remove('access_token');
+        window.location.href = '/auth/login';
+      }
     }
 
     if (error.config) {

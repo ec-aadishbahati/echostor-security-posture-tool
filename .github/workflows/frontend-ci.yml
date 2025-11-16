@@ -121,6 +121,8 @@ jobs:
 
       - name: Start frontend dev server
         working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_E2E_MODE: 'true'
         run: pnpm run dev &
 
       - name: Wait for frontend to be ready

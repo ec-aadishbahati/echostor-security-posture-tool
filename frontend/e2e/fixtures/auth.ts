@@ -19,10 +19,16 @@ export const test = base.extend<AuthFixtures>({
     await page.fill('input[placeholder*="Confirm"]', password);
     await page.click('button[type="submit"]');
 
-    await page.waitForURL(
-      (url) => url.pathname.replace(/\/$/, '') === '/dashboard',
-      { timeout: 10000 },
-    );
+    await page.waitForURL((url) => url.pathname.replace(/\/$/, '') === '/dashboard', {
+      timeout: 10000,
+    });
+
+    const token = await page.evaluate(() => (window as any).__getAuthToken?.());
+    if (token) {
+      await page.addInitScript((t) => {
+        (window as any).__AUTH_TOKEN = t;
+      }, token);
+    }
 
     await use(page);
   },
@@ -36,10 +42,16 @@ export const test = base.extend<AuthFixtures>({
     await page.fill('input[type="password"]', adminPassword);
     await page.click('button[type="submit"]');
 
-    await page.waitForURL(
-      (url) => url.pathname.replace(/\/$/, '') === '/admin',
-      { timeout: 10000 },
-    );
+    await page.waitForURL((url) => url.pathname.replace(/\/$/, '') === '/admin', {
+      timeout: 10000,
+    });
+
+    const token = await page.evaluate(() => (window as any).__getAuthToken?.());
+    if (token) {
+      await page.addInitScript((t) => {
+        (window as any).__AUTH_TOKEN = t;
+      }, token);
+    }
 
     await use(page);
   },
