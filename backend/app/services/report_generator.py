@@ -549,22 +549,30 @@ def generate_ai_insights(
             if response:
                 answer_value = response.answer_value
                 comment_value = response.comment if response.comment else None
-                
+
                 if pii_redactor:
                     answer_str = str(answer_value) if answer_value else ""
-                    redacted_answer_str, answer_redaction_count = pii_redactor.redact(answer_str)
+                    redacted_answer_str, answer_redaction_count = pii_redactor.redact(
+                        answer_str
+                    )
                     if answer_redaction_count > 0:
                         total_redactions += answer_redaction_count
-                        logger.info(f"PII redacted in answer for question {question.id} ({answer_redaction_count} items)")
+                        logger.info(
+                            f"PII redacted in answer for question {question.id} ({answer_redaction_count} items)"
+                        )
                     answer_value = redacted_answer_str
-                    
+
                     if comment_value:
-                        redacted_comment, comment_redaction_count = pii_redactor.redact(comment_value)
+                        redacted_comment, comment_redaction_count = pii_redactor.redact(
+                            comment_value
+                        )
                         if comment_redaction_count > 0:
                             total_redactions += comment_redaction_count
-                            logger.info(f"PII redacted in comment for question {question.id} ({comment_redaction_count} items)")
+                            logger.info(
+                                f"PII redacted in comment for question {question.id} ({comment_redaction_count} items)"
+                            )
                         comment_value = redacted_comment
-                
+
                 resp_dict = {
                     "question": question.text,
                     "answer": answer_value,
@@ -583,10 +591,14 @@ def generate_ai_insights(
                     )
                     if context:
                         if pii_redactor:
-                            redacted_context, context_redaction_count = pii_redactor.redact(context)
+                            redacted_context, context_redaction_count = (
+                                pii_redactor.redact(context)
+                            )
                             if context_redaction_count > 0:
                                 total_redactions += context_redaction_count
-                                logger.info(f"PII redacted in context for question {question.id} ({context_redaction_count} items)")
+                                logger.info(
+                                    f"PII redacted in context for question {question.id} ({context_redaction_count} items)"
+                                )
                             context = redacted_context
                         resp_dict["context"] = context
 
@@ -813,7 +825,7 @@ def generate_ai_insights(
                     key_manager.record_failure(key_id, e)
                     insights[section.id] = create_degraded_artifact(section.id)
                     break  # Don't retry unexpected errors
-    
+
     if total_redactions > 0:
         security_metrics.increment_pii_redactions(total_redactions)
         logger.info(f"Total PII redactions in report: {total_redactions}")
@@ -894,22 +906,30 @@ async def generate_ai_insights_async(
                     if response:
                         answer_value = response.answer_value
                         comment_value = response.comment if response.comment else None
-                        
+
                         if pii_redactor:
                             answer_str = str(answer_value) if answer_value else ""
-                            redacted_answer_str, answer_redaction_count = pii_redactor.redact(answer_str)
+                            redacted_answer_str, answer_redaction_count = (
+                                pii_redactor.redact(answer_str)
+                            )
                             if answer_redaction_count > 0:
                                 section_redactions += answer_redaction_count
-                                logger.info(f"PII redacted in answer for question {question.id} (async, {answer_redaction_count} items)")
+                                logger.info(
+                                    f"PII redacted in answer for question {question.id} (async, {answer_redaction_count} items)"
+                                )
                             answer_value = redacted_answer_str
-                            
+
                             if comment_value:
-                                redacted_comment, comment_redaction_count = pii_redactor.redact(comment_value)
+                                redacted_comment, comment_redaction_count = (
+                                    pii_redactor.redact(comment_value)
+                                )
                                 if comment_redaction_count > 0:
                                     section_redactions += comment_redaction_count
-                                    logger.info(f"PII redacted in comment for question {question.id} (async, {comment_redaction_count} items)")
+                                    logger.info(
+                                        f"PII redacted in comment for question {question.id} (async, {comment_redaction_count} items)"
+                                    )
                                 comment_value = redacted_comment
-                        
+
                         resp_dict = {
                             "question": question.text,
                             "answer": answer_value,
@@ -928,10 +948,14 @@ async def generate_ai_insights_async(
                             )
                             if context:
                                 if pii_redactor:
-                                    redacted_context, context_redaction_count = pii_redactor.redact(context)
+                                    redacted_context, context_redaction_count = (
+                                        pii_redactor.redact(context)
+                                    )
                                     if context_redaction_count > 0:
                                         section_redactions += context_redaction_count
-                                        logger.info(f"PII redacted in context for question {question.id} (async, {context_redaction_count} items)")
+                                        logger.info(
+                                            f"PII redacted in context for question {question.id} (async, {context_redaction_count} items)"
+                                        )
                                     context = redacted_context
                                 resp_dict["context"] = context
 

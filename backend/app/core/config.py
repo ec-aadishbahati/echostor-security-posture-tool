@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     AI_SCHEMA_VERSION: str = "1.1"  # Increased gap field max_length to 1000 chars
 
     PII_REDACTION_ENABLED: bool = True
-    
+
     ENABLE_COOKIE_AUTH: bool = False
     ENABLE_CSRF: bool = False
     ENABLE_STRICT_CORS: bool = False
