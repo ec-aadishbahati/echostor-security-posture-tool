@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import Cookies from 'js-cookie';
-import { authAPI } from './api';
+import { authAPI, setCSRFToken } from './api';
 
 interface User {
   id: string;
@@ -28,62 +28,103 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const ENABLE_COOKIE_AUTH = process.env.NEXT_PUBLIC_ENABLE_COOKIE_AUTH === 'true';
+const ENABLE_CSRF = process.env.NEXT_PUBLIC_ENABLE_CSRF === 'true';
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get('access_token');
-    const adminFlag = Cookies.get('is_admin');
+    if (ENABLE_COOKIE_AUTH) {
+      authAPI
+        .getCurrentUser()
+        .then((response) => {
+          setUser(response.data);
+          if (response.data.is_admin) {
+            setIsAdmin(true);
+          }
+          setIsLoading(false);
 
-    if (token) {
-      if (adminFlag === 'true') {
-        setIsAdmin(true);
-        setIsLoading(false);
-      } else {
-        authAPI
-          .getCurrentUser()
-          .then((response) => {
-            setUser(response.data);
-            setIsLoading(false);
-          })
-          .catch(() => {
-            Cookies.remove('access_token');
-            setIsLoading(false);
-          });
-      }
+          if (ENABLE_CSRF) {
+            authAPI
+              .getCSRFToken()
+              .then((csrfResponse) => {
+                setCSRFToken(csrfResponse.data.csrf_token);
+              })
+              .catch(() => {
+                console.error('Failed to fetch CSRF token');
+              });
+          }
+        })
+        .catch(() => {
+          setIsLoading(false);
+        });
     } else {
-      setIsLoading(false);
+      const token = Cookies.get('access_token');
+      const adminFlag = Cookies.get('is_admin');
+
+      if (token) {
+        if (adminFlag === 'true') {
+          setIsAdmin(true);
+          setIsLoading(false);
+        } else {
+          authAPI
+            .getCurrentUser()
+            .then((response) => {
+              setUser(response.data);
+              setIsLoading(false);
+            })
+            .catch(() => {
+              Cookies.remove('access_token');
+              setIsLoading(false);
+            });
+        }
+      } else {
+        setIsLoading(false);
+      }
     }
   }, []);
 
   const login = async (email: string, password: string) => {
     const response = await authAPI.login({ email, password });
-    const { access_token, user: userData } = response.data;
 
-    Cookies.set('access_token', access_token, { expires: 1 }); // 1 day
+    if (ENABLE_COOKIE_AUTH) {
+      if (ENABLE_CSRF && response.data.csrf_token) {
+        setCSRFToken(response.data.csrf_token);
+      }
 
-    try {
-      const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
-      if (tokenPayload.is_admin) {
+      const meResponse = await authAPI.getCurrentUser();
+      setUser(meResponse.data);
+      if (meResponse.data.is_admin) {
         setIsAdmin(true);
-        Cookies.set('is_admin', 'true', { expires: 1 });
-      } else if (userData && userData.is_admin) {
-        setIsAdmin(true);
-        Cookies.set('is_admin', 'true', { expires: 1 });
-        setUser(userData);
-      } else {
+      }
+    } else {
+      const { access_token, user: userData } = response.data;
+      Cookies.set('access_token', access_token, { expires: 1 });
+
+      try {
+        const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
+        if (tokenPayload.is_admin) {
+          setIsAdmin(true);
+          Cookies.set('is_admin', 'true', { expires: 1 });
+        } else if (userData && userData.is_admin) {
+          setIsAdmin(true);
+          Cookies.set('is_admin', 'true', { expires: 1 });
+          setUser(userData);
+        } else {
+          setUser(userData);
+          setIsAdmin(false);
+        }
+      } catch {
+        if (userData && userData.is_admin) {
+          setIsAdmin(true);
+          Cookies.set('is_admin', 'true', { expires: 1 });
+        }
         setUser(userData);
         setIsAdmin(false);
       }
-    } catch {
-      if (userData && userData.is_admin) {
-        setIsAdmin(true);
-        Cookies.set('is_admin', 'true', { expires: 1 });
-      }
-      setUser(userData);
-      setIsAdmin(false);
     }
 
     return response.data;
@@ -96,15 +137,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     company_name: string;
   }) => {
     const response = await authAPI.register(data);
-    const { access_token, user: userData } = response.data;
 
-    Cookies.set('access_token', access_token, { expires: 1 });
-    setUser(userData);
+    if (ENABLE_COOKIE_AUTH) {
+      if (ENABLE_CSRF && response.data.csrf_token) {
+        setCSRFToken(response.data.csrf_token);
+      }
+
+      const meResponse = await authAPI.getCurrentUser();
+      setUser(meResponse.data);
+      if (meResponse.data.is_admin) {
+        setIsAdmin(true);
+      }
+    } else {
+      const { access_token, user: userData } = response.data;
+      Cookies.set('access_token', access_token, { expires: 1 });
+      setUser(userData);
+    }
   };
 
-  const logout = () => {
-    Cookies.remove('access_token');
-    Cookies.remove('is_admin');
+  const logout = async () => {
+    if (ENABLE_COOKIE_AUTH) {
+      try {
+        await authAPI.logout();
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    } else {
+      Cookies.remove('access_token');
+      Cookies.remove('is_admin');
+    }
+    setCSRFToken(null);
     setUser(null);
     setIsAdmin(false);
     window.location.href = '/';

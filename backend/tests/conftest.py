@@ -117,21 +117,23 @@ def test_admin_user(db_session):
 
 @pytest.fixture
 def auth_token(test_user):
-    return create_access_token(
+    token, _ = create_access_token(
         data={"sub": test_user.email, "user_id": str(test_user.id), "is_admin": False}
     )
+    return token
 
 
 @pytest.fixture
 def test_user2_token(test_user2):
-    return create_access_token(
+    token, _ = create_access_token(
         data={"sub": test_user2.email, "user_id": str(test_user2.id), "is_admin": False}
     )
+    return token
 
 
 @pytest.fixture
 def admin_token(test_admin_user):
-    return create_access_token(
+    token, _ = create_access_token(
         data={
             "sub": test_admin_user.email,
             "user_id": str(test_admin_user.id),
@@ -139,6 +141,7 @@ def admin_token(test_admin_user):
         },
         is_admin=True,
     )
+    return token
 
 
 @pytest.fixture

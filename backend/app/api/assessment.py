@@ -325,7 +325,10 @@ async def get_assessment_responses(
 
 
 @router.post("/{assessment_id}/save-progress")
-@limiter.exempt
+@limiter.limit(
+    "10/minute",
+    exempt_when=lambda *args, **kwargs: not settings.ENABLE_SAVE_PROGRESS_RATE_LIMIT,
+)
 async def save_assessment_progress(
     request: Request,
     assessment_id: str,

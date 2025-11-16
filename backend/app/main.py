@@ -9,6 +9,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.api import admin, assessment, auth, health, openai_keys, reports
 from app.core.config import settings
+from app.middleware.csrf import CSRFMiddleware
 from app.middleware.performance import PerformanceMiddleware
 from app.middleware.rate_limit import limiter
 from app.middleware.security_headers import SecurityHeadersMiddleware
@@ -74,6 +75,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.add_middleware(CSRFMiddleware)
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(PerformanceMiddleware)
 
