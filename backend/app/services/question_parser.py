@@ -219,7 +219,11 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
             current_question["metadata"]["scale_type"] = scale_type
 
         elif line.startswith("**Option") and current_question:
-            option_match = re.match(r"\*\*Option (\d+): (.+?)\*\*", line)
+            option_match = re.match(r"\*\*Option ([a-z0-9_]+): (.+?)\*\*", line)
+            if not option_match:
+                option_match = re.match(r"\*\*Option ([a-z0-9_]+):\*\* (.+)", line)
+            if not option_match:
+                option_match = re.match(r"\*\*Option (\d+): (.+?)\*\*", line)
             if not option_match:
                 option_match = re.match(r"\*\*Option (\d+):\*\* (.+)", line)
 

@@ -29,7 +29,11 @@ from weasyprint import HTML
 
 from app.core.config import settings
 from app.core.database import SessionLocal
-from app.core.scoring_scales import get_option_weight, normalize_option_value
+from app.core.scoring_scales import (
+    get_option_weight,
+    map_numeric_to_slug,
+    normalize_option_value,
+)
 from app.models.ai_artifacts import AISectionArtifact as AISectionArtifactModel
 from app.models.ai_artifacts import AISynthesisArtifact as AISynthesisArtifactModel
 from app.models.ai_metadata import AIGenerationMetadata
@@ -464,7 +468,8 @@ def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
     elif question.type == "multiple_choice":
         scale_type = question.scale_type
         if scale_type:
-            normalized_answer = normalize_option_value(str(answer))
+            mapped_answer = map_numeric_to_slug(question, str(answer))
+            normalized_answer = normalize_option_value(mapped_answer)
             weight_multiplier, answer_flags = get_option_weight(
                 scale_type, normalized_answer
             )
@@ -492,7 +497,8 @@ def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
             all_flags = []
 
             for selected_value in answer:
-                normalized = normalize_option_value(str(selected_value))
+                mapped_value = map_numeric_to_slug(question, str(selected_value))
+                normalized = normalize_option_value(mapped_value)
                 weight, value_flags = get_option_weight(scale_type, normalized)
                 all_flags.extend(value_flags)
                 best_weight = max(best_weight, weight)
@@ -1166,7 +1172,8 @@ def compute_blind_spots(structure, responses) -> dict:
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
-                answer_normalized = normalize_option_value(str(response.answer_value))
+                mapped_answer = map_numeric_to_slug(question, str(response.answer_value))
+                answer_normalized = normalize_option_value(mapped_answer)
                 if answer_normalized in unknown_values:
                     blind_spot_item = {
                         "section_id": section.id,
@@ -1198,8 +1205,10 @@ def get_selected_option_explanation(question: Question, answer_value: str):
     if not settings.ENHANCED_REPORT_EXPLANATIONS:
         return None
 
+    mapped_answer = map_numeric_to_slug(question, str(answer_value))
+    
     for option in question.options:
-        if str(option.value) == str(answer_value):
+        if str(option.value) == str(mapped_answer):
             if option.detailed_explanation:
                 exp = option.detailed_explanation
                 return {

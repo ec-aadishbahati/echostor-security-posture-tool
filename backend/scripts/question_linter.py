@@ -56,6 +56,7 @@ def lint_questions():
                     "line": i,
                     "text": "",
                     "type": "",
+                    "scale": "",
                     "options": [],
                 }
 
@@ -66,14 +67,25 @@ def lint_questions():
 
         if current_question and line_stripped.startswith("**Type:**"):
             current_question["type"] = line_stripped.replace("**Type:**", "").strip()
+        
+        if current_question and line_stripped.startswith("**Scale:**"):
+            current_question["scale"] = line_stripped.replace("**Scale:**", "").strip()
 
         if current_question and line_stripped.startswith("**Option"):
-            option_match = re.match(r"\*\*Option (\d+):\s*(.+?)\*\*", line_stripped)
+            option_match = re.match(r"\*\*Option ([a-z0-9_]+):\s*(.+?)\*\*", line_stripped)
+            if not option_match:
+                option_match = re.match(r"\*\*Option ([a-z0-9_]+):\*\*\s*(.+)", line_stripped)
+            if not option_match:
+                option_match = re.match(r"\*\*Option (\d+):\s*(.+?)\*\*", line_stripped)
+            if not option_match:
+                option_match = re.match(r"\*\*Option (\d+):\*\*\s*(.+)", line_stripped)
+            
             if option_match:
-                option_num = option_match.group(1)
+                option_value = option_match.group(1)
                 option_label = option_match.group(2)
+                is_numeric = option_value.isdigit()
                 current_question["options"].append(
-                    {"value": option_num, "label": option_label, "line": i}
+                    {"value": option_value, "label": option_label, "line": i, "is_numeric": is_numeric}
                 )
 
     if current_question:
@@ -139,6 +151,44 @@ def lint_questions():
                         f"Wireless security question missing modern WPA2/WPA3 standards"
                     )
 
+    numeric_option_count = 0
+    for question in questions:
+        numeric_options = [opt for opt in question["options"] if opt.get("is_numeric", False)]
+        if numeric_options:
+            numeric_option_count += 1
+    
+    if numeric_option_count > 0:
+        warnings.append(
+            f"Found {numeric_option_count} questions still using numeric option values. "
+            f"Consider migrating to stable slug identifiers for Phase 3."
+        )
+    
+    # Validate slug/scale alignment for scale-typed questions
+    SCALE_WEIGHTS = {
+        "maturity": ["optimized", "managed", "defined", "ad_hoc", "ad-hoc"],
+        "frequency_review": ["quarterly", "annually", "only_after_changes", "only_after_major_changes", "as_needed", "no_formal_review", "never"],
+        "frequency_monitoring": ["continuously", "daily", "weekly", "monthly", "quarterly", "only_when_issues", "not_monitored", "never"],
+        "coverage": ["76_100", "51_75", "26_50", "0_25"],
+        "implementation": ["fully_implemented", "partially_implemented", "planned", "not_implemented"],
+        "governance": ["documented_approved_maintained", "documented_but_stale", "informal_understanding", "no_strategy"],
+    }
+    
+    UNIVERSAL_OPTIONS = ["not_sure", "unknown", "not_applicable", "n/a", "na", "other"]
+    
+    for question in questions:
+        scale = question.get("scale", "").strip()
+        if scale and scale in SCALE_WEIGHTS:
+            valid_slugs = set(SCALE_WEIGHTS[scale] + UNIVERSAL_OPTIONS)
+            for opt in question["options"]:
+                if not opt.get("is_numeric", False):
+                    opt_value = opt["value"].lower().replace("-", "_")
+                    if opt_value not in valid_slugs:
+                        warnings.append(
+                            f"Question {question['id']} (line {question['line']}): "
+                            f"Option slug '{opt['value']}' not found in {scale} scale. "
+                            f"Valid slugs: {', '.join(sorted(SCALE_WEIGHTS[scale]))}"
+                        )
+    
     frequency_questions = []
     for question in questions:
         q_text = question["text"].lower()
