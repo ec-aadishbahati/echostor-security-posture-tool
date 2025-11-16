@@ -368,7 +368,7 @@ def calculate_assessment_scores(
 ) -> dict[str, Any]:
     """Calculate assessment scores by section"""
 
-    scores = {
+    scores: dict[str, Any] = {
         "scoring_version": "v2" if settings.SCORING_V2_ENABLED else "v1",
         "question_library_version": settings.QUESTION_LIBRARY_VERSION,
     }
@@ -422,7 +422,12 @@ def calculate_assessment_scores(
             "not_applicable_count": section_na_count,
         }
 
-    dict_scores = [s for s in scores.values() if isinstance(s, dict)]
+    from typing import cast
+    from collections.abc import Mapping
+    
+    dict_scores: list[Mapping[str, Any]] = [
+        cast(Mapping[str, Any], s) for s in scores.values() if isinstance(s, dict)
+    ]
     total_score = sum(s["score"] for s in dict_scores if "score" in s)
     total_max_score = sum(s["max_score"] for s in dict_scores if "max_score" in s)
     total_unknown = sum(
