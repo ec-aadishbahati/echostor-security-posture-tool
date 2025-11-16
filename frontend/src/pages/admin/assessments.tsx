@@ -23,19 +23,17 @@ export default function AdminAssessments() {
     data: assessmentsData,
     isLoading,
     error,
-  } = useQuery(
-    ['adminAssessments', { skip, limit, status: statusFilter }],
-    () =>
+  } = useQuery({
+    queryKey: ['adminAssessments', { skip, limit, status: statusFilter }],
+    queryFn: () =>
       adminAPI.getAssessments({
         skip,
         limit,
         status: statusFilter || undefined,
       }),
-    {
-      keepPreviousData: true,
-      refetchInterval: 30000,
-    }
-  );
+    placeholderData: (previousData) => previousData,
+    refetchInterval: 30000,
+  });
 
   const assessments = assessmentsData?.data?.items || [];
   const pagination = assessmentsData?.data;

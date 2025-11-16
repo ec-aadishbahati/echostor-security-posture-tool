@@ -9,8 +9,8 @@ const WARNING_TIMEOUT = 9 * 60 * 1000; // 9 minutes (1 minute warning)
 export const useAutoLogout = (onBeforeLogout?: () => Promise<void>) => {
   const { logout } = useAuth();
   const router = useRouter();
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const warningTimeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const warningTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const resetTimer = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
