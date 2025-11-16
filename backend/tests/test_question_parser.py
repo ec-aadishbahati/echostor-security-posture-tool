@@ -200,12 +200,12 @@ def test_parse_slug_format_options():
 
 **Option never:** Never
 """
-    
+
     structure = parse_assessment_questions(md_content)
-    
+
     assert len(structure.sections) == 1
     assert len(structure.sections[0].questions) == 1
-    
+
     question = structure.sections[0].questions[0]
     assert len(question.options) == 3
     assert question.options[0].value == "quarterly"
@@ -241,12 +241,12 @@ def test_parse_numeric_format_options():
 
 **Option 3:** No
 """
-    
+
     structure = parse_assessment_questions(md_content)
-    
+
     assert len(structure.sections) == 1
     assert len(structure.sections[0].questions) == 1
-    
+
     question = structure.sections[0].questions[0]
     assert len(question.options) == 3
     assert question.options[0].value == "1"
@@ -290,16 +290,16 @@ def test_parse_mixed_format_options():
 
 **Option 2:** Second option
 """
-    
+
     structure = parse_assessment_questions(md_content)
-    
+
     assert len(structure.sections) == 1
     assert len(structure.sections[0].questions) == 2
-    
+
     q1 = structure.sections[0].questions[0]
     assert q1.options[0].value == "optimized"
     assert q1.options[1].value == "managed"
-    
+
     q2 = structure.sections[0].questions[1]
     assert q2.options[0].value == "1"
     assert q2.options[1].value == "2"

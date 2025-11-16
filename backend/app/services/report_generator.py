@@ -1172,7 +1172,9 @@ def compute_blind_spots(structure, responses) -> dict:
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
-                mapped_answer = map_numeric_to_slug(question, str(response.answer_value))
+                mapped_answer = map_numeric_to_slug(
+                    question, str(response.answer_value)
+                )
                 answer_normalized = normalize_option_value(mapped_answer)
                 if answer_normalized in unknown_values:
                     blind_spot_item = {
@@ -1206,7 +1208,7 @@ def get_selected_option_explanation(question: Question, answer_value: str):
         return None
 
     mapped_answer = map_numeric_to_slug(question, str(answer_value))
-    
+
     for option in question.options:
         if str(option.value) == str(mapped_answer):
             if option.detailed_explanation:
