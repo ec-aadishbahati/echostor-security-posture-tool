@@ -51,7 +51,7 @@ async def generate_report(
     background_tasks: BackgroundTasks,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> UserReportResponse | Response:
     """Generate a standard PDF report for a completed assessment"""
 
     region = os.getenv("FLY_REGION")
@@ -125,7 +125,7 @@ async def request_ai_report(
     request_data: AIReportRequest,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Request an AI-enhanced report (admin will generate it)"""
 
     assessment = (
@@ -203,9 +203,9 @@ async def admin_generate_ai_report(
     request: Request,
     report_id: str,
     background_tasks: BackgroundTasks,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> AdminReportResponse | Response:
     """Admin endpoint to generate AI-enhanced reports"""
 
     region = os.getenv("FLY_REGION")
@@ -244,9 +244,9 @@ async def admin_retry_standard_report(
     request: Request,
     report_id: str,
     background_tasks: BackgroundTasks,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> AdminReportResponse | Response:
     """Admin endpoint to retry generating a failed standard report"""
 
     region = os.getenv("FLY_REGION")
@@ -286,9 +286,9 @@ async def admin_retry_standard_report(
 async def admin_release_ai_report(
     request: Request,
     report_id: str,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Admin endpoint to release AI-enhanced reports to users"""
 
     report = (
@@ -319,9 +319,9 @@ async def admin_release_ai_report(
 async def admin_bulk_release_ai_reports(
     request: Request,
     report_ids: list[str],
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str | int | list[str]]:
     """Admin endpoint to bulk release multiple AI-enhanced reports"""
 
     if not report_ids:
@@ -375,9 +375,9 @@ async def admin_retry_ai_report(
     request: Request,
     report_id: str,
     background_tasks: BackgroundTasks,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> AdminReportResponse | Response:
     """Admin endpoint to retry generating a failed AI-enhanced report"""
 
     region = os.getenv("FLY_REGION")
@@ -417,9 +417,9 @@ async def admin_retry_ai_report(
 async def admin_regenerate_pdf_from_artifacts(
     request: Request,
     report_id: str,
-    current_admin=Depends(get_current_admin_user),
+    current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str] | Response:
     """Admin endpoint to regenerate PDF from existing AI artifacts without re-calling OpenAI"""
 
     region = os.getenv("FLY_REGION")
@@ -526,7 +526,7 @@ async def download_report(
     report_id: str,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> StreamingResponse | Response:
     """Download a completed report"""
 
     region = os.getenv("FLY_REGION")
@@ -694,7 +694,7 @@ async def get_user_reports(
     limit: int = Query(100, ge=1, le=1000),
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, list[UserReportResponse] | int]:
     """Get all reports for the current user with pagination"""
 
     query = (
@@ -723,7 +723,7 @@ async def get_report_status(
     report_id: str,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> UserReportResponse:
     """Get the status of a specific report"""
 
     report = db.query(Report).join(Assessment).filter(Report.id == report_id).first()
