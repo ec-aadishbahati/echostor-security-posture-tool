@@ -11,12 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 class CacheService:
-    def __init__(self):
+    def __init__(self) -> None:
         self._redis_client: redis.Redis | None = None
         self._questions_file_mtime: float | None = None
         self._initialize_redis()
 
-    def _initialize_redis(self):
+    def _initialize_redis(self) -> None:
         if not settings.REDIS_URL:
             logger.warning("REDIS_URL not configured. Caching disabled.")
             return

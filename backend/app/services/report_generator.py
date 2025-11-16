@@ -62,7 +62,7 @@ logger = logging.getLogger(__name__)
 jinja_env = Environment(autoescape=True)
 
 
-def markdown_filter(text):
+def markdown_filter(text: str | None) -> str:
     """Convert markdown to HTML"""
     if not text:
         return ""
@@ -75,7 +75,7 @@ def markdown_filter(text):
     retry=retry_if_exception_type((Exception,)),
     reraise=True,
 )
-def generate_standard_report(report_id: str):
+def generate_standard_report(report_id: str) -> None:
     """Generate a standard PDF report"""
 
     db = SessionLocal()
@@ -171,7 +171,7 @@ def generate_standard_report(report_id: str):
     retry=retry_if_exception_type((Exception,)),
     reraise=True,
 )
-def generate_ai_report(report_id: str):
+def generate_ai_report(report_id: str) -> None:
     """Generate an AI-enhanced report using ChatGPT"""
 
     db = SessionLocal()
@@ -353,7 +353,7 @@ def generate_ai_report(report_id: str):
 
 
 def calculate_assessment_scores(
-    responses: list[AssessmentResponse], structure
+    responses: list[AssessmentResponse], structure: Any
 ) -> dict[str, Any]:
     """Calculate assessment scores by section"""
 
@@ -437,7 +437,7 @@ def calculate_assessment_scores(
     return scores
 
 
-def calculate_question_score(response: AssessmentResponse, question) -> int:
+def calculate_question_score(response: AssessmentResponse, question: Any) -> int:
     """Calculate score for a single question response"""
 
     if question.type == "yes_no":
@@ -457,7 +457,9 @@ def calculate_question_score(response: AssessmentResponse, question) -> int:
     return 0
 
 
-def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
+def calculate_question_score_v2(
+    response: AssessmentResponse, question: Any
+) -> dict[str, Any]:
     """Calculate score with v2 weighted logic"""
 
     answer = response.answer_value
@@ -519,10 +521,10 @@ def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
 
 def generate_ai_insights(
     responses: list[AssessmentResponse],
-    structure,
+    structure: Any,
     key_manager: OpenAIKeyManager,
     report_id: str,
-    db,
+    db: Any,
 ) -> dict[str, SectionAIArtifact]:
     """Generate AI insights for each section using JSON mode with structured output"""
 
@@ -879,10 +881,10 @@ def safe_validate_section_artifact(json_str: str, section_id: str) -> SectionAIA
 
 async def generate_ai_insights_async(
     responses: list[AssessmentResponse],
-    structure,
+    structure: Any,
     key_manager: OpenAIKeyManager,
     report_id: str,
-    max_concurrent: int = None,
+    max_concurrent: int | None = None,
 ) -> dict[str, SectionAIArtifact]:
     """Generate AI insights for each section with parallel processing"""
 
@@ -897,7 +899,7 @@ async def generate_ai_insights_async(
     extractor = get_enhanced_context_extractor()
     pii_redactor = PIIRedactor() if settings.ENABLE_PII_REDACTION_BEFORE_AI else None
 
-    async def process_section(section):
+    async def process_section(section: Any) -> SectionAIArtifact:
         """Process a single section with rate limiting"""
         db = SessionLocal()
         section_redactions = 0
@@ -1233,7 +1235,9 @@ def format_responses_for_ai(responses: list[dict]) -> str:
     return "\n".join(formatted)
 
 
-def compute_blind_spots(structure, responses) -> dict:
+def compute_blind_spots(
+    structure: Any, responses: list[AssessmentResponse]
+) -> dict[str, Any]:
     """
     Compute blind spots by scanning responses for unknown/not_sure answers.
     Returns dict with summary counts per section and list of blind spot items.
@@ -1284,7 +1288,9 @@ def compute_blind_spots(structure, responses) -> dict:
     }
 
 
-def get_selected_option_explanation(question: Question, answer_value: str):
+def get_selected_option_explanation(
+    question: Question, answer_value: str
+) -> dict[str, Any] | None:
     """
     Get detailed explanation for the selected option.
     Returns dict with explanation fields or None if not available.
@@ -1307,7 +1313,12 @@ def get_selected_option_explanation(question: Question, answer_value: str):
     return None
 
 
-def generate_report_html(assessment, responses, scores, structure) -> str:
+def generate_report_html(
+    assessment: Any,
+    responses: list[AssessmentResponse],
+    scores: dict[str, Any],
+    structure: Any,
+) -> str:
     """Generate HTML content for standard report"""
 
     template = jinja_env.from_string(
@@ -1802,11 +1813,11 @@ def generate_report_html(assessment, responses, scores, structure) -> str:
 
 
 def generate_ai_report_html(
-    assessment,
-    responses,
-    scores,
-    structure,
-    ai_insights,
+    assessment: Any,
+    responses: list[AssessmentResponse],
+    scores: dict[str, Any],
+    structure: Any,
+    ai_insights: dict[str, SectionAIArtifact],
     synthesis: SynthesisArtifact = None,
 ) -> str:
     """Generate HTML content for AI-enhanced report with synthesis"""
@@ -2275,7 +2286,7 @@ def generate_ai_report_html(
     )
 
 
-def generate_recommendations(scores, structure) -> list[str]:
+def generate_recommendations(scores: dict[str, Any], structure: Any) -> list[str]:
     """Generate recommendations based on scores"""
 
     recommendations = []
@@ -2372,7 +2383,9 @@ def get_maturity_tier(percentage: float) -> tuple[str, str]:
         return ("Needs Improvement", "low-score")
 
 
-def generate_prioritized_roadmap(scores, structure) -> dict:
+def generate_prioritized_roadmap(
+    scores: dict[str, Any], structure: Any
+) -> dict[str, list[dict[str, str]]]:
     """Generate prioritized roadmap organized by 30/60/90 day timelines"""
 
     roadmap_30_day = []

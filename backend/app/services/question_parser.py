@@ -1,4 +1,5 @@
 import re
+from typing import Any
 
 from app.schemas.assessment import (
     AssessmentStructure,
@@ -80,7 +81,9 @@ def _parse_option_explanation(lines: list[str], start_idx: int) -> dict | None:
     return explanation if has_detailed_explanation else None
 
 
-def _store_explanation_content(explanation: dict, section: str, content: list[str]):
+def _store_explanation_content(
+    explanation: dict[str, Any], section: str, content: list[str]
+) -> None:
     """Store parsed content into appropriate explanation fields"""
     text = "\n".join(content).strip()
 

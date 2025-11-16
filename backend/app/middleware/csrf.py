@@ -1,9 +1,11 @@
 """CSRF protection middleware for Phase 1.3"""
 
 import logging
+from collections.abc import Callable
 
 from fastapi import HTTPException, Request, status
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 
 from app.core.config import settings
 from app.core.security import verify_token
@@ -25,7 +27,7 @@ SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 class CSRFMiddleware(BaseHTTPMiddleware):
     """CSRF protection using JWT-embedded token validation"""
 
-    async def dispatch(self, request: Request, call_next):
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
         if not settings.ENABLE_CSRF or not settings.ENABLE_COOKIE_AUTH:
             return await call_next(request)
 
