@@ -1,5 +1,4 @@
 from collections.abc import Awaitable, Callable
-from typing import Any
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request

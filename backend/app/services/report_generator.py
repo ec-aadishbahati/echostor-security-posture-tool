@@ -422,8 +422,8 @@ def calculate_assessment_scores(
             "not_applicable_count": section_na_count,
         }
 
-    from typing import cast
     from collections.abc import Mapping
+    from typing import cast
     
     dict_scores: list[Mapping[str, Any]] = [
         cast(Mapping[str, Any], s) for s in scores.values() if isinstance(s, dict)
