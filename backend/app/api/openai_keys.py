@@ -24,7 +24,7 @@ async def list_openai_keys(
     include_inactive: bool = False,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> list[OpenAIKeyResponse]:
     """List all OpenAI API keys with masked values."""
     try:
         with OpenAIKeyManager(db) as manager:
@@ -43,7 +43,7 @@ async def create_openai_key(
     key_data: OpenAIKeyCreate,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> OpenAIKeyResponse:
     """Add a new OpenAI API key."""
     try:
         with OpenAIKeyManager(db) as manager:
@@ -75,7 +75,7 @@ async def test_openai_key(
     key_data: OpenAIKeyTest,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> OpenAIKeyTestResponse:
     """Test if an OpenAI API key is valid."""
     try:
         with OpenAIKeyManager(db) as manager:
@@ -92,7 +92,7 @@ async def toggle_openai_key(
     toggle_data: OpenAIKeyToggle,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> OpenAIKeyResponse:
     """Toggle an OpenAI API key's active status."""
     try:
         with OpenAIKeyManager(db) as manager:
@@ -125,7 +125,7 @@ async def delete_openai_key(
     key_id: str,
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Delete an OpenAI API key."""
     try:
         with OpenAIKeyManager(db) as manager:

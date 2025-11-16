@@ -36,7 +36,7 @@ async def register(
     response: Response,
     user_data: UserCreate,
     db: Session = Depends(get_db),
-):
+) -> Token:
     existing_user = db.query(User).filter(User.email == user_data.email).first()
     if existing_user:
         raise HTTPException(
@@ -83,7 +83,7 @@ async def login(
     response: Response,
     user_credentials: UserLogin,
     db: Session = Depends(get_db),
-):
+) -> Token:
     if user_credentials.email == settings.ADMIN_EMAIL:
         if not settings.ADMIN_PASSWORD_HASH:
             raise HTTPException(
@@ -216,7 +216,7 @@ async def get_current_admin_user(
 
 
 @router.get("/csrf")
-async def get_csrf_token(request: Request) -> dict:
+async def get_csrf_token(request: Request) -> dict[str, str]:
     """Get CSRF token from current JWT for client-side storage"""
     if not settings.ENABLE_CSRF or not settings.ENABLE_COOKIE_AUTH:
         raise HTTPException(
@@ -250,7 +250,7 @@ async def get_csrf_token(request: Request) -> dict:
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
-async def logout(response: Response):
+async def logout(response: Response) -> None:
     """Clear authentication cookie"""
     if settings.ENABLE_COOKIE_AUTH:
         clear_auth_cookie(response)
@@ -262,7 +262,7 @@ async def get_current_user_info(
     request: Request,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> UserResponse:
     if current_user.is_admin and current_user.id == "admin":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

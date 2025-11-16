@@ -18,7 +18,7 @@ def get_uptime_seconds() -> float:
     return time.time() - STARTUP_TIME
 
 
-def check_database() -> dict:
+def check_database() -> dict[str, str]:
     """Check database connectivity"""
     try:
         with engine.connect() as conn:
@@ -31,7 +31,7 @@ def check_database() -> dict:
         }
 
 
-def check_redis() -> dict | None:
+def check_redis() -> dict[str, str] | None:
     """Check Redis connectivity if configured"""
     if not settings.REDIS_URL:
         return None
@@ -47,7 +47,7 @@ def check_redis() -> dict | None:
 
 
 @router.get("/health")
-async def health_check():
+async def health_check() -> JSONResponse:
     """
     Comprehensive health check endpoint.
     Returns 200 if all checks pass, 503 if any check fails.
@@ -83,7 +83,7 @@ async def health_check():
 
 
 @router.get("/health/live")
-async def liveness_probe():
+async def liveness_probe() -> dict[str, str | float]:
     """
     Liveness probe endpoint for Kubernetes/container orchestration.
     Always returns 200 to indicate the application is running.
@@ -97,7 +97,7 @@ async def liveness_probe():
 
 
 @router.get("/health/ready")
-async def readiness_probe():
+async def readiness_probe() -> JSONResponse:
     """
     Readiness probe endpoint for Kubernetes/container orchestration.
     Returns 200 if database is accessible, 503 otherwise.

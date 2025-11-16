@@ -2,16 +2,16 @@
 
 import os
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 
 class BenchmarkContextService:
     """Provides curated benchmark context for AI prompts"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.benchmarks = self._load_benchmarks()
 
-    def _load_benchmarks(self) -> dict:
+    def _load_benchmarks(self) -> dict[str, object]:
         """Load benchmarks from YAML file"""
         yaml_path = os.path.join(
             os.path.dirname(__file__), "..", "resources", "benchmarks.yaml"

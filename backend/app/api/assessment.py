@@ -32,7 +32,7 @@ router = APIRouter()
 
 
 @router.get("/structure", response_model=AssessmentStructure)
-async def get_assessment_structure(request: Request):
+async def get_assessment_structure(request: Request) -> AssessmentStructure:
     """Get the complete assessment structure with all questions"""
     return load_assessment_structure_cached()
 
@@ -43,7 +43,7 @@ async def get_filtered_assessment_structure(
     assessment_id: str,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> AssessmentStructure:
     """Get the assessment structure filtered by selected sections for this assessment"""
     assessment = (
         db.query(Assessment)
@@ -74,7 +74,7 @@ async def start_assessment(
     assessment_data: AssessmentCreate | None = None,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> AssessmentResponse:
     """Start a new assessment for the current user"""
 
     if (
@@ -158,7 +158,7 @@ async def get_current_assessment(
     request: Request,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> AssessmentResponse:
     """Get the current assessment for the user"""
 
     assessment = (
@@ -194,7 +194,7 @@ async def get_latest_assessment(
     request: Request,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> AssessmentResponse:
     """Get the latest assessment for the user (in-progress if exists, else most recent completed)"""
 
     in_progress_assessment = (
@@ -242,7 +242,7 @@ async def get_assessment_history(
     request: Request,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> list[AssessmentResponse]:
     """Get all assessments for the current user, ordered by attempt number"""
 
     assessments = (
@@ -260,7 +260,7 @@ async def can_retake_assessment(
     request: Request,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, bool | int]:
     """Check if the user can retake the assessment"""
 
     total_assessments = (
@@ -297,7 +297,7 @@ async def get_assessment_responses(
     assessment_id: str,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> list[AssessmentResponseResponse]:
     """Get all responses for an assessment"""
 
     assessment = (
@@ -335,7 +335,7 @@ async def save_assessment_progress(
     progress_data: SaveProgressRequest,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str | float]:
     """Save assessment progress"""
 
     assessment = (
@@ -434,7 +434,7 @@ async def complete_assessment(
     background_tasks: BackgroundTasks,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Complete an assessment and automatically generate standard report"""
 
     assessment = (
@@ -515,7 +515,7 @@ async def save_consultation_interest(
     consultation_data: ConsultationRequest,
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, str]:
     """Save consultation interest and details"""
 
     assessment = (
@@ -537,7 +537,7 @@ async def save_consultation_interest(
 
 
 @router.get("/tiers")
-async def get_assessment_tiers():
+async def get_assessment_tiers() -> dict[str, dict[str, dict[str, str | int]]]:
     """Get available assessment tiers"""
     return {
         "tiers": {
@@ -555,10 +555,10 @@ async def get_assessment_tiers():
 @router.post("/start-with-tier")
 async def start_assessment_with_tier(
     request: Request,
-    tier_request: dict,
+    tier_request: dict[str, str],
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-):
+) -> dict[str, dict[str, object]]:
     """Start assessment with selected tier"""
 
     tier = tier_request.get("tier")
@@ -573,11 +573,13 @@ async def start_assessment_with_tier(
         started_at=datetime.now(UTC),
         expires_at=datetime.now(UTC) + timedelta(days=30),
         selected_section_ids=selected_sections,
-        metadata={"tier": tier},  # Track which tier was selected
     )
 
     db.add(assessment)
     db.commit()
     db.refresh(assessment)
 
-    return {"data": assessment}
+    assessment_response = AssessmentResponse.model_validate(assessment)
+    assessment_dict = assessment_response.model_dump()
+    assessment_dict["metadata"] = {"tier": tier}
+    return {"data": assessment_dict}

@@ -134,7 +134,7 @@ class ConsultationRequest(BaseModel):
 
     @field_validator("consultation_details")
     @classmethod
-    def validate_consultation_details(cls, v: str | None, info) -> str | None:
+    def validate_consultation_details(cls, v: str | None, info: Any) -> str | None:
         consultation_interest = info.data.get("consultation_interest", False)
 
         if v is not None and not v.strip():

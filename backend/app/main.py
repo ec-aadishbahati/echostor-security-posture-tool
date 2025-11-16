@@ -1,9 +1,12 @@
 import logging
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -24,8 +27,8 @@ if settings.SENTRY_DSN:
         profiles_sample_rate=settings.SENTRY_PROFILES_SAMPLE_RATE,
         enable_tracing=True,
         integrations=[
-            sentry_sdk.integrations.fastapi.FastApiIntegration(),
-            sentry_sdk.integrations.sqlalchemy.SqlalchemyIntegration(),
+            FastApiIntegration(),
+            SqlalchemyIntegration(),
         ],
     )
     logger.info("Sentry performance monitoring initialized")
@@ -34,7 +37,7 @@ else:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Starting application startup...")
 
     import os
@@ -89,5 +92,5 @@ app.include_router(health.router, tags=["health"])
 
 @limiter.exempt
 @app.get("/")
-async def root():
+async def root() -> dict[str, str]:
     return {"message": "EchoStor Security Posture Assessment API", "version": "1.0.0"}
