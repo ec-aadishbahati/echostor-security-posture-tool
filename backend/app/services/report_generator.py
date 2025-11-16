@@ -933,7 +933,7 @@ async def generate_ai_insights_async(
                                     logger.info(
                                         f"PII redacted in comment for question {question.id} (async, {comment_redaction_count} items)"
                                     )
-                                comment_value = redacted_comment
+                                comment_value = redacted_comment  # type: ignore[assignment]
 
                         resp_dict = {
                             "question": question.text,
@@ -1011,7 +1011,7 @@ async def generate_ai_insights_async(
                         )
 
                         start_time = time.time()
-                        response = await client.chat.completions.create(
+                        response = await client.chat.completions.create(  # type: ignore[assignment]
                             model=settings.OPENAI_MODEL,
                             messages=[{"role": "user", "content": prompt}],
                             response_format={"type": "json_object"},
