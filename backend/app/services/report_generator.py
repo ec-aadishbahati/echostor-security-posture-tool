@@ -48,11 +48,13 @@ from app.services.ai_synthesis import (
 from app.services.benchmark_context import benchmark_context_service
 from app.services.enhanced_context_extractor import get_enhanced_context_extractor
 from app.services.openai_key_manager import OpenAIKeyManager
+from app.services.pii_redactor import PIIRedactor
 from app.services.prompt_builder import build_section_prompt_v2
 from app.services.question_parser import (
     filter_structure_by_sections,
     load_assessment_structure,
 )
+from app.services.security_metrics import security_metrics
 from app.services.storage import get_storage_service
 
 logger = logging.getLogger(__name__)
@@ -537,20 +539,48 @@ def generate_ai_insights(
         raise
 
     extractor = get_enhanced_context_extractor()
+    pii_redactor = PIIRedactor() if settings.ENABLE_PII_REDACTION_BEFORE_AI else None
+    total_redactions = 0
 
     for section in structure.sections:
         section_responses = []
         for question in section.questions:
             response = response_dict.get(question.id)
             if response:
+                answer_value = response.answer_value
+                comment_value = response.comment if response.comment else None
+
+                if pii_redactor:
+                    answer_str = str(answer_value) if answer_value else ""
+                    redacted_answer_str, answer_redaction_count = pii_redactor.redact(
+                        answer_str
+                    )
+                    if answer_redaction_count > 0:
+                        total_redactions += answer_redaction_count
+                        logger.info(
+                            f"PII redacted in answer for question {question.id} ({answer_redaction_count} items)"
+                        )
+                    answer_value = redacted_answer_str
+
+                    if comment_value:
+                        redacted_comment, comment_redaction_count = pii_redactor.redact(
+                            comment_value
+                        )
+                        if comment_redaction_count > 0:
+                            total_redactions += comment_redaction_count
+                            logger.info(
+                                f"PII redacted in comment for question {question.id} ({comment_redaction_count} items)"
+                            )
+                        comment_value = redacted_comment
+
                 resp_dict = {
                     "question": question.text,
-                    "answer": response.answer_value,
+                    "answer": answer_value,
                     "weight": question.weight,
                 }
 
-                if settings.INCLUDE_COMMENTS_IN_AI and response.comment:
-                    resp_dict["comment"] = response.comment
+                if settings.INCLUDE_COMMENTS_IN_AI and comment_value:
+                    resp_dict["comment"] = comment_value
 
                 if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI:
                     context = extractor.get_compact_context(
@@ -560,6 +590,16 @@ def generate_ai_insights(
                         question_options=question.options,
                     )
                     if context:
+                        if pii_redactor:
+                            redacted_context, context_redaction_count = (
+                                pii_redactor.redact(context)
+                            )
+                            if context_redaction_count > 0:
+                                total_redactions += context_redaction_count
+                                logger.info(
+                                    f"PII redacted in context for question {question.id} ({context_redaction_count} items)"
+                                )
+                            context = redacted_context
                         resp_dict["context"] = context
 
                 section_responses.append(resp_dict)
@@ -786,6 +826,10 @@ def generate_ai_insights(
                     insights[section.id] = create_degraded_artifact(section.id)
                     break  # Don't retry unexpected errors
 
+    if total_redactions > 0:
+        security_metrics.increment_pii_redactions(total_redactions)
+        logger.info(f"Total PII redactions in report: {total_redactions}")
+
     return insights
 
 
@@ -848,24 +892,52 @@ async def generate_ai_insights_async(
     semaphore = asyncio.Semaphore(max_concurrent)
 
     extractor = get_enhanced_context_extractor()
+    pii_redactor = PIIRedactor() if settings.ENABLE_PII_REDACTION_BEFORE_AI else None
 
     async def process_section(section):
         """Process a single section with rate limiting"""
         db = SessionLocal()
+        section_redactions = 0
         try:
             async with semaphore:
                 section_responses = []
                 for question in section.questions:
                     response = response_dict.get(question.id)
                     if response:
+                        answer_value = response.answer_value
+                        comment_value = response.comment if response.comment else None
+
+                        if pii_redactor:
+                            answer_str = str(answer_value) if answer_value else ""
+                            redacted_answer_str, answer_redaction_count = (
+                                pii_redactor.redact(answer_str)
+                            )
+                            if answer_redaction_count > 0:
+                                section_redactions += answer_redaction_count
+                                logger.info(
+                                    f"PII redacted in answer for question {question.id} (async, {answer_redaction_count} items)"
+                                )
+                            answer_value = redacted_answer_str
+
+                            if comment_value:
+                                redacted_comment, comment_redaction_count = (
+                                    pii_redactor.redact(comment_value)
+                                )
+                                if comment_redaction_count > 0:
+                                    section_redactions += comment_redaction_count
+                                    logger.info(
+                                        f"PII redacted in comment for question {question.id} (async, {comment_redaction_count} items)"
+                                    )
+                                comment_value = redacted_comment
+
                         resp_dict = {
                             "question": question.text,
-                            "answer": response.answer_value,
+                            "answer": answer_value,
                             "weight": question.weight,
                         }
 
-                        if settings.INCLUDE_COMMENTS_IN_AI and response.comment:
-                            resp_dict["comment"] = response.comment
+                        if settings.INCLUDE_COMMENTS_IN_AI and comment_value:
+                            resp_dict["comment"] = comment_value
 
                         if settings.INCLUDE_ENHANCED_CONTEXT_IN_AI:
                             context = extractor.get_compact_context(
@@ -875,6 +947,16 @@ async def generate_ai_insights_async(
                                 question_options=question.options,
                             )
                             if context:
+                                if pii_redactor:
+                                    redacted_context, context_redaction_count = (
+                                        pii_redactor.redact(context)
+                                    )
+                                    if context_redaction_count > 0:
+                                        section_redactions += context_redaction_count
+                                        logger.info(
+                                            f"PII redacted in context for question {question.id} (async, {context_redaction_count} items)"
+                                        )
+                                    context = redacted_context
                                 resp_dict["context"] = context
 
                         section_responses.append(resp_dict)

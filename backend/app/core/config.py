@@ -28,6 +28,13 @@ class Settings(BaseSettings):
 
     PII_REDACTION_ENABLED: bool = True
 
+    ENABLE_COOKIE_AUTH: bool = False
+    ENABLE_CSRF: bool = False
+    ENABLE_STRICT_CORS: bool = False
+    ENABLE_SAVE_PROGRESS_RATE_LIMIT: bool = False
+    ENABLE_PII_REDACTION_BEFORE_AI: bool = True  # Default on for security
+    ENABLE_SENTRY_PII_SCRUBBING: bool = True  # Default on for privacy
+
     INCLUDE_COMMENTS_IN_AI: bool = False
     INCLUDE_ENHANCED_CONTEXT_IN_AI: bool = False
     MAX_COMMENT_CHARS: int = 500
