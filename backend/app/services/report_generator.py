@@ -424,7 +424,7 @@ def calculate_assessment_scores(
 
     from collections.abc import Mapping
     from typing import cast
-    
+
     dict_scores: list[Mapping[str, Any]] = [
         cast(Mapping[str, Any], s) for s in scores.values() if isinstance(s, dict)
     ]

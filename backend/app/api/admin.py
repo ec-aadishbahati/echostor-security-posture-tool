@@ -307,7 +307,7 @@ async def get_users_progress_summary(
                 if aware_activity is not None
                 else 0
             )
-            
+
             user_data = {
                 "user_id": str(user.id),
                 "full_name": user.full_name,
