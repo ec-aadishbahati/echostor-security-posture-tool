@@ -44,7 +44,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/{assessment_id}/generate", response_model=None)
+@router.post("/{assessment_id}/generate", response_model=UserReportResponse)
 async def generate_report(
     request: Request,
     assessment_id: str,
@@ -198,7 +198,7 @@ async def request_ai_report(
     }
 
 
-@router.post("/admin/{report_id}/generate-ai", response_model=None)
+@router.post("/admin/{report_id}/generate-ai", response_model=AdminReportResponse)
 async def admin_generate_ai_report(
     request: Request,
     report_id: str,
@@ -239,7 +239,7 @@ async def admin_generate_ai_report(
     return AdminReportResponse.model_validate(report)
 
 
-@router.post("/admin/{report_id}/retry-standard", response_model=None)
+@router.post("/admin/{report_id}/retry-standard", response_model=AdminReportResponse)
 async def admin_retry_standard_report(
     request: Request,
     report_id: str,
@@ -370,7 +370,7 @@ async def admin_bulk_release_ai_reports(
     }
 
 
-@router.post("/admin/{report_id}/retry-ai", response_model=None)
+@router.post("/admin/{report_id}/retry-ai", response_model=AdminReportResponse)
 async def admin_retry_ai_report(
     request: Request,
     report_id: str,
@@ -694,7 +694,7 @@ async def get_user_reports(
     limit: int = Query(100, ge=1, le=1000),
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> dict[str, list[UserReportResponse] | int]:
+) -> dict[str, list[dict[str, object]] | int]:
     """Get all reports for the current user with pagination"""
 
     query = (
@@ -709,12 +709,14 @@ async def get_user_reports(
 
     from app.utils.pagination import paginate
 
-    return paginate(
+    paginated = paginate(
         items=[UserReportResponse.model_validate(report) for report in reports],
         total=total,
         skip=skip,
         limit=limit,
     )
+    
+    return paginated.model_dump()
 
 
 @router.get("/{report_id}/status", response_model=UserReportResponse)

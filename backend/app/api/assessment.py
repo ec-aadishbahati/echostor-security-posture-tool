@@ -558,7 +558,7 @@ async def start_assessment_with_tier(
     tier_request: dict[str, str],
     current_user: CurrentUserResponse = Depends(get_current_user),
     db: Session = Depends(get_db),
-) -> dict[str, object]:
+) -> dict[str, dict[str, object]]:
     """Start assessment with selected tier"""
 
     tier = tier_request.get("tier")
@@ -573,11 +573,13 @@ async def start_assessment_with_tier(
         started_at=datetime.now(UTC),
         expires_at=datetime.now(UTC) + timedelta(days=30),
         selected_section_ids=selected_sections,
-        metadata={"tier": tier},  # Track which tier was selected
     )
 
     db.add(assessment)
     db.commit()
     db.refresh(assessment)
 
-    return {"data": assessment}
+    assessment_response = AssessmentResponse.model_validate(assessment)
+    assessment_dict = assessment_response.model_dump()
+    assessment_dict["metadata"] = {"tier": tier}
+    return {"data": assessment_dict}
