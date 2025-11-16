@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import Cookies from 'js-cookie';
 import { authAPI, setCSRFToken } from './api';
 
 interface User {
@@ -36,6 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && !ENABLE_COOKIE_AUTH) {
+      Cookies.remove('access_token');
+    }
+
     if (ENABLE_COOKIE_AUTH) {
       authAPI
         .getCurrentUser()
@@ -80,9 +85,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } else {
       const { access_token, user: userData } = response.data;
-      
+
       const { setAuthToken } = await import('./api');
       setAuthToken(access_token);
+
+      if (typeof window !== 'undefined') {
+        Cookies.remove('access_token');
+      }
 
       try {
         const tokenPayload = JSON.parse(atob(access_token.split('.')[1]));
@@ -127,10 +136,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } else {
       const { access_token, user: userData } = response.data;
-      
+
       const { setAuthToken } = await import('./api');
       setAuthToken(access_token);
-      
+
+      if (typeof window !== 'undefined') {
+        Cookies.remove('access_token');
+      }
+
       setUser(userData);
     }
   };
@@ -145,6 +158,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       const { setAuthToken } = await import('./api');
       setAuthToken(null);
+      
+      if (typeof window !== 'undefined') {
+        Cookies.remove('access_token');
+      }
     }
     setCSRFToken(null);
     setUser(null);

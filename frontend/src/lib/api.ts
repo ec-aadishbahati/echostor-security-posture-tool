@@ -61,7 +61,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     return Promise.reject({ _isDuplicate: true, promise: pendingRequest });
   }
 
-  const token = authToken || Cookies.get('access_token');
+  const token = authToken || (typeof window !== 'undefined' ? Cookies.get('access_token') : undefined);
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -94,8 +94,10 @@ api.interceptors.response.use(
 
     if (error.response?.status === 401) {
       authToken = null;
-      Cookies.remove('access_token');
-      window.location.href = '/auth/login';
+      if (typeof window !== 'undefined') {
+        Cookies.remove('access_token');
+        window.location.href = '/auth/login';
+      }
     }
 
     if (error.config) {
