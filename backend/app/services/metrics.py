@@ -55,7 +55,7 @@ class AIMetricsService:
         tokens_completion: int,
         latency_ms: int,
         is_degraded: bool = False,
-    ):
+    ) -> None:
         """Record metrics for a generation"""
         cost = AIMetricsService.calculate_cost(model, tokens_prompt, tokens_completion)
 
@@ -75,7 +75,9 @@ class AIMetricsService:
             db.commit()
 
     @staticmethod
-    def aggregate_daily_metrics(db: Session, target_date: date | None = None):  # type: ignore[assignment]
+    def aggregate_daily_metrics(
+        db: Session, target_date: date | None = None
+    ) -> AIDailyMetrics:
         """Aggregate metrics for a specific date"""
         if not target_date:
             target_date = date.today() - timedelta(days=1)  # Yesterday

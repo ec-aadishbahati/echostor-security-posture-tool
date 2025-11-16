@@ -81,7 +81,7 @@ class AICacheService:
         tokens_prompt: int,
         tokens_completion: int,
         cost_usd: float,
-    ):
+    ) -> None:
         """Store artifact in cache"""
         cache_entry = AISectionCache(
             section_id=section_id,

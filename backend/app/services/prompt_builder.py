@@ -1,14 +1,16 @@
 """Prompt builder service for AI report generation"""
 
+from typing import Any
+
 from app.core.config import settings
 from app.services.pii_redactor import PIIRedactor
 
 
 def build_section_prompt_v2(
-    section,
-    section_responses: list[dict],
+    section: Any,
+    section_responses: list[dict[str, Any]],
     curated_context: str = "",
-    redact_pii: bool | None = None,  # type: ignore[assignment]
+    redact_pii: bool | None = None,
 ) -> tuple[str, int]:
     """Build JSON-mode prompt for section analysis with optional PII redaction
 

@@ -101,7 +101,7 @@ Keep response professional and actionable for executive audience.
 
 async def generate_synthesis_artifact(
     section_artifacts: dict[str, SectionAIArtifact],
-    structure,
+    structure: Any,
     scores: dict[str, Any],
     key_manager: OpenAIKeyManager,
     db: Session,
