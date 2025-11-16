@@ -34,7 +34,7 @@ class Assessment(Base):
     completed_at = Column(DateTime(timezone=True))
     expires_at = Column(DateTime(timezone=True))
     last_saved_at = Column(DateTime(timezone=True), server_default=func.now())
-    progress_percentage = Column(DECIMAL(5, 2), default=0.00)
+    progress_percentage: Column[DECIMAL] = Column(DECIMAL(5, 2), default=0.00)
     selected_section_ids = Column(
         JSON, nullable=True
     )  # NULL = all sections (backward compatible)

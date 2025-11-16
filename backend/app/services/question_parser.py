@@ -33,7 +33,7 @@ def _parse_option_explanation(lines: list[str], start_idx: int) -> dict | None:
 
     has_detailed_explanation = False
     current_section = None
-    current_content = []
+    current_content: list[str] = []
 
     i = start_idx
     while i < len(lines):
@@ -150,7 +150,7 @@ def _store_explanation_content(
 def parse_assessment_questions(md_content: str) -> AssessmentStructure:
     """Parse the markdown file to extract all assessment questions and structure"""
 
-    sections = []
+    sections: list[dict] = []
     current_section = None
     current_question = None
 
