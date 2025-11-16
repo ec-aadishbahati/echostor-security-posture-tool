@@ -378,12 +378,12 @@ async def save_assessment_progress(
         .all()
     )
 
-    existing_by_question = {r.question_id: r for r in existing_responses}
+    existing_by_question = {str(r.question_id): r for r in existing_responses}
 
     new_responses_count = 0
 
     for response_data in progress_data.responses:
-        existing_response = existing_by_question.get(response_data.question_id)
+        existing_response = existing_by_question.get(str(response_data.question_id))
 
         if existing_response:
             existing_response.answer_value = response_data.answer_value
@@ -425,7 +425,7 @@ async def save_assessment_progress(
 
     return {
         "message": "Progress saved successfully",
-        "progress_percentage": assessment.progress_percentage,
+        "progress_percentage": float(assessment.progress_percentage),
     }
 
 
@@ -544,10 +544,10 @@ async def get_assessment_tiers() -> dict[str, dict[str, dict[str, str | int]]]:
     return {
         "tiers": {
             tier_id: {
-                "name": tier_info["name"],
-                "description": tier_info["description"],
-                "duration": tier_info["duration"],
-                "total_questions": tier_info["total_questions"],
+                "name": str(tier_info["name"]),
+                "description": str(tier_info["description"]),
+                "duration": int(tier_info["duration"]),
+                "total_questions": int(tier_info["total_questions"]),
             }
             for tier_id, tier_info in ASSESSMENT_TIERS.items()
         }
