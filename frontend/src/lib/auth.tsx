@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       const { setAuthToken } = await import('./api');
       setAuthToken(null);
-      
+
       if (typeof window !== 'undefined') {
         Cookies.remove('access_token');
       }

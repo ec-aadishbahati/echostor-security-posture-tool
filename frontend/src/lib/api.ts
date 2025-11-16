@@ -61,9 +61,8 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     return Promise.reject({ _isDuplicate: true, promise: pendingRequest });
   }
 
-  const token = authToken || (typeof window !== 'undefined' ? Cookies.get('access_token') : undefined);
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (authToken && config.headers) {
+    config.headers.Authorization = `Bearer ${authToken}`;
   }
 
   if (
