@@ -555,7 +555,7 @@ async def reset_user_password(
                 detail="New password is required",
             )
 
-        user.password_hash = get_password_hash(new_password)
+        user.password_hash = get_password_hash(new_password)  # type: ignore[assignment]
         db.commit()
 
         await log_admin_action(

@@ -231,7 +231,7 @@ async def admin_generate_ai_report(
             detail="Report not found or not pending",
         )
 
-    report.status = "generating"
+    report.status = "generating"  # type: ignore[assignment]
     db.commit()
 
     background_tasks.add_task(generate_ai_report, str(report.id))
@@ -272,9 +272,9 @@ async def admin_retry_standard_report(
             detail="Report not found or not in failed status",
         )
 
-    report.status = "generating"
-    report.file_path = None
-    report.completed_at = None
+    report.status = "generating"  # type: ignore[assignment]
+    report.file_path = None  # type: ignore[assignment]
+    report.completed_at = None  # type: ignore[assignment]
     db.commit()
 
     background_tasks.add_task(generate_standard_report, str(report.id))
@@ -309,7 +309,7 @@ async def admin_release_ai_report(
             detail="Report not found or not ready for release",
         )
 
-    report.status = "released"
+    report.status = "released"  # type: ignore[assignment]
     db.commit()
 
     return {"message": "AI report released to user", "report_id": report_id}
@@ -354,7 +354,7 @@ async def admin_bulk_release_ai_reports(
 
     for report in reports:
         if report.status == "completed":
-            report.status = "released"
+            report.status = "released"  # type: ignore[assignment]
             released_count += 1
             released_ids.append(str(report.id))
         else:
@@ -403,9 +403,9 @@ async def admin_retry_ai_report(
             detail="Report not found or not in failed status",
         )
 
-    report.status = "generating"
-    report.file_path = None
-    report.completed_at = None
+    report.status = "generating"  # type: ignore[assignment]
+    report.file_path = None  # type: ignore[assignment]
+    report.completed_at = None  # type: ignore[assignment]
     db.commit()
 
     background_tasks.add_task(generate_ai_report, str(report.id))
@@ -506,10 +506,10 @@ async def admin_regenerate_pdf_from_artifacts(
             detail="Failed to save regenerated PDF",
         )
 
-    report.file_path = storage_location
-    report.completed_at = datetime.now(UTC)
+    report.file_path = storage_location  # type: ignore[assignment]
+    report.completed_at = datetime.now(UTC)  # type: ignore[assignment]
     if report.status == "failed":
-        report.status = "completed"
+        report.status = "completed"  # type: ignore[assignment]
     db.commit()
 
     return {
@@ -632,7 +632,7 @@ async def download_report(
 
             new_filename = f"report_{report_id}_{uuid.uuid4().hex[:8]}.pdf"
             storage_location = storage_service.save(pdf_bytes, new_filename)
-            report.file_path = storage_location
+            report.file_path = storage_location  # type: ignore[assignment]
             db.commit()
 
             logger.info(

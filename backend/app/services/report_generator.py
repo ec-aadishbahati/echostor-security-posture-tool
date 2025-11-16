@@ -93,7 +93,7 @@ def generate_standard_report(report_id: str) -> None:
         )
         if not assessment:
             logger.error(f"Assessment not found for report: {report_id}")
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
             return
 
@@ -146,9 +146,9 @@ def generate_standard_report(report_id: str) -> None:
             )
 
         logger.info("PDF generated and stored successfully: %s", storage_location)
-        report.file_path = storage_location
-        report.status = "completed"
-        report.completed_at = datetime.now(UTC)
+        report.file_path = storage_location  # type: ignore[assignment]
+        report.status = "completed"  # type: ignore[assignment]
+        report.completed_at = datetime.now(UTC)  # type: ignore[assignment]
         db.commit()
 
         logger.info(
@@ -159,7 +159,7 @@ def generate_standard_report(report_id: str) -> None:
         error_msg = f"Error generating standard report {report_id}: {str(e)}"
         logger.error(error_msg, exc_info=True)
         if report:
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
     finally:
         db.close()
@@ -192,7 +192,7 @@ def generate_ai_report(report_id: str) -> None:
         )
         if not assessment:
             logger.error(f"Assessment not found for report: {report_id}")
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
             return
 
@@ -332,9 +332,9 @@ def generate_ai_report(report_id: str) -> None:
             f"AI PDF generated successfully: {storage_location} "
             f"(region={fly_region}, primary={fly_primary}, backend={storage_backend})"
         )
-        report.file_path = storage_location
-        report.status = "completed"
-        report.completed_at = datetime.now(UTC)
+        report.file_path = storage_location  # type: ignore[assignment]
+        report.status = "completed"  # type: ignore[assignment]
+        report.completed_at = datetime.now(UTC)  # type: ignore[assignment]
         db.commit()
 
         logger.info(
@@ -346,7 +346,7 @@ def generate_ai_report(report_id: str) -> None:
         error_msg = f"Error generating AI report {report_id}: {str(e)}"
         logger.error(error_msg, exc_info=True)
         if report:
-            report.status = "failed"
+            report.status = "failed"  # type: ignore[assignment]
             db.commit()
     finally:
         db.close()
@@ -400,7 +400,7 @@ def calculate_assessment_scores(
             (section_score / section_max_score) * 100 if section_max_score > 0 else 0
         )
 
-        scores[section.id] = {
+        scores[section.id] = {  # type: ignore[assignment]
             "score": section_score,
             "max_score": section_max_score,
             "percentage": score_percentage,
@@ -426,7 +426,7 @@ def calculate_assessment_scores(
         (total_score / total_max_score) * 100 if total_max_score > 0 else 0
     )
 
-    scores["overall"] = {
+    scores["overall"] = {  # type: ignore[assignment]
         "score": total_score,
         "max_score": total_max_score,
         "percentage": overall_percentage,
@@ -490,7 +490,7 @@ def calculate_question_score_v2(
 
     elif question.type == "multiple_select":
         if not isinstance(answer, list):
-            answer = [answer] if answer else []
+            answer = [answer] if answer else []  # type: ignore[assignment]
 
         if not answer:
             return {"score": 0, "max_score": question.weight, "flags": flags}
@@ -505,7 +505,7 @@ def calculate_question_score_v2(
                 normalized = normalize_option_value(mapped_value)
                 weight, value_flags = get_option_weight(scale_type, normalized)
                 all_flags.extend(value_flags)
-                best_weight = max(best_weight, weight)
+                best_weight = max(best_weight, weight)  # type: ignore[assignment]
 
             if "not_applicable" in all_flags:
                 return {"score": 0, "max_score": 0, "flags": all_flags}
@@ -562,7 +562,7 @@ def generate_ai_insights(
                         logger.info(
                             f"PII redacted in answer for question {question.id} ({answer_redaction_count} items)"
                         )
-                    answer_value = redacted_answer_str
+                    answer_value = redacted_answer_str  # type: ignore[assignment]
 
                     if comment_value:
                         redacted_comment, comment_redaction_count = pii_redactor.redact(
@@ -573,7 +573,7 @@ def generate_ai_insights(
                             logger.info(
                                 f"PII redacted in comment for question {question.id} ({comment_redaction_count} items)"
                             )
-                        comment_value = redacted_comment
+                        comment_value = redacted_comment  # type: ignore[assignment]
 
                 resp_dict = {
                     "question": question.text,
@@ -642,7 +642,7 @@ def generate_ai_insights(
                     )
 
                     start_time = datetime.now()
-                    response = client.chat.completions.create(
+                    response = client.chat.completions.create(  # type: ignore[assignment]
                         model=settings.OPENAI_MODEL,
                         messages=[{"role": "user", "content": prompt}],
                         response_format={"type": "json_object"},
@@ -1818,7 +1818,7 @@ def generate_ai_report_html(
     scores: dict[str, Any],
     structure: Any,
     ai_insights: dict[str, SectionAIArtifact],
-    synthesis: SynthesisArtifact = None,
+    synthesis: SynthesisArtifact | None = None,
 ) -> str:
     """Generate HTML content for AI-enhanced report with synthesis"""
 

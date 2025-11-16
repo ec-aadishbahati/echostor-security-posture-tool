@@ -147,8 +147,8 @@ class OpenAIKeyManager:
                 "Please add API keys in the admin portal."
             )
 
-        key.last_used_at = now
-        key.usage_count += 1
+        key.last_used_at = now  # type: ignore[assignment]
+        key.usage_count += 1  # type: ignore[assignment]
         self.db.commit()
 
         decrypted_key = decrypt_api_key(key.encrypted_key)
@@ -167,8 +167,8 @@ class OpenAIKeyManager:
         assert self.db is not None
         key = self.db.query(OpenAIAPIKey).filter(OpenAIAPIKey.id == key_id).first()
         if key:
-            key.error_count = 0
-            key.cooldown_until = None
+            key.error_count = 0  # type: ignore[assignment]
+            key.cooldown_until = None  # type: ignore[assignment]
             self.db.commit()
             logger.debug(f"Recorded success for key: {key.key_name}")
 
@@ -184,20 +184,20 @@ class OpenAIKeyManager:
         if not key:
             return
 
-        key.error_count += 1
+        key.error_count += 1  # type: ignore[assignment]
 
         error_str = str(error).lower()
         is_rate_limit = "429" in error_str or "rate limit" in error_str
 
         if is_rate_limit:
             cooldown_minutes = min(2**key.error_count, 60)  # Max 60 minutes
-            key.cooldown_until = datetime.now(UTC) + timedelta(minutes=cooldown_minutes)
+            key.cooldown_until = datetime.now(UTC) + timedelta(minutes=cooldown_minutes)  # type: ignore[assignment]
             logger.warning(
                 f"Rate limit hit for key {key.key_name}. "
                 f"Cooldown until {key.cooldown_until} ({cooldown_minutes} minutes)"
             )
         elif key.error_count >= 5:
-            key.is_active = False
+            key.is_active = False  # type: ignore[assignment]
             logger.error(
                 f"Key {key.key_name} deactivated after {key.error_count} consecutive errors"
             )
@@ -222,10 +222,10 @@ class OpenAIKeyManager:
         if not key:
             raise ValueError(f"API key not found: {key_id}")
 
-        key.is_active = is_active
+        key.is_active = is_active  # type: ignore[assignment]
         if is_active:
-            key.error_count = 0
-            key.cooldown_until = None
+            key.error_count = 0  # type: ignore[assignment]
+            key.cooldown_until = None  # type: ignore[assignment]
 
         self.db.commit()
         self.db.refresh(key)

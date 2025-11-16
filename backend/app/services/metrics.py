@@ -70,8 +70,8 @@ class AIMetricsService:
         )
 
         if metadata:
-            metadata.total_cost_usd = cost
-            metadata.is_degraded = 1 if is_degraded else 0
+            metadata.total_cost_usd = cost  # type: ignore[assignment]
+            metadata.is_degraded = 1 if is_degraded else 0  # type: ignore[assignment]
             db.commit()
 
     @staticmethod
