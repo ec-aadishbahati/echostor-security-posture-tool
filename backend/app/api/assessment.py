@@ -544,10 +544,10 @@ async def get_assessment_tiers() -> dict[str, dict[str, dict[str, str | int]]]:
     return {
         "tiers": {
             tier_id: {
-                "name": str(tier_info["name"]),
-                "description": str(tier_info["description"]),
-                "duration": int(tier_info["duration"]),
-                "total_questions": int(tier_info["total_questions"]),
+                "name": tier_info["name"],
+                "description": tier_info["description"],
+                "duration": tier_info["duration"],
+                "total_questions": tier_info["total_questions"],
             }
             for tier_id, tier_info in ASSESSMENT_TIERS.items()
         }
