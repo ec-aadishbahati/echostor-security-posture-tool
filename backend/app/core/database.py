@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 SLOW_QUERY_THRESHOLD = 100
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    settings.DATABASE_URL or "",
     connect_args={"check_same_thread": False}
     if settings.DATABASE_URL and "sqlite" in settings.DATABASE_URL
     else {},
@@ -25,12 +25,12 @@ Base = declarative_base()
 
 
 @event.listens_for(engine, "before_cursor_execute")
-def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
-    conn.info.setdefault("query_start_time", []).append(time.time())
+def before_cursor_execute(conn: object, cursor: object, statement: object, parameters: object, context: object, executemany: object) -> None:
+    conn.info.setdefault("query_start_time", []).append(time.time())  # type: ignore[attr-defined]
 
 
 @event.listens_for(engine, "after_cursor_execute")
-def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+def after_cursor_execute(conn: object, cursor: object, statement: object, parameters: object, context: object, executemany: object) -> None:
     total_time = time.time() - conn.info["query_start_time"].pop()
     duration_ms = total_time * 1000
 
@@ -44,7 +44,7 @@ def after_cursor_execute(conn, cursor, statement, parameters, context, executema
             )
 
 
-def get_db():
+def get_db() -> object:
     db = SessionLocal()
     try:
         yield db

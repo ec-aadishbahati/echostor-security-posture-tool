@@ -49,16 +49,17 @@ def get_tier_sections(tier: str) -> list[str]:
 
     tier_config = ASSESSMENT_TIERS[tier]
 
-    if tier_config["sections"] == "all":
+    sections = tier_config["sections"]
+    if sections == "all":
         from app.services.question_parser import load_assessment_structure
 
         structure = load_assessment_structure()
         return [section.id for section in structure.sections]
     else:
-        return tier_config["sections"]
+        return sections  # type: ignore[return-value]
 
 
-def get_tier_info(tier: str) -> dict:
+def get_tier_info(tier: str) -> dict[str, object]:
     """Get tier information for UI"""
     if tier not in ASSESSMENT_TIERS:
         raise ValueError(f"Unknown tier: {tier}")

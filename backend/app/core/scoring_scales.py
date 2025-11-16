@@ -57,7 +57,7 @@ def get_option_weight(scale_type: str, option_value: str) -> tuple[float, list[s
     Returns:
         (weight_multiplier, flags)
     """
-    flags = []
+    flags: list[str] = []
 
     option_value_lower = option_value.lower().replace(" ", "_").replace("-", "_")
 
@@ -88,7 +88,7 @@ def normalize_option_value(value: str) -> str:
     return normalized
 
 
-def map_numeric_to_slug(question, answer_value: str) -> str:
+def map_numeric_to_slug(question: object, answer_value: str) -> str:
     """
     Map numeric answer values to slugs based on question's current options.
 
