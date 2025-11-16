@@ -142,7 +142,7 @@ async def get_all_assessments(
     request: Request,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    status: str | None = Query(None),
+    status_filter: str | None = Query(None),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ):
@@ -151,8 +151,8 @@ async def get_all_assessments(
     try:
         query = db.query(Assessment).options(joinedload(Assessment.user)).join(User)
 
-        if status:
-            query = query.filter(Assessment.status == status)
+        if status_filter:
+            query = query.filter(Assessment.status == status_filter)
 
         total = query.count()
         assessments = (
@@ -162,7 +162,7 @@ async def get_all_assessments(
         await log_admin_action(
             admin_email=current_admin.email,
             action="view_assessments",
-            details={"status_filter": status, "count": len(assessments)},
+            details={"status_filter": status_filter, "count": len(assessments)},
             db=db,
         )
 
@@ -338,7 +338,7 @@ async def get_all_reports(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     report_type: str | None = Query(None),
-    status: str | None = Query(None),
+    status_filter: str | None = Query(None),
     search: str | None = Query(None),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
@@ -356,8 +356,8 @@ async def get_all_reports(
         if report_type:
             query = query.filter(Report.report_type == report_type)
 
-        if status:
-            query = query.filter(Report.status == status)
+        if status_filter:
+            query = query.filter(Report.status == status_filter)
 
         if search:
             search_param = f"%{search}%"
@@ -375,7 +375,7 @@ async def get_all_reports(
             action="view_reports",
             details={
                 "type_filter": report_type,
-                "status_filter": status,
+                "status_filter": status_filter,
                 "search": search,
                 "count": len(reports),
             },

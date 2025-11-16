@@ -49,6 +49,7 @@ class OpenAIKeyManager:
         Returns:
             The created OpenAIAPIKey object
         """
+        assert self.db is not None
         encrypted_key = encrypt_api_key(api_key)
 
         key_obj = OpenAIAPIKey(
@@ -74,6 +75,7 @@ class OpenAIKeyManager:
         Returns:
             List of key information dictionaries with masked keys
         """
+        assert self.db is not None
         query = self.db.query(OpenAIAPIKey)
 
         if not include_inactive:
@@ -110,6 +112,7 @@ class OpenAIKeyManager:
         Raises:
             ValueError: If no active keys are available
         """
+        assert self.db is not None
         now = datetime.now(UTC)
 
         query = (
@@ -154,6 +157,7 @@ class OpenAIKeyManager:
         Args:
             key_id: The ID of the key that was used successfully
         """
+        assert self.db is not None
         key = self.db.query(OpenAIAPIKey).filter(OpenAIAPIKey.id == key_id).first()
         if key:
             key.error_count = 0
@@ -168,6 +172,7 @@ class OpenAIKeyManager:
             key_id: The ID of the key that failed
             error: The exception that occurred
         """
+        assert self.db is not None
         key = self.db.query(OpenAIAPIKey).filter(OpenAIAPIKey.id == key_id).first()
         if not key:
             return
@@ -205,6 +210,7 @@ class OpenAIKeyManager:
         Raises:
             ValueError: If key not found
         """
+        assert self.db is not None
         key = self.db.query(OpenAIAPIKey).filter(OpenAIAPIKey.id == key_id).first()
         if not key:
             raise ValueError(f"API key not found: {key_id}")
@@ -231,6 +237,7 @@ class OpenAIKeyManager:
         Raises:
             ValueError: If key not found
         """
+        assert self.db is not None
         key = self.db.query(OpenAIAPIKey).filter(OpenAIAPIKey.id == key_id).first()
         if not key:
             raise ValueError(f"API key not found: {key_id}")

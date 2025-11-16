@@ -48,6 +48,7 @@ class CacheService:
             return None
 
         try:
+            assert self._redis_client is not None
             value = self._redis_client.get(key)
             if value:
                 logger.debug(f"Cache hit: {key}")
@@ -63,6 +64,7 @@ class CacheService:
             return False
 
         try:
+            assert self._redis_client is not None
             serialized = json.dumps(value)
             if ttl:
                 self._redis_client.setex(key, ttl, serialized)
@@ -79,6 +81,7 @@ class CacheService:
             return False
 
         try:
+            assert self._redis_client is not None
             self._redis_client.delete(key)
             logger.debug(f"Cache delete: {key}")
             return True
@@ -91,6 +94,7 @@ class CacheService:
             return False
 
         try:
+            assert self._redis_client is not None
             self._redis_client.flushdb()
             logger.info("Cache cleared")
             return True

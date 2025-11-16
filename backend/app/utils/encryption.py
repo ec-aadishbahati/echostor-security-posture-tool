@@ -16,10 +16,10 @@ def get_encryption_key() -> bytes:
     Tries to read from settings first, then os.getenv(), then /run/secrets file.
     This handles different ways Fly.io and other platforms expose secrets.
     """
-    key = (
-        settings.OPENAI_KEYS_ENCRYPTION_KEY
-        or os.getenv("OPENAI_KEYS_ENCRYPTION_KEY", "")
-    ).strip()
+    key_value = settings.OPENAI_KEYS_ENCRYPTION_KEY or os.getenv(
+        "OPENAI_KEYS_ENCRYPTION_KEY", ""
+    )
+    key = key_value.strip() if key_value else ""
 
     if not key:
         try:
