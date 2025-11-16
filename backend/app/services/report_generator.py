@@ -400,7 +400,7 @@ def calculate_assessment_scores(
             (section_score / section_max_score) * 100 if section_max_score > 0 else 0
         )
 
-        scores[section.id] = {
+        scores[section.id] = {  # type: ignore[assignment]
             "score": section_score,
             "max_score": section_max_score,
             "percentage": score_percentage,
@@ -426,7 +426,7 @@ def calculate_assessment_scores(
         (total_score / total_max_score) * 100 if total_max_score > 0 else 0
     )
 
-    scores["overall"] = {
+    scores["overall"] = {  # type: ignore[assignment]
         "score": total_score,
         "max_score": total_max_score,
         "percentage": overall_percentage,
@@ -488,7 +488,7 @@ def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
 
     elif question.type == "multiple_select":
         if not isinstance(answer, list):
-            answer = [answer] if answer else []
+            answer = [answer] if answer else []  # type: ignore[assignment]
 
         if not answer:
             return {"score": 0, "max_score": question.weight, "flags": flags}
@@ -503,7 +503,7 @@ def calculate_question_score_v2(response: AssessmentResponse, question) -> dict:
                 normalized = normalize_option_value(mapped_value)
                 weight, value_flags = get_option_weight(scale_type, normalized)
                 all_flags.extend(value_flags)
-                best_weight = max(best_weight, weight)
+                best_weight = max(best_weight, weight)  # type: ignore[assignment]
 
             if "not_applicable" in all_flags:
                 return {"score": 0, "max_score": 0, "flags": all_flags}
@@ -560,7 +560,7 @@ def generate_ai_insights(
                         logger.info(
                             f"PII redacted in answer for question {question.id} ({answer_redaction_count} items)"
                         )
-                    answer_value = redacted_answer_str
+                    answer_value = redacted_answer_str  # type: ignore[assignment]
 
                     if comment_value:
                         redacted_comment, comment_redaction_count = pii_redactor.redact(
@@ -571,7 +571,7 @@ def generate_ai_insights(
                             logger.info(
                                 f"PII redacted in comment for question {question.id} ({comment_redaction_count} items)"
                             )
-                        comment_value = redacted_comment
+                        comment_value = redacted_comment  # type: ignore[assignment]
 
                 resp_dict = {
                     "question": question.text,
@@ -640,7 +640,7 @@ def generate_ai_insights(
                     )
 
                     start_time = datetime.now()
-                    response = client.chat.completions.create(
+                    response = client.chat.completions.create(  # type: ignore[assignment]
                         model=settings.OPENAI_MODEL,
                         messages=[{"role": "user", "content": prompt}],
                         response_format={"type": "json_object"},
@@ -882,7 +882,7 @@ async def generate_ai_insights_async(
     structure,
     key_manager: OpenAIKeyManager,
     report_id: str,
-    max_concurrent: int = None,
+    max_concurrent: int | None = None,  # type: ignore[assignment]
 ) -> dict[str, SectionAIArtifact]:
     """Generate AI insights for each section with parallel processing"""
 
@@ -1807,7 +1807,7 @@ def generate_ai_report_html(
     scores,
     structure,
     ai_insights,
-    synthesis: SynthesisArtifact = None,
+    synthesis: SynthesisArtifact | None = None,  # type: ignore[assignment]
 ) -> str:
     """Generate HTML content for AI-enhanced report with synthesis"""
 

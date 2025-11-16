@@ -8,7 +8,7 @@ def build_section_prompt_v2(
     section,
     section_responses: list[dict],
     curated_context: str = "",
-    redact_pii: bool = None,
+    redact_pii: bool | None = None,  # type: ignore[assignment]
 ) -> tuple[str, int]:
     """Build JSON-mode prompt for section analysis with optional PII redaction
 

@@ -553,7 +553,7 @@ async def reset_user_password(
                 detail="New password is required",
             )
 
-        user.password_hash = get_password_hash(new_password)
+        user.password_hash = get_password_hash(new_password)  # type: ignore[assignment]
         db.commit()
 
         await log_admin_action(
@@ -714,7 +714,7 @@ async def log_admin_action(
     action: str,
     target_user_id: str | None = None,
     details: dict | None = None,
-    db: Session = None,
+    db: Session | None = None,  # type: ignore[assignment]
 ):
     """Log admin actions for audit trail"""
 

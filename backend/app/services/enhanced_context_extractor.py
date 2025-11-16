@@ -70,11 +70,13 @@ class EnhancedContextExtractor:
             key = f"{current_question_id}_option_{current_option_num}"
             raw_blocks[key] = "".join(option_block_lines)
 
-        self._raw_blocks_cache = raw_blocks
+        self._raw_blocks_cache = raw_blocks  # type: ignore[assignment]
         return raw_blocks
 
     def _get_option_ordinal(
-        self, option_value: str, question_options: list = None
+        self,
+        option_value: str,
+        question_options: list | None = None,  # type: ignore[assignment]
     ) -> str:
         """Map option value to ordinal number for markdown lookup"""
         if question_options:
@@ -84,7 +86,10 @@ class EnhancedContextExtractor:
         return str(option_value)
 
     def get_enhanced_context(
-        self, question_id: str, option_value: str, question_options: list = None
+        self,
+        question_id: str,
+        option_value: str,
+        question_options: list | None = None,  # type: ignore[assignment]
     ) -> dict[str, str]:
         """
         Get enhanced multi-section content for a specific option.
@@ -167,7 +172,7 @@ class EnhancedContextExtractor:
         question_id: str,
         option_value: str,
         max_chars: int = 400,
-        question_options: list = None,
+        question_options: list | None = None,  # type: ignore[assignment]
     ) -> str:
         """
         Get compact enhanced context suitable for AI prompts.

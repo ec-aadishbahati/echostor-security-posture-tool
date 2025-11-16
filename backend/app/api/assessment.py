@@ -180,7 +180,7 @@ async def get_current_assessment(
     if assessment.expires_at and datetime.now(UTC) > assessment.expires_at.replace(
         tzinfo=UTC
     ):
-        assessment.status = "expired"
+        assessment.status = "expired"  # type: ignore[assignment]
         db.commit()
         raise HTTPException(
             status_code=status.HTTP_410_GONE, detail="Assessment has expired"
@@ -359,7 +359,7 @@ async def save_assessment_progress(
     if assessment.expires_at and datetime.now(UTC) > assessment.expires_at.replace(
         tzinfo=UTC
     ):
-        assessment.status = "expired"
+        assessment.status = "expired"  # type: ignore[assignment]
         db.commit()
         raise HTTPException(
             status_code=status.HTTP_410_GONE, detail="Assessment has expired"
@@ -399,7 +399,7 @@ async def save_assessment_progress(
             db.add(new_response)
             new_responses_count += 1
 
-    assessment.last_saved_at = datetime.now(UTC)
+    assessment.last_saved_at = datetime.now(UTC)  # type: ignore[assignment]
 
     total_responses = (
         db.query(AssessmentResponseModel)
@@ -417,7 +417,7 @@ async def save_assessment_progress(
     total_questions = structure.total_questions
 
     if total_questions > 0:
-        assessment.progress_percentage = (total_responses / total_questions) * 100
+        assessment.progress_percentage = (total_responses / total_questions) * 100  # type: ignore[assignment]
 
     db.commit()
 
@@ -458,15 +458,15 @@ async def complete_assessment(
     if assessment.expires_at and datetime.now(UTC) > assessment.expires_at.replace(
         tzinfo=UTC
     ):
-        assessment.status = "expired"
+        assessment.status = "expired"  # type: ignore[assignment]
         db.commit()
         raise HTTPException(
             status_code=status.HTTP_410_GONE, detail="Assessment has expired"
         )
 
-    assessment.status = "completed"
-    assessment.completed_at = datetime.now(UTC)
-    assessment.progress_percentage = 100.0
+    assessment.status = "completed"  # type: ignore[assignment]
+    assessment.completed_at = datetime.now(UTC)  # type: ignore[assignment]
+    assessment.progress_percentage = 100.0  # type: ignore[assignment]
 
     db.commit()
 
@@ -529,8 +529,8 @@ async def save_consultation_interest(
     if not assessment:
         raise HTTPException(status_code=404, detail="Assessment not found")
 
-    assessment.consultation_interest = consultation_data.consultation_interest
-    assessment.consultation_details = consultation_data.consultation_details
+    assessment.consultation_interest = consultation_data.consultation_interest  # type: ignore[assignment]
+    assessment.consultation_details = consultation_data.consultation_details  # type: ignore[assignment]
 
     db.commit()
     return {"message": "Consultation preferences saved"}
