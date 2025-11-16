@@ -212,7 +212,7 @@ async def get_latest_assessment(
         if in_progress_assessment.expires_at and datetime.now(
             UTC
         ) > in_progress_assessment.expires_at.replace(tzinfo=UTC):
-            in_progress_assessment.status = "expired"
+            in_progress_assessment.status = "expired"  # type: ignore[assignment]
             db.commit()
         else:
             return AssessmentResponse.model_validate(in_progress_assessment)
