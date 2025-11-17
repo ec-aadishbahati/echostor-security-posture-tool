@@ -1,6 +1,6 @@
-from typing import Any
-
 """Tests for AI services: prompt_builder, benchmark_context, and ai_cache"""
+
+from typing import Any
 
 import pytest
 from pydantic import ValidationError

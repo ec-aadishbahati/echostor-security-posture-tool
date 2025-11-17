@@ -1,5 +1,3 @@
-from typing import Any
-
 """
 Dry-run migration preview script
 
@@ -14,6 +12,7 @@ It connects to the database and shows:
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from sqlalchemy import create_engine, text
 

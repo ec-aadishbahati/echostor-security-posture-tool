@@ -1,7 +1,6 @@
-from typing import Any
-
 """Tests for PII redaction before AI processing"""
 
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 from app.models.assessment import AssessmentResponse

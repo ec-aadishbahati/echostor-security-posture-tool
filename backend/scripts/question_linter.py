@@ -1,5 +1,3 @@
-from typing import Any
-
 #!/usr/bin/env python3
 """
 Question Library Linter - Run in CI to catch issues
@@ -14,6 +12,7 @@ This linter checks for:
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
 def lint_questions() -> None:

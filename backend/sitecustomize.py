@@ -1,6 +1,6 @@
-from typing import Any
-
 """Test-only helpers for environments without PostgreSQL JSONB support."""
+
+from typing import Any
 
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.compiler import compiles

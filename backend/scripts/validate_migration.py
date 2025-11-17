@@ -1,5 +1,3 @@
-from typing import Any
-
 """
 Validate migration results
 
@@ -13,6 +11,7 @@ This script runs after the migration to verify:
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from sqlalchemy import create_engine, text
 

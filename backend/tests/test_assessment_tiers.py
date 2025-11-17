@@ -1,6 +1,6 @@
-from typing import Any
-
 """Tests for assessment tier functionality"""
+
+from typing import Any
 
 import pytest
 

@@ -1,5 +1,3 @@
-from typing import Any
-
 """
 Generate slug mappings for all questions in security_assessment_questions.md
 
@@ -19,6 +17,7 @@ to ensure reproducibility even if the markdown changes later.
 import json
 import re
 from pathlib import Path
+from typing import Any
 
 # Scale-appropriate slug mappings from scoring_scales.py
 SCALE_SLUGS = {

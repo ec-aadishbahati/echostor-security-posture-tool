@@ -1,5 +1,3 @@
-from typing import Any
-
 #!/usr/bin/env python3
 """
 Questionnaire Linter - Detects placeholder options and content mismatches
@@ -17,6 +15,7 @@ Exit codes:
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
 class QuestionnaireIssue:

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
+"""Check if admin user exists in database"""
 
-
+from app.core.database import SessionLocal
 from app.models.user import User
 
 
 def check_admin_user() -> None:
     """Check if admin user exists in database"""
     try:
-        db = next(get_write_db())  # type: ignore[name-defined]
+        db = SessionLocal()
 
         admin_user = (
             db.query(User).filter(User.email == "aadish.bahati@echostor.com").first()
