@@ -12,19 +12,7 @@ import {
   XCircleIcon,
 } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
-
-interface OpenAIKey {
-  id: string;
-  key_name: string;
-  masked_key: string;
-  is_active: boolean;
-  last_used_at: string | null;
-  usage_count: number;
-  cooldown_until: string | null;
-  error_count: number;
-  created_at: string;
-  created_by: string;
-}
+import type { OpenAIKey } from '@/lib/apiTypes';
 
 export default function OpenAIKeysManagement() {
   const queryClient = useQueryClient();
@@ -33,9 +21,9 @@ export default function OpenAIKeysManagement() {
   const [newKeyName, setNewKeyName] = useState('');
   const [newApiKey, setNewApiKey] = useState('');
   const [testApiKey, setTestApiKey] = useState('');
-  const [testResult, setTestResult] = useState<{ is_valid: boolean; message: string } | null>(null);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  const { data: keys, isLoading } = useQuery<{ data: OpenAIKey[] }>({
+  const { data: keys, isLoading } = useQuery({
     queryKey: ['openaiKeys'],
     queryFn: () => adminAPI.listOpenAIKeys(true),
     refetchInterval: 30000,
@@ -94,7 +82,7 @@ export default function OpenAIKeysManagement() {
     },
     onError: (error: unknown) => {
       setTestResult({
-        is_valid: false,
+        success: false,
         message:
           (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
           'Test failed',
@@ -425,20 +413,20 @@ export default function OpenAIKeysManagement() {
                     {testResult && (
                       <div
                         className={`p-3 rounded-md ${
-                          testResult.is_valid
+                          testResult.success
                             ? 'bg-green-50 border border-green-200'
                             : 'bg-red-50 border border-red-200'
                         }`}
                       >
                         <div className="flex items-center">
-                          {testResult.is_valid ? (
+                          {testResult.success ? (
                             <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2" />
                           ) : (
                             <XCircleIcon className="h-5 w-5 text-red-600 mr-2" />
                           )}
                           <p
                             className={`text-sm ${
-                              testResult.is_valid ? 'text-green-800' : 'text-red-800'
+                              testResult.success ? 'text-green-800' : 'text-red-800'
                             }`}
                           >
                             {testResult.message}

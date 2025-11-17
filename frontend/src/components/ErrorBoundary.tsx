@@ -44,7 +44,14 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
             <button onClick={resetErrorBoundary} className="btn-primary">
               Try Again
             </button>
-            <button onClick={() => (window.location.href = '/')} className="btn-secondary">
+            <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/';
+                }
+              }}
+              className="btn-secondary"
+            >
               Go Home
             </button>
           </div>

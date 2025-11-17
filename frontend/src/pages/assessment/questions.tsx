@@ -363,7 +363,9 @@ export default function AssessmentQuestions() {
     } else if (currentSectionIndex > 0) {
       setCurrentSectionIndex((prev) => prev - 1);
       const prevSection = structure?.data?.sections?.[currentSectionIndex - 1];
-      setCurrentQuestionIndex(prevSection.questions.length - 1);
+      if (prevSection) {
+        setCurrentQuestionIndex(prevSection.questions.length - 1);
+      }
     }
   };
 
