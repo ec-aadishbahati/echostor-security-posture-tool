@@ -169,7 +169,8 @@ export const assessmentAPI = {
 
   getTiers: () => api.get<{ tiers: Record<string, Tier> }>('/api/assessment/tiers'),
 
-  startWithTier: (data: { tier: string }) => api.post<Assessment>('/api/assessment/start-with-tier', data),
+  startWithTier: (data: { tier: string }) =>
+    api.post<Assessment>('/api/assessment/start-with-tier', data),
 
   getCurrentAssessment: () => api.get<Assessment>('/api/assessment/current'),
 
@@ -177,12 +178,22 @@ export const assessmentAPI = {
 
   getAssessmentHistory: () => api.get<Assessment[]>('/api/assessment/history'),
 
-  canRetakeAssessment: () => api.get<{ can_retake: boolean; message?: string; attempts_remaining?: number; total_attempts?: number }>('/api/assessment/can-retake'),
+  canRetakeAssessment: () =>
+    api.get<{
+      can_retake: boolean;
+      message?: string;
+      attempts_remaining?: number;
+      total_attempts?: number;
+    }>('/api/assessment/can-retake'),
 
-  getResponses: (assessmentId: string) => api.get<AssessmentResponse[]>(`/api/assessment/${assessmentId}/responses`),
+  getResponses: (assessmentId: string) =>
+    api.get<AssessmentResponse[]>(`/api/assessment/${assessmentId}/responses`),
 
   saveProgress: (assessmentId: string, responses: Record<string, unknown>[]) =>
-    api.post<{ message: string; progress_percentage: number }>(`/api/assessment/${assessmentId}/save-progress`, { responses }),
+    api.post<{ message: string; progress_percentage: number }>(
+      `/api/assessment/${assessmentId}/save-progress`,
+      { responses }
+    ),
 
   completeAssessment: (assessmentId: string) =>
     api.post<{ message: string }>(`/api/assessment/${assessmentId}/complete`),
@@ -190,11 +201,13 @@ export const assessmentAPI = {
   saveConsultationInterest: (
     assessmentId: string,
     consultationData: { consultation_interest: boolean; consultation_details?: string }
-  ) => api.post<{ message: string }>(`/api/assessment/${assessmentId}/consultation`, consultationData),
+  ) =>
+    api.post<{ message: string }>(`/api/assessment/${assessmentId}/consultation`, consultationData),
 };
 
 export const reportsAPI = {
-  generateReport: (assessmentId: string) => api.post<Report>(`/api/reports/${assessmentId}/generate`),
+  generateReport: (assessmentId: string) =>
+    api.post<Report>(`/api/reports/${assessmentId}/generate`),
 
   requestAIReport: (assessmentId: string, message?: string) =>
     api.post<Report>(`/api/reports/${assessmentId}/request-ai-report`, { message }),
@@ -214,7 +227,8 @@ export const adminAPI = {
 
   getUser: (userId: string) => api.get<User>(`/api/admin/users/${userId}`),
 
-  getUserAssessments: (userId: string) => api.get<Assessment[]>(`/api/admin/users/${userId}/assessments`),
+  getUserAssessments: (userId: string) =>
+    api.get<Assessment[]>(`/api/admin/users/${userId}/assessments`),
 
   getAssessments: (params?: { skip?: number; limit?: number; status?: string }) =>
     api.get<Paginated<Assessment>>('/api/admin/assessments', { params }),
@@ -225,18 +239,26 @@ export const adminAPI = {
     api.get<Paginated<Report>>('/api/admin/reports', { params }),
 
   getAlerts: () => api.get<{ alerts: Alert[] }>('/api/admin/alerts'),
-  getUsersProgressSummary: () => api.get<{ users_progress: UserProgress[] }>('/api/admin/users-progress-summary'),
-  generateAIReport: (reportId: string) => api.post<{ message: string }>(`/api/reports/admin/${reportId}/generate-ai`),
-  releaseAIReport: (reportId: string) => api.post<{ message: string }>(`/api/reports/admin/${reportId}/release`),
+  getUsersProgressSummary: () =>
+    api.get<{ users_progress: UserProgress[] }>('/api/admin/users-progress-summary'),
+  generateAIReport: (reportId: string) =>
+    api.post<{ message: string }>(`/api/reports/admin/${reportId}/generate-ai`),
+  releaseAIReport: (reportId: string) =>
+    api.post<{ message: string }>(`/api/reports/admin/${reportId}/release`),
   retryStandardReport: (reportId: string) =>
     api.post<{ message: string }>(`/api/reports/admin/${reportId}/retry-standard`),
   downloadReport: (reportId: string) =>
     api.get<Blob>(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
   deleteUser: (userId: string) => api.delete<{ message: string }>(`/api/admin/users/${userId}`),
   resetUserPassword: (userId: string, newPassword: string) =>
-    api.post<{ message: string }>(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),
+    api.post<{ message: string }>(`/api/admin/users/${userId}/reset-password`, {
+      new_password: newPassword,
+    }),
   bulkUpdateUserStatus: (userIds: string[], isActive: boolean) =>
-    api.post<{ message: string }>('/api/admin/users/bulk-update-status', { user_ids: userIds, is_active: isActive }),
+    api.post<{ message: string }>('/api/admin/users/bulk-update-status', {
+      user_ids: userIds,
+      is_active: isActive,
+    }),
   bulkDeleteUsers: (userIds: string[]) =>
     api.post<{ message: string }>('/api/admin/users/bulk-delete', { user_ids: userIds }),
 
@@ -249,15 +271,21 @@ export const adminAPI = {
   },
 
   listOpenAIKeys: (includeInactive = false) =>
-    api.get<OpenAIKey[]>('/api/admin/openai-keys/', { params: { include_inactive: includeInactive } }),
+    api.get<OpenAIKey[]>('/api/admin/openai-keys/', {
+      params: { include_inactive: includeInactive },
+    }),
 
   createOpenAIKey: (data: { key_name: string; api_key: string }) =>
     api.post<OpenAIKey>('/api/admin/openai-keys/', data),
 
-  testOpenAIKey: (apiKey: string) => api.post<{ success: boolean; message: string }>('/api/admin/openai-keys/test', { api_key: apiKey }),
+  testOpenAIKey: (apiKey: string) =>
+    api.post<{ success: boolean; message: string }>('/api/admin/openai-keys/test', {
+      api_key: apiKey,
+    }),
 
   toggleOpenAIKey: (keyId: string, isActive: boolean) =>
     api.patch<OpenAIKey>(`/api/admin/openai-keys/${keyId}/toggle`, { is_active: isActive }),
 
-  deleteOpenAIKey: (keyId: string) => api.delete<{ message: string }>(`/api/admin/openai-keys/${keyId}`),
+  deleteOpenAIKey: (keyId: string) =>
+    api.delete<{ message: string }>(`/api/admin/openai-keys/${keyId}`),
 };

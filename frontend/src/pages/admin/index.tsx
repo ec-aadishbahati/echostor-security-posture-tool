@@ -303,16 +303,17 @@ export default function AdminDashboard() {
                         )}
                     </tbody>
                   </table>
-                  {usersProgress?.data?.users_progress && usersProgress.data.users_progress.length > 10 && (
-                    <div className="mt-4 text-center">
-                      <Link
-                        href="/admin/users"
-                        className="text-primary-600 hover:text-primary-500 text-sm font-medium"
-                      >
-                        View all {usersProgress?.data?.users_progress?.length || 0} users →
-                      </Link>
-                    </div>
-                  )}
+                  {usersProgress?.data?.users_progress &&
+                    usersProgress.data.users_progress.length > 10 && (
+                      <div className="mt-4 text-center">
+                        <Link
+                          href="/admin/users"
+                          className="text-primary-600 hover:text-primary-500 text-sm font-medium"
+                        >
+                          View all {usersProgress?.data?.users_progress?.length || 0} users →
+                        </Link>
+                      </div>
+                    )}
                 </div>
               )}
             </div>

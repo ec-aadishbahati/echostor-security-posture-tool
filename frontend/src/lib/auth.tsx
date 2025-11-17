@@ -16,7 +16,10 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAdmin: boolean;
-  login: (email: string, password: string) => Promise<{ access_token: string; user: User; csrf_token?: string }>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ access_token: string; user: User; csrf_token?: string }>;
   register: (data: {
     email: string;
     password: string;
