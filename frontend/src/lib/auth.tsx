@@ -16,7 +16,10 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAdmin: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (
+    email: string,
+    password: string
+  ) => Promise<{ access_token: string; user: User; csrf_token?: string }>;
   register: (data: {
     email: string;
     password: string;
@@ -166,7 +169,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCSRFToken(null);
     setUser(null);
     setIsAdmin(false);
-    window.location.href = '/';
+    if (typeof window !== 'undefined') {
+      window.location.href = '/';
+    }
   };
 
   const contextValue: AuthContextType = {

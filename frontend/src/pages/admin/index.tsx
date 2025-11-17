@@ -109,7 +109,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Alerts Section */}
-            {!alertsLoading && alerts?.data?.alerts?.length > 0 && (
+            {!alertsLoading && alerts?.data?.alerts && alerts.data.alerts.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">System Alerts</h3>
                 <div className="space-y-4">
@@ -303,16 +303,17 @@ export default function AdminDashboard() {
                         )}
                     </tbody>
                   </table>
-                  {usersProgress?.data?.users_progress?.length > 10 && (
-                    <div className="mt-4 text-center">
-                      <Link
-                        href="/admin/users"
-                        className="text-primary-600 hover:text-primary-500 text-sm font-medium"
-                      >
-                        View all {usersProgress?.data?.users_progress?.length || 0} users →
-                      </Link>
-                    </div>
-                  )}
+                  {usersProgress?.data?.users_progress &&
+                    usersProgress.data.users_progress.length > 10 && (
+                      <div className="mt-4 text-center">
+                        <Link
+                          href="/admin/users"
+                          className="text-primary-600 hover:text-primary-500 text-sm font-medium"
+                        >
+                          View all {usersProgress?.data?.users_progress?.length || 0} users →
+                        </Link>
+                      </div>
+                    )}
                 </div>
               )}
             </div>

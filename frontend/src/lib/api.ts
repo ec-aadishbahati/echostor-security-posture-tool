@@ -1,6 +1,20 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 import axiosRetry, { isNetworkError, isRetryableError } from 'axios-retry';
+import type {
+  User,
+  Assessment,
+  AssessmentStructure,
+  AssessmentResponse,
+  Report,
+  Paginated,
+  DashboardStats,
+  Alert,
+  ConsultationRequest,
+  OpenAIKey,
+  Tier,
+  UserProgress,
+} from './apiTypes';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'https://echostor-security-posture-tool.fly.dev';
@@ -130,119 +144,148 @@ export default api;
 
 export const authAPI = {
   register: (data: { email: string; password: string; full_name: string; company_name: string }) =>
-    api.post('/api/auth/register', data),
+    api.post<{ access_token: string; user: User; csrf_token?: string }>('/api/auth/register', data),
 
-  login: (data: { email: string; password: string }) => api.post('/api/auth/login', data),
+  login: (data: { email: string; password: string }) =>
+    api.post<{ access_token: string; user: User; csrf_token?: string }>('/api/auth/login', data),
 
-  logout: () => api.post('/api/auth/logout'),
+  logout: () => api.post<{ message: string }>('/api/auth/logout'),
 
-  getCurrentUser: () => api.get('/api/auth/me'),
+  getCurrentUser: () => api.get<User>('/api/auth/me'),
 
-  getCSRFToken: () => api.get('/api/auth/csrf'),
+  getCSRFToken: () => api.get<{ csrf_token: string }>('/api/auth/csrf'),
 };
 
 export const assessmentAPI = {
-  getStructure: () => api.get('/api/assessment/structure'),
+  getStructure: () => api.get<AssessmentStructure>('/api/assessment/structure'),
 
   getFilteredStructure: (assessmentId: string) =>
-    api.get(`/api/assessment/${assessmentId}/filtered-structure`),
+    api.get<AssessmentStructure>(`/api/assessment/${assessmentId}/filtered-structure`),
 
-  startAssessment: () => api.post('/api/assessment/start'),
+  startAssessment: () => api.post<Assessment>('/api/assessment/start'),
 
   startAssessmentWithSections: (selectedSectionIds: string[]) =>
-    api.post('/api/assessment/start', { selected_section_ids: selectedSectionIds }),
+    api.post<Assessment>('/api/assessment/start', { selected_section_ids: selectedSectionIds }),
 
-  getTiers: () => api.get('/api/assessment/tiers'),
+  getTiers: () => api.get<{ tiers: Record<string, Tier> }>('/api/assessment/tiers'),
 
-  startWithTier: (data: { tier: string }) => api.post('/api/assessment/start-with-tier', data),
+  startWithTier: (data: { tier: string }) =>
+    api.post<Assessment>('/api/assessment/start-with-tier', data),
 
-  getCurrentAssessment: () => api.get('/api/assessment/current'),
+  getCurrentAssessment: () => api.get<Assessment>('/api/assessment/current'),
 
-  getLatestAssessment: () => api.get('/api/assessment/latest'),
+  getLatestAssessment: () => api.get<Assessment>('/api/assessment/latest'),
 
-  getAssessmentHistory: () => api.get('/api/assessment/history'),
+  getAssessmentHistory: () => api.get<Assessment[]>('/api/assessment/history'),
 
-  canRetakeAssessment: () => api.get('/api/assessment/can-retake'),
+  canRetakeAssessment: () =>
+    api.get<{
+      can_retake: boolean;
+      message?: string;
+      attempts_remaining?: number;
+      total_attempts?: number;
+    }>('/api/assessment/can-retake'),
 
-  getResponses: (assessmentId: string) => api.get(`/api/assessment/${assessmentId}/responses`),
+  getResponses: (assessmentId: string) =>
+    api.get<AssessmentResponse[]>(`/api/assessment/${assessmentId}/responses`),
 
   saveProgress: (assessmentId: string, responses: Record<string, unknown>[]) =>
-    api.post(`/api/assessment/${assessmentId}/save-progress`, { responses }),
+    api.post<{ message: string; progress_percentage: number }>(
+      `/api/assessment/${assessmentId}/save-progress`,
+      { responses }
+    ),
 
   completeAssessment: (assessmentId: string) =>
-    api.post(`/api/assessment/${assessmentId}/complete`),
+    api.post<{ message: string }>(`/api/assessment/${assessmentId}/complete`),
 
   saveConsultationInterest: (
     assessmentId: string,
     consultationData: { consultation_interest: boolean; consultation_details?: string }
-  ) => api.post(`/api/assessment/${assessmentId}/consultation`, consultationData),
+  ) =>
+    api.post<{ message: string }>(`/api/assessment/${assessmentId}/consultation`, consultationData),
 };
 
 export const reportsAPI = {
-  generateReport: (assessmentId: string) => api.post(`/api/reports/${assessmentId}/generate`),
+  generateReport: (assessmentId: string) =>
+    api.post<Report>(`/api/reports/${assessmentId}/generate`),
 
   requestAIReport: (assessmentId: string, message?: string) =>
-    api.post(`/api/reports/${assessmentId}/request-ai-report`, { message }),
+    api.post<Report>(`/api/reports/${assessmentId}/request-ai-report`, { message }),
 
   getUserReports: (params?: { skip?: number; limit?: number }) =>
-    api.get('/api/reports/user/reports', { params }),
+    api.get<Paginated<Report>>('/api/reports/user/reports', { params }),
 
-  getReportStatus: (reportId: string) => api.get(`/api/reports/${reportId}/status`),
+  getReportStatus: (reportId: string) => api.get<Report>(`/api/reports/${reportId}/status`),
 
   downloadReport: (reportId: string) =>
-    api.get(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
+    api.get<Blob>(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
 };
 
 export const adminAPI = {
   getUsers: (params?: { skip?: number; limit?: number; search?: string }) =>
-    api.get('/api/admin/users', { params }),
+    api.get<Paginated<User>>('/api/admin/users', { params }),
 
-  getUser: (userId: string) => api.get(`/api/admin/users/${userId}`),
+  getUser: (userId: string) => api.get<User>(`/api/admin/users/${userId}`),
 
-  getUserAssessments: (userId: string) => api.get(`/api/admin/users/${userId}/assessments`),
+  getUserAssessments: (userId: string) =>
+    api.get<Assessment[]>(`/api/admin/users/${userId}/assessments`),
 
   getAssessments: (params?: { skip?: number; limit?: number; status?: string }) =>
-    api.get('/api/admin/assessments', { params }),
+    api.get<Paginated<Assessment>>('/api/admin/assessments', { params }),
 
-  getDashboardStats: () => api.get('/api/admin/dashboard/stats'),
+  getDashboardStats: () => api.get<DashboardStats>('/api/admin/dashboard/stats'),
 
   getReports: (params?: { skip?: number; limit?: number; report_type?: string; status?: string }) =>
-    api.get('/api/admin/reports', { params }),
+    api.get<Paginated<Report>>('/api/admin/reports', { params }),
 
-  getAlerts: () => api.get('/api/admin/alerts'),
-  getUsersProgressSummary: () => api.get('/api/admin/users-progress-summary'),
-  generateAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/generate-ai`),
-  releaseAIReport: (reportId: string) => api.post(`/api/reports/admin/${reportId}/release`),
+  getAlerts: () => api.get<{ alerts: Alert[] }>('/api/admin/alerts'),
+  getUsersProgressSummary: () =>
+    api.get<{ users_progress: UserProgress[] }>('/api/admin/users-progress-summary'),
+  generateAIReport: (reportId: string) =>
+    api.post<{ message: string }>(`/api/reports/admin/${reportId}/generate-ai`),
+  releaseAIReport: (reportId: string) =>
+    api.post<{ message: string }>(`/api/reports/admin/${reportId}/release`),
   retryStandardReport: (reportId: string) =>
-    api.post(`/api/reports/admin/${reportId}/retry-standard`),
+    api.post<{ message: string }>(`/api/reports/admin/${reportId}/retry-standard`),
   downloadReport: (reportId: string) =>
-    api.get(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
-  deleteUser: (userId: string) => api.delete(`/api/admin/users/${userId}`),
+    api.get<Blob>(`/api/reports/${reportId}/download`, { responseType: 'blob' }),
+  deleteUser: (userId: string) => api.delete<{ message: string }>(`/api/admin/users/${userId}`),
   resetUserPassword: (userId: string, newPassword: string) =>
-    api.post(`/api/admin/users/${userId}/reset-password`, { new_password: newPassword }),
+    api.post<{ message: string }>(`/api/admin/users/${userId}/reset-password`, {
+      new_password: newPassword,
+    }),
   bulkUpdateUserStatus: (userIds: string[], isActive: boolean) =>
-    api.post('/api/admin/users/bulk-update-status', { user_ids: userIds, is_active: isActive }),
+    api.post<{ message: string }>('/api/admin/users/bulk-update-status', {
+      user_ids: userIds,
+      is_active: isActive,
+    }),
   bulkDeleteUsers: (userIds: string[]) =>
-    api.post('/api/admin/users/bulk-delete', { user_ids: userIds }),
+    api.post<{ message: string }>('/api/admin/users/bulk-delete', { user_ids: userIds }),
 
   getConsultationRequests: (skip = 0, limit = 100) => {
     const params = new URLSearchParams({
       skip: skip.toString(),
       limit: limit.toString(),
     });
-    return api.get(`/api/admin/consultations?${params}`);
+    return api.get<Paginated<ConsultationRequest>>(`/api/admin/consultations?${params}`);
   },
 
   listOpenAIKeys: (includeInactive = false) =>
-    api.get('/api/admin/openai-keys/', { params: { include_inactive: includeInactive } }),
+    api.get<OpenAIKey[]>('/api/admin/openai-keys/', {
+      params: { include_inactive: includeInactive },
+    }),
 
   createOpenAIKey: (data: { key_name: string; api_key: string }) =>
-    api.post('/api/admin/openai-keys/', data),
+    api.post<OpenAIKey>('/api/admin/openai-keys/', data),
 
-  testOpenAIKey: (apiKey: string) => api.post('/api/admin/openai-keys/test', { api_key: apiKey }),
+  testOpenAIKey: (apiKey: string) =>
+    api.post<{ success: boolean; message: string }>('/api/admin/openai-keys/test', {
+      api_key: apiKey,
+    }),
 
   toggleOpenAIKey: (keyId: string, isActive: boolean) =>
-    api.patch(`/api/admin/openai-keys/${keyId}/toggle`, { is_active: isActive }),
+    api.patch<OpenAIKey>(`/api/admin/openai-keys/${keyId}/toggle`, { is_active: isActive }),
 
-  deleteOpenAIKey: (keyId: string) => api.delete(`/api/admin/openai-keys/${keyId}`),
+  deleteOpenAIKey: (keyId: string) =>
+    api.delete<{ message: string }>(`/api/admin/openai-keys/${keyId}`),
 };

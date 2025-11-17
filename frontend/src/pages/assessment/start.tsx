@@ -8,23 +8,12 @@ import { assessmentAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { ClockIcon, DocumentTextIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
-interface Tier {
-  name: string;
-  description: string;
-  duration: string;
-  total_questions: number;
-}
-
-interface TiersResponse {
-  tiers: Record<string, Tier>;
-}
-
 export default function StartAssessment() {
   const { user } = useAuth();
   const router = useRouter();
   const [selectedTier, setSelectedTier] = useState<string>('standard');
 
-  const { data: tiersData, isLoading } = useQuery<{ data: TiersResponse }>({
+  const { data: tiersData, isLoading } = useQuery({
     queryKey: ['assessmentTiers'],
     queryFn: assessmentAPI.getTiers,
   });

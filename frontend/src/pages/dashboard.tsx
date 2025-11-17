@@ -52,7 +52,9 @@ export default function Dashboard() {
   const isCompleted = hasActiveAssessment && assessment.data.status === 'completed';
   const progressPercentage = hasActiveAssessment ? assessment.data.progress_percentage || 0 : 0;
   const timeRemaining =
-    hasActiveAssessment && !isCompleted ? calculateTimeRemaining(assessment.data.expires_at) : null;
+    hasActiveAssessment && !isCompleted && assessment.data.expires_at
+      ? calculateTimeRemaining(assessment.data.expires_at)
+      : null;
 
   const canRetake = retakeData?.data?.can_retake || false;
   const attemptsRemaining = retakeData?.data?.attempts_remaining || 0;
