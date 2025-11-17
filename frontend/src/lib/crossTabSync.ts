@@ -14,7 +14,7 @@ export interface SyncEvent {
   assessmentId: string;
   timestamp: number;
   originTabId?: string;
-  data?: any;
+  data?: unknown;
 }
 
 type SyncEventHandler = (event: SyncEvent) => void;
@@ -65,7 +65,7 @@ class CrossTabSync {
     });
   }
 
-  public broadcast(type: SyncEventType, assessmentId: string, data?: any) {
+  public broadcast(type: SyncEventType, assessmentId: string, data?: unknown) {
     const event: SyncEvent = {
       type,
       assessmentId,

@@ -23,10 +23,10 @@ export const test = base.extend<AuthFixtures>({
       timeout: 10000,
     });
 
-    const token = await page.evaluate(() => (window as any).__getAuthToken?.());
+    const token = await page.evaluate(() => (window as { __getAuthToken?: () => string | null }).__getAuthToken?.());
     if (token) {
       await page.addInitScript((t) => {
-        (window as any).__AUTH_TOKEN = t;
+        (window as { __AUTH_TOKEN?: string }).__AUTH_TOKEN = t;
       }, token);
     }
 
@@ -46,10 +46,10 @@ export const test = base.extend<AuthFixtures>({
       timeout: 10000,
     });
 
-    const token = await page.evaluate(() => (window as any).__getAuthToken?.());
+    const token = await page.evaluate(() => (window as { __getAuthToken?: () => string | null }).__getAuthToken?.());
     if (token) {
       await page.addInitScript((t) => {
-        (window as any).__AUTH_TOKEN = t;
+        (window as { __AUTH_TOKEN?: string }).__AUTH_TOKEN = t;
       }, token);
     }
 

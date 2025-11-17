@@ -113,40 +113,42 @@ export default function AdminDashboard() {
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">System Alerts</h3>
                 <div className="space-y-4">
-                  {alerts?.data?.alerts?.map((alert: any, index: number) => (
-                    <div
-                      key={index}
-                      className={`p-4 rounded-lg border-l-4 ${
-                        alert.type === 'warning'
-                          ? 'bg-yellow-50 border-yellow-400'
-                          : 'bg-blue-50 border-blue-400'
-                      }`}
-                    >
-                      <div className="flex items-center">
-                        <ExclamationTriangleIcon
-                          className={`h-5 w-5 mr-3 ${
-                            alert.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'
-                          }`}
-                        />
-                        <div>
-                          <h4
-                            className={`font-semibold ${
-                              alert.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'
+                  {alerts?.data?.alerts?.map(
+                    (alert: { type: string; title: string; message: string }, index: number) => (
+                      <div
+                        key={index}
+                        className={`p-4 rounded-lg border-l-4 ${
+                          alert.type === 'warning'
+                            ? 'bg-yellow-50 border-yellow-400'
+                            : 'bg-blue-50 border-blue-400'
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <ExclamationTriangleIcon
+                            className={`h-5 w-5 mr-3 ${
+                              alert.type === 'warning' ? 'text-yellow-600' : 'text-blue-600'
                             }`}
-                          >
-                            {alert.title}
-                          </h4>
-                          <p
-                            className={`text-sm ${
-                              alert.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'
-                            }`}
-                          >
-                            {alert.message}
-                          </p>
+                          />
+                          <div>
+                            <h4
+                              className={`font-semibold ${
+                                alert.type === 'warning' ? 'text-yellow-800' : 'text-blue-800'
+                              }`}
+                            >
+                              {alert.title}
+                            </h4>
+                            <p
+                              className={`text-sm ${
+                                alert.type === 'warning' ? 'text-yellow-700' : 'text-blue-700'
+                              }`}
+                            >
+                              {alert.message}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </div>
             )}
@@ -243,50 +245,62 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {usersProgress?.data?.users_progress?.slice(0, 10).map((user: any) => (
-                        <tr key={user.user_id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-gray-900">
-                              {user.full_name}
-                            </div>
-                            <div className="text-sm text-gray-500">{user.email}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {user.company_name}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
-                                <div
-                                  className="bg-primary-600 h-2 rounded-full"
-                                  style={{ width: `${user.progress_percentage}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-sm text-gray-900">
-                                {user.progress_percentage.toFixed(1)}%
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span
-                              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                user.assessment_status === 'completed'
-                                  ? 'bg-green-100 text-green-800'
-                                  : user.assessment_status === 'in_progress'
-                                    ? 'bg-yellow-100 text-yellow-800'
-                                    : 'bg-gray-100 text-gray-800'
-                              }`}
-                            >
-                              {user.assessment_status.replace('_', ' ')}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {user.days_since_activity === 0
-                              ? 'Today'
-                              : `${user.days_since_activity} days ago`}
-                          </td>
-                        </tr>
-                      ))}
+                      {usersProgress?.data?.users_progress
+                        ?.slice(0, 10)
+                        .map(
+                          (user: {
+                            user_id: string;
+                            full_name: string;
+                            email: string;
+                            company_name: string;
+                            progress_percentage: number;
+                            assessment_status: string;
+                            days_since_activity: number;
+                          }) => (
+                            <tr key={user.user_id}>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {user.full_name}
+                                </div>
+                                <div className="text-sm text-gray-500">{user.email}</div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {user.company_name}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="flex items-center">
+                                  <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                    <div
+                                      className="bg-primary-600 h-2 rounded-full"
+                                      style={{ width: `${user.progress_percentage}%` }}
+                                    ></div>
+                                  </div>
+                                  <span className="text-sm text-gray-900">
+                                    {user.progress_percentage.toFixed(1)}%
+                                  </span>
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span
+                                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                    user.assessment_status === 'completed'
+                                      ? 'bg-green-100 text-green-800'
+                                      : user.assessment_status === 'in_progress'
+                                        ? 'bg-yellow-100 text-yellow-800'
+                                        : 'bg-gray-100 text-gray-800'
+                                  }`}
+                                >
+                                  {user.assessment_status.replace('_', ' ')}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {user.days_since_activity === 0
+                                  ? 'Today'
+                                  : `${user.days_since_activity} days ago`}
+                              </td>
+                            </tr>
+                          )
+                        )}
                     </tbody>
                   </table>
                   {usersProgress?.data?.users_progress?.length > 10 && (

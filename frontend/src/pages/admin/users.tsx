@@ -19,7 +19,15 @@ export default function AdminUsers() {
   const [currentPage, setCurrentPage] = useState(1);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<{
+    id: string;
+    email: string;
+    full_name: string;
+    company_name: string;
+    is_active: boolean;
+    is_admin: boolean;
+    created_at: string;
+  } | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [bulkOperation, setBulkOperation] = useState<'activate' | 'deactivate' | 'delete' | null>(
@@ -117,12 +125,28 @@ export default function AdminUsers() {
     },
   });
 
-  const handleDeleteUser = (user: any) => {
+  const handleDeleteUser = (user: {
+    id: string;
+    email: string;
+    full_name: string;
+    company_name: string;
+    is_active: boolean;
+    is_admin: boolean;
+    created_at: string;
+  }) => {
     setSelectedUser(user);
     setShowDeleteModal(true);
   };
 
-  const handleResetPassword = (user: any) => {
+  const handleResetPassword = (user: {
+    id: string;
+    email: string;
+    full_name: string;
+    company_name: string;
+    is_active: boolean;
+    is_admin: boolean;
+    created_at: string;
+  }) => {
     setSelectedUser(user);
     setShowPasswordModal(true);
   };
@@ -143,7 +167,19 @@ export default function AdminUsers() {
     if (selectedUsers.length === users.length) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(users.map((user: any) => user.id));
+      setSelectedUsers(
+        users.map(
+          (user: {
+            id: string;
+            email: string;
+            full_name: string;
+            company_name: string;
+            is_active: boolean;
+            is_admin: boolean;
+            created_at: string;
+          }) => user.id
+        )
+      );
     }
   };
 
@@ -289,59 +325,69 @@ export default function AdminUsers() {
                       </tr>
                     </thead>
                     <tbody>
-                      {users.map((user: any) => (
-                        <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-4 px-4">
-                            <input
-                              type="checkbox"
-                              checked={selectedUsers.includes(user.id)}
-                              onChange={() => handleSelectUser(user.id)}
-                              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                            />
-                          </td>
-                          <td className="py-4 px-4">
-                            <div>
-                              <div className="font-medium text-gray-900">{user.full_name}</div>
-                              <div className="text-sm text-gray-600">{user.email}</div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className="text-gray-900">{user.company_name}</span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span
-                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                user.is_active
-                                  ? 'bg-green-100 text-green-800'
-                                  : 'bg-red-100 text-red-800'
-                              }`}
-                            >
-                              {user.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className="text-gray-600">{formatDate(user.created_at)}</span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={() => handleResetPassword(user)}
-                                className="text-indigo-600 hover:text-indigo-900 flex items-center"
-                                title="Reset Password"
+                      {users.map(
+                        (user: {
+                          id: string;
+                          email: string;
+                          full_name: string;
+                          company_name: string;
+                          is_active: boolean;
+                          is_admin: boolean;
+                          created_at: string;
+                        }) => (
+                          <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-4 px-4">
+                              <input
+                                type="checkbox"
+                                checked={selectedUsers.includes(user.id)}
+                                onChange={() => handleSelectUser(user.id)}
+                                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                              />
+                            </td>
+                            <td className="py-4 px-4">
+                              <div>
+                                <div className="font-medium text-gray-900">{user.full_name}</div>
+                                <div className="text-sm text-gray-600">{user.email}</div>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className="text-gray-900">{user.company_name}</span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <span
+                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                  user.is_active
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-red-100 text-red-800'
+                                }`}
                               >
-                                <KeyIcon className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteUser(user)}
-                                className="text-red-600 hover:text-red-900 flex items-center"
-                                title="Delete User"
-                              >
-                                <TrashIcon className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                                {user.is_active ? 'Active' : 'Inactive'}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className="text-gray-600">{formatDate(user.created_at)}</span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => handleResetPassword(user)}
+                                  className="text-indigo-600 hover:text-indigo-900 flex items-center"
+                                  title="Reset Password"
+                                >
+                                  <KeyIcon className="h-4 w-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteUser(user)}
+                                  className="text-red-600 hover:text-red-900 flex items-center"
+                                  title="Delete User"
+                                >
+                                  <TrashIcon className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      )}
                     </tbody>
                   </table>
                 </div>

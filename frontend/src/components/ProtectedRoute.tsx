@@ -15,14 +15,12 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
   useEffect(() => {
     if (!isLoading) {
       if (!user && !isAdmin) {
-        console.log('ProtectedRoute: No user or admin, redirecting to login');
         setRedirecting(true);
         router.push('/auth/login');
         return;
       }
 
       if (adminOnly && !isAdmin) {
-        console.log('ProtectedRoute: Admin required but user is not admin, redirecting to home');
         setRedirecting(true);
         router.push('/');
         return;

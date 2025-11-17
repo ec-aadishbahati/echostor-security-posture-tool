@@ -39,7 +39,7 @@ export default function Register() {
       });
       toast.success('Registration successful!');
       router.push('/dashboard');
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(formatApiError(error, 'Registration failed'));
     } finally {
       setIsLoading(false);

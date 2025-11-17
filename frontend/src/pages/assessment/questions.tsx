@@ -52,7 +52,7 @@ export default function AssessmentQuestions() {
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, unknown>>({});
   const [comments, setComments] = useState<Record<string, string>>({});
   const [consultationInterest, setConsultationInterest] = useState<boolean | null>(null);
   const [consultationDetails, setConsultationDetails] = useState<string>('');
@@ -86,14 +86,16 @@ export default function AssessmentQuestions() {
       setAssessmentId(_assessment.data.id);
       setSavedProgress(_assessment.data.progress_percentage || 0);
       assessmentAPI.getResponses(_assessment.data.id).then((responseData) => {
-        const existingResponses: Record<string, any> = {};
+        const existingResponses: Record<string, unknown> = {};
         const existingComments: Record<string, string> = {};
-        responseData.data.forEach((response: any) => {
-          existingResponses[response.question_id] = response.answer_value;
-          if (response.comment) {
-            existingComments[response.question_id] = response.comment;
+        responseData.data.forEach(
+          (response: { question_id: string; answer_value: unknown; comment?: string }) => {
+            existingResponses[response.question_id] = response.answer_value;
+            if (response.comment) {
+              existingComments[response.question_id] = response.comment;
+            }
           }
-        });
+        );
         setResponses((prev) => ({ ...prev, ...existingResponses }));
         setComments((prev) => ({ ...prev, ...existingComments }));
       });
@@ -107,17 +109,23 @@ export default function AssessmentQuestions() {
       queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
       crossTabSync.broadcast(SyncEventType.ASSESSMENT_STARTED, data.data.id);
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error('Failed to start assessment:', error);
       const errorMessage =
-        error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+        'Failed to start assessment. Please try again.';
       toast.error(errorMessage);
     },
   });
 
   const saveProgressMutation = useMutation({
-    mutationFn: ({ assessmentId, responses }: { assessmentId: string; responses: any[] }) =>
-      assessmentAPI.saveProgress(assessmentId, responses),
+    mutationFn: ({
+      assessmentId,
+      responses,
+    }: {
+      assessmentId: string;
+      responses: Record<string, unknown>[];
+    }) => assessmentAPI.saveProgress(assessmentId, responses),
     onSuccess: (data, variables) => {
       setLastSaved(new Date());
       if (data.data.progress_percentage !== undefined) {
@@ -126,7 +134,7 @@ export default function AssessmentQuestions() {
       crossTabSync.broadcast(SyncEventType.PROGRESS_SAVED, variables.assessmentId);
       toast.success('Progress saved!');
     },
-    onError: (_error: any) => {
+    onError: (_error: unknown) => {
       toast.error('Failed to save progress');
     },
   });
@@ -138,7 +146,7 @@ export default function AssessmentQuestions() {
       toast.success('Assessment completed!');
       router.push('/reports');
     },
-    onError: (_error: any) => {
+    onError: (_error: unknown) => {
       toast.error('Failed to complete assessment');
     },
   });
@@ -280,7 +288,7 @@ export default function AssessmentQuestions() {
     return { sectionIndex: lastSectionIndex, questionIndex: lastQuestionIndex, allAnswered: true };
   };
 
-  const handleAnswerChange = useCallback((questionId: string, value: any) => {
+  const handleAnswerChange = useCallback((questionId: string, value: unknown) => {
     setResponses((prev) => ({
       ...prev,
       [questionId]: value,
@@ -777,11 +785,11 @@ export default function AssessmentQuestions() {
                             value={option.value}
                             checked={
                               Array.isArray(responses[currentQuestion.id]) &&
-                              responses[currentQuestion.id].includes(option.value)
+                              (responses[currentQuestion.id] as string[]).includes(option.value)
                             }
                             onChange={(e) => {
                               const currentValues = Array.isArray(responses[currentQuestion.id])
-                                ? responses[currentQuestion.id]
+                                ? (responses[currentQuestion.id] as string[])
                                 : [];
 
                               if (e.target.checked) {

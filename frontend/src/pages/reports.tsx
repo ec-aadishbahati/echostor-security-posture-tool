@@ -148,18 +148,42 @@ export default function Reports() {
   };
 
   const completedAssessments = reports.filter(
-    (report: any) => report.assessment?.status === 'completed'
+    (report: {
+      id: string;
+      assessment_id: string;
+      report_type: string;
+      status: string;
+      requested_at: string;
+      completed_at?: string;
+      assessment?: { status?: string; attempt_number?: number; completed_at?: string };
+    }) => report.assessment?.status === 'completed'
   );
 
   const hasStandardReport = (assessmentId: string) => {
     return reports.some(
-      (report: any) => report.assessment_id === assessmentId && report.report_type === 'standard'
+      (report: {
+        id: string;
+        assessment_id: string;
+        report_type: string;
+        status: string;
+        requested_at: string;
+        completed_at?: string;
+        assessment?: { status?: string; attempt_number?: number; completed_at?: string };
+      }) => report.assessment_id === assessmentId && report.report_type === 'standard'
     );
   };
 
   const hasAIReport = (assessmentId: string) => {
     return reports.some(
-      (report: any) => report.assessment_id === assessmentId && report.report_type === 'ai_enhanced'
+      (report: {
+        id: string;
+        assessment_id: string;
+        report_type: string;
+        status: string;
+        requested_at: string;
+        completed_at?: string;
+        assessment?: { status?: string; attempt_number?: number; completed_at?: string };
+      }) => report.assessment_id === assessmentId && report.report_type === 'ai_enhanced'
     );
   };
 
@@ -206,90 +230,106 @@ export default function Reports() {
                 </h3>
 
                 <div className="space-y-4">
-                  {reports.map((report: any) => (
-                    <div
-                      key={report.id}
-                      className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            {getTypeIcon(report.report_type)}
-                            <span
-                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(report.report_type)}`}
-                            >
-                              {report.report_type === 'ai_enhanced'
-                                ? 'AI Enhanced Report'
-                                : 'Standard Report'}
-                            </span>
-                            <span
-                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`}
-                            >
-                              {report.status.toUpperCase()}
-                            </span>
-                          </div>
-
-                          <div className="text-sm text-gray-600 space-y-1">
-                            <p className="font-semibold text-gray-900">
-                              Assessment #{report.assessment?.attempt_number || 1} -{' '}
-                              {
-                                formatDate(
-                                  report.assessment?.completed_at || report.requested_at
-                                ).split(',')[0]
-                              }
-                            </p>
-                            <p>
-                              Assessment completed:{' '}
-                              {formatDate(report.assessment?.completed_at || report.requested_at)}
-                            </p>
-                            <p>Report requested: {formatDate(report.requested_at)}</p>
-                            {report.completed_at && (
-                              <p>Report completed: {formatDate(report.completed_at)}</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          {(report.status === 'completed' || report.status === 'released') && (
-                            <button
-                              onClick={() => handleDownload(report.id)}
-                              disabled={downloadMutation.isPending}
-                              className="btn-secondary inline-flex items-center text-sm"
-                            >
-                              <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
-                              Download
-                            </button>
-                          )}
-
-                          {report.status === 'generating' && (
-                            <div className="flex items-center text-sm text-blue-600">
-                              <ClockIcon className="h-4 w-4 mr-1" />
-                              Generating...
-                            </div>
-                          )}
-
-                          {report.status === 'pending' && report.report_type === 'ai_enhanced' && (
-                            <span className="text-blue-600 text-sm">
-                              AI report requested - awaiting admin generation
-                            </span>
-                          )}
-
-                          {report.status === 'completed' &&
-                            report.report_type === 'ai_enhanced' && (
-                              <span className="text-orange-600 text-sm">
-                                AI report generated - awaiting admin release
+                  {reports.map(
+                    (report: {
+                      id: string;
+                      assessment_id: string;
+                      report_type: string;
+                      status: string;
+                      requested_at: string;
+                      completed_at?: string;
+                      assessment?: {
+                        status?: string;
+                        attempt_number?: number;
+                        completed_at?: string;
+                      };
+                    }) => (
+                      <div
+                        key={report.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              {getTypeIcon(report.report_type)}
+                              <span
+                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(report.report_type)}`}
+                              >
+                                {report.report_type === 'ai_enhanced'
+                                  ? 'AI Enhanced Report'
+                                  : 'Standard Report'}
                               </span>
+                              <span
+                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`}
+                              >
+                                {report.status.toUpperCase()}
+                              </span>
+                            </div>
+
+                            <div className="text-sm text-gray-600 space-y-1">
+                              <p className="font-semibold text-gray-900">
+                                Assessment #{report.assessment?.attempt_number || 1} -{' '}
+                                {
+                                  formatDate(
+                                    report.assessment?.completed_at || report.requested_at
+                                  ).split(',')[0]
+                                }
+                              </p>
+                              <p>
+                                Assessment completed:{' '}
+                                {formatDate(report.assessment?.completed_at || report.requested_at)}
+                              </p>
+                              <p>Report requested: {formatDate(report.requested_at)}</p>
+                              {report.completed_at && (
+                                <p>Report completed: {formatDate(report.completed_at)}</p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {(report.status === 'completed' || report.status === 'released') && (
+                              <button
+                                onClick={() => handleDownload(report.id)}
+                                disabled={downloadMutation.isPending}
+                                className="btn-secondary inline-flex items-center text-sm"
+                              >
+                                <ArrowDownTrayIcon className="h-4 w-4 mr-1" />
+                                Download
+                              </button>
                             )}
 
-                          {report.status === 'released' && report.report_type === 'ai_enhanced' && (
-                            <span className="text-green-600 text-sm">
-                              AI report available for download
-                            </span>
-                          )}
+                            {report.status === 'generating' && (
+                              <div className="flex items-center text-sm text-blue-600">
+                                <ClockIcon className="h-4 w-4 mr-1" />
+                                Generating...
+                              </div>
+                            )}
+
+                            {report.status === 'pending' &&
+                              report.report_type === 'ai_enhanced' && (
+                                <span className="text-blue-600 text-sm">
+                                  AI report requested - awaiting admin generation
+                                </span>
+                              )}
+
+                            {report.status === 'completed' &&
+                              report.report_type === 'ai_enhanced' && (
+                                <span className="text-orange-600 text-sm">
+                                  AI report generated - awaiting admin release
+                                </span>
+                              )}
+
+                            {report.status === 'released' &&
+                              report.report_type === 'ai_enhanced' && (
+                                <span className="text-green-600 text-sm">
+                                  AI report available for download
+                                </span>
+                              )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </div>
 
@@ -304,54 +344,69 @@ export default function Reports() {
                   </p>
 
                   <div className="space-y-3">
-                    {completedAssessments.map((report: any) => {
-                      const assessmentId = report.assessment_id;
-                      const hasStandard = hasStandardReport(assessmentId);
-                      const hasAI = hasAIReport(assessmentId);
+                    {completedAssessments.map(
+                      (report: {
+                        id: string;
+                        assessment_id: string;
+                        report_type: string;
+                        status: string;
+                        requested_at: string;
+                        completed_at?: string;
+                        assessment?: {
+                          status?: string;
+                          attempt_number?: number;
+                          completed_at?: string;
+                        };
+                      }) => {
+                        const assessmentId = report.assessment_id;
+                        const hasStandard = hasStandardReport(assessmentId);
+                        const hasAI = hasAIReport(assessmentId);
 
-                      if (hasStandard && hasAI) return null;
+                        if (hasStandard && hasAI) return null;
 
-                      return (
-                        <div
-                          key={assessmentId}
-                          className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
-                        >
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              Assessment completed {formatDate(report.assessment?.completed_at)}
-                            </p>
-                            <p className="text-sm text-gray-600">
-                              {!hasStandard && !hasAI && 'No reports generated yet'}
-                              {hasStandard && !hasAI && 'Standard report available'}
-                              {!hasStandard && hasAI && 'AI report requested'}
-                            </p>
+                        return (
+                          <div
+                            key={assessmentId}
+                            className="flex items-center justify-between p-3 border border-gray-200 rounded-lg"
+                          >
+                            <div>
+                              <p className="font-medium text-gray-900">
+                                Assessment completed{' '}
+                                {formatDate(report.assessment?.completed_at || '')}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {!hasStandard && !hasAI && 'No reports generated yet'}
+                                {hasStandard && !hasAI && 'Standard report available'}
+                                {!hasStandard && hasAI && 'AI report requested'}
+                              </p>
+                            </div>
+
+                            <div className="flex gap-2">
+                              {!hasStandard && (
+                                <button
+                                  onClick={() => handleGenerateReport(assessmentId)}
+                                  disabled={generateReportMutation.isPending}
+                                  className="btn-secondary text-sm"
+                                >
+                                  Generate Standard Report
+                                </button>
+                              )}
+
+                              {!hasAI && (
+                                <button
+                                  onClick={() => handleRequestAIReport(assessmentId)}
+                                  disabled={requestAIReportMutation.isPending}
+                                  className="btn-primary text-sm inline-flex items-center"
+                                >
+                                  <SparklesIcon className="h-4 w-4 mr-1" />
+                                  Request AI Report
+                                </button>
+                              )}
+                            </div>
                           </div>
-
-                          <div className="flex gap-2">
-                            {!hasStandard && (
-                              <button
-                                onClick={() => handleGenerateReport(assessmentId)}
-                                disabled={generateReportMutation.isPending}
-                                className="btn-secondary text-sm"
-                              >
-                                Generate Standard Report
-                              </button>
-                            )}
-
-                            {!hasAI && (
-                              <button
-                                onClick={() => handleRequestAIReport(assessmentId)}
-                                disabled={requestAIReportMutation.isPending}
-                                className="btn-primary text-sm inline-flex items-center"
-                              >
-                                <SparklesIcon className="h-4 w-4 mr-1" />
-                                Request AI Report
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      }
+                    )}
                   </div>
                 </div>
               )}
