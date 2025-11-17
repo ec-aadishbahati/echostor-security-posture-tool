@@ -34,7 +34,7 @@ export default function Login() {
       } else {
         router.push('/dashboard');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(formatApiError(error, 'Login failed'));
     } finally {
       setIsLoading(false);

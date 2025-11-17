@@ -174,64 +174,73 @@ export default function AdminAssessments() {
                       </tr>
                     </thead>
                     <tbody>
-                      {assessments.map((assessment: any) => (
-                        <tr
-                          key={assessment.id}
-                          className="border-b border-gray-100 hover:bg-gray-50"
-                        >
-                          <td className="py-4 px-4">
-                            <div>
-                              <div className="font-medium text-gray-900">
-                                {assessment.user?.full_name || 'Unknown User'}
+                      {assessments.map(
+                        (assessment: {
+                          id: string;
+                          user?: { full_name?: string; email?: string };
+                          status: string;
+                          progress_percentage: number;
+                          started_at: string;
+                          expires_at: string;
+                        }) => (
+                          <tr
+                            key={assessment.id}
+                            className="border-b border-gray-100 hover:bg-gray-50"
+                          >
+                            <td className="py-4 px-4">
+                              <div>
+                                <div className="font-medium text-gray-900">
+                                  {assessment.user?.full_name || 'Unknown User'}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                  {assessment.user?.email || 'No email'}
+                                </div>
                               </div>
-                              <div className="text-sm text-gray-600">
-                                {assessment.user?.email || 'No email'}
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2">
+                                {getStatusIcon(assessment.status)}
+                                <span
+                                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assessment.status)}`}
+                                >
+                                  {assessment.status.replace('_', ' ').toUpperCase()}
+                                </span>
                               </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              {getStatusIcon(assessment.status)}
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2">
+                                <div className="w-24 bg-gray-200 rounded-full h-2">
+                                  <div
+                                    className="bg-primary-600 h-2 rounded-full"
+                                    style={{
+                                      width: `${getProgress(assessment.progress_percentage)}%`,
+                                    }}
+                                  ></div>
+                                </div>
+                                <span className="text-sm text-gray-600">
+                                  {getProgress(assessment.progress_percentage)}%
+                                </span>
+                              </div>
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className="text-gray-600">
+                                {formatDate(assessment.started_at)}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
                               <span
-                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(assessment.status)}`}
+                                className={`text-sm ${
+                                  new Date(assessment.expires_at) < new Date()
+                                    ? 'text-red-600 font-medium'
+                                    : 'text-gray-600'
+                                }`}
                               >
-                                {assessment.status.replace('_', ' ').toUpperCase()}
+                                {formatDate(assessment.expires_at)}
                               </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              <div className="w-24 bg-gray-200 rounded-full h-2">
-                                <div
-                                  className="bg-primary-600 h-2 rounded-full"
-                                  style={{
-                                    width: `${getProgress(assessment.progress_percentage)}%`,
-                                  }}
-                                ></div>
-                              </div>
-                              <span className="text-sm text-gray-600">
-                                {getProgress(assessment.progress_percentage)}%
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className="text-gray-600">
-                              {formatDate(assessment.started_at)}
-                            </span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span
-                              className={`text-sm ${
-                                new Date(assessment.expires_at) < new Date()
-                                  ? 'text-red-600 font-medium'
-                                  : 'text-gray-600'
-                              }`}
-                            >
-                              {formatDate(assessment.expires_at)}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
+                            </td>
+                          </tr>
+                        )
+                      )}
                     </tbody>
                   </table>
                 </div>

@@ -84,46 +84,55 @@ export default function AdminConsultations() {
                 </div>
               ) : (
                 <div className="space-y-6">
-                  {consultations.map((consultation: any) => (
-                    <div key={consultation.id} className="card">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center">
-                          <ChatBubbleLeftRightIcon className="h-6 w-6 text-primary-600 mr-3" />
-                          <div>
-                            <h4 className="font-semibold text-gray-900">
-                              {consultation.user_name}
-                            </h4>
-                            <div className="flex items-center text-sm text-gray-600 mt-1">
-                              <EnvelopeIcon className="h-4 w-4 mr-1" />
-                              {consultation.user_email}
-                              <BuildingOfficeIcon className="h-4 w-4 ml-4 mr-1" />
-                              {consultation.company_name}
+                  {consultations.map(
+                    (consultation: {
+                      id: string;
+                      user_name: string;
+                      user_email: string;
+                      company_name: string;
+                      consultation_details: string;
+                      created_at: string;
+                    }) => (
+                      <div key={consultation.id} className="card">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center">
+                            <ChatBubbleLeftRightIcon className="h-6 w-6 text-primary-600 mr-3" />
+                            <div>
+                              <h4 className="font-semibold text-gray-900">
+                                {consultation.user_name}
+                              </h4>
+                              <div className="flex items-center text-sm text-gray-600 mt-1">
+                                <EnvelopeIcon className="h-4 w-4 mr-1" />
+                                {consultation.user_email}
+                                <BuildingOfficeIcon className="h-4 w-4 ml-4 mr-1" />
+                                {consultation.company_name}
+                              </div>
                             </div>
                           </div>
+                          <div className="text-sm text-gray-500">
+                            {new Date(consultation.created_at).toLocaleDateString()}
+                          </div>
                         </div>
-                        <div className="text-sm text-gray-500">
-                          {new Date(consultation.created_at).toLocaleDateString()}
+
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <h5 className="font-medium text-gray-900 mb-2">Consultation Details:</h5>
+                          <p className="text-gray-700 whitespace-pre-wrap">
+                            {consultation.consultation_details}
+                          </p>
+                        </div>
+
+                        <div className="mt-4 flex justify-end">
+                          <a
+                            href={`mailto:${consultation.user_email}?subject=EchoStor Security Consultation&body=Hello ${consultation.user_name},%0D%0A%0D%0AThank you for your interest in our security consultation services.`}
+                            className="btn-primary inline-flex items-center"
+                          >
+                            <EnvelopeIcon className="h-4 w-4 mr-2" />
+                            Contact User
+                          </a>
                         </div>
                       </div>
-
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <h5 className="font-medium text-gray-900 mb-2">Consultation Details:</h5>
-                        <p className="text-gray-700 whitespace-pre-wrap">
-                          {consultation.consultation_details}
-                        </p>
-                      </div>
-
-                      <div className="mt-4 flex justify-end">
-                        <a
-                          href={`mailto:${consultation.user_email}?subject=EchoStor Security Consultation&body=Hello ${consultation.user_name},%0D%0A%0D%0AThank you for your interest in our security consultation services.`}
-                          className="btn-primary inline-flex items-center"
-                        >
-                          <EnvelopeIcon className="h-4 w-4 mr-2" />
-                          Contact User
-                        </a>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               )}
             </div>

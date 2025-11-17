@@ -2,10 +2,12 @@
  * Formats API error responses into user-friendly strings.
  * Handles FastAPI/Pydantic validation errors and other error formats.
  */
-export function formatApiError(error: any, fallbackMessage = 'An error occurred'): string {
+export function formatApiError(error: unknown, fallbackMessage = 'An error occurred'): string {
   if (!error) return fallbackMessage;
 
-  const detail = error.response?.data?.detail;
+  const detail = (
+    error as { response?: { data?: { detail?: string | unknown[] | { msg?: string } } } }
+  ).response?.data?.detail;
 
   if (!detail) return fallbackMessage;
 
@@ -13,9 +15,10 @@ export function formatApiError(error: any, fallbackMessage = 'An error occurred'
 
   if (Array.isArray(detail)) {
     const messages = detail
-      .map((err) => {
+      .map((err: unknown) => {
         if (typeof err === 'string') return err;
-        if (err?.msg) return err.msg;
+        if (typeof err === 'object' && err !== null && 'msg' in err)
+          return (err as { msg: string }).msg;
         return JSON.stringify(err);
       })
       .filter(Boolean);
@@ -23,8 +26,8 @@ export function formatApiError(error: any, fallbackMessage = 'An error occurred'
     return messages.length > 0 ? messages.join(', ') : fallbackMessage;
   }
 
-  if (typeof detail === 'object' && detail.msg) {
-    return detail.msg;
+  if (typeof detail === 'object' && detail !== null && 'msg' in detail) {
+    return (detail as { msg: string }).msg;
   }
 
   if (typeof detail === 'object') {

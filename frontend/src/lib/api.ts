@@ -41,20 +41,20 @@ if (typeof window !== 'undefined' && E2E_MODE) {
   window.__getAuthToken = () => authToken;
 }
 
-const pendingRequests = new Map<string, Promise<any>>();
+const pendingRequests = new Map<string, Promise<AxiosResponse>>();
 
 function generateRequestKey(config: InternalAxiosRequestConfig): string {
   const { method, url, params, data } = config;
   return `${method}:${url}:${JSON.stringify(params)}:${JSON.stringify(data)}`;
 }
 
-function addPendingRequest(config: InternalAxiosRequestConfig, promise: Promise<any>) {
+function addPendingRequest(config: InternalAxiosRequestConfig, promise: Promise<AxiosResponse>) {
   const key = generateRequestKey(config);
   pendingRequests.set(key, promise);
   promise.finally(() => pendingRequests.delete(key));
 }
 
-function getPendingRequest(config: InternalAxiosRequestConfig): Promise<any> | undefined {
+function getPendingRequest(config: InternalAxiosRequestConfig): Promise<AxiosResponse> | undefined {
   const key = generateRequestKey(config);
   return pendingRequests.get(key);
 }
@@ -105,12 +105,12 @@ api.interceptors.response.use(
     }
     return response;
   },
-  (error: AxiosError | any) => {
-    if (error._isDuplicate) {
+  (error: AxiosError | { _isDuplicate?: boolean; promise?: Promise<AxiosResponse> }) => {
+    if ('_isDuplicate' in error && error._isDuplicate) {
       return error.promise;
     }
 
-    if (error.response?.status === 401) {
+    if ('response' in error && error.response?.status === 401) {
       authToken = null;
       if (typeof window !== 'undefined') {
         Cookies.remove('access_token');
@@ -118,7 +118,7 @@ api.interceptors.response.use(
       }
     }
 
-    if (error.config) {
+    if ('config' in error && error.config) {
       addPendingRequest(error.config, Promise.reject(error));
     }
 
@@ -166,7 +166,7 @@ export const assessmentAPI = {
 
   getResponses: (assessmentId: string) => api.get(`/api/assessment/${assessmentId}/responses`),
 
-  saveProgress: (assessmentId: string, responses: Record<string, any>[]) =>
+  saveProgress: (assessmentId: string, responses: Record<string, unknown>[]) =>
     api.post(`/api/assessment/${assessmentId}/save-progress`, { responses }),
 
   completeAssessment: (assessmentId: string) =>

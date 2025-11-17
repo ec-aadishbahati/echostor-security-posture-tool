@@ -35,7 +35,7 @@ export default function AdminReports() {
       toast.success('AI report generation started');
       queryClient.invalidateQueries({ queryKey: ['adminReports'] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error(formatApiError(error, 'Failed to generate AI report'));
     },
   });
@@ -46,7 +46,7 @@ export default function AdminReports() {
       toast.success('AI report released to user');
       queryClient.invalidateQueries({ queryKey: ['adminReports'] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error(formatApiError(error, 'Failed to release AI report'));
     },
   });
@@ -57,7 +57,7 @@ export default function AdminReports() {
       toast.success('Standard report retry started');
       queryClient.invalidateQueries({ queryKey: ['adminReports'] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       toast.error(formatApiError(error, 'Failed to retry standard report'));
     },
   });
@@ -87,7 +87,7 @@ export default function AdminReports() {
       window.URL.revokeObjectURL(url);
 
       toast.success('Report downloaded successfully');
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(formatApiError(error, 'Failed to download report'));
     } finally {
       setDownloadingReportId(null);
@@ -327,114 +327,138 @@ export default function AdminReports() {
                       </tr>
                     </thead>
                     <tbody>
-                      {reports.map((report: any) => (
-                        <tr key={report.id} className="border-b border-gray-100 hover:bg-gray-50">
-                          <td className="py-4 px-4">
-                            <div>
-                              <div className="font-medium text-gray-900">
-                                {report.assessment?.user?.full_name || 'Unknown User'}
+                      {reports.map(
+                        (report: {
+                          id: string;
+                          assessment_id: string;
+                          report_type: string;
+                          status: string;
+                          requested_at: string;
+                          completed_at?: string;
+                          assessment?: {
+                            user?: { full_name?: string; email?: string; company_name?: string };
+                            status?: string;
+                            attempt_number?: number;
+                            completed_at?: string;
+                          };
+                        }) => (
+                          <tr key={report.id} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-4 px-4">
+                              <div>
+                                <div className="font-medium text-gray-900">
+                                  {report.assessment?.user?.full_name || 'Unknown User'}
+                                </div>
+                                <div className="text-sm text-gray-600">
+                                  {report.assessment?.user?.email || 'No email'}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {report.assessment?.user?.company_name || 'No company'}
+                                </div>
                               </div>
-                              <div className="text-sm text-gray-600">
-                                {report.assessment?.user?.email || 'No email'}
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2">
+                                {getTypeIcon(report.report_type)}
+                                <span
+                                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(report.report_type)}`}
+                                >
+                                  {report.report_type === 'ai_enhanced'
+                                    ? 'AI Enhanced'
+                                    : 'Standard'}
+                                </span>
                               </div>
-                              <div className="text-xs text-gray-500">
-                                {report.assessment?.user?.company_name || 'No company'}
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2">
+                                {getStatusIcon(report.status)}
+                                <span
+                                  className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`}
+                                >
+                                  {report.status.toUpperCase()}
+                                </span>
                               </div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              {getTypeIcon(report.report_type)}
-                              <span
-                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getTypeColor(report.report_type)}`}
-                              >
-                                {report.report_type === 'ai_enhanced' ? 'AI Enhanced' : 'Standard'}
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className="text-gray-600">
+                                {formatDate(report.requested_at)}
                               </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2">
-                              {getStatusIcon(report.status)}
-                              <span
-                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`}
-                              >
-                                {report.status.toUpperCase()}
+                            </td>
+                            <td className="py-4 px-4">
+                              <span className="text-gray-600">
+                                {report.completed_at ? formatDate(report.completed_at) : '-'}
                               </span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className="text-gray-600">{formatDate(report.requested_at)}</span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <span className="text-gray-600">
-                              {report.completed_at ? formatDate(report.completed_at) : '-'}
-                            </span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              {isDownloadable(report.status) ? (
-                                <button
-                                  onClick={() =>
-                                    handleDownloadReport(report.id, report.report_type)
-                                  }
-                                  disabled={downloadingReportId === report.id}
-                                  className="btn-primary text-xs flex items-center"
-                                  title="Download report"
-                                >
-                                  <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
-                                  {downloadingReportId === report.id
-                                    ? 'Downloading...'
-                                    : 'Download'}
-                                </button>
-                              ) : (
-                                <button
-                                  disabled
-                                  className="btn-secondary text-xs flex items-center opacity-50 cursor-not-allowed"
-                                  title={`Report must be completed or released to download (current: ${report.status})`}
-                                >
-                                  <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
-                                  Download
-                                </button>
-                              )}
-
-                              {report.report_type === 'standard' && report.status === 'failed' && (
-                                <button
-                                  onClick={() => retryStandardReportMutation.mutate(report.id)}
-                                  disabled={retryStandardReportMutation.isPending}
-                                  className="btn-secondary text-xs flex items-center"
-                                >
-                                  <ExclamationTriangleIcon className="h-3 w-3 mr-1" />
-                                  {retryStandardReportMutation.isPending ? 'Retrying...' : 'Retry'}
-                                </button>
-                              )}
-                              {report.report_type === 'ai_enhanced' &&
-                                report.status === 'pending' && (
+                            </td>
+                            <td className="py-4 px-4">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                {isDownloadable(report.status) ? (
                                   <button
-                                    onClick={() => generateAIReportMutation.mutate(report.id)}
-                                    disabled={generateAIReportMutation.isPending}
+                                    onClick={() =>
+                                      handleDownloadReport(report.id, report.report_type)
+                                    }
+                                    disabled={downloadingReportId === report.id}
                                     className="btn-primary text-xs flex items-center"
+                                    title="Download report"
                                   >
-                                    <SparklesIcon className="h-3 w-3 mr-1" />
-                                    {generateAIReportMutation.isPending
-                                      ? 'Generating...'
-                                      : 'Generate'}
+                                    <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
+                                    {downloadingReportId === report.id
+                                      ? 'Downloading...'
+                                      : 'Download'}
                                   </button>
-                                )}
-                              {report.report_type === 'ai_enhanced' &&
-                                report.status === 'completed' && (
+                                ) : (
                                   <button
-                                    onClick={() => releaseAIReportMutation.mutate(report.id)}
-                                    disabled={releaseAIReportMutation.isPending}
-                                    className="btn-secondary text-xs flex items-center"
+                                    disabled
+                                    className="btn-secondary text-xs flex items-center opacity-50 cursor-not-allowed"
+                                    title={`Report must be completed or released to download (current: ${report.status})`}
                                   >
-                                    <PaperAirplaneIcon className="h-3 w-3 mr-1" />
-                                    {releaseAIReportMutation.isPending ? 'Releasing...' : 'Release'}
+                                    <ArrowDownTrayIcon className="h-3 w-3 mr-1" />
+                                    Download
                                   </button>
                                 )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+
+                                {report.report_type === 'standard' &&
+                                  report.status === 'failed' && (
+                                    <button
+                                      onClick={() => retryStandardReportMutation.mutate(report.id)}
+                                      disabled={retryStandardReportMutation.isPending}
+                                      className="btn-secondary text-xs flex items-center"
+                                    >
+                                      <ExclamationTriangleIcon className="h-3 w-3 mr-1" />
+                                      {retryStandardReportMutation.isPending
+                                        ? 'Retrying...'
+                                        : 'Retry'}
+                                    </button>
+                                  )}
+                                {report.report_type === 'ai_enhanced' &&
+                                  report.status === 'pending' && (
+                                    <button
+                                      onClick={() => generateAIReportMutation.mutate(report.id)}
+                                      disabled={generateAIReportMutation.isPending}
+                                      className="btn-primary text-xs flex items-center"
+                                    >
+                                      <SparklesIcon className="h-3 w-3 mr-1" />
+                                      {generateAIReportMutation.isPending
+                                        ? 'Generating...'
+                                        : 'Generate'}
+                                    </button>
+                                  )}
+                                {report.report_type === 'ai_enhanced' &&
+                                  report.status === 'completed' && (
+                                    <button
+                                      onClick={() => releaseAIReportMutation.mutate(report.id)}
+                                      disabled={releaseAIReportMutation.isPending}
+                                      className="btn-secondary text-xs flex items-center"
+                                    >
+                                      <PaperAirplaneIcon className="h-3 w-3 mr-1" />
+                                      {releaseAIReportMutation.isPending
+                                        ? 'Releasing...'
+                                        : 'Release'}
+                                    </button>
+                                  )}
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      )}
                     </tbody>
                   </table>
                 </div>

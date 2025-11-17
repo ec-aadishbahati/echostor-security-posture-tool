@@ -34,12 +34,10 @@ function reportMetric(metric: Metric): void {
     delta: metric.delta,
   };
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log('Web Vitals:', webVitalsMetric);
-  }
-
-  if (typeof window !== 'undefined' && (window as any).Sentry) {
-    (window as any).Sentry.captureMessage(`Web Vitals: ${metric.name}`, {
+  if (typeof window !== 'undefined' && (window as unknown as { Sentry?: unknown }).Sentry) {
+    (
+      window as unknown as { Sentry: { captureMessage: (msg: string, opts: unknown) => void } }
+    ).Sentry.captureMessage(`Web Vitals: ${metric.name}`, {
       level: webVitalsMetric.rating === 'poor' ? 'warning' : 'info',
       contexts: {
         webVitals: webVitalsMetric,

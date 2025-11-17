@@ -50,8 +50,11 @@ export default function OpenAIKeysManagement() {
       setNewApiKey('');
       queryClient.invalidateQueries({ queryKey: ['openaiKeys'] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.detail || 'Failed to add API key');
+    onError: (error: unknown) => {
+      toast.error(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+          'Failed to add API key'
+      );
     },
   });
 
@@ -62,8 +65,11 @@ export default function OpenAIKeysManagement() {
       toast.success('API key status updated');
       queryClient.invalidateQueries({ queryKey: ['openaiKeys'] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.detail || 'Failed to update API key');
+    onError: (error: unknown) => {
+      toast.error(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+          'Failed to update API key'
+      );
     },
   });
 
@@ -73,8 +79,11 @@ export default function OpenAIKeysManagement() {
       toast.success('API key deleted successfully');
       queryClient.invalidateQueries({ queryKey: ['openaiKeys'] });
     },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.detail || 'Failed to delete API key');
+    onError: (error: unknown) => {
+      toast.error(
+        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+          'Failed to delete API key'
+      );
     },
   });
 
@@ -83,10 +92,12 @@ export default function OpenAIKeysManagement() {
     onSuccess: (data) => {
       setTestResult(data.data);
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       setTestResult({
         is_valid: false,
-        message: error?.response?.data?.detail || 'Test failed',
+        message:
+          (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+          'Test failed',
       });
     },
   });

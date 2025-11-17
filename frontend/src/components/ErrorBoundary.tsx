@@ -55,8 +55,10 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 }
 
 function logErrorToService(error: Error, errorInfo: React.ErrorInfo) {
-  if (typeof window !== 'undefined' && (window as any).Sentry) {
-    (window as any).Sentry.captureException(error, {
+  if (typeof window !== 'undefined' && (window as { Sentry?: unknown }).Sentry) {
+    (
+      window as unknown as { Sentry: { captureException: (err: Error, opts: unknown) => void } }
+    ).Sentry.captureException(error, {
       contexts: {
         react: {
           componentStack: errorInfo.componentStack,

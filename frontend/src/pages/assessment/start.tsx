@@ -29,16 +29,17 @@ export default function StartAssessment() {
     queryFn: assessmentAPI.getTiers,
   });
 
-  const startAssessmentMutation = useMutation<any, Error, string>({
+  const startAssessmentMutation = useMutation<unknown, Error, string>({
     mutationFn: (tier: string) => assessmentAPI.startWithTier({ tier }),
     onSuccess: () => {
       toast.success('Assessment started!');
       router.push('/assessment/questions');
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error('Failed to start assessment:', error);
       const errorMessage =
-        error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+        'Failed to start assessment. Please try again.';
       toast.error(errorMessage);
     },
   });

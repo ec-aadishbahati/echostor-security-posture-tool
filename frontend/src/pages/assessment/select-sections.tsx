@@ -12,7 +12,7 @@ interface Section {
   id: string;
   title: string;
   description: string;
-  questions: any[];
+  questions: unknown[];
 }
 
 const SECTION_DESCRIPTIONS: Record<string, string> = {
@@ -66,17 +66,18 @@ export default function SelectSections() {
     queryFn: assessmentAPI.getStructure,
   });
 
-  const startAssessmentMutation = useMutation<any, Error, string[]>({
+  const startAssessmentMutation = useMutation<unknown, Error, string[]>({
     mutationFn: (selectedSectionIds: string[]) =>
       assessmentAPI.startAssessmentWithSections(selectedSectionIds),
     onSuccess: () => {
       toast.success('Assessment started!');
       router.push('/assessment/questions');
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error('Failed to start assessment:', error);
       const errorMessage =
-        error?.response?.data?.detail || 'Failed to start assessment. Please try again.';
+        (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail ||
+        'Failed to start assessment. Please try again.';
       toast.error(errorMessage);
     },
   });
