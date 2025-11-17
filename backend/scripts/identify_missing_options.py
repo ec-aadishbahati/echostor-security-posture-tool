@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 Identify questions that need "Not sure" or "Not applicable" options

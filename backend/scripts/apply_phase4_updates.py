@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """
 Apply Phase 4 systematic improvements to questions file

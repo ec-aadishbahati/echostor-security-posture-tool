@@ -1,4 +1,3 @@
-
 """
 Update security_assessment_questions.md to use slug-format options
 
