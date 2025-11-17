@@ -1,7 +1,7 @@
 """add composite index on assessments user_id and status
 
 Revision ID: 1763376500
-Revises: 1763254371
+Revises: 575105e0b6ed
 Create Date: 2025-11-17 10:55:00.000000
 
 """
@@ -10,7 +10,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "1763376500"
-down_revision = "1763254371"
+down_revision = "575105e0b6ed"
 branch_labels = None
 depends_on = None
 
