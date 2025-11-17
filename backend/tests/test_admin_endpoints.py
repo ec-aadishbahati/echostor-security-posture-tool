@@ -1,9 +1,10 @@
 from datetime import UTC
+from typing import Any
 
 from fastapi.testclient import TestClient
 
 
-def test_get_all_users(client: TestClient, admin_token, test_user):
+def test_get_all_users(client: TestClient, admin_token: str, test_user: Any) -> None:
     response = client.get(
         "/api/admin/users", headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -14,7 +15,9 @@ def test_get_all_users(client: TestClient, admin_token, test_user):
     assert len(data["items"]) >= 1
 
 
-def test_get_all_users_with_search(client: TestClient, admin_token, test_user):
+def test_get_all_users_with_search(
+    client: TestClient, admin_token: str, test_user: Any
+) -> None:
     response = client.get(
         "/api/admin/users",
         params={"search": test_user.email},
@@ -26,14 +29,14 @@ def test_get_all_users_with_search(client: TestClient, admin_token, test_user):
     assert len(data["items"]) >= 1
 
 
-def test_get_all_users_unauthorized(client: TestClient, auth_token):
+def test_get_all_users_unauthorized(client: TestClient, auth_token: str) -> None:
     response = client.get(
         "/api/admin/users", headers={"Authorization": f"Bearer {auth_token}"}
     )
     assert response.status_code == 403
 
 
-def test_get_user(client: TestClient, admin_token, test_user):
+def test_get_user(client: TestClient, admin_token: str, test_user: Any) -> None:
     response = client.get(
         f"/api/admin/users/{test_user.id}",
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -43,7 +46,7 @@ def test_get_user(client: TestClient, admin_token, test_user):
     assert data["email"] == test_user.email
 
 
-def test_get_user_not_found(client: TestClient, admin_token):
+def test_get_user_not_found(client: TestClient, admin_token: str) -> None:
     response = client.get(
         "/api/admin/users/nonexistent-id",
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -52,8 +55,8 @@ def test_get_user_not_found(client: TestClient, admin_token):
 
 
 def test_get_user_assessments(
-    client: TestClient, admin_token, test_user, test_assessment
-):
+    client: TestClient, admin_token: str, test_user: Any, test_assessment: Any
+) -> None:
     response = client.get(
         f"/api/admin/users/{test_user.id}/assessments",
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -64,7 +67,9 @@ def test_get_user_assessments(
     assert len(data) >= 1
 
 
-def test_get_all_assessments(client: TestClient, admin_token, test_assessment):
+def test_get_all_assessments(
+    client: TestClient, admin_token: str, test_assessment: Any
+) -> None:
     response = client.get(
         "/api/admin/assessments", headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -75,8 +80,8 @@ def test_get_all_assessments(client: TestClient, admin_token, test_assessment):
 
 
 def test_get_all_assessments_with_status_filter(
-    client: TestClient, admin_token, test_assessment
-):
+    client: TestClient, admin_token: str, test_assessment: Any
+) -> None:
     response = client.get(
         "/api/admin/assessments",
         params={"status": "in_progress"},
@@ -89,8 +94,8 @@ def test_get_all_assessments_with_status_filter(
 
 
 def test_get_dashboard_stats(
-    client: TestClient, admin_token, test_user, test_assessment
-):
+    client: TestClient, admin_token: str, test_user: Any, test_assessment: Any
+) -> None:
     response = client.get(
         "/api/admin/dashboard/stats", headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -102,7 +107,9 @@ def test_get_dashboard_stats(
     assert data["total_users"] >= 1
 
 
-def test_get_users_progress_summary(client: TestClient, admin_token, test_user):
+def test_get_users_progress_summary(
+    client: TestClient, admin_token: str, test_user: Any
+) -> None:
     response = client.get(
         "/api/admin/users-progress-summary",
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -113,7 +120,9 @@ def test_get_users_progress_summary(client: TestClient, admin_token, test_user):
     assert isinstance(data["users_progress"], list)
 
 
-def test_get_all_reports(client: TestClient, admin_token, test_report):
+def test_get_all_reports(
+    client: TestClient, admin_token: str, test_report: Any
+) -> None:
     response = client.get(
         "/api/admin/reports", headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -123,7 +132,7 @@ def test_get_all_reports(client: TestClient, admin_token, test_report):
     assert isinstance(data["items"], list)
 
 
-def test_get_alerts(client: TestClient, admin_token):
+def test_get_alerts(client: TestClient, admin_token: str) -> None:
     response = client.get(
         "/api/admin/alerts", headers={"Authorization": f"Bearer {admin_token}"}
     )
@@ -133,7 +142,7 @@ def test_get_alerts(client: TestClient, admin_token):
     assert isinstance(data["alerts"], list)
 
 
-def test_delete_user(client: TestClient, admin_token, db_session):
+def test_delete_user(client: TestClient, admin_token: str, db_session: Any) -> None:
     from app.core.security import get_password_hash
     from app.models.user import User
 
@@ -158,7 +167,9 @@ def test_delete_user(client: TestClient, admin_token, db_session):
     assert "message" in data
 
 
-def test_reset_user_password(client: TestClient, admin_token, test_user):
+def test_reset_user_password(
+    client: TestClient, admin_token: str, test_user: Any
+) -> None:
     response = client.post(
         f"/api/admin/users/{test_user.id}/reset-password",
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -170,8 +181,8 @@ def test_reset_user_password(client: TestClient, admin_token, test_user):
 
 
 def test_get_consultation_requests(
-    client: TestClient, admin_token, db_session, test_user
-):
+    client: TestClient, admin_token: str, db_session: Any, test_user: Any
+) -> None:
     from datetime import datetime, timedelta
 
     from app.models.assessment import Assessment
@@ -198,7 +209,9 @@ def test_get_consultation_requests(
     assert isinstance(data["items"], list)
 
 
-def test_bulk_update_user_status(client: TestClient, admin_token, test_user):
+def test_bulk_update_user_status(
+    client: TestClient, admin_token: str, test_user: Any
+) -> None:
     response = client.post(
         "/api/admin/users/bulk-update-status",
         headers={"Authorization": f"Bearer {admin_token}"},
@@ -209,7 +222,9 @@ def test_bulk_update_user_status(client: TestClient, admin_token, test_user):
     assert "updated_count" in data
 
 
-def test_bulk_delete_users(client: TestClient, admin_token, db_session):
+def test_bulk_delete_users(
+    client: TestClient, admin_token: str, db_session: Any
+) -> None:
     from app.core.security import get_password_hash
     from app.models.user import User
 

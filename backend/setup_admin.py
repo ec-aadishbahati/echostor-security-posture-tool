@@ -18,13 +18,13 @@ from app.core.security import get_password_hash
 from app.models.user import User
 
 
-def generate_secure_password(length=16):
+def generate_secure_password(length: int = 16) -> str:
     """Generate a secure random password"""
     alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
 
-def setup_production_admin():
+def setup_production_admin() -> None:
     """Set up admin user for production deployment"""
     admin_email = "aadish.bahati@echostor.com"
     admin_password = generate_secure_password()
@@ -34,7 +34,7 @@ def setup_production_admin():
     try:
         existing_admin = db.query(User).filter(User.email == admin_email).first()
         if existing_admin:
-            existing_admin.is_admin = True
+            existing_admin.is_admin = True  # type: ignore[assignment]
             db.commit()
             print(f"✅ Updated existing user {admin_email} with admin privileges")
             print("🔑 Use existing password or reset via admin panel")

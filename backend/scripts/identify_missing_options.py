@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.services.question_parser import parse_assessment_questions
 
 
-def identify_missing_options():
+def identify_missing_options() -> None:
     """Scan questions for missing options"""
 
     md_path = Path(__file__).parent.parent / "data" / "security_assessment_questions.md"
@@ -147,7 +147,7 @@ def identify_missing_options():
     print(f"📝 Report saved to: {output_path}")
     print()
 
-    return needs_not_sure, needs_not_applicable
+    return needs_not_sure, needs_not_applicable  # type: ignore[return-value]
 
 
 if __name__ == "__main__":

@@ -1,7 +1,11 @@
+from typing import Any
+
 from fastapi.testclient import TestClient
 
 
-def test_admin_users_pagination_first_page(client: TestClient, admin_token, test_user):
+def test_admin_users_pagination_first_page(
+    client: TestClient, admin_token: Any, test_user: Any
+) -> None:
     """Test first page of users pagination"""
     response = client.get(
         "/api/admin/users",
@@ -21,7 +25,9 @@ def test_admin_users_pagination_first_page(client: TestClient, admin_token, test
     assert isinstance(data["items"], list)
 
 
-def test_admin_users_pagination_metadata(client: TestClient, admin_token, db_session):
+def test_admin_users_pagination_metadata(
+    client: TestClient, admin_token: Any, db_session: Any
+) -> None:
     """Test pagination metadata calculation"""
     from app.core.security import get_password_hash
     from app.models.user import User
@@ -61,7 +67,9 @@ def test_admin_users_pagination_metadata(client: TestClient, admin_token, db_ses
     assert data["has_prev"] is True
 
 
-def test_admin_assessments_pagination(client: TestClient, admin_token, test_assessment):
+def test_admin_assessments_pagination(
+    client: TestClient, admin_token: Any, test_assessment: Any
+) -> None:
     """Test assessments pagination"""
     response = client.get(
         "/api/admin/assessments",
@@ -76,7 +84,9 @@ def test_admin_assessments_pagination(client: TestClient, admin_token, test_asse
     assert "has_prev" in data
 
 
-def test_admin_reports_pagination(client: TestClient, admin_token, test_report):
+def test_admin_reports_pagination(
+    client: TestClient, admin_token: Any, test_report: Any
+) -> None:
     """Test reports pagination"""
     response = client.get(
         "/api/admin/reports",
@@ -92,8 +102,8 @@ def test_admin_reports_pagination(client: TestClient, admin_token, test_report):
 
 
 def test_consultations_pagination(
-    client: TestClient, admin_token, db_session, test_user
-):
+    client: TestClient, admin_token: Any, db_session: Any, test_user: Any
+) -> None:
     """Test consultations pagination"""
     from datetime import UTC, datetime, timedelta
 
@@ -125,7 +135,7 @@ def test_consultations_pagination(
     assert "has_prev" in data
 
 
-def test_user_reports_pagination(client: TestClient, auth_token):
+def test_user_reports_pagination(client: TestClient, auth_token: str) -> None:
     """Test user reports pagination"""
     response = client.get(
         "/api/reports/user/reports",
@@ -140,7 +150,7 @@ def test_user_reports_pagination(client: TestClient, auth_token):
     assert "has_prev" in data
 
 
-def test_pagination_empty_results(client: TestClient, admin_token):
+def test_pagination_empty_results(client: TestClient, admin_token: str) -> None:
     """Test pagination with no results"""
     response = client.get(
         "/api/admin/users",
@@ -156,7 +166,9 @@ def test_pagination_empty_results(client: TestClient, admin_token):
     assert data["has_prev"] is False
 
 
-def test_pagination_pages_calculation(client: TestClient, admin_token, db_session):
+def test_pagination_pages_calculation(
+    client: TestClient, admin_token: Any, db_session: Any
+) -> None:
     """Test pages calculation in pagination"""
     from app.core.security import get_password_hash
     from app.models.user import User

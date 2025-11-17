@@ -12,27 +12,28 @@ It connects to the database and shows:
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 from sqlalchemy import create_engine, text
 
 from app.core.config import settings
 
 
-def load_mappings():
+def load_mappings() -> Any:
     """Load slug mappings from JSON file"""
     mappings_file = Path(__file__).parent / "slug_mappings.json"
     with open(mappings_file) as f:
         return json.load(f)
 
 
-def preview_migration():
+def preview_migration() -> None:
     """Preview what the migration would do"""
     # Load mappings
     mappings = load_mappings()
     print(f"Loaded mappings for {len(mappings)} questions\n")
 
     # Connect to database
-    engine = create_engine(settings.DATABASE_URL)
+    engine = create_engine(str(settings.DATABASE_URL))
 
     with engine.connect() as conn:
         # Get total response count

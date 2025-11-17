@@ -1,5 +1,7 @@
 """Tests for AI services: prompt_builder, benchmark_context, and ai_cache"""
 
+from typing import Any
+
 import pytest
 from pydantic import ValidationError
 
@@ -26,7 +28,7 @@ class MockSection:
 class TestPromptBuilder:
     """Tests for prompt_builder service"""
 
-    def test_build_section_prompt_basic(self):
+    def test_build_section_prompt_basic(self) -> None:
         """Test basic prompt building without curated context"""
         section = MockSection(
             title="Access Control",
@@ -47,7 +49,7 @@ class TestPromptBuilder:
         assert "STRICT REQUIREMENTS" in prompt
         assert redaction_count == 0
 
-    def test_build_section_prompt_with_curated_context(self):
+    def test_build_section_prompt_with_curated_context(self) -> None:
         """Test prompt building with curated benchmark context"""
         section = MockSection(
             title="Authentication",
@@ -67,10 +69,10 @@ class TestPromptBuilder:
         assert "Multi-factor authentication" in prompt
         assert redaction_count == 0
 
-    def test_build_section_prompt_empty_responses(self):
+    def test_build_section_prompt_empty_responses(self) -> None:
         """Test prompt building with empty responses list"""
         section = MockSection(title="Test", description="Test description")
-        section_responses = []
+        section_responses: list[Any] = []
 
         prompt, redaction_count = build_section_prompt_v2(section, section_responses)
 
@@ -83,7 +85,7 @@ class TestPromptBuilder:
 class TestBenchmarkContextService:
     """Tests for benchmark_context service"""
 
-    def test_get_relevant_context_authentication(self):
+    def test_get_relevant_context_authentication(self) -> None:
         """Test getting relevant context for authentication-related sections"""
         service = BenchmarkContextService()
 
@@ -96,7 +98,7 @@ class TestBenchmarkContextService:
         assert context != ""
         assert "RELEVANT INDUSTRY CONTROLS" in context
 
-    def test_get_relevant_context_access_control(self):
+    def test_get_relevant_context_access_control(self) -> None:
         """Test getting relevant context for access control sections"""
         service = BenchmarkContextService()
 
@@ -109,7 +111,7 @@ class TestBenchmarkContextService:
         assert context != ""
         assert "RELEVANT INDUSTRY CONTROLS" in context
 
-    def test_get_relevant_context_no_matches(self):
+    def test_get_relevant_context_no_matches(self) -> None:
         """Test getting context when no keywords match"""
         service = BenchmarkContextService()
 
@@ -121,7 +123,7 @@ class TestBenchmarkContextService:
 
         assert context == ""
 
-    def test_extract_keywords(self):
+    def test_extract_keywords(self) -> None:
         """Test keyword extraction from text"""
         service = BenchmarkContextService()
 
@@ -139,7 +141,7 @@ class TestBenchmarkContextService:
 class TestAICacheService:
     """Tests for ai_cache service"""
 
-    def test_compute_answers_hash_deterministic(self):
+    def test_compute_answers_hash_deterministic(self) -> None:
         """Test that hash computation is deterministic"""
         service = AICacheService()
 
@@ -154,7 +156,7 @@ class TestAICacheService:
         assert hash1 == hash2
         assert len(hash1) == 64  # SHA-256 hex digest
 
-    def test_compute_answers_hash_order_independent(self):
+    def test_compute_answers_hash_order_independent(self) -> None:
         """Test that hash is order-independent"""
         service = AICacheService()
 
@@ -172,7 +174,7 @@ class TestAICacheService:
 
         assert hash1 == hash2
 
-    def test_compute_answers_hash_normalization(self):
+    def test_compute_answers_hash_normalization(self) -> None:
         """Test that hash normalizes whitespace and case"""
         service = AICacheService()
 
@@ -184,7 +186,7 @@ class TestAICacheService:
 
         assert hash1 == hash2
 
-    def test_compute_answers_hash_different_answers(self):
+    def test_compute_answers_hash_different_answers(self) -> None:
         """Test that different answers produce different hashes"""
         service = AICacheService()
 
@@ -200,9 +202,9 @@ class TestAICacheService:
 class TestAIArtifactSchemas:
     """Tests for AI artifact Pydantic schemas and validators"""
 
-    def test_recommendation_requires_linked_signals(self):
+    def test_recommendation_requires_linked_signals(self) -> None:
         """Test that recommendations must have linked signals"""
-        rec = Recommendation(
+        rec = Recommendation(  # type: ignore[call-arg]
             action="Implement MFA for all accounts",
             rationale="MFA reduces account compromise risk",
             linked_signals=["Q1", "Q7"],
@@ -213,7 +215,7 @@ class TestAIArtifactSchemas:
         assert rec.linked_signals == ["Q1", "Q7"]
 
         with pytest.raises(ValidationError):
-            Recommendation(
+            Recommendation(  # type: ignore[call-arg]
                 action="Implement MFA",
                 rationale="Important",
                 linked_signals=[],  # Empty list should fail
@@ -222,7 +224,7 @@ class TestAIArtifactSchemas:
                 timeline="30-day",
             )
 
-    def test_gap_requires_linked_signals(self):
+    def test_gap_requires_linked_signals(self) -> None:
         """Test that gaps must have linked signals"""
         gap = Gap(
             gap="No MFA for admin accounts",
@@ -238,9 +240,9 @@ class TestAIArtifactSchemas:
                 severity="High",
             )
 
-    def test_section_artifact_validates_gaps_have_signals(self):
+    def test_section_artifact_validates_gaps_have_signals(self) -> None:
         """Test that SectionAIArtifact validates gaps have signals"""
-        artifact = SectionAIArtifact(
+        artifact = SectionAIArtifact(  # type: ignore[call-arg]
             risk_level="High",
             risk_explanation="Multiple critical gaps identified in authentication controls",
             strengths=["Strong password policy"],
@@ -252,7 +254,7 @@ class TestAIArtifactSchemas:
                 )
             ],
             recommendations=[
-                Recommendation(
+                Recommendation(  # type: ignore[call-arg]
                     action="Implement MFA for all accounts",
                     rationale="Multi-factor authentication reduces the risk of account compromise significantly",
                     linked_signals=["Q7"],
@@ -262,7 +264,7 @@ class TestAIArtifactSchemas:
                 )
             ],
             benchmarks=[
-                Benchmark(
+                Benchmark(  # type: ignore[call-arg]
                     control="Multi-Factor Authentication",
                     status="Missing",
                     framework="NIST",
@@ -272,10 +274,10 @@ class TestAIArtifactSchemas:
         )
         assert artifact.risk_level == "High"
 
-    def test_section_artifact_validates_recommendations_have_signals(self):
+    def test_section_artifact_validates_recommendations_have_signals(self) -> None:
         """Test that SectionAIArtifact validates recommendations have signals"""
         with pytest.raises(ValidationError):
-            SectionAIArtifact(
+            SectionAIArtifact(  # type: ignore[call-arg]
                 risk_level="Medium",
                 risk_explanation="Some gaps identified",
                 strengths=["Good policy"],
@@ -287,7 +289,7 @@ class TestAIArtifactSchemas:
                     )
                 ],
                 recommendations=[
-                    Recommendation(
+                    Recommendation(  # type: ignore[call-arg]
                         action="Fix something",
                         rationale="Important",
                         linked_signals=[],  # Empty - should fail
@@ -297,7 +299,7 @@ class TestAIArtifactSchemas:
                     )
                 ],
                 benchmarks=[
-                    Benchmark(
+                    Benchmark(  # type: ignore[call-arg]
                         control="Test",
                         status="Partial",
                         framework="NIST",
@@ -305,7 +307,7 @@ class TestAIArtifactSchemas:
                 ],
             )
 
-    def test_signal_format_validation(self):
+    def test_signal_format_validation(self) -> None:
         """Test that signal IDs must start with 'Q'"""
         gap = Gap(
             gap="Test gap for validation purposes",

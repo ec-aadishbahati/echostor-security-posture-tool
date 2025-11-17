@@ -12,9 +12,10 @@ This linter checks for:
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 
-def lint_questions():
+def lint_questions() -> None:
     """Lint question library for common issues"""
     errors = []
     warnings = []
@@ -34,7 +35,7 @@ def lint_questions():
 
     current_question = None
     current_section = None
-    questions = []
+    questions: list[Any] = []
 
     for i, line in enumerate(lines, start=1):
         line_stripped = line.strip()

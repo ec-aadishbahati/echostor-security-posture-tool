@@ -1,23 +1,25 @@
+from typing import Any
+
 from fastapi.testclient import TestClient
 
 
-def test_health_endpoint(client: TestClient):
+def test_health_endpoint(client: TestClient) -> None:
     response = client.get("/health")
     assert response.status_code == 200
     assert "status" in response.json()
 
 
-def test_root_endpoint(client: TestClient):
+def test_root_endpoint(client: TestClient) -> None:
     response = client.get("/")
     assert response.status_code == 200
 
 
-def test_docs_endpoint(client: TestClient):
+def test_docs_endpoint(client: TestClient) -> None:
     response = client.get("/docs")
     assert response.status_code == 200
 
 
-def test_register_new_user(client: TestClient):
+def test_register_new_user(client: TestClient) -> None:
     response = client.post(
         "/api/auth/register",
         json={
@@ -36,7 +38,7 @@ def test_register_new_user(client: TestClient):
     assert data["user"]["company_name"] == "New Company"
 
 
-def test_register_duplicate_email(client: TestClient, test_user):
+def test_register_duplicate_email(client: TestClient, test_user: Any) -> None:
     response = client.post(
         "/api/auth/register",
         json={
@@ -50,7 +52,7 @@ def test_register_duplicate_email(client: TestClient, test_user):
     assert "already registered" in response.json()["detail"].lower()
 
 
-def test_login_valid_credentials(client: TestClient, test_user):
+def test_login_valid_credentials(client: TestClient, test_user: Any) -> None:
     response = client.post(
         "/api/auth/login",
         json={"email": test_user.email, "password": "TestPass123!"},
@@ -62,7 +64,7 @@ def test_login_valid_credentials(client: TestClient, test_user):
     assert data["user"]["email"] == test_user.email
 
 
-def test_login_invalid_password(client: TestClient, test_user):
+def test_login_invalid_password(client: TestClient, test_user: Any) -> None:
     response = client.post(
         "/api/auth/login", json={"email": test_user.email, "password": "wrongpassword"}
     )
@@ -70,7 +72,7 @@ def test_login_invalid_password(client: TestClient, test_user):
     assert "incorrect" in response.json()["detail"].lower()
 
 
-def test_login_nonexistent_user(client: TestClient):
+def test_login_nonexistent_user(client: TestClient) -> None:
     response = client.post(
         "/api/auth/login",
         json={"email": "nonexistent@example.com", "password": "password123"},
@@ -78,7 +80,9 @@ def test_login_nonexistent_user(client: TestClient):
     assert response.status_code == 401
 
 
-def test_get_current_user_authenticated(client: TestClient, test_user, auth_token):
+def test_get_current_user_authenticated(
+    client: TestClient, test_user: Any, auth_token: str
+) -> None:
     response = client.get(
         "/api/auth/me", headers={"Authorization": f"Bearer {auth_token}"}
     )
@@ -89,19 +93,19 @@ def test_get_current_user_authenticated(client: TestClient, test_user, auth_toke
     assert data["company_name"] == test_user.company_name
 
 
-def test_get_current_user_unauthenticated(client: TestClient):
+def test_get_current_user_unauthenticated(client: TestClient) -> None:
     response = client.get("/api/auth/me")
     assert response.status_code == 403
 
 
-def test_get_current_user_invalid_token(client: TestClient):
+def test_get_current_user_invalid_token(client: TestClient) -> None:
     response = client.get(
         "/api/auth/me", headers={"Authorization": "Bearer invalid_token_here"}
     )
     assert response.status_code == 401
 
 
-def test_admin_user_login(client: TestClient, test_admin_user):
+def test_admin_user_login(client: TestClient, test_admin_user: Any) -> None:
     response = client.post(
         "/api/auth/login",
         json={"email": test_admin_user.email, "password": "AdminPass123!"},
@@ -112,7 +116,7 @@ def test_admin_user_login(client: TestClient, test_admin_user):
     assert data["user"]["email"] == test_admin_user.email
 
 
-def test_password_hashing():
+def test_password_hashing() -> None:
     """Test password hashing and verification"""
     from app.core.security import get_password_hash, verify_password
 
@@ -124,7 +128,7 @@ def test_password_hashing():
     assert not verify_password("wrongpassword", hashed)
 
 
-def test_token_verification():
+def test_token_verification() -> None:
     """Test token creation and verification"""
     from app.core.security import create_access_token, verify_token
 
@@ -139,7 +143,7 @@ def test_token_verification():
     assert decoded["user_id"] == "123"
 
 
-def test_admin_token_creation():
+def test_admin_token_creation() -> None:
     """Test creating admin token with is_admin flag"""
     from app.core.security import create_access_token, verify_token
 
@@ -151,7 +155,7 @@ def test_admin_token_creation():
     assert decoded["is_admin"]
 
 
-def test_generate_admin_password():
+def test_generate_admin_password() -> None:
     """Test admin password generation"""
     from app.core.security import generate_admin_password, verify_password
 

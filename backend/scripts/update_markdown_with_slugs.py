@@ -16,7 +16,7 @@ from datetime import datetime
 from pathlib import Path
 
 
-def update_markdown_with_slugs(md_file_path: str, mappings_file_path: str):
+def update_markdown_with_slugs(md_file_path: str, mappings_file_path: str) -> None:
     """
     Update markdown file to use slug-format options
 
@@ -113,7 +113,7 @@ def update_markdown_with_slugs(md_file_path: str, mappings_file_path: str):
     print(f"  Slug-format options found: {len(slug_options)}")
 
 
-def main():
+def main() -> None:
     # Paths
     script_dir = Path(__file__).parent
     md_file = script_dir.parent / "data" / "security_assessment_questions.md"

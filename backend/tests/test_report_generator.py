@@ -1,3 +1,4 @@
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 from app.schemas.assessment import Question, QuestionOption
@@ -13,7 +14,7 @@ from app.services.report_generator import (
 )
 
 
-def test_calculate_question_score_yes():
+def test_calculate_question_score_yes() -> None:
     from app.models.assessment import AssessmentResponse
 
     response = MagicMock(spec=AssessmentResponse)
@@ -27,7 +28,7 @@ def test_calculate_question_score_yes():
     assert score == 5
 
 
-def test_calculate_question_score_no():
+def test_calculate_question_score_no() -> None:
     from app.models.assessment import AssessmentResponse
 
     response = MagicMock(spec=AssessmentResponse)
@@ -41,7 +42,7 @@ def test_calculate_question_score_no():
     assert score == 0
 
 
-def test_calculate_question_score_multiple_choice():
+def test_calculate_question_score_multiple_choice() -> None:
     from app.models.assessment import AssessmentResponse
 
     response = MagicMock(spec=AssessmentResponse)
@@ -55,7 +56,7 @@ def test_calculate_question_score_multiple_choice():
     assert score == 3
 
 
-def test_calculate_question_score_na():
+def test_calculate_question_score_na() -> None:
     from app.models.assessment import AssessmentResponse
 
     response = MagicMock(spec=AssessmentResponse)
@@ -69,7 +70,7 @@ def test_calculate_question_score_na():
     assert score == 0
 
 
-def test_calculate_assessment_scores(test_assessment_response):
+def test_calculate_assessment_scores(test_assessment_response: Any) -> None:
     from app.services.question_parser import load_assessment_structure
 
     structure = load_assessment_structure()
@@ -83,11 +84,11 @@ def test_calculate_assessment_scores(test_assessment_response):
     assert scores["overall"]["max_score"] > 0
 
 
-def test_calculate_assessment_scores_empty():
+def test_calculate_assessment_scores_empty() -> None:
     from app.services.question_parser import load_assessment_structure
 
     structure = load_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     scores = calculate_assessment_scores(responses, structure)
 
@@ -95,13 +96,13 @@ def test_calculate_assessment_scores_empty():
     assert scores["overall"]["max_score"] > 0
 
 
-def test_generate_ai_insights(encryption_key, mocker):
+def test_generate_ai_insights(encryption_key: str, mocker: Any) -> None:
     from app.services.openai_key_manager import OpenAIKeyManager
     from app.services.question_parser import create_sample_assessment_structure
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -138,8 +139,11 @@ def test_generate_ai_insights(encryption_key, mocker):
 
 
 def test_generate_standard_report(
-    db_session, test_report, completed_assessment, test_assessment_response
-):
+    db_session: Any,
+    test_report: Any,
+    completed_assessment: Any,
+    test_assessment_response: Any,
+) -> None:
     from app.services.report_generator import generate_standard_report
 
     with patch("app.services.report_generator.HTML") as mock_html_class:
@@ -163,8 +167,11 @@ def test_generate_standard_report(
 
 
 def test_generate_ai_report(
-    encryption_key, db_session, completed_assessment, test_assessment_response
-):
+    encryption_key: str,
+    db_session: Any,
+    completed_assessment: Any,
+    test_assessment_response: Any,
+) -> None:
     from app.models.assessment import Report
     from app.services.report_generator import generate_ai_report
 
@@ -213,7 +220,7 @@ def test_generate_ai_report(
             db_session.refresh(ai_report)
 
 
-def test_format_responses_for_ai():
+def test_format_responses_for_ai() -> None:
     from app.services.report_generator import format_responses_for_ai
 
     responses = [
@@ -231,7 +238,7 @@ def test_format_responses_for_ai():
     assert "Weight: 3" in result
 
 
-def test_generate_recommendations():
+def test_generate_recommendations() -> None:
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_recommendations
 
@@ -249,7 +256,7 @@ def test_generate_recommendations():
     assert len(recommendations) > 0
 
 
-def test_generate_recommendations_high_score():
+def test_generate_recommendations_high_score() -> None:
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_recommendations
 
@@ -266,7 +273,9 @@ def test_generate_recommendations_high_score():
     assert isinstance(recommendations, list)
 
 
-def test_generate_report_html(completed_assessment, test_assessment_response):
+def test_generate_report_html(
+    completed_assessment: Any, test_assessment_response: Any
+) -> None:
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_report_html
 
@@ -300,7 +309,9 @@ def test_generate_report_html(completed_assessment, test_assessment_response):
     assert len(html) > 100
 
 
-def test_generate_ai_report_html(completed_assessment, test_assessment_response):
+def test_generate_ai_report_html(
+    completed_assessment: Any, test_assessment_response: Any
+) -> None:
     from app.schemas.ai_artifacts import (
         Benchmark,
         Gap,
@@ -405,7 +416,7 @@ def test_generate_ai_report_html(completed_assessment, test_assessment_response)
     assert len(html) > 100
 
 
-def test_normalize_answer_display_yes_no():
+def test_normalize_answer_display_yes_no() -> None:
     question = MagicMock(spec=Question)
     question.type = "yes_no"
 
@@ -417,7 +428,7 @@ def test_normalize_answer_display_yes_no():
     assert normalize_answer_display(None, question) == "Not answered"
 
 
-def test_normalize_answer_display_multiple_choice():
+def test_normalize_answer_display_multiple_choice() -> None:
     option1 = QuestionOption(
         value="opt1", label="Option One", description="First option"
     )
@@ -435,7 +446,7 @@ def test_normalize_answer_display_multiple_choice():
     assert normalize_answer_display(None, question) == "Not answered"
 
 
-def test_normalize_answer_display_multiple_select():
+def test_normalize_answer_display_multiple_select() -> None:
     option1 = QuestionOption(
         value="opt1", label="Option One", description="First option"
     )
@@ -455,7 +466,7 @@ def test_normalize_answer_display_multiple_select():
     assert normalize_answer_display(None, question) == "Not answered"
 
 
-def test_normalize_answer_display_text():
+def test_normalize_answer_display_text() -> None:
     question = MagicMock(spec=Question)
     question.type = "text"
 
@@ -466,7 +477,7 @@ def test_normalize_answer_display_text():
     assert normalize_answer_display(None, question) == "Not answered"
 
 
-def test_get_maturity_tier():
+def test_get_maturity_tier() -> None:
     tier, css = get_maturity_tier(80.0)
     assert tier == "Strong"
     assert css == "high-score"
@@ -486,7 +497,7 @@ def test_get_maturity_tier():
     assert tier == "Needs Improvement"
 
 
-def test_calculate_confidence_level_high():
+def test_calculate_confidence_level_high() -> None:
     scores = {
         "overall": {"percentage": 85.0},
         "section_1": {"percentage": 80.0, "completion_rate": 85.0},
@@ -498,7 +509,7 @@ def test_calculate_confidence_level_high():
     assert "substantially completed" in description
 
 
-def test_calculate_confidence_level_medium():
+def test_calculate_confidence_level_medium() -> None:
     scores = {
         "overall": {"percentage": 70.0},
         "section_1": {"percentage": 65.0, "completion_rate": 65.0},
@@ -510,7 +521,7 @@ def test_calculate_confidence_level_medium():
     assert "generally reliable" in description
 
 
-def test_calculate_confidence_level_low():
+def test_calculate_confidence_level_low() -> None:
     scores = {
         "overall": {"percentage": 50.0},
         "section_1": {"percentage": 40.0, "completion_rate": 50.0},
@@ -522,7 +533,7 @@ def test_calculate_confidence_level_low():
     assert "gaps" in description
 
 
-def test_generate_prioritized_remediation():
+def test_generate_prioritized_remediation() -> None:
     from app.services.question_parser import create_sample_assessment_structure
 
     structure = create_sample_assessment_structure()
@@ -548,7 +559,7 @@ def test_generate_prioritized_remediation():
     assert p2_item["timeframe"] == "30-90 days"
 
 
-def test_generate_section_summaries():
+def test_generate_section_summaries() -> None:
     from app.models.assessment import AssessmentResponse
     from app.services.question_parser import create_sample_assessment_structure
 
@@ -593,7 +604,9 @@ def test_generate_section_summaries():
     assert len(summary1["recommendations"]) > 0
 
 
-def test_generate_report_html_enhanced(completed_assessment, test_assessment_response):
+def test_generate_report_html_enhanced(
+    completed_assessment: Any, test_assessment_response: Any
+) -> None:
     from app.models.assessment import AssessmentResponse
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_report_html
@@ -650,13 +663,15 @@ def test_generate_report_html_enhanced(completed_assessment, test_assessment_res
     assert "Disclaimer" in html
 
 
-def test_generate_ai_insights_validation_error(encryption_key, mocker):
+def test_generate_ai_insights_validation_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from app.services.openai_key_manager import OpenAIKeyManager
     from app.services.question_parser import create_sample_assessment_structure
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -693,7 +708,9 @@ def test_generate_ai_insights_validation_error(encryption_key, mocker):
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_authentication_error(encryption_key, mocker):
+def test_generate_ai_insights_authentication_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import AuthenticationError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -701,7 +718,7 @@ def test_generate_ai_insights_authentication_error(encryption_key, mocker):
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -734,7 +751,9 @@ def test_generate_ai_insights_authentication_error(encryption_key, mocker):
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_rate_limit_error(encryption_key, mocker):
+def test_generate_ai_insights_rate_limit_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import RateLimitError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -742,7 +761,7 @@ def test_generate_ai_insights_rate_limit_error(encryption_key, mocker):
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -775,7 +794,9 @@ def test_generate_ai_insights_rate_limit_error(encryption_key, mocker):
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_api_connection_error(encryption_key, mocker):
+def test_generate_ai_insights_api_connection_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import APIConnectionError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -783,7 +804,7 @@ def test_generate_ai_insights_api_connection_error(encryption_key, mocker):
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -817,7 +838,9 @@ def test_generate_ai_insights_api_connection_error(encryption_key, mocker):
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_sqlalchemy_error(encryption_key, mocker):
+def test_generate_ai_insights_sqlalchemy_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from sqlalchemy.exc import SQLAlchemyError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -825,7 +848,7 @@ def test_generate_ai_insights_sqlalchemy_error(encryption_key, mocker):
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -866,7 +889,9 @@ def test_generate_ai_insights_sqlalchemy_error(encryption_key, mocker):
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_authentication_error_with_retry(encryption_key, mocker):
+def test_generate_ai_insights_authentication_error_with_retry(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import AuthenticationError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -874,7 +899,7 @@ def test_generate_ai_insights_authentication_error_with_retry(encryption_key, mo
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -906,7 +931,7 @@ def test_generate_ai_insights_authentication_error_with_retry(encryption_key, mo
 
         call_count = [0]
 
-        def create_client_side_effect(*args, **kwargs):
+        def create_client_side_effect(*args: Any, **kwargs: Any) -> Any:
             call_count[0] += 1
             if call_count[0] == 1:
                 return mock_client1
@@ -940,7 +965,9 @@ def test_generate_ai_insights_authentication_error_with_retry(encryption_key, mo
             assert "Test insight" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key, mocker):
+def test_generate_ai_insights_rate_limit_error_with_retry(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import RateLimitError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -948,7 +975,7 @@ def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key, mocker
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -980,7 +1007,7 @@ def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key, mocker
 
         call_count = [0]
 
-        def create_client_side_effect(*args, **kwargs):
+        def create_client_side_effect(*args: Any, **kwargs: Any) -> Any:
             call_count[0] += 1
             if call_count[0] == 1:
                 return mock_client1
@@ -1014,7 +1041,9 @@ def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key, mocker
             assert "Test insight" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_api_error_with_retry(encryption_key, mocker):
+def test_generate_ai_insights_api_error_with_retry(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import APIConnectionError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -1022,7 +1051,7 @@ def test_generate_ai_insights_api_error_with_retry(encryption_key, mocker):
     from app.utils.encryption import encrypt_api_key
 
     structure = create_sample_assessment_structure()
-    responses = []
+    responses: list[Any] = []
 
     mock_db = mocker.MagicMock()
     key_manager = OpenAIKeyManager(mock_db)
@@ -1054,7 +1083,7 @@ def test_generate_ai_insights_api_error_with_retry(encryption_key, mocker):
 
         call_count = [0]
 
-        def create_client_side_effect(*args, **kwargs):
+        def create_client_side_effect(*args: Any, **kwargs: Any) -> Any:
             call_count[0] += 1
             if call_count[0] == 1:
                 return mock_client1
@@ -1089,7 +1118,7 @@ def test_generate_ai_insights_api_error_with_retry(encryption_key, mocker):
             assert "Test insight" in artifact.risk_explanation
 
 
-def test_create_degraded_artifact():
+def test_create_degraded_artifact() -> None:
     from app.services.report_generator import create_degraded_artifact
 
     artifact = create_degraded_artifact("test-section-id")

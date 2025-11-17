@@ -9,12 +9,14 @@ Tests cover:
 - User cannot modify other user's data
 """
 
+from typing import Any
+
 from fastapi.testclient import TestClient
 
 
 def test_user_cannot_access_other_user_assessment(
-    client: TestClient, auth_token, test_user2_token, db_session
-):
+    client: TestClient, auth_token: str, test_user2_token: str, db_session: Any
+) -> None:
     """Test that User A cannot access User B's assessment"""
     response = client.post(
         "/api/assessment/start", headers={"Authorization": f"Bearer {auth_token}"}
@@ -30,8 +32,12 @@ def test_user_cannot_access_other_user_assessment(
 
 
 def test_user_cannot_access_other_user_report(
-    client: TestClient, auth_token, test_user2_token, completed_assessment, test_report
-):
+    client: TestClient,
+    auth_token: str,
+    test_user2_token: str,
+    completed_assessment: Any,
+    test_report: Any,
+) -> None:
     """Test that User A cannot download User B's report"""
     response = client.get(
         f"/api/reports/{test_report.id}/download",
@@ -40,7 +46,9 @@ def test_user_cannot_access_other_user_report(
     assert response.status_code == 403
 
 
-def test_user_cannot_access_admin_endpoints(client: TestClient, auth_token):
+def test_user_cannot_access_admin_endpoints(
+    client: TestClient, auth_token: str
+) -> None:
     """Test that regular user cannot access admin endpoints"""
     admin_endpoints = [
         "/api/admin/users",
@@ -60,8 +68,8 @@ def test_user_cannot_access_admin_endpoints(client: TestClient, auth_token):
 
 
 def test_admin_can_access_all_user_data(
-    client: TestClient, admin_token, auth_token, test_assessment
-):
+    client: TestClient, admin_token: str, auth_token: str, test_assessment: Any
+) -> None:
     """Test that admin can access all user assessments and reports"""
     response = client.get(
         "/api/admin/assessments", headers={"Authorization": f"Bearer {admin_token}"}
@@ -71,7 +79,7 @@ def test_admin_can_access_all_user_data(
     assert any(a["id"] == str(test_assessment.id) for a in assessments)
 
 
-def test_unauthenticated_cannot_access_protected_endpoints(client: TestClient):
+def test_unauthenticated_cannot_access_protected_endpoints(client: TestClient) -> None:
     """Test that unauthenticated requests are rejected"""
     protected_endpoints = [
         ("/api/assessment/current", "GET"),
@@ -91,8 +99,8 @@ def test_unauthenticated_cannot_access_protected_endpoints(client: TestClient):
 
 
 def test_user_cannot_modify_other_user_assessment(
-    client: TestClient, auth_token, test_user2_token, db_session
-):
+    client: TestClient, auth_token: str, test_user2_token: str, db_session: Any
+) -> None:
     """Test that User A cannot save progress to User B's assessment"""
     response = client.post(
         "/api/assessment/start", headers={"Authorization": f"Bearer {auth_token}"}
@@ -109,8 +117,8 @@ def test_user_cannot_modify_other_user_assessment(
 
 
 def test_user_cannot_complete_other_user_assessment(
-    client: TestClient, auth_token, test_user2_token, db_session
-):
+    client: TestClient, auth_token: str, test_user2_token: str, db_session: Any
+) -> None:
     """Test that User A cannot complete User B's assessment"""
     response = client.post(
         "/api/assessment/start", headers={"Authorization": f"Bearer {auth_token}"}
@@ -127,8 +135,11 @@ def test_user_cannot_complete_other_user_assessment(
 
 
 def test_user_cannot_generate_report_for_other_user_assessment(
-    client: TestClient, auth_token, test_user2_token, completed_assessment
-):
+    client: TestClient,
+    auth_token: str,
+    test_user2_token: str,
+    completed_assessment: Any,
+) -> None:
     """Test that User A cannot generate report for User B's assessment"""
     response = client.post(
         f"/api/reports/{completed_assessment.id}/generate",
@@ -138,8 +149,8 @@ def test_user_cannot_generate_report_for_other_user_assessment(
 
 
 def test_user_cannot_view_other_user_report_status(
-    client: TestClient, auth_token, test_user2_token, test_report
-):
+    client: TestClient, auth_token: str, test_user2_token: str, test_report: Any
+) -> None:
     """Test that User A cannot view User B's report status"""
     response = client.get(
         f"/api/reports/{test_report.id}/status",
@@ -149,8 +160,8 @@ def test_user_cannot_view_other_user_report_status(
 
 
 def test_admin_can_generate_ai_reports(
-    client: TestClient, admin_token, completed_assessment, db_session
-):
+    client: TestClient, admin_token: str, completed_assessment: Any, db_session: Any
+) -> None:
     """Test that admin can generate AI reports for any user"""
     from app.models.assessment import Report
 
@@ -171,8 +182,8 @@ def test_admin_can_generate_ai_reports(
 
 
 def test_regular_user_cannot_generate_ai_reports(
-    client: TestClient, auth_token, completed_assessment, db_session
-):
+    client: TestClient, auth_token: str, completed_assessment: Any, db_session: Any
+) -> None:
     """Test that regular user cannot generate AI reports"""
     from app.models.assessment import Report
 
@@ -193,8 +204,8 @@ def test_regular_user_cannot_generate_ai_reports(
 
 
 def test_admin_can_release_ai_reports(
-    client: TestClient, admin_token, completed_assessment, db_session
-):
+    client: TestClient, admin_token: str, completed_assessment: Any, db_session: Any
+) -> None:
     """Test that admin can release AI reports to users"""
     from app.models.assessment import Report
 
@@ -215,8 +226,8 @@ def test_admin_can_release_ai_reports(
 
 
 def test_regular_user_cannot_release_ai_reports(
-    client: TestClient, auth_token, completed_assessment, db_session
-):
+    client: TestClient, auth_token: str, completed_assessment: Any, db_session: Any
+) -> None:
     """Test that regular user cannot release AI reports"""
     from app.models.assessment import Report
 

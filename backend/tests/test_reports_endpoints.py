@@ -1,10 +1,14 @@
 import io
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
 
-def test_generate_standard_report(client: TestClient, auth_token, completed_assessment):
+def test_generate_standard_report(
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
         response = client.post(
             f"/api/reports/{completed_assessment.id}/generate",
@@ -17,7 +21,9 @@ def test_generate_standard_report(client: TestClient, auth_token, completed_asse
         assert data["report_type"] == "standard"
 
 
-def test_generate_report_assessment_not_found(client: TestClient, auth_token):
+def test_generate_report_assessment_not_found(
+    client: TestClient, auth_token: str
+) -> None:
     response = client.post(
         "/api/reports/nonexistent-id/generate",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -26,8 +32,8 @@ def test_generate_report_assessment_not_found(client: TestClient, auth_token):
 
 
 def test_generate_report_incomplete_assessment(
-    client: TestClient, auth_token, test_assessment
-):
+    client: TestClient, auth_token: str, test_assessment: Any
+) -> None:
     response = client.post(
         f"/api/reports/{test_assessment.id}/generate",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -36,7 +42,9 @@ def test_generate_report_incomplete_assessment(
     assert "not found or not completed" in response.json()["detail"].lower()
 
 
-def test_request_ai_report(client: TestClient, auth_token, completed_assessment):
+def test_request_ai_report(
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
         response = client.post(
             f"/api/reports/{completed_assessment.id}/request-ai-report",
@@ -52,7 +60,9 @@ def test_request_ai_report(client: TestClient, auth_token, completed_assessment)
         assert data["status"] == "pending"
 
 
-def test_get_user_reports(client: TestClient, auth_token, test_report):
+def test_get_user_reports(
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.get(
         "/api/reports/user/reports", headers={"Authorization": f"Bearer {auth_token}"}
     )
@@ -63,7 +73,9 @@ def test_get_user_reports(client: TestClient, auth_token, test_report):
     assert len(data["items"]) >= 1
 
 
-def test_get_report_status(client: TestClient, auth_token, test_report):
+def test_get_report_status(
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.get(
         f"/api/reports/{test_report.id}/status",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -74,7 +86,7 @@ def test_get_report_status(client: TestClient, auth_token, test_report):
     assert data["status"] == "pending"
 
 
-def test_get_report_status_not_found(client: TestClient, auth_token):
+def test_get_report_status_not_found(client: TestClient, auth_token: str) -> None:
     response = client.get(
         "/api/reports/nonexistent-id/status",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -82,7 +94,9 @@ def test_get_report_status_not_found(client: TestClient, auth_token):
     assert response.status_code == 404
 
 
-def test_download_report_not_ready(client: TestClient, auth_token, test_report):
+def test_download_report_not_ready(
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.get(
         f"/api/reports/{test_report.id}/download",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -92,8 +106,8 @@ def test_download_report_not_ready(client: TestClient, auth_token, test_report):
 
 
 def test_admin_generate_ai_report(
-    client: TestClient, admin_token, db_session, completed_assessment
-):
+    client: TestClient, admin_token: str, db_session: Session, completed_assessment: Any
+) -> None:
     from app.models.assessment import Report
 
     ai_report = Report(
@@ -116,8 +130,8 @@ def test_admin_generate_ai_report(
 
 
 def test_admin_generate_ai_report_unauthorized(
-    client: TestClient, auth_token, test_report
-):
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.post(
         f"/api/reports/admin/{test_report.id}/generate-ai",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -125,7 +139,9 @@ def test_admin_generate_ai_report_unauthorized(
     assert response.status_code == 403
 
 
-def test_admin_release_report(client: TestClient, admin_token, test_report, db_session):
+def test_admin_release_report(
+    client: TestClient, admin_token: str, test_report: Any, db_session: Session
+) -> None:
     test_report.status = "completed"
     test_report.report_type = "ai_enhanced"
     db_session.commit()
@@ -140,8 +156,8 @@ def test_admin_release_report(client: TestClient, admin_token, test_report, db_s
 
 
 def test_duplicate_standard_report_prevention(
-    client: TestClient, auth_token, completed_assessment
-):
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     """Test that attempting to create duplicate standard reports returns existing report."""
     with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
         response1 = client.post(
@@ -165,8 +181,8 @@ def test_duplicate_standard_report_prevention(
 
 
 def test_duplicate_ai_report_prevention(
-    client: TestClient, auth_token, completed_assessment
-):
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     """Test that attempting to create duplicate AI reports returns existing report."""
     response1 = client.post(
         f"/api/reports/{completed_assessment.id}/request-ai-report",
@@ -189,8 +205,8 @@ def test_duplicate_ai_report_prevention(
 
 
 def test_concurrent_report_generation_race_condition(
-    client: TestClient, auth_token, completed_assessment, db_session
-):
+    client: TestClient, auth_token: str, completed_assessment: Any, db_session: Session
+) -> None:
     """Test that concurrent report generation attempts don't create duplicates."""
     from app.models.assessment import Report
 
@@ -218,8 +234,8 @@ def test_concurrent_report_generation_race_condition(
 
 
 def test_different_report_types_allowed(
-    client: TestClient, auth_token, completed_assessment, db_session
-):
+    client: TestClient, auth_token: str, completed_assessment: Any, db_session: Session
+) -> None:
     """Test that different report types (standard vs AI) can coexist for same assessment."""
     from app.models.assessment import Report
 
@@ -248,15 +264,15 @@ def test_different_report_types_allowed(
 
 
 def test_user_reports_ordered_by_requested_at(
-    client: TestClient, auth_token, completed_assessment, db_session
-):
+    client: TestClient, auth_token: str, completed_assessment: Any, db_session: Session
+) -> None:
     """Test that user reports are returned in descending order by requested_at."""
     from datetime import UTC, datetime, timedelta
 
     from app.models.assessment import Report
 
     base_time = datetime.now(UTC)
-    reports_data = [
+    reports_data: list[dict[str, Any]] = [
         {"offset_minutes": -60, "type": "standard"},  # 1 hour ago
         {"offset_minutes": -30, "type": "ai_enhanced"},  # 30 minutes ago
     ]
@@ -264,9 +280,9 @@ def test_user_reports_ordered_by_requested_at(
     for data in reports_data:
         report = Report(
             assessment_id=completed_assessment.id,
-            report_type=data["type"],
+            report_type=str(data["type"]),
             status="completed",
-            requested_at=base_time + timedelta(minutes=data["offset_minutes"]),
+            requested_at=base_time + timedelta(minutes=int(data["offset_minutes"])),
         )
         db_session.add(report)
     db_session.commit()
@@ -292,8 +308,8 @@ def test_user_reports_ordered_by_requested_at(
 
 
 def test_admin_retry_failed_standard_report(
-    client: TestClient, admin_token, completed_assessment, db_session
-):
+    client: TestClient, admin_token: str, completed_assessment: Any, db_session: Session
+) -> None:
     """Test that admin can retry a failed standard report."""
     from app.models.assessment import Report
 
@@ -318,8 +334,8 @@ def test_admin_retry_failed_standard_report(
 
 
 def test_admin_retry_non_failed_report_fails(
-    client: TestClient, admin_token, completed_assessment, db_session
-):
+    client: TestClient, admin_token: str, completed_assessment: Any, db_session: Session
+) -> None:
     """Test that admin cannot retry a report that hasn't failed."""
     from app.models.assessment import Report
 
@@ -341,8 +357,8 @@ def test_admin_retry_non_failed_report_fails(
 
 
 def test_user_generate_report_excludes_file_path(
-    client: TestClient, auth_token, completed_assessment
-):
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     """Test that user generate report endpoint excludes file_path from response."""
     with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
         response = client.post(
@@ -357,8 +373,8 @@ def test_user_generate_report_excludes_file_path(
 
 
 def test_user_get_reports_excludes_file_path(
-    client: TestClient, auth_token, test_report
-):
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     """Test that user get reports endpoint excludes file_path from response."""
     response = client.get(
         "/api/reports/user/reports", headers={"Authorization": f"Bearer {auth_token}"}
@@ -373,8 +389,8 @@ def test_user_get_reports_excludes_file_path(
 
 
 def test_user_get_report_status_excludes_file_path(
-    client: TestClient, auth_token, test_report
-):
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     """Test that user get report status endpoint excludes file_path from response."""
     response = client.get(
         f"/api/reports/{test_report.id}/status",
@@ -388,8 +404,8 @@ def test_user_get_report_status_excludes_file_path(
 
 
 def test_admin_generate_ai_report_includes_file_path(
-    client: TestClient, admin_token, db_session, completed_assessment
-):
+    client: TestClient, admin_token: str, db_session: Session, completed_assessment: Any
+) -> None:
     """Test that admin generate AI report endpoint includes file_path in response."""
     from app.models.assessment import Report
 
@@ -415,8 +431,8 @@ def test_admin_generate_ai_report_includes_file_path(
 
 
 def test_admin_retry_standard_report_includes_file_path(
-    client: TestClient, admin_token, completed_assessment, db_session
-):
+    client: TestClient, admin_token: str, completed_assessment: Any, db_session: Session
+) -> None:
     """Test that admin retry standard report endpoint includes file_path in response."""
     from app.models.assessment import Report
 
@@ -443,11 +459,11 @@ def test_admin_retry_standard_report_includes_file_path(
 
 def test_reports_admin_overview_flow(
     client: TestClient,
-    admin_token,
-    test_user,
-    completed_assessment,
-    db_session,
-):
+    admin_token: str,
+    test_user: Any,
+    completed_assessment: Any,
+    db_session: Session,
+) -> None:
     """Exercise key admin overview endpoints to guard the reporting workflow."""
 
     from datetime import UTC, datetime, timedelta
@@ -572,10 +588,10 @@ def test_reports_admin_overview_flow(
 
 def test_reports_user_health_flow(
     client: TestClient,
-    auth_token,
-    test_assessment,
-    test_assessment_response,
-):
+    auth_token: str,
+    test_assessment: Any,
+    test_assessment_response: Any,
+) -> None:
     """Run user, auth, and health endpoints to maintain coverage for report pipelines."""
 
     headers = {"Authorization": f"Bearer {auth_token}"}
@@ -609,8 +625,12 @@ def test_reports_user_health_flow(
 
 
 def test_download_report_serves_existing_file(
-    client: TestClient, auth_token, db_session, completed_assessment, monkeypatch
-):
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    completed_assessment: Any,
+    monkeypatch: Any,
+) -> None:
     from app.models.assessment import Report
 
     report = Report(
@@ -643,8 +663,12 @@ def test_download_report_serves_existing_file(
 
 
 def test_download_report_regenerates_when_file_missing(
-    client: TestClient, auth_token, db_session, completed_assessment, monkeypatch
-):
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    completed_assessment: Any,
+    monkeypatch: Any,
+) -> None:
     from app.models.assessment import AssessmentResponse, Report
 
     assessment_response = AssessmentResponse(
@@ -669,7 +693,7 @@ def test_download_report_regenerates_when_file_missing(
     fake_pdf_bytes = b"%PDF-1.4 REGENERATED PDF"
     saved_path = None
 
-    def mock_save(pdf_bytes, filename):
+    def mock_save(pdf_bytes: bytes, filename: str) -> str:
         nonlocal saved_path
         saved_path = f"reports/{filename}"
         return saved_path
@@ -708,8 +732,12 @@ def test_download_report_regenerates_when_file_missing(
 
 
 def test_download_report_ai_report_fails_when_file_missing(
-    client: TestClient, auth_token, db_session, completed_assessment, monkeypatch
-):
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    completed_assessment: Any,
+    monkeypatch: Any,
+) -> None:
     from app.models.assessment import Report
 
     report = Report(
@@ -737,8 +765,12 @@ def test_download_report_ai_report_fails_when_file_missing(
 
 
 def test_download_report_uses_filtered_structure_for_customized_assessment(
-    client: TestClient, auth_token, db_session, test_user, monkeypatch
-):
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    test_user: Any,
+    monkeypatch: Any,
+) -> None:
     from datetime import UTC, datetime, timedelta
 
     from app.models.assessment import Assessment, AssessmentResponse, Report
@@ -778,7 +810,7 @@ def test_download_report_uses_filtered_structure_for_customized_assessment(
     fake_pdf_bytes = b"%PDF-1.4 FILTERED PDF"
     filter_called_with = None
 
-    def mock_filter(structure, selected_ids):
+    def mock_filter(structure: Any, selected_ids: Any) -> Any:
         nonlocal filter_called_with
         filter_called_with = selected_ids
         return structure

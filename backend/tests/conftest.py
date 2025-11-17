@@ -1,13 +1,15 @@
 import os
 import sys
+from collections.abc import Generator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import pytest
 from cryptography.fernet import Fernet
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
@@ -32,7 +34,7 @@ TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 @pytest.fixture
-def encryption_key(monkeypatch):
+def encryption_key(monkeypatch: Any) -> str:
     """Set up encryption key for tests."""
     from app.core.config import settings
 
@@ -42,7 +44,7 @@ def encryption_key(monkeypatch):
 
 
 @pytest.fixture(scope="function")
-def db_session():
+def db_session() -> Generator[Session, None, None]:
     Base.metadata.create_all(bind=engine)
     session = TestSessionLocal()
     try:
@@ -53,8 +55,8 @@ def db_session():
 
 
 @pytest.fixture
-def client(db_session):
-    def override_get_db():
+def client(db_session: Session) -> Generator[TestClient, None, None]:
+    def override_get_db() -> Generator[Session, None, None]:
         try:
             yield db_session
         finally:
@@ -68,7 +70,7 @@ def client(db_session):
 
 
 @pytest.fixture
-def test_user(db_session):
+def test_user(db_session: Session) -> User:
     user = User(
         email="test@example.com",
         full_name="Test User",
@@ -84,7 +86,7 @@ def test_user(db_session):
 
 
 @pytest.fixture
-def test_user2(db_session):
+def test_user2(db_session: Session) -> User:
     user = User(
         email="testuser2@example.com",
         full_name="Test User 2",
@@ -100,7 +102,7 @@ def test_user2(db_session):
 
 
 @pytest.fixture
-def test_admin_user(db_session):
+def test_admin_user(db_session: Session) -> User:
     admin = User(
         email="admin@example.com",
         full_name="Admin User",
@@ -116,7 +118,7 @@ def test_admin_user(db_session):
 
 
 @pytest.fixture
-def auth_token(test_user):
+def auth_token(test_user: User) -> str:
     token, _ = create_access_token(
         data={"sub": test_user.email, "user_id": str(test_user.id), "is_admin": False}
     )
@@ -124,7 +126,7 @@ def auth_token(test_user):
 
 
 @pytest.fixture
-def test_user2_token(test_user2):
+def test_user2_token(test_user2: User) -> str:
     token, _ = create_access_token(
         data={"sub": test_user2.email, "user_id": str(test_user2.id), "is_admin": False}
     )
@@ -132,7 +134,7 @@ def test_user2_token(test_user2):
 
 
 @pytest.fixture
-def admin_token(test_admin_user):
+def admin_token(test_admin_user: User) -> str:
     token, _ = create_access_token(
         data={
             "sub": test_admin_user.email,
@@ -145,7 +147,7 @@ def admin_token(test_admin_user):
 
 
 @pytest.fixture
-def test_assessment(db_session, test_user):
+def test_assessment(db_session: Session, test_user: User) -> Assessment:
     assessment = Assessment(
         user_id=test_user.id,
         status="in_progress",
@@ -160,7 +162,7 @@ def test_assessment(db_session, test_user):
 
 
 @pytest.fixture
-def completed_assessment(db_session, test_user):
+def completed_assessment(db_session: Session, test_user: User) -> Assessment:
     assessment = Assessment(
         user_id=test_user.id,
         status="completed",
@@ -176,7 +178,9 @@ def completed_assessment(db_session, test_user):
 
 
 @pytest.fixture
-def admin_completed_assessment(db_session, test_admin_user):
+def admin_completed_assessment(
+    db_session: Session, test_admin_user: User
+) -> Assessment:
     assessment = Assessment(
         user_id=test_admin_user.id,
         status="completed",
@@ -192,7 +196,9 @@ def admin_completed_assessment(db_session, test_admin_user):
 
 
 @pytest.fixture
-def test_assessment_response(db_session, test_assessment):
+def test_assessment_response(
+    db_session: Session, test_assessment: Assessment
+) -> AssessmentResponseModel:
     response = AssessmentResponseModel(
         assessment_id=test_assessment.id,
         section_id="access-control",
@@ -207,7 +213,7 @@ def test_assessment_response(db_session, test_assessment):
 
 
 @pytest.fixture
-def test_report(db_session, completed_assessment):
+def test_report(db_session: Session, completed_assessment: Assessment) -> Report:
     report = Report(
         assessment_id=completed_assessment.id, report_type="standard", status="pending"
     )
@@ -217,7 +223,7 @@ def test_report(db_session, completed_assessment):
     return report
 
 
-def pytest_configure(config):
+def pytest_configure(config: Any) -> None:
     """Relax coverage threshold for targeted smoke runs that only hit report suites."""
 
     cov_plugin = config.pluginmanager.get_plugin("_cov")

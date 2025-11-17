@@ -6,7 +6,7 @@ from app.services.question_parser import (
 )
 
 
-def test_load_assessment_structure():
+def test_load_assessment_structure() -> None:
     structure = load_assessment_structure()
 
     assert structure is not None
@@ -16,7 +16,7 @@ def test_load_assessment_structure():
     assert len(structure.sections) > 0
 
 
-def test_assessment_structure_has_required_fields():
+def test_assessment_structure_has_required_fields() -> None:
     structure = load_assessment_structure()
 
     assert hasattr(structure, "sections")
@@ -28,7 +28,7 @@ def test_assessment_structure_has_required_fields():
         assert hasattr(section, "questions")
 
 
-def test_question_types_are_valid():
+def test_question_types_are_valid() -> None:
     structure = load_assessment_structure()
 
     valid_types = ["yes_no", "multiple_choice", "multiple_select", "text"]
@@ -38,7 +38,7 @@ def test_question_types_are_valid():
             assert question.type in valid_types
 
 
-def test_total_questions_count():
+def test_total_questions_count() -> None:
     structure = load_assessment_structure()
 
     actual_count = sum(len(section.questions) for section in structure.sections)
@@ -47,7 +47,7 @@ def test_total_questions_count():
     assert structure.total_questions > 0
 
 
-def test_create_sample_assessment_structure():
+def test_create_sample_assessment_structure() -> None:
     structure = create_sample_assessment_structure()
 
     assert structure is not None
@@ -56,7 +56,7 @@ def test_create_sample_assessment_structure():
     assert len(structure.sections) == 2
 
 
-def test_parse_option_explanation_with_full_details():
+def test_parse_option_explanation_with_full_details() -> None:
     """Test parsing option explanation with all sections present"""
     lines = [
         "**📋 What This Option Means:**",
@@ -83,7 +83,7 @@ def test_parse_option_explanation_with_full_details():
     assert result["recommendation"] == "This is the recommendation."
 
 
-def test_parse_option_explanation_with_minimal_details():
+def test_parse_option_explanation_with_minimal_details() -> None:
     """Test parsing option explanation with only definition"""
     lines = [
         "**📋 What This Option Means:**",
@@ -100,7 +100,7 @@ def test_parse_option_explanation_with_minimal_details():
     assert result["recommendation"] is None
 
 
-def test_parse_option_explanation_no_detailed_explanation():
+def test_parse_option_explanation_no_detailed_explanation() -> None:
     """Test parsing when no detailed explanation is present"""
     lines = [
         "*Basic Description: Simple description*",
@@ -113,7 +113,7 @@ def test_parse_option_explanation_no_detailed_explanation():
     assert result is None
 
 
-def test_parse_option_explanation_case_insensitive():
+def test_parse_option_explanation_case_insensitive() -> None:
     """Test that parsing is case-insensitive for headings"""
     lines = [
         "**what this option means:**",
@@ -132,7 +132,7 @@ def test_parse_option_explanation_case_insensitive():
     assert result["recommendation"] == "Recommendation text."
 
 
-def test_parse_option_explanation_emoji_agnostic():
+def test_parse_option_explanation_emoji_agnostic() -> None:
     """Test that parsing works without emojis"""
     lines = [
         "**What This Option Means:**",
@@ -155,7 +155,7 @@ def test_parse_option_explanation_emoji_agnostic():
     assert result["recommendation"] == "Recommendation without emoji."
 
 
-def test_loaded_structure_has_explanations():
+def test_loaded_structure_has_explanations() -> None:
     """Test that loaded structure includes detailed explanations for some options"""
     structure = load_assessment_structure()
 
@@ -173,7 +173,7 @@ def test_loaded_structure_has_explanations():
     assert options_with_explanations >= 0
 
 
-def test_parse_slug_format_options():
+def test_parse_slug_format_options() -> None:
     """Test parsing options with slug format (Phase 3a)"""
     md_content = """
 ## Section 1: Test Section
@@ -216,7 +216,7 @@ def test_parse_slug_format_options():
     assert question.options[2].label == "Never"
 
 
-def test_parse_numeric_format_options():
+def test_parse_numeric_format_options() -> None:
     """Test parsing options with numeric format (backward compatibility)"""
     md_content = """
 ## Section 1: Test Section
@@ -257,7 +257,7 @@ def test_parse_numeric_format_options():
     assert question.options[2].label == "No"
 
 
-def test_parse_mixed_format_options():
+def test_parse_mixed_format_options() -> None:
     """Test parsing document with both slug and numeric formats"""
     md_content = """
 ## Section 1: Test Section
