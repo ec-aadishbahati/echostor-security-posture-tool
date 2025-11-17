@@ -1,3 +1,5 @@
+from typing import Any
+
 """
 Generate slug mappings for all questions in security_assessment_questions.md
 
@@ -81,7 +83,7 @@ def slugify(text: str) -> str:
     return slug
 
 
-def generate_slug_for_option(label: str, scale_type: str = None, index: int = 0) -> str:
+def generate_slug_for_option(label: str, scale_type: str | None = None, index: int = 0) -> str:
     """
     Generate a slug for an option based on its label and context
 
@@ -128,7 +130,7 @@ def parse_questions_and_generate_mappings(md_file_path: str) -> dict:
     with open(md_file_path, encoding="utf-8") as f:
         lines = f.readlines()
 
-    mappings = {}
+    mappings: dict[str, Any] = {}
     current_question = None
     current_question_id = None
     current_scale = None
@@ -197,7 +199,7 @@ def parse_questions_and_generate_mappings(md_file_path: str) -> dict:
     return mappings
 
 
-def main():
+def main() -> None:
     # Path to questions markdown file
     md_file = Path(__file__).parent.parent / "data" / "security_assessment_questions.md"
 

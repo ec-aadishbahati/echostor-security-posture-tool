@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Apply Phase 4 systematic improvements to questions file
@@ -124,7 +126,7 @@ NOT_APPLICABLE_QUESTIONS = [
 ]
 
 
-def apply_phase4_updates():
+def apply_phase4_updates() -> None:
     """Apply Phase 4 systematic improvements"""
 
     md_path = Path(__file__).parent.parent / "data" / "security_assessment_questions.md"

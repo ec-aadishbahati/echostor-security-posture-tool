@@ -15,6 +15,7 @@ of migration to ensure reproducibility even if the question markdown changes lat
 """
 
 import json
+from typing import Any
 
 import sqlalchemy as sa
 from alembic import op
@@ -34,7 +35,7 @@ NUMERIC_TO_SLUG_MAPPING = """{"10_1_1":{"1":"yes","2":"no"},"10_1_2":{"1":"quart
 SLUG_TO_NUMERIC_MAPPING = {}
 
 
-def load_mappings():
+def load_mappings() -> Any:
     """Load and prepare mappings"""
     global SLUG_TO_NUMERIC_MAPPING
 
@@ -83,7 +84,7 @@ def upgrade() -> None:
 
     responses_migrated = 0
     responses_skipped = 0
-    errors = []
+    errors: list[str] = []
 
     for row in result:
         response_id = row[0]

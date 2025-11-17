@@ -105,7 +105,7 @@ class S3Storage(StorageService):
         if region:
             session_kwargs["region_name"] = region
 
-        self.s3_client = boto3.client("s3", endpoint_url=endpoint_url, **session_kwargs)
+        self.s3_client = boto3.client("s3", endpoint_url=endpoint_url, **session_kwargs)  # type: ignore[call-overload]
 
     def save(self, content: bytes, filename: str) -> str:
         """Save content to S3 and return S3 URI."""

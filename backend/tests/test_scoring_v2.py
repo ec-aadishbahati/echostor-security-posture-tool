@@ -35,7 +35,7 @@ def create_test_response(answer_value: str) -> AssessmentResponse:
 class TestMaturityScale:
     """Test maturity scale scoring"""
 
-    def test_optimized_gets_full_weight(self):
+    def test_optimized_gets_full_weight(self) -> None:
         question = create_test_question("maturity", weight=10)
         response = create_test_response("optimized")
 
@@ -45,7 +45,7 @@ class TestMaturityScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_managed_gets_75_percent(self):
+    def test_managed_gets_75_percent(self) -> None:
         question = create_test_question("maturity", weight=10)
         response = create_test_response("managed")
 
@@ -55,7 +55,7 @@ class TestMaturityScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_defined_gets_50_percent(self):
+    def test_defined_gets_50_percent(self) -> None:
         question = create_test_question("maturity", weight=10)
         response = create_test_response("defined")
 
@@ -65,7 +65,7 @@ class TestMaturityScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_ad_hoc_gets_25_percent(self):
+    def test_ad_hoc_gets_25_percent(self) -> None:
         question = create_test_question("maturity", weight=10)
         response = create_test_response("ad_hoc")
 
@@ -79,7 +79,7 @@ class TestMaturityScale:
 class TestFrequencyReviewScale:
     """Test frequency_review scale scoring"""
 
-    def test_quarterly_gets_full_weight(self):
+    def test_quarterly_gets_full_weight(self) -> None:
         question = create_test_question("frequency_review", weight=10)
         response = create_test_response("quarterly")
 
@@ -89,7 +89,7 @@ class TestFrequencyReviewScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_annually_gets_75_percent(self):
+    def test_annually_gets_75_percent(self) -> None:
         question = create_test_question("frequency_review", weight=10)
         response = create_test_response("annually")
 
@@ -99,7 +99,7 @@ class TestFrequencyReviewScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_only_after_changes_gets_50_percent(self):
+    def test_only_after_changes_gets_50_percent(self) -> None:
         question = create_test_question("frequency_review", weight=10)
         response = create_test_response("only_after_changes")
 
@@ -109,7 +109,7 @@ class TestFrequencyReviewScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_no_formal_review_gets_zero(self):
+    def test_no_formal_review_gets_zero(self) -> None:
         question = create_test_question("frequency_review", weight=10)
         response = create_test_response("no_formal_review")
 
@@ -123,7 +123,7 @@ class TestFrequencyReviewScale:
 class TestCoverageScale:
     """Test coverage scale scoring"""
 
-    def test_76_100_gets_full_weight(self):
+    def test_76_100_gets_full_weight(self) -> None:
         question = create_test_question("coverage", weight=10)
         response = create_test_response("76_100")
 
@@ -133,7 +133,7 @@ class TestCoverageScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_51_75_gets_75_percent(self):
+    def test_51_75_gets_75_percent(self) -> None:
         question = create_test_question("coverage", weight=10)
         response = create_test_response("51_75")
 
@@ -147,7 +147,7 @@ class TestCoverageScale:
 class TestImplementationScale:
     """Test implementation scale scoring"""
 
-    def test_fully_implemented_gets_full_weight(self):
+    def test_fully_implemented_gets_full_weight(self) -> None:
         question = create_test_question("implementation", weight=10)
         response = create_test_response("fully_implemented")
 
@@ -157,7 +157,7 @@ class TestImplementationScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_partially_implemented_gets_50_percent(self):
+    def test_partially_implemented_gets_50_percent(self) -> None:
         question = create_test_question("implementation", weight=10)
         response = create_test_response("partially_implemented")
 
@@ -167,7 +167,7 @@ class TestImplementationScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_planned_gets_25_percent(self):
+    def test_planned_gets_25_percent(self) -> None:
         question = create_test_question("implementation", weight=10)
         response = create_test_response("planned")
 
@@ -177,7 +177,7 @@ class TestImplementationScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_not_implemented_gets_zero(self):
+    def test_not_implemented_gets_zero(self) -> None:
         question = create_test_question("implementation", weight=10)
         response = create_test_response("not_implemented")
 
@@ -191,7 +191,7 @@ class TestImplementationScale:
 class TestGovernanceScale:
     """Test governance scale scoring"""
 
-    def test_documented_approved_maintained_gets_full_weight(self):
+    def test_documented_approved_maintained_gets_full_weight(self) -> None:
         question = create_test_question("governance", weight=10)
         response = create_test_response("documented_approved_maintained")
 
@@ -201,7 +201,7 @@ class TestGovernanceScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_documented_but_stale_gets_50_percent(self):
+    def test_documented_but_stale_gets_50_percent(self) -> None:
         question = create_test_question("governance", weight=10)
         response = create_test_response("documented_but_stale")
 
@@ -211,7 +211,7 @@ class TestGovernanceScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_informal_understanding_gets_25_percent(self):
+    def test_informal_understanding_gets_25_percent(self) -> None:
         question = create_test_question("governance", weight=10)
         response = create_test_response("informal_understanding")
 
@@ -221,7 +221,7 @@ class TestGovernanceScale:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_no_strategy_gets_zero(self):
+    def test_no_strategy_gets_zero(self) -> None:
         question = create_test_question("governance", weight=10)
         response = create_test_response("no_strategy")
 
@@ -235,7 +235,7 @@ class TestGovernanceScale:
 class TestSpecialHandling:
     """Test special handling for unknown and not_applicable"""
 
-    def test_unknown_gets_flagged(self):
+    def test_unknown_gets_flagged(self) -> None:
         question = create_test_question("maturity", weight=10)
         response = create_test_response("not_sure")
 
@@ -245,7 +245,7 @@ class TestSpecialHandling:
         assert result["max_score"] == 10
         assert "unknown" in result["flags"]
 
-    def test_not_applicable_excluded_from_denominator(self):
+    def test_not_applicable_excluded_from_denominator(self) -> None:
         question = create_test_question("maturity", weight=10)
         response = create_test_response("not_applicable")
 
@@ -255,7 +255,7 @@ class TestSpecialHandling:
         assert result["max_score"] == 0
         assert "not_applicable" in result["flags"]
 
-    def test_unknown_variants_all_flagged(self):
+    def test_unknown_variants_all_flagged(self) -> None:
         question = create_test_question("maturity", weight=10)
 
         for variant in ["unknown", "not_sure", "don't_know"]:
@@ -264,7 +264,7 @@ class TestSpecialHandling:
 
             assert "unknown" in result["flags"], f"Failed for variant: {variant}"
 
-    def test_not_applicable_variants_all_flagged(self):
+    def test_not_applicable_variants_all_flagged(self) -> None:
         question = create_test_question("maturity", weight=10)
 
         for variant in ["not_applicable", "n/a", "na"]:
@@ -277,7 +277,7 @@ class TestSpecialHandling:
 class TestYesNoQuestions:
     """Test yes/no question scoring"""
 
-    def test_yes_gets_full_weight(self):
+    def test_yes_gets_full_weight(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -296,7 +296,7 @@ class TestYesNoQuestions:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_no_gets_zero(self):
+    def test_no_gets_zero(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -319,7 +319,7 @@ class TestYesNoQuestions:
 class TestMultipleSelectQuestions:
     """Test multiple_select question scoring"""
 
-    def test_best_answer_wins(self):
+    def test_best_answer_wins(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -340,7 +340,7 @@ class TestMultipleSelectQuestions:
         assert result["max_score"] == 10
         assert result["flags"] == []
 
-    def test_empty_list_gets_zero(self):
+    def test_empty_list_gets_zero(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -365,7 +365,7 @@ class TestMultipleSelectQuestions:
 class TestFallbackBehavior:
     """Test fallback behavior for questions without scale_type"""
 
-    def test_no_scale_type_uses_v1_logic(self):
+    def test_no_scale_type_uses_v1_logic(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -388,7 +388,7 @@ class TestFallbackBehavior:
 class TestNumericToSlugMapper:
     """Test runtime numeric→slug mapper for Phase 3a"""
 
-    def test_slug_value_returns_unchanged(self):
+    def test_slug_value_returns_unchanged(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -406,7 +406,7 @@ class TestNumericToSlugMapper:
         result = map_numeric_to_slug(question, "quarterly")
         assert result == "quarterly"
 
-    def test_numeric_value_maps_to_slug(self):
+    def test_numeric_value_maps_to_slug(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -426,7 +426,7 @@ class TestNumericToSlugMapper:
         assert map_numeric_to_slug(question, "2") == "annually"
         assert map_numeric_to_slug(question, "3") == "never"
 
-    def test_numeric_value_with_numeric_options(self):
+    def test_numeric_value_with_numeric_options(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -444,7 +444,7 @@ class TestNumericToSlugMapper:
         assert map_numeric_to_slug(question, "1") == "1"
         assert map_numeric_to_slug(question, "2") == "2"
 
-    def test_out_of_range_numeric_returns_unchanged(self):
+    def test_out_of_range_numeric_returns_unchanged(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -461,7 +461,7 @@ class TestNumericToSlugMapper:
         result = map_numeric_to_slug(question, "99")
         assert result == "99"
 
-    def test_empty_value_returns_unchanged(self):
+    def test_empty_value_returns_unchanged(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",
@@ -474,9 +474,9 @@ class TestNumericToSlugMapper:
         )
 
         assert map_numeric_to_slug(question, "") == ""
-        assert map_numeric_to_slug(question, None) is None
+        assert map_numeric_to_slug(question, None) is None  # type: ignore[arg-type]
 
-    def test_scoring_with_numeric_values_uses_mapper(self):
+    def test_scoring_with_numeric_values_uses_mapper(self) -> None:
         question = Question(
             id="test_q",
             section_id="test_s",

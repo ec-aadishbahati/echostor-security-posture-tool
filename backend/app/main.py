@@ -20,7 +20,7 @@ from app.middleware.security_headers import SecurityHeadersMiddleware
 logger = logging.getLogger(__name__)
 
 
-def scrub_pii_from_sentry_event(event: dict, hint: dict | None = None) -> dict:
+def scrub_pii_from_sentry_event(event: dict, hint: dict | None = None) -> dict | None:
     """Scrub PII from Sentry events before sending"""
     import re
 
@@ -46,9 +46,9 @@ def scrub_pii_from_sentry_event(event: dict, hint: dict | None = None) -> dict:
             if isinstance(value, str):
                 scrubbed[key] = scrub_string(value)
             elif isinstance(value, dict):
-                scrubbed[key] = scrub_dict(value)
+                scrubbed[key] = scrub_dict(value)  # type: ignore[assignment]
             elif isinstance(value, list):
-                scrubbed[key] = [
+                scrubbed[key] = [  # type: ignore[assignment]
                     scrub_dict(item)
                     if isinstance(item, dict)
                     else scrub_string(item)
@@ -75,7 +75,7 @@ if settings.SENTRY_DSN:
             FastApiIntegration(),
             SqlalchemyIntegration(),
         ],
-        before_send=lambda event, hint: scrub_pii_from_sentry_event(event),
+        before_send=lambda event, hint: scrub_pii_from_sentry_event(event),  # type: ignore[arg-type,return-value]
     )
     logger.info("Sentry performance monitoring initialized with PII scrubbing")
 else:
@@ -114,7 +114,7 @@ app = FastAPI(
 )
 
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
 app.add_middleware(
     CORSMiddleware,

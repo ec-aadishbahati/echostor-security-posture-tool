@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 
 import getpass
@@ -13,7 +15,7 @@ from app.core.security import get_password_hash
 from app.models.user import User
 
 
-def create_admin_user():
+def create_admin_user() -> None:
     """Create admin user with secure password input"""
     admin_email = input("Enter admin email: ").strip()
     if not admin_email:

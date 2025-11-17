@@ -3,7 +3,7 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 
-def test_health_endpoint_healthy(client: TestClient):
+def test_health_endpoint_healthy(client: TestClient) -> None:
     """Test comprehensive health check when all systems are healthy"""
     response = client.get("/health")
     assert response.status_code == 200
@@ -19,7 +19,7 @@ def test_health_endpoint_healthy(client: TestClient):
     assert data["checks"]["database"]["status"] == "healthy"
 
 
-def test_health_endpoint_database_failure(client: TestClient):
+def test_health_endpoint_database_failure(client: TestClient) -> None:
     """Test health check when database is unavailable"""
     with patch("app.api.health.check_database") as mock_check:
         mock_check.return_value = {
@@ -33,7 +33,7 @@ def test_health_endpoint_database_failure(client: TestClient):
         assert data["checks"]["database"]["status"] == "unhealthy"
 
 
-def test_health_endpoint_with_redis(client: TestClient):
+def test_health_endpoint_with_redis(client: TestClient) -> None:
     """Test health check includes Redis when configured"""
     with patch("app.core.config.settings.REDIS_URL", "redis://localhost:6379/0"):
         with patch("app.api.health.check_redis") as mock_redis:
@@ -48,7 +48,7 @@ def test_health_endpoint_with_redis(client: TestClient):
             assert data["checks"]["redis"]["status"] == "healthy"
 
 
-def test_health_endpoint_redis_failure(client: TestClient):
+def test_health_endpoint_redis_failure(client: TestClient) -> None:
     """Test health check when Redis is configured but unavailable"""
     with patch("app.core.config.settings.REDIS_URL", "redis://localhost:6379/0"):
         with patch("app.api.health.check_redis") as mock_redis:
@@ -63,7 +63,7 @@ def test_health_endpoint_redis_failure(client: TestClient):
             assert data["checks"]["redis"]["status"] == "unhealthy"
 
 
-def test_liveness_probe(client: TestClient):
+def test_liveness_probe(client: TestClient) -> None:
     """Test liveness probe always returns 200"""
     response = client.get("/health/live")
     assert response.status_code == 200
@@ -76,7 +76,7 @@ def test_liveness_probe(client: TestClient):
     assert "timestamp" in data
 
 
-def test_liveness_probe_even_with_db_failure(client: TestClient):
+def test_liveness_probe_even_with_db_failure(client: TestClient) -> None:
     """Test liveness probe returns 200 even if database is down"""
     with patch("app.api.health.check_database") as mock_check:
         mock_check.return_value = {
@@ -89,7 +89,7 @@ def test_liveness_probe_even_with_db_failure(client: TestClient):
         assert data["status"] == "alive"
 
 
-def test_readiness_probe_healthy(client: TestClient):
+def test_readiness_probe_healthy(client: TestClient) -> None:
     """Test readiness probe when database is accessible"""
     response = client.get("/health/ready")
     assert response.status_code == 200
@@ -102,7 +102,7 @@ def test_readiness_probe_healthy(client: TestClient):
     assert data["checks"]["database"]["status"] == "healthy"
 
 
-def test_readiness_probe_database_failure(client: TestClient):
+def test_readiness_probe_database_failure(client: TestClient) -> None:
     """Test readiness probe when database is unavailable"""
     with patch("app.api.health.check_database") as mock_check:
         mock_check.return_value = {
@@ -116,7 +116,7 @@ def test_readiness_probe_database_failure(client: TestClient):
         assert data["checks"]["database"]["status"] == "unhealthy"
 
 
-def test_uptime_increases(client: TestClient):
+def test_uptime_increases(client: TestClient) -> None:
     """Test that uptime increases between calls"""
     import time
 

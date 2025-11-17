@@ -1,8 +1,10 @@
+from typing import Any
+
 import pytest
 from fastapi.testclient import TestClient
 
 
-def test_rate_limiter_configuration():
+def test_rate_limiter_configuration() -> None:
     from app.main import app
     from app.middleware.rate_limit import limiter
 
@@ -12,7 +14,7 @@ def test_rate_limiter_configuration():
     assert limiter._headers_enabled is True
 
 
-def test_auth_endpoints_have_rate_limit_decorators():
+def test_auth_endpoints_have_rate_limit_decorators() -> None:
     from app.api.auth import login, register
 
     assert hasattr(register, "__wrapped__")
@@ -23,7 +25,7 @@ def test_auth_endpoints_have_rate_limit_decorators():
     reason="TestClient doesn't support rate limiting middleware. "
     "Rate limiting must be tested manually or in deployed environment."
 )
-def test_auth_register_rate_limit(client: TestClient):
+def test_auth_register_rate_limit(client: TestClient) -> None:
     for i in range(5):
         response = client.post(
             "/api/auth/register",
@@ -53,7 +55,7 @@ def test_auth_register_rate_limit(client: TestClient):
     reason="TestClient doesn't support rate limiting middleware. "
     "Rate limiting must be tested manually or in deployed environment."
 )
-def test_auth_login_rate_limit(client: TestClient):
+def test_auth_login_rate_limit(client: TestClient) -> None:
     for _ in range(5):
         response = client.post(
             "/api/auth/login",
@@ -73,7 +75,7 @@ def test_auth_login_rate_limit(client: TestClient):
     reason="TestClient doesn't support rate limiting middleware. "
     "Rate limiting must be tested manually or in deployed environment."
 )
-def test_rate_limit_headers(client: TestClient):
+def test_rate_limit_headers(client: TestClient) -> None:
     response = client.post(
         "/api/auth/login",
         json={"email": "test@example.com", "password": "password"},
@@ -82,13 +84,13 @@ def test_rate_limit_headers(client: TestClient):
     assert "X-RateLimit-Remaining" in response.headers
 
 
-def test_health_endpoint_no_rate_limit(client: TestClient):
+def test_health_endpoint_no_rate_limit(client: TestClient) -> None:
     for _ in range(150):
         response = client.get("/health")
         assert response.status_code == 200
 
 
-def test_root_endpoint_no_rate_limit(client: TestClient):
+def test_root_endpoint_no_rate_limit(client: TestClient) -> None:
     for _ in range(150):
         response = client.get("/")
         assert response.status_code == 200
@@ -98,7 +100,7 @@ def test_root_endpoint_no_rate_limit(client: TestClient):
     reason="TestClient doesn't support rate limiting middleware. "
     "Rate limiting must be tested manually or in deployed environment."
 )
-def test_authenticated_endpoint_rate_limit(client: TestClient, auth_token: str):
+def test_authenticated_endpoint_rate_limit(client: TestClient, auth_token: str) -> None:
     response = client.get(
         "/api/assessment/structure", headers={"Authorization": f"Bearer {auth_token}"}
     )

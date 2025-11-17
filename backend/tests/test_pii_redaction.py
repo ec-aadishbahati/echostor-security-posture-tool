@@ -1,3 +1,5 @@
+from typing import Any
+
 """Tests for PII redaction before AI processing"""
 
 from unittest.mock import MagicMock, patch
@@ -10,7 +12,7 @@ from app.services.report_generator import generate_ai_insights
 class TestPIIRedactionBeforeAI:
     """Test that PII is redacted before sending to OpenAI"""
 
-    def test_pii_redactor_redacts_email(self):
+    def test_pii_redactor_redacts_email(self) -> None:
         """Test that emails are redacted"""
         redactor = PIIRedactor()
         text = "Contact me at john.doe@company.com for more info"
@@ -20,7 +22,7 @@ class TestPIIRedactionBeforeAI:
         assert "[EMAIL_REDACTED]" in redacted
         assert count == 1
 
-    def test_pii_redactor_redacts_phone(self):
+    def test_pii_redactor_redacts_phone(self) -> None:
         """Test that phone numbers are redacted"""
         redactor = PIIRedactor()
         text = "Call me at 555-123-4567 or (555) 987-6543"
@@ -31,7 +33,7 @@ class TestPIIRedactionBeforeAI:
         assert "[PHONE_REDACTED]" in redacted
         assert count >= 1
 
-    def test_pii_redactor_redacts_ssn(self):
+    def test_pii_redactor_redacts_ssn(self) -> None:
         """Test that SSNs are redacted"""
         redactor = PIIRedactor()
         text = "My SSN is 123-45-6789"
@@ -41,7 +43,7 @@ class TestPIIRedactionBeforeAI:
         assert "[SSN_REDACTED]" in redacted
         assert count == 1
 
-    def test_pii_redactor_redacts_multiple_patterns(self):
+    def test_pii_redactor_redacts_multiple_patterns(self) -> None:
         """Test that multiple PII patterns are redacted"""
         redactor = PIIRedactor()
         text = "Email: test@company.com, Phone: 555-123-4567, SSN: 123-45-6789"
@@ -55,7 +57,7 @@ class TestPIIRedactionBeforeAI:
         assert "[SSN_REDACTED]" in redacted
         assert count == 3
 
-    def test_pii_redactor_preserves_non_pii(self):
+    def test_pii_redactor_preserves_non_pii(self) -> None:
         """Test that non-PII text is preserved"""
         redactor = PIIRedactor()
         text = "We use MFA and have strong password policies"
@@ -68,8 +70,8 @@ class TestPIIRedactionBeforeAI:
     @patch("app.services.report_generator.OpenAIKeyManager")
     @patch("app.services.report_generator.settings")
     def test_pii_redacted_in_answers_before_ai(
-        self, mock_settings, mock_key_manager, mock_openai
-    ):
+        self, mock_settings: Any, mock_key_manager: Any, mock_openai: Any
+    ) -> None:
         """Test that PII in answers is redacted before OpenAI API call"""
         mock_settings.ENABLE_PII_REDACTION_BEFORE_AI = True
         mock_settings.INCLUDE_COMMENTS_IN_AI = False
@@ -166,8 +168,8 @@ class TestPIIRedactionBeforeAI:
     @patch("app.services.report_generator.OpenAIKeyManager")
     @patch("app.services.report_generator.settings")
     def test_pii_redacted_in_comments_before_ai(
-        self, mock_settings, mock_key_manager, mock_openai
-    ):
+        self, mock_settings: Any, mock_key_manager: Any, mock_openai: Any
+    ) -> None:
         """Test that PII in comments is redacted before OpenAI API call"""
         mock_settings.ENABLE_PII_REDACTION_BEFORE_AI = True
         mock_settings.INCLUDE_COMMENTS_IN_AI = True
@@ -265,8 +267,8 @@ class TestPIIRedactionBeforeAI:
     @patch("app.services.report_generator.OpenAIKeyManager")
     @patch("app.services.report_generator.settings")
     def test_pii_redaction_metrics_tracked(
-        self, mock_settings, mock_key_manager, mock_openai, mock_metrics
-    ):
+        self, mock_settings: Any, mock_key_manager: Any, mock_openai: Any, mock_metrics: Any
+    ) -> None:
         """Test that PII redaction events are tracked in metrics"""
         mock_settings.ENABLE_PII_REDACTION_BEFORE_AI = True
         mock_settings.INCLUDE_COMMENTS_IN_AI = True

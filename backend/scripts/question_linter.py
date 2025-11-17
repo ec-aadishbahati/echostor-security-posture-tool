@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Question Library Linter - Run in CI to catch issues
@@ -14,7 +16,7 @@ import sys
 from pathlib import Path
 
 
-def lint_questions():
+def lint_questions() -> None:
     """Lint question library for common issues"""
     errors = []
     warnings = []
@@ -34,7 +36,7 @@ def lint_questions():
 
     current_question = None
     current_section = None
-    questions = []
+    questions: list[Any] = []
 
     for i, line in enumerate(lines, start=1):
         line_stripped = line.strip()

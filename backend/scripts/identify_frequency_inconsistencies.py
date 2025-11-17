@@ -6,13 +6,14 @@ Identify frequency scale inconsistencies across questions
 import sys
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.services.question_parser import parse_assessment_questions
 
 
-def identify_frequency_inconsistencies():
+def identify_frequency_inconsistencies() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Scan questions for frequency scale inconsistencies"""
 
     md_path = Path(__file__).parent.parent / "data" / "security_assessment_questions.md"
@@ -60,7 +61,7 @@ def identify_frequency_inconsistencies():
 
     option_patterns = defaultdict(list)
     for q in frequency_questions:
-        pattern = tuple(sorted([opt.lower() for opt in q["options"]]))
+        pattern = tuple(sorted([opt.lower() for opt in q["options"]]))  # type: ignore[union-attr]
         option_patterns[pattern].append(q)
 
     print("=" * 80)
@@ -95,7 +96,7 @@ def identify_frequency_inconsistencies():
             print(f"{i}. Question {q['id']} (Scale: {q['scale'] or 'None'})")
             print(f"   Section: {q['section']}")
             print(f"   Text: {q['text']}")
-            print(f"   Options: {', '.join(q['options'])}")
+            print(f"   Options: {', '.join(q['options'])}")  # type: ignore[arg-type]
             print()
 
     monitoring_questions = [q for q in frequency_questions if q["type"] == "monitoring"]
@@ -107,7 +108,7 @@ def identify_frequency_inconsistencies():
             print(f"{i}. Question {q['id']} (Scale: {q['scale'] or 'None'})")
             print(f"   Section: {q['section']}")
             print(f"   Text: {q['text']}")
-            print(f"   Options: {', '.join(q['options'])}")
+            print(f"   Options: {', '.join(q['options'])}")  # type: ignore[arg-type]
             print()
 
     print("=" * 80)
@@ -147,7 +148,7 @@ def identify_frequency_inconsistencies():
     }
 
     for q in frequency_questions:
-        options_lower = {opt.lower() for opt in q["options"]}
+        options_lower = {opt.lower() for opt in q["options"]}  # type: ignore[union-attr]
 
         if q["type"] == "review":
             if q["scale"] != "frequency_review":
@@ -190,7 +191,7 @@ def identify_frequency_inconsistencies():
             print(f"   Section: {q['section']}")
             print(f"   Text: {q['text']}")
             print(f"   Reason: {q['reason']}")
-            print(f"   Current options: {', '.join(q['options'])}")
+            print(f"   Current options: {', '.join(q['options'])}")  # type: ignore[arg-type]
             print()
 
     output_path = Path(__file__).parent / "frequency_inconsistencies_report.txt"
@@ -206,7 +207,7 @@ def identify_frequency_inconsistencies():
             for q in needs_normalization:
                 f.write(f"Question {q['id']}: {q['text']}\n")
                 f.write(f"  Reason: {q['reason']}\n")
-                f.write(f"  Current options: {', '.join(q['options'])}\n\n")
+                f.write(f"  Current options: {', '.join(q['options'])}\n\n")  # type: ignore[arg-type]  # noqa
 
     print(f"📝 Report saved to: {output_path}")
     print()

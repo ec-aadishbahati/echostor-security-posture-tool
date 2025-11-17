@@ -19,7 +19,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 
-def get_url():
+def get_url() -> str | None:
     return settings.DATABASE_URL
 
 
@@ -55,9 +55,11 @@ def run_migrations_online() -> None:
 
     """
     configuration = config.get_section(config.config_ini_section)
-    configuration["sqlalchemy.url"] = get_url()
+    if configuration is None:
+        configuration = {}
+    configuration["sqlalchemy.url"] = str(get_url())
     connectable = engine_from_config(
-        configuration,
+        configuration,  # type: ignore[arg-type]
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )

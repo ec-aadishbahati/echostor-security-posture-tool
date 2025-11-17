@@ -2,14 +2,14 @@
 
 from sqlalchemy import text
 
-from app.core.database import get_write_db
+from app.core.database import get_write_db  # type: ignore[attr-defined]
 from app.models.user import User
 
 
-def update_admin_user():
+def update_admin_user() -> None:
     """Add is_admin column and update admin user"""
     try:
-        db = next(get_write_db())
+        db = next(get_write_db())  # type: ignore[name-defined]
 
         try:
             db.execute(

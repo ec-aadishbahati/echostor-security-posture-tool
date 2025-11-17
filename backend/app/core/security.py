@@ -57,7 +57,7 @@ def create_access_token(
         }
     )
     encoded_jwt = jwt.encode(
-        to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM
+        to_encode, str(settings.JWT_SECRET_KEY), algorithm=settings.JWT_ALGORITHM
     )
     return encoded_jwt, csrf_token
 
@@ -66,7 +66,7 @@ def verify_token(token: str) -> dict:
     try:
         payload: dict = jwt.decode(
             token,
-            settings.JWT_SECRET_KEY,
+            str(settings.JWT_SECRET_KEY),
             algorithms=[settings.JWT_ALGORITHM],
             audience="echostor-security-tool",
             issuer="echostor-api",

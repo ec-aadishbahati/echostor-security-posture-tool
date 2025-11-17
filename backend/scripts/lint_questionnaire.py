@@ -1,3 +1,5 @@
+from typing import Any
+
 #!/usr/bin/env python3
 """
 Questionnaire Linter - Detects placeholder options and content mismatches
@@ -160,7 +162,7 @@ def detect_todo_placeholders(lines: list[str]) -> list[QuestionnaireIssue]:
     return issues
 
 
-def main():
+def main() -> None:
     """Main linter function"""
     script_dir = Path(__file__).parent
     questionnaire_path = script_dir.parent / "data" / "security_assessment_questions.md"
@@ -190,7 +192,7 @@ def main():
     else:
         print(f"❌ Found {len(all_issues)} issue(s):\n")
 
-        by_type = {}
+        by_type: dict[str, Any] = {}
         for issue in all_issues:
             if issue.issue_type not in by_type:
                 by_type[issue.issue_type] = []
