@@ -1,4 +1,5 @@
 from typing import Any
+
 from fastapi.testclient import TestClient
 
 
@@ -54,7 +55,10 @@ def test_complete_user_flow(client: TestClient) -> None:
 
 
 def test_admin_workflow(
-    client: TestClient, admin_token: str, test_user: Any, admin_completed_assessment: Any
+    client: TestClient,
+    admin_token: str,
+    test_user: Any,
+    admin_completed_assessment: Any,
 ) -> None:
     users_response = client.get(
         "/api/admin/users", headers={"Authorization": f"Bearer {admin_token}"}

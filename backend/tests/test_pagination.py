@@ -3,7 +3,9 @@ from typing import Any
 from fastapi.testclient import TestClient
 
 
-def test_admin_users_pagination_first_page(client: TestClient, admin_token: Any, test_user: Any) -> None:
+def test_admin_users_pagination_first_page(
+    client: TestClient, admin_token: Any, test_user: Any
+) -> None:
     """Test first page of users pagination"""
     response = client.get(
         "/api/admin/users",
@@ -23,7 +25,9 @@ def test_admin_users_pagination_first_page(client: TestClient, admin_token: Any,
     assert isinstance(data["items"], list)
 
 
-def test_admin_users_pagination_metadata(client: TestClient, admin_token: Any, db_session: Any) -> None:
+def test_admin_users_pagination_metadata(
+    client: TestClient, admin_token: Any, db_session: Any
+) -> None:
     """Test pagination metadata calculation"""
     from app.core.security import get_password_hash
     from app.models.user import User
@@ -63,7 +67,9 @@ def test_admin_users_pagination_metadata(client: TestClient, admin_token: Any, d
     assert data["has_prev"] is True
 
 
-def test_admin_assessments_pagination(client: TestClient, admin_token: Any, test_assessment: Any) -> None:
+def test_admin_assessments_pagination(
+    client: TestClient, admin_token: Any, test_assessment: Any
+) -> None:
     """Test assessments pagination"""
     response = client.get(
         "/api/admin/assessments",
@@ -78,7 +84,9 @@ def test_admin_assessments_pagination(client: TestClient, admin_token: Any, test
     assert "has_prev" in data
 
 
-def test_admin_reports_pagination(client: TestClient, admin_token: Any, test_report: Any) -> None:
+def test_admin_reports_pagination(
+    client: TestClient, admin_token: Any, test_report: Any
+) -> None:
     """Test reports pagination"""
     response = client.get(
         "/api/admin/reports",
@@ -158,7 +166,9 @@ def test_pagination_empty_results(client: TestClient, admin_token: str) -> None:
     assert data["has_prev"] is False
 
 
-def test_pagination_pages_calculation(client: TestClient, admin_token: Any, db_session: Any) -> None:
+def test_pagination_pages_calculation(
+    client: TestClient, admin_token: Any, db_session: Any
+) -> None:
     """Test pages calculation in pagination"""
     from app.core.security import get_password_hash
     from app.models.user import User

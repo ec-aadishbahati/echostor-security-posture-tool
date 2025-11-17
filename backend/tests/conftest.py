@@ -1,8 +1,9 @@
 import os
 import sys
+from collections.abc import Generator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, Generator
+from typing import Any
 
 import pytest
 from cryptography.fernet import Fernet
@@ -177,7 +178,9 @@ def completed_assessment(db_session: Session, test_user: User) -> Assessment:
 
 
 @pytest.fixture
-def admin_completed_assessment(db_session: Session, test_admin_user: User) -> Assessment:
+def admin_completed_assessment(
+    db_session: Session, test_admin_user: User
+) -> Assessment:
     assessment = Assessment(
         user_id=test_admin_user.id,
         status="completed",
@@ -193,7 +196,9 @@ def admin_completed_assessment(db_session: Session, test_admin_user: User) -> As
 
 
 @pytest.fixture
-def test_assessment_response(db_session: Session, test_assessment: Assessment) -> AssessmentResponseModel:
+def test_assessment_response(
+    db_session: Session, test_assessment: Assessment
+) -> AssessmentResponseModel:
     response = AssessmentResponseModel(
         assessment_id=test_assessment.id,
         section_id="access-control",

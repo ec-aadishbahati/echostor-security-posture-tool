@@ -32,7 +32,11 @@ def test_user_cannot_access_other_user_assessment(
 
 
 def test_user_cannot_access_other_user_report(
-    client: TestClient, auth_token: str, test_user2_token: str, completed_assessment: Any, test_report: Any
+    client: TestClient,
+    auth_token: str,
+    test_user2_token: str,
+    completed_assessment: Any,
+    test_report: Any,
 ) -> None:
     """Test that User A cannot download User B's report"""
     response = client.get(
@@ -42,7 +46,9 @@ def test_user_cannot_access_other_user_report(
     assert response.status_code == 403
 
 
-def test_user_cannot_access_admin_endpoints(client: TestClient, auth_token: str) -> None:
+def test_user_cannot_access_admin_endpoints(
+    client: TestClient, auth_token: str
+) -> None:
     """Test that regular user cannot access admin endpoints"""
     admin_endpoints = [
         "/api/admin/users",
@@ -129,7 +135,10 @@ def test_user_cannot_complete_other_user_assessment(
 
 
 def test_user_cannot_generate_report_for_other_user_assessment(
-    client: TestClient, auth_token: str, test_user2_token: str, completed_assessment: Any
+    client: TestClient,
+    auth_token: str,
+    test_user2_token: str,
+    completed_assessment: Any,
 ) -> None:
     """Test that User A cannot generate report for User B's assessment"""
     response = client.post(

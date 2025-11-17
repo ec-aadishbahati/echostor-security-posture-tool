@@ -1,5 +1,4 @@
 from typing import Any
-
 from unittest.mock import MagicMock, patch
 
 import redis
@@ -12,7 +11,9 @@ class TestCacheService:
 
     @patch("app.services.cache.settings")
     @patch("app.services.cache.redis.from_url")
-    def test_init_with_valid_redis_url(self, mock_from_url: Any, mock_settings: Any) -> None:
+    def test_init_with_valid_redis_url(
+        self, mock_from_url: Any, mock_settings: Any
+    ) -> None:
         """Test successful Redis initialization with valid URL"""
         mock_settings.REDIS_URL = "redis://localhost:6379/0"
         mock_redis = MagicMock()
@@ -40,7 +41,9 @@ class TestCacheService:
 
     @patch("app.services.cache.settings")
     @patch("app.services.cache.redis.from_url")
-    def test_init_with_connection_failure(self, mock_from_url: Any, mock_settings: Any) -> None:
+    def test_init_with_connection_failure(
+        self, mock_from_url: Any, mock_settings: Any
+    ) -> None:
         """Test graceful handling when Redis connection fails"""
         mock_settings.REDIS_URL = "redis://invalid:6379/0"
         mock_redis = MagicMock()
@@ -53,7 +56,9 @@ class TestCacheService:
 
     @patch("app.services.cache.settings")
     @patch("app.services.cache.redis.from_url")
-    def test_is_available_when_redis_connected(self, mock_from_url: Any, mock_settings: Any) -> None:
+    def test_is_available_when_redis_connected(
+        self, mock_from_url: Any, mock_settings: Any
+    ) -> None:
         """Test _is_available returns True when Redis is connected"""
         mock_settings.REDIS_URL = "redis://localhost:6379/0"
         mock_redis = MagicMock()
@@ -75,7 +80,9 @@ class TestCacheService:
 
     @patch("app.services.cache.settings")
     @patch("app.services.cache.redis.from_url")
-    def test_is_available_when_redis_ping_fails(self, mock_from_url: Any, mock_settings: Any) -> None:
+    def test_is_available_when_redis_ping_fails(
+        self, mock_from_url: Any, mock_settings: Any
+    ) -> None:
         """Test _is_available returns False when ping fails"""
         mock_settings.REDIS_URL = "redis://localhost:6379/0"
         mock_redis = MagicMock()

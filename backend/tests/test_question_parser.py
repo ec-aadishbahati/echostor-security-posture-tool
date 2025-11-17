@@ -1,4 +1,3 @@
-from typing import Any
 
 from app.services.question_parser import (
     _parse_option_explanation,

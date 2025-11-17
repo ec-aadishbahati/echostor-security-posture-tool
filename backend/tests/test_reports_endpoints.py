@@ -6,7 +6,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 
-def test_generate_standard_report(client: TestClient, auth_token: str, completed_assessment: Any) -> None:
+def test_generate_standard_report(
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
         response = client.post(
             f"/api/reports/{completed_assessment.id}/generate",
@@ -19,7 +21,9 @@ def test_generate_standard_report(client: TestClient, auth_token: str, completed
         assert data["report_type"] == "standard"
 
 
-def test_generate_report_assessment_not_found(client: TestClient, auth_token: str) -> None:
+def test_generate_report_assessment_not_found(
+    client: TestClient, auth_token: str
+) -> None:
     response = client.post(
         "/api/reports/nonexistent-id/generate",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -38,7 +42,9 @@ def test_generate_report_incomplete_assessment(
     assert "not found or not completed" in response.json()["detail"].lower()
 
 
-def test_request_ai_report(client: TestClient, auth_token: str, completed_assessment: Any) -> None:
+def test_request_ai_report(
+    client: TestClient, auth_token: str, completed_assessment: Any
+) -> None:
     with patch("app.api.reports.BackgroundTasks.add_task") as _mock_task:
         response = client.post(
             f"/api/reports/{completed_assessment.id}/request-ai-report",
@@ -54,7 +60,9 @@ def test_request_ai_report(client: TestClient, auth_token: str, completed_assess
         assert data["status"] == "pending"
 
 
-def test_get_user_reports(client: TestClient, auth_token: str, test_report: Any) -> None:
+def test_get_user_reports(
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.get(
         "/api/reports/user/reports", headers={"Authorization": f"Bearer {auth_token}"}
     )
@@ -65,7 +73,9 @@ def test_get_user_reports(client: TestClient, auth_token: str, test_report: Any)
     assert len(data["items"]) >= 1
 
 
-def test_get_report_status(client: TestClient, auth_token: str, test_report: Any) -> None:
+def test_get_report_status(
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.get(
         f"/api/reports/{test_report.id}/status",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -84,7 +94,9 @@ def test_get_report_status_not_found(client: TestClient, auth_token: str) -> Non
     assert response.status_code == 404
 
 
-def test_download_report_not_ready(client: TestClient, auth_token: str, test_report: Any) -> None:
+def test_download_report_not_ready(
+    client: TestClient, auth_token: str, test_report: Any
+) -> None:
     response = client.get(
         f"/api/reports/{test_report.id}/download",
         headers={"Authorization": f"Bearer {auth_token}"},
@@ -127,7 +139,9 @@ def test_admin_generate_ai_report_unauthorized(
     assert response.status_code == 403
 
 
-def test_admin_release_report(client: TestClient, admin_token: str, test_report: Any, db_session: Session) -> None:
+def test_admin_release_report(
+    client: TestClient, admin_token: str, test_report: Any, db_session: Session
+) -> None:
     test_report.status = "completed"
     test_report.report_type = "ai_enhanced"
     db_session.commit()
@@ -611,7 +625,11 @@ def test_reports_user_health_flow(
 
 
 def test_download_report_serves_existing_file(
-    client: TestClient, auth_token: str, db_session: Session, completed_assessment: Any, monkeypatch: Any
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    completed_assessment: Any,
+    monkeypatch: Any,
 ) -> None:
     from app.models.assessment import Report
 
@@ -645,7 +663,11 @@ def test_download_report_serves_existing_file(
 
 
 def test_download_report_regenerates_when_file_missing(
-    client: TestClient, auth_token: str, db_session: Session, completed_assessment: Any, monkeypatch: Any
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    completed_assessment: Any,
+    monkeypatch: Any,
 ) -> None:
     from app.models.assessment import AssessmentResponse, Report
 
@@ -710,7 +732,11 @@ def test_download_report_regenerates_when_file_missing(
 
 
 def test_download_report_ai_report_fails_when_file_missing(
-    client: TestClient, auth_token: str, db_session: Session, completed_assessment: Any, monkeypatch: Any
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    completed_assessment: Any,
+    monkeypatch: Any,
 ) -> None:
     from app.models.assessment import Report
 
@@ -739,7 +765,11 @@ def test_download_report_ai_report_fails_when_file_missing(
 
 
 def test_download_report_uses_filtered_structure_for_customized_assessment(
-    client: TestClient, auth_token: str, db_session: Session, test_user: Any, monkeypatch: Any
+    client: TestClient,
+    auth_token: str,
+    db_session: Session,
+    test_user: Any,
+    monkeypatch: Any,
 ) -> None:
     from datetime import UTC, datetime, timedelta
 

@@ -13,7 +13,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.services.question_parser import parse_assessment_questions
 
 
-def identify_frequency_inconsistencies() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def identify_frequency_inconsistencies() -> tuple[
+    list[dict[str, Any]], list[dict[str, Any]]
+]:
     """Scan questions for frequency scale inconsistencies"""
 
     md_path = Path(__file__).parent.parent / "data" / "security_assessment_questions.md"

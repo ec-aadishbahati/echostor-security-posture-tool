@@ -1,7 +1,6 @@
 """Tests for enhanced context extractor service"""
 
 import os
-from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -49,7 +48,9 @@ class TestEnhancedContextExtractor:
         assert "What This Option Means" in option1_content
         assert "Market Context" in option1_content
 
-    def test_get_option_ordinal_with_question_options(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_option_ordinal_with_question_options(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test option value to ordinal mapping with question options"""
         mock_options = [
             Mock(value="annually"),
@@ -63,39 +64,51 @@ class TestEnhancedContextExtractor:
         assert extractor._get_option_ordinal("as-needed", mock_options) == "3"
         assert extractor._get_option_ordinal("never", mock_options) == "4"
 
-    def test_get_option_ordinal_without_question_options(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_option_ordinal_without_question_options(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test option value to ordinal mapping without question options"""
         assert extractor._get_option_ordinal("1", None) == "1"
         assert extractor._get_option_ordinal("2", None) == "2"
         assert extractor._get_option_ordinal("annually", None) == "annually"
 
-    def test_get_option_ordinal_no_match(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_option_ordinal_no_match(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test option value to ordinal mapping with no match"""
         mock_options = [Mock(value="yes"), Mock(value="no")]
 
         assert extractor._get_option_ordinal("maybe", mock_options) == "maybe"
 
-    def test_get_enhanced_context_with_content(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_enhanced_context_with_content(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting enhanced context for option with enhanced content"""
         context = extractor.get_enhanced_context("1.1.2", "quarterly")
 
         assert len(context) > 0
         assert "what_this_means" in context or "market_context" in context
 
-    def test_get_enhanced_context_nonexistent_option(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_enhanced_context_nonexistent_option(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting enhanced context for nonexistent option"""
         context = extractor.get_enhanced_context("999.999.999", "1")
 
         assert context == {}
 
-    def test_get_enhanced_context_with_underscore_id(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_enhanced_context_with_underscore_id(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test that question IDs with underscores are normalized"""
         context1 = extractor.get_enhanced_context("1_1_2", "1")
         context2 = extractor.get_enhanced_context("1.1.2", "1")
 
         assert context1 == context2
 
-    def test_get_enhanced_context_with_question_options(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_enhanced_context_with_question_options(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting enhanced context with question options mapping"""
         mock_options = [
             Mock(value="annually"),
@@ -107,25 +120,33 @@ class TestEnhancedContextExtractor:
         context_direct = extractor.get_enhanced_context("1.1.2", "1")
         assert context == context_direct
 
-    def test_get_compact_context_with_content(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_compact_context_with_content(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting compact context for option with enhanced content"""
         compact = extractor.get_compact_context("1.1.2", "1", max_chars=400)
 
         assert isinstance(compact, str)
 
-    def test_get_compact_context_truncated(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_compact_context_truncated(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting compact context with truncation"""
         compact = extractor.get_compact_context("1.1.2", "1", max_chars=50)
 
         assert len(compact) <= 50
 
-    def test_get_compact_context_no_enhanced_content(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_compact_context_no_enhanced_content(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting compact context for option without enhanced content"""
         compact = extractor.get_compact_context("999.999.999", "1", max_chars=400)
 
         assert compact == ""
 
-    def test_get_compact_context_with_question_options(self, extractor: EnhancedContextExtractor) -> None:
+    def test_get_compact_context_with_question_options(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test getting compact context with question options mapping"""
         mock_options = [Mock(value="annually")]
 
@@ -136,12 +157,16 @@ class TestEnhancedContextExtractor:
         compact_direct = extractor.get_compact_context("1.1.2", "1", max_chars=400)
         assert compact == compact_direct
 
-    def test_has_enhanced_content_with_content(self, extractor: EnhancedContextExtractor) -> None:
+    def test_has_enhanced_content_with_content(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test has_enhanced_content for option with content"""
         result = extractor.has_enhanced_content("1.1.2", "1")
         assert isinstance(result, bool)
 
-    def test_has_enhanced_content_nonexistent(self, extractor: EnhancedContextExtractor) -> None:
+    def test_has_enhanced_content_nonexistent(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test has_enhanced_content returns False for nonexistent option"""
         assert extractor.has_enhanced_content("999.999.999", "1") is False
 
@@ -163,7 +188,9 @@ class TestEnhancedContextExtractor:
         assert "Why It Matters" in result
         assert "Market Context" not in result  # Should stop at next section
 
-    def test_extract_section_not_found(self, extractor: EnhancedContextExtractor) -> None:
+    def test_extract_section_not_found(
+        self, extractor: EnhancedContextExtractor
+    ) -> None:
         """Test extracting section that doesn't exist"""
         content = "Some basic content without sections."
 

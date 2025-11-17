@@ -139,7 +139,10 @@ def test_generate_ai_insights(encryption_key: str, mocker: Any) -> None:
 
 
 def test_generate_standard_report(
-    db_session: Any, test_report: Any, completed_assessment: Any, test_assessment_response: Any
+    db_session: Any,
+    test_report: Any,
+    completed_assessment: Any,
+    test_assessment_response: Any,
 ) -> None:
     from app.services.report_generator import generate_standard_report
 
@@ -164,7 +167,10 @@ def test_generate_standard_report(
 
 
 def test_generate_ai_report(
-    encryption_key: str, db_session: Any, completed_assessment: Any, test_assessment_response: Any
+    encryption_key: str,
+    db_session: Any,
+    completed_assessment: Any,
+    test_assessment_response: Any,
 ) -> None:
     from app.models.assessment import Report
     from app.services.report_generator import generate_ai_report
@@ -267,7 +273,9 @@ def test_generate_recommendations_high_score() -> None:
     assert isinstance(recommendations, list)
 
 
-def test_generate_report_html(completed_assessment: Any, test_assessment_response: Any) -> None:
+def test_generate_report_html(
+    completed_assessment: Any, test_assessment_response: Any
+) -> None:
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_report_html
 
@@ -301,7 +309,9 @@ def test_generate_report_html(completed_assessment: Any, test_assessment_respons
     assert len(html) > 100
 
 
-def test_generate_ai_report_html(completed_assessment: Any, test_assessment_response: Any) -> None:
+def test_generate_ai_report_html(
+    completed_assessment: Any, test_assessment_response: Any
+) -> None:
     from app.schemas.ai_artifacts import (
         Benchmark,
         Gap,
@@ -594,7 +604,9 @@ def test_generate_section_summaries() -> None:
     assert len(summary1["recommendations"]) > 0
 
 
-def test_generate_report_html_enhanced(completed_assessment: Any, test_assessment_response: Any) -> None:
+def test_generate_report_html_enhanced(
+    completed_assessment: Any, test_assessment_response: Any
+) -> None:
     from app.models.assessment import AssessmentResponse
     from app.services.question_parser import create_sample_assessment_structure
     from app.services.report_generator import generate_report_html
@@ -651,7 +663,9 @@ def test_generate_report_html_enhanced(completed_assessment: Any, test_assessmen
     assert "Disclaimer" in html
 
 
-def test_generate_ai_insights_validation_error(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_validation_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from app.services.openai_key_manager import OpenAIKeyManager
     from app.services.question_parser import create_sample_assessment_structure
     from app.utils.encryption import encrypt_api_key
@@ -694,7 +708,9 @@ def test_generate_ai_insights_validation_error(encryption_key: str, mocker: Any)
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_authentication_error(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_authentication_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import AuthenticationError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -735,7 +751,9 @@ def test_generate_ai_insights_authentication_error(encryption_key: str, mocker: 
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_rate_limit_error(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_rate_limit_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import RateLimitError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -776,7 +794,9 @@ def test_generate_ai_insights_rate_limit_error(encryption_key: str, mocker: Any)
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_api_connection_error(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_api_connection_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import APIConnectionError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -818,7 +838,9 @@ def test_generate_ai_insights_api_connection_error(encryption_key: str, mocker: 
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_sqlalchemy_error(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_sqlalchemy_error(
+    encryption_key: str, mocker: Any
+) -> None:
     from sqlalchemy.exc import SQLAlchemyError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -867,7 +889,9 @@ def test_generate_ai_insights_sqlalchemy_error(encryption_key: str, mocker: Any)
             assert "temporarily unavailable" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_authentication_error_with_retry(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_authentication_error_with_retry(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import AuthenticationError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -941,7 +965,9 @@ def test_generate_ai_insights_authentication_error_with_retry(encryption_key: st
             assert "Test insight" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_rate_limit_error_with_retry(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import RateLimitError
 
     from app.services.openai_key_manager import OpenAIKeyManager
@@ -1015,7 +1041,9 @@ def test_generate_ai_insights_rate_limit_error_with_retry(encryption_key: str, m
             assert "Test insight" in artifact.risk_explanation
 
 
-def test_generate_ai_insights_api_error_with_retry(encryption_key: str, mocker: Any) -> None:
+def test_generate_ai_insights_api_error_with_retry(
+    encryption_key: str, mocker: Any
+) -> None:
     from openai import APIConnectionError
 
     from app.services.openai_key_manager import OpenAIKeyManager

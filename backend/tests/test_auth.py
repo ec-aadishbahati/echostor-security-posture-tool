@@ -80,7 +80,9 @@ def test_login_nonexistent_user(client: TestClient) -> None:
     assert response.status_code == 401
 
 
-def test_get_current_user_authenticated(client: TestClient, test_user: Any, auth_token: str) -> None:
+def test_get_current_user_authenticated(
+    client: TestClient, test_user: Any, auth_token: str
+) -> None:
     response = client.get(
         "/api/auth/me", headers={"Authorization": f"Bearer {auth_token}"}
     )

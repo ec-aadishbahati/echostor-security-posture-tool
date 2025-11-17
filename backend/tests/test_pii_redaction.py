@@ -267,7 +267,11 @@ class TestPIIRedactionBeforeAI:
     @patch("app.services.report_generator.OpenAIKeyManager")
     @patch("app.services.report_generator.settings")
     def test_pii_redaction_metrics_tracked(
-        self, mock_settings: Any, mock_key_manager: Any, mock_openai: Any, mock_metrics: Any
+        self,
+        mock_settings: Any,
+        mock_key_manager: Any,
+        mock_openai: Any,
+        mock_metrics: Any,
     ) -> None:
         """Test that PII redaction events are tracked in metrics"""
         mock_settings.ENABLE_PII_REDACTION_BEFORE_AI = True

@@ -205,7 +205,6 @@ class TestAIArtifactSchemas:
     def test_recommendation_requires_linked_signals(self) -> None:
         """Test that recommendations must have linked signals"""
         rec = Recommendation(  # type: ignore[call-arg]
-                
             action="Implement MFA for all accounts",
             rationale="MFA reduces account compromise risk",
             linked_signals=["Q1", "Q7"],
@@ -217,7 +216,6 @@ class TestAIArtifactSchemas:
 
         with pytest.raises(ValidationError):
             Recommendation(  # type: ignore[call-arg]
-                
                 action="Implement MFA",
                 rationale="Important",
                 linked_signals=[],  # Empty list should fail
@@ -245,7 +243,6 @@ class TestAIArtifactSchemas:
     def test_section_artifact_validates_gaps_have_signals(self) -> None:
         """Test that SectionAIArtifact validates gaps have signals"""
         artifact = SectionAIArtifact(  # type: ignore[call-arg]
-                
             risk_level="High",
             risk_explanation="Multiple critical gaps identified in authentication controls",
             strengths=["Strong password policy"],
@@ -258,7 +255,6 @@ class TestAIArtifactSchemas:
             ],
             recommendations=[
                 Recommendation(  # type: ignore[call-arg]
-                
                     action="Implement MFA for all accounts",
                     rationale="Multi-factor authentication reduces the risk of account compromise significantly",
                     linked_signals=["Q7"],
@@ -269,7 +265,6 @@ class TestAIArtifactSchemas:
             ],
             benchmarks=[
                 Benchmark(  # type: ignore[call-arg]
-                
                     control="Multi-Factor Authentication",
                     status="Missing",
                     framework="NIST",
@@ -283,7 +278,6 @@ class TestAIArtifactSchemas:
         """Test that SectionAIArtifact validates recommendations have signals"""
         with pytest.raises(ValidationError):
             SectionAIArtifact(  # type: ignore[call-arg]
-                
                 risk_level="Medium",
                 risk_explanation="Some gaps identified",
                 strengths=["Good policy"],
@@ -296,7 +290,6 @@ class TestAIArtifactSchemas:
                 ],
                 recommendations=[
                     Recommendation(  # type: ignore[call-arg]
-                
                         action="Fix something",
                         rationale="Important",
                         linked_signals=[],  # Empty - should fail
@@ -307,7 +300,6 @@ class TestAIArtifactSchemas:
                 ],
                 benchmarks=[
                     Benchmark(  # type: ignore[call-arg]
-                
                         control="Test",
                         status="Partial",
                         framework="NIST",

@@ -83,7 +83,9 @@ def slugify(text: str) -> str:
     return slug
 
 
-def generate_slug_for_option(label: str, scale_type: str | None = None, index: int = 0) -> str:
+def generate_slug_for_option(
+    label: str, scale_type: str | None = None, index: int = 0
+) -> str:
     """
     Generate a slug for an option based on its label and context
 
