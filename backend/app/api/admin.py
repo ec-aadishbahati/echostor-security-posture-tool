@@ -31,7 +31,9 @@ async def get_all_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     search: str | None = Query(None),
-    sort_by: str = Query("created_at", regex="^(full_name|email|company_name|created_at|is_active)$"),
+    sort_by: str = Query(
+        "created_at", regex="^(full_name|email|company_name|created_at|is_active)$"
+    ),
     sort_order: str = Query("desc", regex="^(asc|desc)$"),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
@@ -699,12 +701,10 @@ async def bulk_delete_users(
             )
 
         existing_users = (
-            db.query(User.id)
-            .filter(User.id.in_(request_data.user_ids))
-            .all()
+            db.query(User.id).filter(User.id.in_(request_data.user_ids)).all()
         )
         existing_user_ids = {user.id for user in existing_users}
-        
+
         if not existing_user_ids:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -712,7 +712,7 @@ async def bulk_delete_users(
             )
 
         invalid_ids = set(request_data.user_ids) - existing_user_ids
-        
+
         deleted_count = (
             db.query(User)
             .filter(User.id.in_(existing_user_ids))

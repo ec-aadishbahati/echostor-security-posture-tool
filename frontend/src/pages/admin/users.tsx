@@ -48,7 +48,14 @@ export default function AdminUsers() {
     error,
   } = useQuery({
     queryKey: ['adminUsers', { skip, limit, search, sort_by: sortBy, sort_order: sortOrder }],
-    queryFn: () => adminAPI.getUsers({ skip, limit, search: search || undefined, sort_by: sortBy, sort_order: sortOrder }),
+    queryFn: () =>
+      adminAPI.getUsers({
+        skip,
+        limit,
+        search: search || undefined,
+        sort_by: sortBy,
+        sort_order: sortOrder,
+      }),
     placeholderData: (previousData) => previousData,
     refetchInterval: 30000,
   });
@@ -342,25 +349,25 @@ export default function AdminUsers() {
                             className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                           />
                         </th>
-                        <th 
+                        <th
                           className="text-left py-3 px-4 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50"
                           onClick={() => handleSort('full_name')}
                         >
                           User{getSortIcon('full_name')}
                         </th>
-                        <th 
+                        <th
                           className="text-left py-3 px-4 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50"
                           onClick={() => handleSort('company_name')}
                         >
                           Company{getSortIcon('company_name')}
                         </th>
-                        <th 
+                        <th
                           className="text-left py-3 px-4 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50"
                           onClick={() => handleSort('is_active')}
                         >
                           Status{getSortIcon('is_active')}
                         </th>
-                        <th 
+                        <th
                           className="text-left py-3 px-4 font-semibold text-gray-900 cursor-pointer hover:bg-gray-50"
                           onClick={() => handleSort('created_at')}
                         >

@@ -222,8 +222,13 @@ export const reportsAPI = {
 };
 
 export const adminAPI = {
-  getUsers: (params?: { skip?: number; limit?: number; search?: string; sort_by?: string; sort_order?: string }) =>
-    api.get<Paginated<User>>('/api/admin/users', { params }),
+  getUsers: (params?: {
+    skip?: number;
+    limit?: number;
+    search?: string;
+    sort_by?: string;
+    sort_order?: string;
+  }) => api.get<Paginated<User>>('/api/admin/users', { params }),
 
   getUser: (userId: string) => api.get<User>(`/api/admin/users/${userId}`),
 
