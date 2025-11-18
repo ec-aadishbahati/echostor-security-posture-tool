@@ -18,6 +18,10 @@ depends_on = None
 
 
 def upgrade() -> None:
+    bind = op.get_bind()
+    dialect_name = bind.dialect.name
+    json_type = postgresql.JSONB() if dialect_name == "postgresql" else sa.JSON()
+
     op.create_table(
         "assessment_intake_sessions",
         sa.Column("id", sa.String(36), primary_key=True),
@@ -28,9 +32,9 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.Column("user_profile_json", postgresql.JSONB(), nullable=False),
-        sa.Column("ai_raw_response_json", postgresql.JSONB(), nullable=True),
-        sa.Column("final_selected_section_ids", postgresql.JSONB(), nullable=True),
+        sa.Column("user_profile_json", json_type, nullable=False),
+        sa.Column("ai_raw_response_json", json_type, nullable=True),
+        sa.Column("final_selected_section_ids", json_type, nullable=True),
         sa.Column("time_preference", sa.String(20), nullable=True),
         sa.Column("used_fallback", sa.Boolean(), default=False, nullable=False),
     )
