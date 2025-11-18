@@ -294,3 +294,43 @@ export const adminAPI = {
   deleteOpenAIKey: (keyId: string) =>
     api.delete<{ message: string }>(`/api/admin/openai-keys/${keyId}`),
 };
+
+export const intakeAPI = {
+  getQuestions: () =>
+    api.get<{
+      questions: Array<{
+        id: string;
+        text: string;
+        type: string;
+        options?: Array<{ value: string; label: string }>;
+        required: boolean;
+      }>;
+    }>('/api/intake/questions'),
+
+  submitAndRecommend: (answers: {
+    role: string;
+    org_size: string;
+    sector: string;
+    environment: string;
+    system_types: string[];
+    cloud_providers: string[];
+    primary_goal: string;
+    primary_goal_detail?: string;
+    time_preference: string;
+  }) =>
+    api.post<{
+      recommended_sections: Array<{
+        id: string;
+        priority: string;
+        reason: string;
+        confidence?: number;
+      }>;
+      excluded_sections: Array<{
+        id: string;
+        reason: string;
+        confidence?: number;
+      }>;
+      used_fallback: boolean;
+      session_id: string;
+    }>('/api/intake/recommend', { answers }),
+};
