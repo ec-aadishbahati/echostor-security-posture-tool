@@ -10,7 +10,7 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from app.api import admin, assessment, auth, health, openai_keys, reports
+from app.api import admin, assessment, auth, health, intake, openai_keys, reports
 from app.core.config import settings
 from app.middleware.csrf import CSRFMiddleware
 from app.middleware.performance import PerformanceMiddleware
@@ -136,6 +136,7 @@ app.add_middleware(PerformanceMiddleware)
 
 app.include_router(auth.router, prefix="/api/auth", tags=["authentication"])
 app.include_router(assessment.router, prefix="/api/assessment", tags=["assessment"])
+app.include_router(intake.router, prefix="/api/intake", tags=["intake"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(openai_keys.router, prefix="/api/admin/openai-keys", tags=["admin"])
 app.include_router(reports.router, prefix="/api/reports", tags=["reports"])

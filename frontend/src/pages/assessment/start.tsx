@@ -7,11 +7,13 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { assessmentAPI } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { ClockIcon, DocumentTextIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import IntakeWizard from '@/components/IntakeWizard';
 
 export default function StartAssessment() {
   const { user } = useAuth();
   const router = useRouter();
   const [selectedTier, setSelectedTier] = useState<string>('standard');
+  const [showAIWizard, setShowAIWizard] = useState<boolean>(false);
 
   const { data: tiersData, isLoading } = useQuery({
     queryKey: ['assessmentTiers'],
@@ -46,6 +48,14 @@ export default function StartAssessment() {
     return null;
   }
 
+  if (showAIWizard) {
+    return (
+      <ProtectedRoute>
+        <IntakeWizard onBack={() => setShowAIWizard(false)} />
+      </ProtectedRoute>
+    );
+  }
+
   const tiers = tiersData?.data?.tiers || {};
   const tierOrder = ['quick', 'standard', 'deep'];
 
@@ -59,6 +69,52 @@ export default function StartAssessment() {
               Select the assessment level that best fits your needs. You can always customize
               sections later.
             </p>
+
+            {/* AI-Guided Option Banner */}
+            <div className="mb-8 bg-gradient-to-r from-primary-50 to-blue-50 border-2 border-primary-200 rounded-lg p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center mb-2">
+                    <svg
+                      className="w-6 h-6 text-primary-600 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                      />
+                    </svg>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      Not sure which sections to choose?
+                    </h3>
+                    <span className="ml-3 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-600 text-white">
+                      AI-Powered
+                    </span>
+                  </div>
+                  <p className="text-gray-700 mb-4">
+                    Answer a few quick questions about your role, environment, and goals. Our AI will
+                    recommend the most relevant sections for you, saving you time and ensuring you
+                    focus on what matters most.
+                  </p>
+                  <button
+                    onClick={() => setShowAIWizard(true)}
+                    className="btn-primary"
+                  >
+                    Get AI Recommendations
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                Or choose a pre-defined tier:
+              </h2>
+            </div>
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               {tierOrder.map((tierId) => {
