@@ -601,7 +601,9 @@ class TestIntakeServiceHelpers:
 
         mock_response = MagicMock()
         mock_response.choices = [MagicMock()]
-        mock_response.choices[0].message.content = '{"recommended_sections": [{"id": "section_1", "priority": "must_do", "reason": "Test", "confidence": 0.9}], "excluded_sections": []}'
+        mock_response.choices[
+            0
+        ].message.content = '{"recommended_sections": [{"id": "section_1", "priority": "must_do", "reason": "Test", "confidence": 0.9}], "excluded_sections": []}'
 
         with patch("app.services.intake_service.openai.OpenAI") as mock_openai:
             mock_client = MagicMock()
