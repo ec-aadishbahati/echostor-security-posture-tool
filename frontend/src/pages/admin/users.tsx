@@ -310,7 +310,7 @@ export default function AdminUsers() {
                     <select
                       value={pageSize}
                       onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                      className="text-sm border border-gray-300 rounded px-2 py-1"
+                      className="text-sm border border-gray-300 rounded pl-2 pr-9 py-1 bg-white min-w-[120px]"
                     >
                       <option value={10}>10 per page</option>
                       <option value={20}>20 per page</option>
