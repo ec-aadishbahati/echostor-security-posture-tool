@@ -160,7 +160,7 @@ export default function Dashboard() {
                   ? '/reports'
                   : hasActiveAssessment
                     ? '/assessment/questions'
-                    : '/assessment/select-sections'
+                    : '/assessment/start'
               }
               className="card hover:shadow-lg transition-shadow cursor-pointer"
             >
@@ -263,7 +263,7 @@ export default function Dashboard() {
                   ? '/reports'
                   : hasActiveAssessment
                     ? '/assessment/questions'
-                    : '/assessment/select-sections'
+                    : '/assessment/start'
               }
               className="btn-primary inline-flex items-center"
             >
@@ -284,10 +284,7 @@ export default function Dashboard() {
                 assessment {attemptsRemaining} more {attemptsRemaining === 1 ? 'time' : 'times'} to
                 track your security posture improvements over time.
               </p>
-              <Link
-                href="/assessment/select-sections"
-                className="btn-primary inline-flex items-center"
-              >
+              <Link href="/assessment/start" className="btn-primary inline-flex items-center">
                 Retake Assessment
                 <ArrowRightIcon className="ml-2 h-4 w-4" />
               </Link>
