@@ -1,5 +1,7 @@
 """Tests for intake wizard feature"""
 
+from unittest.mock import MagicMock, patch
+
 from app.schemas.intake import (
     AIRecommendationResponse,
     IntakeAnswers,
@@ -10,7 +12,9 @@ from app.schemas.intake import (
 from app.services.intake_prompt_builder import build_messages, get_openai_params
 from app.services.intake_service import (
     apply_guardrails,
+    call_openai_for_recommendations,
     generate_fallback_recommendations,
+    load_sections_metadata,
     map_answers_to_profile,
 )
 
@@ -412,3 +416,204 @@ class TestIntakeServiceGuardrails:
         result = apply_guardrails(ai_response, user_profile, sections)
 
         assert len(result.recommended_sections) <= 5
+
+    def test_apply_guardrails_respects_moderate_time_cap(self) -> None:
+        """Test that guardrails respect moderate time preference cap"""
+        user_profile = UserProfile(
+            role="CISO",
+            org_size="51-250",
+            sector="General Corporate",
+            environment="Mostly in the cloud",
+            system_types=["saas"],
+            has_ot_ics=False,
+            cloud_providers=[],
+            primary_goal="Understand our overall security posture",
+            primary_goal_detail=None,
+            time_preference="moderate",
+        )
+        ai_response = AIRecommendationResponse(
+            recommended_sections=[
+                SectionRecommendation(
+                    id=f"section_{i}",
+                    priority="must_do" if i < 5 else "should_do",
+                    reason="Test",
+                    confidence=0.9,
+                )
+                for i in range(1, 15)
+            ],
+            excluded_sections=[],
+        )
+        sections = [
+            SectionMetadata(
+                id=f"section_{i}",
+                name=f"Section {i}",
+                description="Test",
+                tags=[],
+            )
+            for i in range(1, 15)
+        ]
+
+        result = apply_guardrails(ai_response, user_profile, sections)
+
+        assert len(result.recommended_sections) <= 8
+
+    def test_apply_guardrails_filters_invalid_section_ids(self) -> None:
+        """Test that guardrails filter out invalid section IDs"""
+        user_profile = UserProfile(
+            role="IT Manager",
+            org_size="51-250",
+            sector="Technology",
+            environment="Mostly in the cloud",
+            system_types=["saas"],
+            has_ot_ics=False,
+            cloud_providers=[],
+            primary_goal="Understand our overall security posture",
+            primary_goal_detail=None,
+            time_preference="moderate",
+        )
+        ai_response = AIRecommendationResponse(
+            recommended_sections=[
+                SectionRecommendation(
+                    id="section_1", priority="must_do", reason="Test", confidence=0.9
+                ),
+                SectionRecommendation(
+                    id="invalid_section",
+                    priority="must_do",
+                    reason="Test",
+                    confidence=0.9,
+                ),
+            ],
+            excluded_sections=[],
+        )
+        sections = [
+            SectionMetadata(
+                id="section_1", name="Governance", description="Test", tags=[]
+            ),
+        ]
+
+        result = apply_guardrails(ai_response, user_profile, sections)
+
+        section_ids = [rec.id for rec in result.recommended_sections]
+        assert "section_1" in section_ids
+        assert "invalid_section" not in section_ids
+
+    def test_generate_fallback_recommendations_includes_app_security(self) -> None:
+        """Test that fallback includes app security for web/custom apps"""
+        user_profile = UserProfile(
+            role="IT Manager",
+            org_size="51-250",
+            sector="Technology",
+            environment="Mostly in the cloud",
+            system_types=["public_web_apps", "internal_custom_apps"],
+            has_ot_ics=False,
+            cloud_providers=["AWS"],
+            primary_goal="Understand our overall security posture",
+            primary_goal_detail=None,
+            time_preference="moderate",
+        )
+        sections = [
+            SectionMetadata(
+                id="section_1", name="Governance", description="Test", tags=[]
+            ),
+            SectionMetadata(id="section_4", name="IAM", description="Test", tags=[]),
+            SectionMetadata(
+                id="section_8", name="Application Security", description="Test", tags=[]
+            ),
+            SectionMetadata(
+                id="section_10", name="Incident Response", description="Test", tags=[]
+            ),
+        ]
+
+        response = generate_fallback_recommendations(user_profile, sections)
+
+        section_ids = [rec.id for rec in response.recommended_sections]
+        assert "section_8" in section_ids
+
+    def test_generate_fallback_recommendations_includes_risk_mgmt_for_posture_goal(
+        self,
+    ) -> None:
+        """Test that fallback includes risk management for overall posture goal"""
+        user_profile = UserProfile(
+            role="CISO",
+            org_size="51-250",
+            sector="General Corporate",
+            environment="Mostly in the cloud",
+            system_types=["saas"],
+            has_ot_ics=False,
+            cloud_providers=["AWS"],
+            primary_goal="Understand our overall security posture",
+            primary_goal_detail=None,
+            time_preference="moderate",
+        )
+        sections = [
+            SectionMetadata(
+                id="section_1", name="Governance", description="Test", tags=[]
+            ),
+            SectionMetadata(
+                id="section_2", name="Risk Management", description="Test", tags=[]
+            ),
+            SectionMetadata(id="section_4", name="IAM", description="Test", tags=[]),
+            SectionMetadata(
+                id="section_10", name="Incident Response", description="Test", tags=[]
+            ),
+        ]
+
+        response = generate_fallback_recommendations(user_profile, sections)
+
+        section_ids = [rec.id for rec in response.recommended_sections]
+        assert "section_2" in section_ids
+
+
+class TestIntakeServiceHelpers:
+    """Tests for intake service helper functions"""
+
+    def test_load_sections_metadata(self) -> None:
+        """Test that sections metadata loads successfully"""
+        sections = load_sections_metadata()
+
+        assert len(sections) > 0
+        assert all(isinstance(s, SectionMetadata) for s in sections)
+        assert all(s.id and s.name and s.description for s in sections)
+
+    def test_call_openai_for_recommendations_success(self) -> None:
+        """Test successful OpenAI call for recommendations"""
+        user_profile = UserProfile(
+            role="IT Manager",
+            org_size="51-250",
+            sector="Finance",
+            environment="Hybrid",
+            system_types=["public_web_apps"],
+            has_ot_ics=False,
+            cloud_providers=["AWS"],
+            primary_goal="Understand our overall security posture",
+            primary_goal_detail=None,
+            time_preference="moderate",
+        )
+        sections = [
+            SectionMetadata(
+                id="section_1", name="Governance", description="Test", tags=[]
+            ),
+            SectionMetadata(id="section_4", name="IAM", description="Test", tags=[]),
+        ]
+
+        mock_key_manager = MagicMock()
+        mock_key_manager.get_next_key.return_value = ("key_id", "test_api_key")
+
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = '{"recommended_sections": [{"id": "section_1", "priority": "must_do", "reason": "Test", "confidence": 0.9}], "excluded_sections": []}'
+
+        with patch("app.services.intake_service.openai.OpenAI") as mock_openai:
+            mock_client = MagicMock()
+            mock_client.chat.completions.create.return_value = mock_response
+            mock_openai.return_value = mock_client
+
+            result, raw = call_openai_for_recommendations(
+                user_profile, sections, mock_key_manager
+            )
+
+        assert result is not None
+        assert isinstance(result, AIRecommendationResponse)
+        assert len(result.recommended_sections) == 1
+        assert result.recommended_sections[0].id == "section_1"
+        mock_key_manager.record_success.assert_called_once_with("key_id")
