@@ -22,20 +22,25 @@ def upgrade() -> None:
         "assessment_intake_sessions",
         sa.Column("id", sa.String(36), primary_key=True),
         sa.Column("user_id", sa.String(36), nullable=True),
-        sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.Column("user_profile_json", postgresql.JSONB(), nullable=False),
         sa.Column("ai_raw_response_json", postgresql.JSONB(), nullable=True),
         sa.Column("final_selected_section_ids", postgresql.JSONB(), nullable=True),
         sa.Column("time_preference", sa.String(20), nullable=True),
         sa.Column("used_fallback", sa.Boolean(), default=False, nullable=False),
     )
-    
+
     op.create_index(
         "ix_assessment_intake_sessions_user_id",
         "assessment_intake_sessions",
         ["user_id"],
     )
-    
+
     op.create_index(
         "ix_assessment_intake_sessions_created_at",
         "assessment_intake_sessions",
@@ -44,6 +49,11 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_index("ix_assessment_intake_sessions_created_at", table_name="assessment_intake_sessions")
-    op.drop_index("ix_assessment_intake_sessions_user_id", table_name="assessment_intake_sessions")
+    op.drop_index(
+        "ix_assessment_intake_sessions_created_at",
+        table_name="assessment_intake_sessions",
+    )
+    op.drop_index(
+        "ix_assessment_intake_sessions_user_id", table_name="assessment_intake_sessions"
+    )
     op.drop_table("assessment_intake_sessions")

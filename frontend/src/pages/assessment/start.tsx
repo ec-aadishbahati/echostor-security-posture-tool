@@ -96,14 +96,11 @@ export default function StartAssessment() {
                     </span>
                   </div>
                   <p className="text-gray-700 mb-4">
-                    Answer a few quick questions about your role, environment, and goals. Our AI will
-                    recommend the most relevant sections for you, saving you time and ensuring you
-                    focus on what matters most.
+                    Answer a few quick questions about your role, environment, and goals. Our AI
+                    will recommend the most relevant sections for you, saving you time and ensuring
+                    you focus on what matters most.
                   </p>
-                  <button
-                    onClick={() => setShowAIWizard(true)}
-                    className="btn-primary"
-                  >
+                  <button onClick={() => setShowAIWizard(true)} className="btn-primary">
                     Get AI Recommendations
                   </button>
                 </div>

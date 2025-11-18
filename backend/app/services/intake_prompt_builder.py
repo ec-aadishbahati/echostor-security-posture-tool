@@ -35,12 +35,14 @@ You MUST:
 * Set confidence scores between 0.0 and 1.0 for each recommendation."""
 
 
-def build_user_message(user_profile: UserProfile, sections: list[SectionMetadata]) -> str:
+def build_user_message(
+    user_profile: UserProfile, sections: list[SectionMetadata]
+) -> str:
     """Build the user message with profile and sections data"""
-    
+
     profile_dict = user_profile.model_dump()
     sections_list = [section.model_dump() for section in sections]
-    
+
     message = f"""Here is the user's profile (JSON):
 
 {json.dumps(profile_dict, indent=2)}
@@ -79,15 +81,17 @@ Respond with JSON ONLY in this exact structure:
 }}
 
 No extra text, comments or explanations outside the JSON."""
-    
+
     return message
 
 
-def build_messages(user_profile: UserProfile, sections: list[SectionMetadata]) -> list[dict[str, str]]:
+def build_messages(
+    user_profile: UserProfile, sections: list[SectionMetadata]
+) -> list[dict[str, str]]:
     """Build the complete messages array for OpenAI API"""
     return [
         {"role": "system", "content": build_system_message()},
-        {"role": "user", "content": build_user_message(user_profile, sections)}
+        {"role": "user", "content": build_user_message(user_profile, sections)},
     ]
 
 
@@ -96,5 +100,5 @@ def get_openai_params() -> dict[str, Any]:
     return {
         "model": "gpt-4o-mini",
         "temperature": 0.2,
-        "response_format": {"type": "json_object"}
+        "response_format": {"type": "json_object"},
     }

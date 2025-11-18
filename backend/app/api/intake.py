@@ -22,7 +22,7 @@ router = APIRouter()
 @router.get("/questions", response_model=DiscoveryQuestionnaire)
 async def get_discovery_questions(request: Request) -> DiscoveryQuestionnaire:
     """Get the discovery questionnaire for intake"""
-    
+
     questions = [
         DiscoveryQuestion(
             id="role",
@@ -30,7 +30,10 @@ async def get_discovery_questions(request: Request) -> DiscoveryQuestionnaire:
             type="single_select",
             options=[
                 {"value": "ciso", "label": "CISO / Head of Security"},
-                {"value": "security_manager", "label": "Security Manager / Security Analyst"},
+                {
+                    "value": "security_manager",
+                    "label": "Security Manager / Security Analyst",
+                },
                 {"value": "it_manager", "label": "IT Manager / Infrastructure Lead"},
                 {"value": "cio_cto", "label": "CIO / CTO"},
                 {"value": "founder", "label": "Founder / Business Owner"},
@@ -56,7 +59,10 @@ async def get_discovery_questions(request: Request) -> DiscoveryQuestionnaire:
             text="Which sector fits you best?",
             type="single_select",
             options=[
-                {"value": "general_corporate", "label": "General Corporate / Professional Services"},
+                {
+                    "value": "general_corporate",
+                    "label": "General Corporate / Professional Services",
+                },
                 {"value": "finance", "label": "Finance / Banking / Insurance"},
                 {"value": "healthcare", "label": "Healthcare / Life Sciences"},
                 {"value": "government", "label": "Government / Public Sector"},
@@ -84,10 +90,22 @@ async def get_discovery_questions(request: Request) -> DiscoveryQuestionnaire:
             text="Which of these do you have today?",
             type="multi_select",
             options=[
-                {"value": "ot_ics", "label": "OT/ICS / SCADA / Industrial control systems"},
-                {"value": "public_web_apps", "label": "Public-facing web applications or APIs"},
-                {"value": "internal_custom_apps", "label": "Internal custom applications (developed in-house)"},
-                {"value": "saas_tools", "label": "Mainly SaaS tools (e.g. Microsoft 365, Google Workspace, CRM)"},
+                {
+                    "value": "ot_ics",
+                    "label": "OT/ICS / SCADA / Industrial control systems",
+                },
+                {
+                    "value": "public_web_apps",
+                    "label": "Public-facing web applications or APIs",
+                },
+                {
+                    "value": "internal_custom_apps",
+                    "label": "Internal custom applications (developed in-house)",
+                },
+                {
+                    "value": "saas_tools",
+                    "label": "Mainly SaaS tools (e.g. Microsoft 365, Google Workspace, CRM)",
+                },
                 {"value": "other", "label": "Other"},
                 {"value": "not_sure", "label": "Not sure"},
             ],
@@ -112,11 +130,26 @@ async def get_discovery_questions(request: Request) -> DiscoveryQuestionnaire:
             text="What's your primary reason for doing this assessment?",
             type="single_select",
             options=[
-                {"value": "overall_posture", "label": "Understand our overall security posture"},
-                {"value": "audit_cert", "label": "Prepare for an audit or certification (e.g. ISO 27001, SOC 2)"},
-                {"value": "cloud_identity", "label": "Focus specifically on cloud and identity security"},
-                {"value": "supplier_gaps", "label": "Understand gaps before engaging a supplier/partner"},
-                {"value": "benchmark", "label": "Benchmark ourselves against best practices"},
+                {
+                    "value": "overall_posture",
+                    "label": "Understand our overall security posture",
+                },
+                {
+                    "value": "audit_cert",
+                    "label": "Prepare for an audit or certification (e.g. ISO 27001, SOC 2)",
+                },
+                {
+                    "value": "cloud_identity",
+                    "label": "Focus specifically on cloud and identity security",
+                },
+                {
+                    "value": "supplier_gaps",
+                    "label": "Understand gaps before engaging a supplier/partner",
+                },
+                {
+                    "value": "benchmark",
+                    "label": "Benchmark ourselves against best practices",
+                },
                 {"value": "other", "label": "Something else"},
             ],
             required=True,
@@ -126,14 +159,23 @@ async def get_discovery_questions(request: Request) -> DiscoveryQuestionnaire:
             text="How much time do you want to spend today?",
             type="single_select",
             options=[
-                {"value": "quick", "label": "Quick overview (approx. 10–15 minutes, only key sections)"},
-                {"value": "moderate", "label": "Moderate depth (approx. 30–40 minutes, more coverage)"},
-                {"value": "deep", "label": "Deep dive (I'm happy to go into detailed sections)"},
+                {
+                    "value": "quick",
+                    "label": "Quick overview (approx. 10–15 minutes, only key sections)",
+                },
+                {
+                    "value": "moderate",
+                    "label": "Moderate depth (approx. 30–40 minutes, more coverage)",
+                },
+                {
+                    "value": "deep",
+                    "label": "Deep dive (I'm happy to go into detailed sections)",
+                },
             ],
             required=True,
         ),
     ]
-    
+
     return DiscoveryQuestionnaire(questions=questions)
 
 
@@ -150,15 +192,15 @@ async def submit_intake_and_recommend(
     """
     try:
         user_id = current_user.id if current_user else None
-        
+
         recommendations = generate_recommendations(
             answers=intake_request.answers,
             db=db,
             user_id=user_id,
         )
-        
+
         return recommendations
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

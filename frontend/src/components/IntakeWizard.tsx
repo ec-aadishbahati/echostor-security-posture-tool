@@ -52,7 +52,7 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
     onSuccess: (response) => {
       setRecommendations(response.data.recommended_sections);
       setUsedFallback(response.data.used_fallback);
-      
+
       const preSelected = new Set<string>();
       response.data.recommended_sections.forEach((rec) => {
         if (rec.priority === 'must_do') {
@@ -71,8 +71,7 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
   });
 
   const startAssessmentMutation = useMutation({
-    mutationFn: (sectionIds: string[]) =>
-      assessmentAPI.startAssessmentWithSections(sectionIds),
+    mutationFn: (sectionIds: string[]) => assessmentAPI.startAssessmentWithSections(sectionIds),
     onSuccess: () => {
       toast.success('Assessment started!');
       router.push('/assessment/questions');
@@ -192,8 +191,9 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
             {usedFallback && (
               <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-sm text-yellow-800">
-                  <strong>Note:</strong> We used our fallback recommendation system to generate these
-                  suggestions. The recommendations are based on proven best practices for your profile.
+                  <strong>Note:</strong> We used our fallback recommendation system to generate
+                  these suggestions. The recommendations are based on proven best practices for your
+                  profile.
                 </p>
               </div>
             )}
@@ -332,9 +332,7 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
                 disabled={startAssessmentMutation.isPending || selectedSections.size === 0}
                 className="px-8 py-3 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
               >
-                {startAssessmentMutation.isPending
-                  ? 'Starting Assessment...'
-                  : 'Start Assessment'}
+                {startAssessmentMutation.isPending ? 'Starting Assessment...' : 'Start Assessment'}
               </button>
             </div>
           </div>
@@ -364,9 +362,7 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
 
           {currentQuestion && (
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                {currentQuestion.text}
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">{currentQuestion.text}</h2>
 
               {currentQuestion.type === 'single_select' && currentQuestion.options && (
                 <div className="space-y-3">
@@ -379,7 +375,9 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
                         type="radio"
                         name={currentQuestion.id}
                         value={option.value}
-                        checked={answers[currentQuestion.id as keyof IntakeAnswers] === option.value}
+                        checked={
+                          answers[currentQuestion.id as keyof IntakeAnswers] === option.value
+                        }
                         onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
                         className="h-5 w-5 text-primary-600 focus:ring-primary-500"
                       />
@@ -400,10 +398,11 @@ export default function IntakeWizard({ onBack }: IntakeWizardProps) {
                         type="checkbox"
                         value={option.value}
                         checked={(
-                          answers[currentQuestion.id as keyof IntakeAnswers] as string[] || []
+                          (answers[currentQuestion.id as keyof IntakeAnswers] as string[]) || []
                         ).includes(option.value)}
                         onChange={(e) => {
-                          const currentValues = (answers[currentQuestion.id as keyof IntakeAnswers] as string[]) || [];
+                          const currentValues =
+                            (answers[currentQuestion.id as keyof IntakeAnswers] as string[]) || [];
                           const newValues = e.target.checked
                             ? [...currentValues, option.value]
                             : currentValues.filter((v) => v !== option.value);

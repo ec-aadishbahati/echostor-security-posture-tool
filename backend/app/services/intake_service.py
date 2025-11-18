@@ -33,7 +33,9 @@ def load_sections_metadata() -> list[SectionMetadata]:
     """Load section metadata from JSON file"""
     import os
 
-    current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    current_dir = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
     metadata_path = os.path.join(current_dir, "data", "sections_metadata.json")
 
     with open(metadata_path, encoding="utf-8") as f:
@@ -71,7 +73,7 @@ def call_openai_for_recommendations(
     """
     key_id: str | None = None
     api_key: str | None = None
-    
+
     try:
         key_id, api_key = key_manager.get_next_key()
         if not key_id or not api_key:
@@ -84,7 +86,7 @@ def call_openai_for_recommendations(
         client = openai.OpenAI(api_key=api_key)
         response = client.chat.completions.create(
             messages=messages,  # type: ignore
-            **params
+            **params,
         )
 
         content = response.choices[0].message.content
@@ -140,7 +142,11 @@ def generate_fallback_recommendations(
 
     sections_by_id = {s.id: s for s in sections}
 
-    core_sections = ["section_1", "section_4", "section_10"]  # Governance, IAM, Incident Response
+    core_sections = [
+        "section_1",
+        "section_4",
+        "section_10",
+    ]  # Governance, IAM, Incident Response
     for section_id in core_sections:
         if section_id in sections_by_id:
             recommended.append(
@@ -152,7 +158,9 @@ def generate_fallback_recommendations(
                 )
             )
 
-    if user_profile.cloud_providers and "none" not in [p.lower() for p in user_profile.cloud_providers]:
+    if user_profile.cloud_providers and "none" not in [
+        p.lower() for p in user_profile.cloud_providers
+    ]:
         if "section_9" in sections_by_id:
             recommended.append(
                 SectionRecommendation(
@@ -183,7 +191,10 @@ def generate_fallback_recommendations(
                 )
             )
 
-    if "public_web_apps" in user_profile.system_types or "internal_custom_apps" in user_profile.system_types:
+    if (
+        "public_web_apps" in user_profile.system_types
+        or "internal_custom_apps" in user_profile.system_types
+    ):
         if "section_8" in sections_by_id:
             recommended.append(
                 SectionRecommendation(
@@ -194,7 +205,10 @@ def generate_fallback_recommendations(
                 )
             )
 
-    if "overall" in user_profile.primary_goal.lower() or "posture" in user_profile.primary_goal.lower():
+    if (
+        "overall" in user_profile.primary_goal.lower()
+        or "posture" in user_profile.primary_goal.lower()
+    ):
         if "section_2" in sections_by_id:
             recommended.append(
                 SectionRecommendation(
@@ -249,7 +263,9 @@ def apply_guardrails(
         )
         recommended_ids.add("section_4")
 
-    if user_profile.cloud_providers and "none" not in [p.lower() for p in user_profile.cloud_providers]:
+    if user_profile.cloud_providers and "none" not in [
+        p.lower() for p in user_profile.cloud_providers
+    ]:
         if "section_9" not in recommended_ids and "section_9" in sections_by_id:
             found = False
             for rec in ai_response.recommended_sections:
@@ -286,9 +302,15 @@ def apply_guardrails(
             recommended_ids.add("section_18")
 
     if user_profile.time_preference == "quick":
-        must_do = [r for r in ai_response.recommended_sections if r.priority == "must_do"]
-        should_do = [r for r in ai_response.recommended_sections if r.priority == "should_do"]
-        optional = [r for r in ai_response.recommended_sections if r.priority == "optional"]
+        must_do = [
+            r for r in ai_response.recommended_sections if r.priority == "must_do"
+        ]
+        should_do = [
+            r for r in ai_response.recommended_sections if r.priority == "should_do"
+        ]
+        optional = [
+            r for r in ai_response.recommended_sections if r.priority == "optional"
+        ]
 
         should_do.sort(key=lambda x: x.confidence or 0.5, reverse=True)
         optional.sort(key=lambda x: x.confidence or 0.5, reverse=True)
@@ -301,9 +323,15 @@ def apply_guardrails(
         ai_response.recommended_sections = final
 
     elif user_profile.time_preference == "moderate":
-        must_do = [r for r in ai_response.recommended_sections if r.priority == "must_do"]
-        should_do = [r for r in ai_response.recommended_sections if r.priority == "should_do"]
-        optional = [r for r in ai_response.recommended_sections if r.priority == "optional"]
+        must_do = [
+            r for r in ai_response.recommended_sections if r.priority == "must_do"
+        ]
+        should_do = [
+            r for r in ai_response.recommended_sections if r.priority == "should_do"
+        ]
+        optional = [
+            r for r in ai_response.recommended_sections if r.priority == "optional"
+        ]
 
         should_do.sort(key=lambda x: x.confidence or 0.5, reverse=True)
         optional.sort(key=lambda x: x.confidence or 0.5, reverse=True)
@@ -317,7 +345,6 @@ def apply_guardrails(
                 final.extend(optional[:remaining])
 
         ai_response.recommended_sections = final
-
 
     valid_ids = set(sections_by_id.keys())
     ai_response.recommended_sections = [
