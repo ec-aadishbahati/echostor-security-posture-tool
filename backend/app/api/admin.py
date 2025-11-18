@@ -515,6 +515,12 @@ async def delete_user(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
 
+        if user.is_protected:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Cannot delete protected admin account",
+            )
+
         assessments = db.query(Assessment).filter(Assessment.user_id == user_id).all()
         for assessment in assessments:
             db.query(AssessmentResponse).filter(
@@ -701,7 +707,9 @@ async def bulk_delete_users(
             )
 
         existing_users = (
-            db.query(User.id).filter(User.id.in_(request_data.user_ids)).all()
+            db.query(User.id, User.is_protected, User.email)
+            .filter(User.id.in_(request_data.user_ids))
+            .all()
         )
         existing_user_ids = {user.id for user in existing_users}
 
@@ -713,9 +721,24 @@ async def bulk_delete_users(
 
         invalid_ids = set(request_data.user_ids) - existing_user_ids
 
+        protected_users = [
+            {"id": user.id, "email": user.email}
+            for user in existing_users
+            if user.is_protected
+        ]
+        protected_user_ids = {user["id"] for user in protected_users}
+
+        deletable_user_ids = existing_user_ids - protected_user_ids
+
+        if not deletable_user_ids:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Cannot delete protected admin accounts",
+            )
+
         deleted_count = (
             db.query(User)
-            .filter(User.id.in_(existing_user_ids))
+            .filter(User.id.in_(deletable_user_ids))
             .delete(synchronize_session=False)
         )
         db.commit()
@@ -727,11 +750,14 @@ async def bulk_delete_users(
                 "requested_user_ids": request_data.user_ids,
                 "deleted_count": deleted_count,
                 "invalid_ids": list(invalid_ids) if invalid_ids else [],
+                "protected_users": protected_users,
             },
             db=db,
         )
 
         response_message = f"Successfully deleted {deleted_count} user{'s' if deleted_count != 1 else ''}"
+        if protected_users:
+            response_message += f" ({len(protected_users)} protected account{'s' if len(protected_users) != 1 else ''} skipped)"
         if invalid_ids:
             response_message += f" ({len(invalid_ids)} invalid ID{'s' if len(invalid_ids) != 1 else ''} skipped)"
 
@@ -739,6 +765,7 @@ async def bulk_delete_users(
             "message": response_message,
             "deleted_count": deleted_count,
             "invalid_ids": list(invalid_ids) if invalid_ids else [],
+            "protected_users": protected_users,
         }
 
     except HTTPException:
