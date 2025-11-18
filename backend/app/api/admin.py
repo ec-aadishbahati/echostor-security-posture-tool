@@ -31,10 +31,12 @@ async def get_all_users(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     search: str | None = Query(None),
+    sort_by: str = Query("created_at", regex="^(full_name|email|company_name|created_at|is_active)$"),
+    sort_order: str = Query("desc", regex="^(asc|desc)$"),
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ) -> PaginatedResponse[UserResponse]:
-    """Get all users with pagination and search"""
+    """Get all users with pagination, search, and sorting"""
 
     query = db.query(User)
 
@@ -45,6 +47,12 @@ async def get_all_users(
             | User.email.ilike(search_param)
             | User.company_name.ilike(search_param)
         )
+
+    sort_column = getattr(User, sort_by)
+    if sort_order == "desc":
+        query = query.order_by(desc(sort_column))
+    else:
+        query = query.order_by(sort_column)
 
     total = query.count()
     users = query.offset(skip).limit(limit).all()
@@ -681,15 +689,33 @@ async def bulk_delete_users(
     current_admin: CurrentUserResponse = Depends(get_current_admin_user),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
-    """Bulk delete users and all associated data"""
+    """Bulk delete users and all associated data with optimized performance"""
 
     try:
-        # Let SQLAlchemy handle cascade deletion automatically
-        # User.assessments relationship has cascade="all, delete-orphan"
-        # Assessment foreign keys have ondelete="CASCADE"
+        if not request_data.user_ids:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No user IDs provided",
+            )
+
+        existing_users = (
+            db.query(User.id)
+            .filter(User.id.in_(request_data.user_ids))
+            .all()
+        )
+        existing_user_ids = {user.id for user in existing_users}
+        
+        if not existing_user_ids:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No valid users found to delete",
+            )
+
+        invalid_ids = set(request_data.user_ids) - existing_user_ids
+        
         deleted_count = (
             db.query(User)
-            .filter(User.id.in_(request_data.user_ids))
+            .filter(User.id.in_(existing_user_ids))
             .delete(synchronize_session=False)
         )
         db.commit()
@@ -697,18 +723,28 @@ async def bulk_delete_users(
         await log_admin_action(
             admin_email=current_admin.email,
             action="bulk_delete_users",
-            details={"user_ids": request_data.user_ids, "deleted_count": deleted_count},
+            details={
+                "requested_user_ids": request_data.user_ids,
+                "deleted_count": deleted_count,
+                "invalid_ids": list(invalid_ids) if invalid_ids else [],
+            },
             db=db,
         )
 
+        response_message = f"Successfully deleted {deleted_count} user{'s' if deleted_count != 1 else ''}"
+        if invalid_ids:
+            response_message += f" ({len(invalid_ids)} invalid ID{'s' if len(invalid_ids) != 1 else ''} skipped)"
+
         return {
-            "message": f"Deleted {deleted_count} users",
+            "message": response_message,
             "deleted_count": deleted_count,
+            "invalid_ids": list(invalid_ids) if invalid_ids else [],
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         db.rollback()
-        # Log the specific error for debugging
         print(f"Bulk delete error: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
