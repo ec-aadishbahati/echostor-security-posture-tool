@@ -10,6 +10,7 @@ export interface User {
   company_name: string;
   is_active: boolean;
   is_admin: boolean;
+  is_protected: boolean;
   created_at: string;
   updated_at: string;
 }

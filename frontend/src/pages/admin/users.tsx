@@ -31,6 +31,7 @@ export default function AdminUsers() {
     company_name: string;
     is_active: boolean;
     is_admin: boolean;
+    is_protected: boolean;
     created_at: string;
   } | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -170,6 +171,7 @@ export default function AdminUsers() {
     company_name: string;
     is_active: boolean;
     is_admin: boolean;
+    is_protected: boolean;
     created_at: string;
   }) => {
     setSelectedUser(user);
@@ -183,6 +185,7 @@ export default function AdminUsers() {
     company_name: string;
     is_active: boolean;
     is_admin: boolean;
+    is_protected: boolean;
     created_at: string;
   }) => {
     setSelectedUser(user);
@@ -202,22 +205,23 @@ export default function AdminUsers() {
   };
 
   const handleSelectAll = () => {
-    if (selectedUsers.length === users.length) {
+    const selectableUsers = users.filter(
+      (user: {
+        id: string;
+        email: string;
+        full_name: string;
+        company_name: string;
+        is_active: boolean;
+        is_admin: boolean;
+        is_protected: boolean;
+        created_at: string;
+      }) => !user.is_protected
+    );
+
+    if (selectedUsers.length === selectableUsers.length && selectableUsers.length > 0) {
       setSelectedUsers([]);
     } else {
-      setSelectedUsers(
-        users.map(
-          (user: {
-            id: string;
-            email: string;
-            full_name: string;
-            company_name: string;
-            is_active: boolean;
-            is_admin: boolean;
-            created_at: string;
-          }) => user.id
-        )
-      );
+      setSelectedUsers(selectableUsers.map((user) => user.id));
     }
   };
 
@@ -403,6 +407,7 @@ export default function AdminUsers() {
                           company_name: string;
                           is_active: boolean;
                           is_admin: boolean;
+                          is_protected: boolean;
                           created_at: string;
                         }) => (
                           <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
@@ -411,7 +416,9 @@ export default function AdminUsers() {
                                 type="checkbox"
                                 checked={selectedUsers.includes(user.id)}
                                 onChange={() => handleSelectUser(user.id)}
-                                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                disabled={user.is_protected}
+                                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                                title={user.is_protected ? 'Protected account' : ''}
                               />
                             </td>
                             <td className="py-4 px-4">
@@ -448,8 +455,13 @@ export default function AdminUsers() {
                                 </button>
                                 <button
                                   onClick={() => handleDeleteUser(user)}
-                                  className="text-red-600 hover:text-red-900 flex items-center"
-                                  title="Delete User"
+                                  disabled={user.is_protected}
+                                  className={`flex items-center ${
+                                    user.is_protected
+                                      ? 'text-gray-400 cursor-not-allowed'
+                                      : 'text-red-600 hover:text-red-900'
+                                  }`}
+                                  title={user.is_protected ? 'Protected account' : 'Delete User'}
                                 >
                                   <TrashIcon className="h-4 w-4" />
                                 </button>

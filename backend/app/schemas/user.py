@@ -40,6 +40,7 @@ class UserResponse(UserBase):
     id: str
     is_active: bool
     is_admin: bool
+    is_protected: bool
     created_at: datetime
     updated_at: datetime
 
