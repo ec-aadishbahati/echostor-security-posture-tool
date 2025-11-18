@@ -19,6 +19,7 @@ import { toast } from 'react-hot-toast';
 export default function AdminUsers() {
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [sortBy, setSortBy] = useState<string>('created_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -38,7 +39,7 @@ export default function AdminUsers() {
     null
   );
   const [newPassword, setNewPassword] = useState('');
-  const limit = 20;
+  const limit = pageSize;
   const skip = (currentPage - 1) * limit;
   const queryClient = useQueryClient();
 
@@ -77,6 +78,11 @@ export default function AdminUsers() {
       setSortBy(column);
       setSortOrder('asc');
     }
+    setCurrentPage(1);
+  };
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
     setCurrentPage(1);
   };
 
@@ -300,6 +306,18 @@ export default function AdminUsers() {
                       </select>
                     </div>
                   )}
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={pageSize}
+                      onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                      className="text-sm border border-gray-300 rounded px-2 py-1"
+                    >
+                      <option value={10}>10 per page</option>
+                      <option value={20}>20 per page</option>
+                      <option value={50}>50 per page</option>
+                      <option value={100}>100 per page</option>
+                    </select>
+                  </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
