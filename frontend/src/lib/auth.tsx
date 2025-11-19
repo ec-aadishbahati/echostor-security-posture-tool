@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (storedToken) {
           const { setAuthToken } = require('./api');
           setAuthToken(storedToken);
-          
+
           authAPI
             .getCurrentUser()
             .then((response) => {

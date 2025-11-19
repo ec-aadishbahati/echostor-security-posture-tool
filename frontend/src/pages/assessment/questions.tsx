@@ -132,10 +132,10 @@ export default function AssessmentQuestions() {
       if (data.data.progress_percentage !== undefined) {
         setSavedProgress(data.data.progress_percentage);
       }
-      
+
       queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
       queryClient.invalidateQueries({ queryKey: ['latestAssessment'] });
-      
+
       queryClient.setQueryData(['latestAssessment'], (oldData: unknown) => {
         if (oldData && typeof oldData === 'object' && 'data' in oldData) {
           const typedData = oldData as { data: Record<string, unknown> };
@@ -150,7 +150,7 @@ export default function AssessmentQuestions() {
         }
         return oldData;
       });
-      
+
       crossTabSync.broadcast(SyncEventType.PROGRESS_SAVED, variables.assessmentId);
       toast.success('Progress saved!');
     },
