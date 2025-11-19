@@ -30,7 +30,7 @@ export default function Layout({ children, title }: LayoutProps) {
       ]
     : [
         { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-        { name: 'Assessment', href: '/assessment', icon: DocumentTextIcon },
+        { name: 'Assessment', href: '/assessment/start', icon: DocumentTextIcon },
         { name: 'Reports', href: '/reports', icon: ChartBarIcon },
       ];
 
