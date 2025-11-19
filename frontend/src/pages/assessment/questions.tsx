@@ -136,12 +136,13 @@ export default function AssessmentQuestions() {
       queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
       queryClient.invalidateQueries({ queryKey: ['latestAssessment'] });
       
-      queryClient.setQueryData(['latestAssessment'], (oldData: any) => {
-        if (oldData?.data) {
+      queryClient.setQueryData(['latestAssessment'], (oldData: unknown) => {
+        if (oldData && typeof oldData === 'object' && 'data' in oldData) {
+          const typedData = oldData as { data: Record<string, unknown> };
           return {
-            ...oldData,
+            ...typedData,
             data: {
-              ...oldData.data,
+              ...typedData.data,
               progress_percentage: data.data.progress_percentage,
               last_saved_at: new Date().toISOString(),
             },
