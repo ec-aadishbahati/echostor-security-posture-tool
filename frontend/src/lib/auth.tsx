@@ -69,7 +69,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setIsLoading(false);
         });
     } else {
-      setIsLoading(false);
+      if (typeof window !== 'undefined') {
+        const storedToken = localStorage.getItem('auth_token');
+        if (storedToken) {
+          const { setAuthToken } = require('./api');
+          setAuthToken(storedToken);
+
+          authAPI
+            .getCurrentUser()
+            .then((response) => {
+              setUser(response.data);
+              if (response.data.is_admin) {
+                setIsAdmin(true);
+              }
+              setIsLoading(false);
+            })
+            .catch(() => {
+              localStorage.removeItem('auth_token');
+              setIsLoading(false);
+            });
+        } else {
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(false);
+      }
     }
   }, []);
 

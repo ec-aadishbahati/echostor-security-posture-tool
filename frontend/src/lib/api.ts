@@ -40,6 +40,14 @@ export const getCSRFToken = () => csrfToken;
 
 export const setAuthToken = (token: string | null) => {
   authToken = token;
+
+  if (typeof window !== 'undefined') {
+    if (token) {
+      localStorage.setItem('auth_token', token);
+    } else {
+      localStorage.removeItem('auth_token');
+    }
+  }
 };
 
 export const getAuthToken = () => authToken;

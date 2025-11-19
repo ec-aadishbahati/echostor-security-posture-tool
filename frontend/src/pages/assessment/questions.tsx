@@ -107,6 +107,7 @@ export default function AssessmentQuestions() {
     onSuccess: (data) => {
       setAssessmentId(data.data.id);
       queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
+      queryClient.invalidateQueries({ queryKey: ['latestAssessment'] });
       crossTabSync.broadcast(SyncEventType.ASSESSMENT_STARTED, data.data.id);
     },
     onError: (error: unknown) => {
@@ -131,6 +132,25 @@ export default function AssessmentQuestions() {
       if (data.data.progress_percentage !== undefined) {
         setSavedProgress(data.data.progress_percentage);
       }
+
+      queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
+      queryClient.invalidateQueries({ queryKey: ['latestAssessment'] });
+
+      queryClient.setQueryData(['latestAssessment'], (oldData: unknown) => {
+        if (oldData && typeof oldData === 'object' && 'data' in oldData) {
+          const typedData = oldData as { data: Record<string, unknown> };
+          return {
+            ...typedData,
+            data: {
+              ...typedData.data,
+              progress_percentage: data.data.progress_percentage,
+              last_saved_at: new Date().toISOString(),
+            },
+          };
+        }
+        return oldData;
+      });
+
       crossTabSync.broadcast(SyncEventType.PROGRESS_SAVED, variables.assessmentId);
       toast.success('Progress saved!');
     },
@@ -212,10 +232,12 @@ export default function AssessmentQuestions() {
         case SyncEventType.ASSESSMENT_STARTED:
         case SyncEventType.PROGRESS_SAVED:
           queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
+          queryClient.invalidateQueries({ queryKey: ['latestAssessment'] });
           toast('Assessment updated in another tab', { icon: '🔄' });
           break;
         case SyncEventType.ASSESSMENT_COMPLETED:
           queryClient.invalidateQueries({ queryKey: ['currentAssessment'] });
+          queryClient.invalidateQueries({ queryKey: ['latestAssessment'] });
           toast.success('Assessment completed in another tab');
           router.push('/reports');
           break;

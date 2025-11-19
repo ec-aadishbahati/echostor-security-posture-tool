@@ -29,6 +29,7 @@ export default function Dashboard() {
     queryFn: assessmentAPI.getLatestAssessment,
     retry: false,
     refetchOnWindowFocus: false,
+    refetchOnMount: 'always',
   });
 
   const { data: retakeData } = useQuery({
