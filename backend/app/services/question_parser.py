@@ -244,6 +244,9 @@ def parse_assessment_questions(md_content: str) -> AssessmentStructure:
                     and not lines[j].strip().startswith("####")
                 ):
                     desc_line = lines[j].strip()
+                    if desc_line.startswith("###"):
+                        j += 1
+                        continue
                     if desc_line and not desc_line.startswith("*Note:"):
                         if desc_line.startswith("*Basic Description:"):
                             description = desc_line.replace(
