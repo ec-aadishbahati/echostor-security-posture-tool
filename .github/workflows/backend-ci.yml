@@ -6,10 +6,30 @@ on:
     paths: ['backend/**']
   pull_request:
     paths: ['backend/**']
+  workflow_run:
+    workflows: ["Deploy Backend to Fly.io"]
+    types: [completed]
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  ci-gate:
+    name: CI Gate
+    runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Check workflow trigger
+        run: |
+          echo "Workflow triggered by: ${{ github.event_name }}"
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "Triggered after Deploy Backend workflow"
+            echo "Deploy workflow conclusion: ${{ github.event.workflow_run.conclusion }}"
+          fi
   lint:
     name: Lint with Ruff
+    needs: ci-gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,6 +65,7 @@ jobs:
 
   format:
     name: Check Formatting
+    needs: ci-gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -80,6 +101,7 @@ jobs:
 
   type-check:
     name: Type Check with mypy
+    needs: ci-gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -116,6 +138,7 @@ jobs:
 
   test:
     name: Run Tests
+    needs: ci-gate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
